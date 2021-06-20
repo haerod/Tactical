@@ -23,7 +23,7 @@ public class M_Characters : MonoBehaviour
 
     private void Start()
     {
-        currentCharacter = characters.GetRandom();
+        //currentCharacter = characters.GetRandom();
         NewCurrentCharacter();
     }
 

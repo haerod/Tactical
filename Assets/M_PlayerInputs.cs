@@ -154,7 +154,7 @@ public class M_PlayerInputs : MonoBehaviour
             lineOut.gameObject.SetActive(true);
             lineOut.positionCount = currentPathfinding.Count - actionPoints;
             M_UI.instance.SetActionCostText((currentPathfinding.Count - 1).ToString(), currentTile.transform.position, true);
-        }
+        }   
         else // IN
         {
             lineOut.gameObject.SetActive(false);
