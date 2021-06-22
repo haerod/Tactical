@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 
-// NOTE
-// LE PATHFINING POURRAIT ETRE AMELIORE
-// SI LORSQU'ON VERIFIE SI LE NOUVEAU COUT EST INFERIEUR, ET QUE CE N'EST PAS LE CAS
-// ALORS IL FAUDRAIT VERIFIER AVEC LE GRAND PARENT SI CE N'EST PAS PLUS COURT
-
-public class Pathfinding : MonoBehaviour
+public class M_Pathfinding : MonoBehaviour
 {
+    public static M_Pathfinding inst;
+
     public TiledTerrainCreator terrainCreator;
+    [Space]
 
     private int startX;
     private int startY;
@@ -28,12 +27,24 @@ public class Pathfinding : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
+    private void Awake()
+    {
+        if (!inst)
+        {
+            inst = this;
+        }
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
     // Returns the path
     // If no path, returns null
+    // NOTE
+    // LE PATHFINING POURRAIT ETRE AMELIORE
+    // SI LORSQU'ON VERIFIE SI LE NOUVEAU COUT EST INFERIEUR, ET QUE CE N'EST PAS LE CAS
+    // ALORS IL FAUDRAIT VERIFIER AVEC LE GRAND PARENT SI CE N'EST PAS PLUS COURT
     public List<TileStat> Pathfind(int sX, int sY, int eX, int eY)
     {
         ClearPath();
@@ -57,13 +68,14 @@ public class Pathfinding : MonoBehaviour
         {            
             if (openList.Count > 0) // Choose current tile in open list
             {
-                currentTile = GetLowest(); // LINQ
+                currentTile = openList.OrderBy(o => o.f).FirstOrDefault();
                 closedList.Add(currentTile);
                 openList.Remove(currentTile);
             }
             else // Open list is void -> no direction in the path, return null
             {
                 NoDirectionEnd();
+                print("0");
                 return null;
             }
 
@@ -106,16 +118,87 @@ public class Pathfinding : MonoBehaviour
         return null;
     }
 
+    public List<TileStat> AreaMovementZone(int sX, int sY, int distance)
+    {
+        ClearPath();
+
+        if (distance == 0)
+        {
+            return closedList;
+        }
+
+        // Set bacis values
+        startX = sX;
+        startY = sY;
+
+        grid = terrainCreator.grid;
+
+        // Set first tile
+        currentTile = grid[startX, startY];
+        currentTile.cost = 0;
+        openList.Add(currentTile);
+
+        // Tile search loop
+        while (openList.Count > 0)
+        {
+            if (openList.Count > 0) // Get first tile in open list
+            {
+                currentTile = openList[0];
+                closedList.Add(currentTile);
+                openList.Remove(currentTile);
+            }
+            else // Open list is void -> all direction founded
+            {
+                closedList.Remove(grid[startX, startY]);
+                return closedList;
+            }
+
+            // Put all tiles in around list
+            aroundList.Clear();
+            AddTile(GetAround(0, 1));
+            AddTile(GetAround(1, 1));
+            AddTile(GetAround(1, 0));
+            AddTile(GetAround(1, -1));
+            AddTile(GetAround(0, -1));
+            AddTile(GetAround(-1, -1));
+            AddTile(GetAround(-1, 0));
+            AddTile(GetAround(-1, 1));
+
+            // Calculation loop (f, g & h)
+            foreach (TileStat tile in aroundList)
+            {
+                tile.parent = currentTile;
+                tile.cost = tile.parent.cost + 1;
+
+                // Add it in open list
+                if (!openList.Contains(tile))
+                {
+                    openList.Add(tile);
+                }
+
+                // Border tiles
+                if (tile.cost == distance)
+                {
+                    closedList.Add(tile);
+                    openList.Remove(tile);
+                }
+            }
+        }
+
+        closedList.Remove(grid[startX, startY]);
+        return closedList;
+    }
+
     public void ClearPath()
     {
         foreach (TileStat t in openList)
         {
-            t.ResetTile();
+            t.ResetTileValues();
         }
         openList.Clear();
         foreach (TileStat t in closedList)
         {
-            t.ResetTile();
+            t.ResetTileValues();
         }
         closedList.Clear();
 
@@ -131,17 +214,6 @@ public class Pathfinding : MonoBehaviour
         if (!InTerrainRange(x, y)) return null;
 
         return grid[currentTile.x + x, currentTile.y + y];
-    }
-
-    private TileStat GetLowest()
-    {
-        TileStat lowest = openList[0];
-        for (int i = 0; i < openList.Count; i++)
-        {
-            if (openList[i].f > lowest.f) continue;
-            lowest = openList[i];
-        }
-        return lowest;
     }
 
     private bool IsDiagonal(TileStat tile1, TileStat tile2)

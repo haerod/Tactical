@@ -14,6 +14,15 @@ public class TileStat : MonoBehaviour
     public int f; // f = cost + heuristic
     public TileStat parent;
 
+    [Header("MATERIALS (debug)")]
+    [SerializeField] private Material basic = null;
+    [SerializeField] private Material open = null;
+    [SerializeField] private Material closed = null;
+    [SerializeField] private Material path = null;
+    [Space]
+    [SerializeField] private GameObject area = null;
+    public enum TileMaterial { Basic, Open, Closed, Path, Area}
+
     [HideInInspector] public bool hole = false;
 
     [Header("REFERENCES")]
@@ -50,7 +59,7 @@ public class TileStat : MonoBehaviour
         fText.gameObject.SetActive(false);
     }
 
-    public void ResetTile()
+    public void ResetTileValues()
     {
         cost = 0;
         heuristic = 0;
@@ -58,13 +67,46 @@ public class TileStat : MonoBehaviour
         parent = null;
     }
 
+    public void ResteTileSkin()
+    {
+        SetMaterial(TileMaterial.Basic);
+    }
+
     public void DisableRenderer()
     {
         rend.enabled = false;
     }
 
+    public void SetMaterial(TileMaterial mat)
+    {
+        if(mat != TileMaterial.Area)
+        {
+            area.SetActive(false);
+        }
+
+        switch (mat)
+        {
+            case TileMaterial.Basic:
+                rend.material = basic;
+                break;
+            case TileMaterial.Open:
+                rend.material = open;
+                break;
+            case TileMaterial.Closed:
+                rend.material = closed;
+                break;
+            case TileMaterial.Path:
+                rend.material = path;
+                break;
+            case TileMaterial.Area:
+                area.SetActive(true);
+                break;
+            default:
+                break;
+        }
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
 }

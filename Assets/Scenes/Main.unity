@@ -545,7 +545,6 @@ MonoBehaviour:
   lineOffset: 0.05
   squareTransform: {fileID: 1793327907}
   squareOffset: 0.01
-  pathfinding: {fileID: 1244375244}
   c: {fileID: 1904902467}
   cValueChanged: 0
 --- !u!4 &634797626
@@ -809,7 +808,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &951955762
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1252,7 +1251,7 @@ GameObject:
   - component: {fileID: 1244375245}
   - component: {fileID: 1244375244}
   m_Layer: 0
-  m_Name: Pathfinding
+  m_Name: M_Pathfinding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

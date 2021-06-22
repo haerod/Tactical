@@ -27,6 +27,10 @@ public class M_UI : MonoBehaviour
         {
             instance = this;
         }
+        else
+        {
+            Debug.LogError("2 managers !", this);
+        }
     }
 
     // ======================================================================
@@ -65,6 +69,8 @@ public class M_UI : MonoBehaviour
     public void ClickOnAddActionPoint()
     {
         M_Characters.instance.currentCharacter.actionPoints.AddActionPoints();
+        M_Characters.instance.currentCharacter.gridMove.ClearAreaZone();
+        M_Characters.instance.currentCharacter.gridMove.EnableMoveArea();
     }
 
     // ======================================================================

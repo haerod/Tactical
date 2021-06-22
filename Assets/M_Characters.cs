@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,10 @@ public class M_Characters : MonoBehaviour
         {
             instance = this;
         }
+        else
+        {
+            Debug.LogError("2 managers !", this);
+        }
     }
 
     private void Start()
@@ -27,12 +32,17 @@ public class M_Characters : MonoBehaviour
         NewCurrentCharacter();
     }
 
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
     public void ChangeCharacter()
     {
+        // Old character
+        currentCharacter.gridMove.ClearAreaZone();
+
+        // New character
         currentCharacter = characters.Next(characters.IndexOf(currentCharacter));
         NewCurrentCharacter();
     }
@@ -53,5 +63,6 @@ public class M_Characters : MonoBehaviour
         M_PlayerInputs.inst.c = currentCharacter;
         M_PlayerInputs.inst.cValueChanged = true;
         M_UI.instance.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
+        currentCharacter.gridMove.EnableMoveArea();
     }
 }

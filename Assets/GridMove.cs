@@ -31,6 +31,7 @@ public class GridMove : MonoBehaviour
 
     private bool move;
     private List<TileStat> currentPath = null;
+    private List<TileStat> currentArea = null;
     private int index = 0;
     private Vector3 destination;
 
@@ -72,6 +73,28 @@ public class GridMove : MonoBehaviour
         anim.SetFloat("speed", animSpeed); // Blend tree anim speed
 
         M_PlayerInputs.inst.canClick = false;
+
+        ClearAreaZone();
+    }
+
+    public void EnableMoveArea()
+    {
+        currentArea = M_Pathfinding.inst.AreaMovementZone(x, y, c.actionPoints.actionPoints).ToList();
+
+        foreach (TileStat t in currentArea)
+        {
+            t.SetMaterial(TileStat.TileMaterial.Area);
+        }
+    }
+
+    public void ClearAreaZone()
+    {
+        foreach (TileStat t in currentArea)
+        {
+            t.SetMaterial(TileStat.TileMaterial.Basic);
+        }
+
+        currentArea.Clear();
     }
 
     // ======================================================================
@@ -113,6 +136,7 @@ public class GridMove : MonoBehaviour
         move = false;
         anim.SetFloat("speed", 0f);
         M_PlayerInputs.inst.canClick = true;
+        EnableMoveArea();
     }
 
     private void OrientTo(Vector3 targetPosition, float offset = 0)

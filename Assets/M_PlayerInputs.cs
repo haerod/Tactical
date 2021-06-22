@@ -26,9 +26,6 @@ public class M_PlayerInputs : MonoBehaviour
     [Range(.01f, .5f)]
     [SerializeField] private float squareOffset = .01f;
 
-    [Space]
-    [SerializeField] private Pathfinding pathfinding = null;
-
     public Character c = null;
 
     [HideInInspector] public bool cValueChanged = false;
@@ -46,6 +43,10 @@ public class M_PlayerInputs : MonoBehaviour
         if (!inst)
         {
             inst = this;
+        }
+        else
+        {
+            Debug.LogError("2 managers !", this);
         }
     }
 
@@ -103,7 +104,7 @@ public class M_PlayerInputs : MonoBehaviour
         {
             TileStat tile = hit.transform.GetComponent<TileStat>();
 
-            if (!CanGo(tile)) // Is a tile, not hole tile and not same tile
+            if (!CanGo(tile)) // Isnt a tile, a hole tile or same tile
             {
                 NoGo();
                 return;
@@ -113,7 +114,7 @@ public class M_PlayerInputs : MonoBehaviour
             {
                 // New current tile and pathfinding
                 currentTile = tile;
-                currentPathfinding = pathfinding.Pathfind(c.gridMove.x, c.gridMove.y, tile.x, tile.y).ToList();
+                currentPathfinding = M_Pathfinding.inst.Pathfind(c.gridMove.x, c.gridMove.y, tile.x, tile.y).ToList();
 
                 SetLines();
                 SetSquare();
@@ -131,7 +132,7 @@ public class M_PlayerInputs : MonoBehaviour
         line.gameObject.SetActive(false);
         lineOut.gameObject.SetActive(false);
         M_UI.instance.DisableActionCostText();
-        pathfinding.ClearPath();
+        M_Pathfinding.inst.ClearPath();
         currentPathfinding = null;
     }
 
