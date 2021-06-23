@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TiledTerrainCreator : MonoBehaviour
+public class M_Terrain : MonoBehaviour
 {
+    public static M_Terrain inst;
+
     [Header("TERRAIN PARAMETERS")]
     [Range(1, 100)]
     public int length = 5;
@@ -18,7 +20,7 @@ public class TiledTerrainCreator : MonoBehaviour
     [SerializeField] private GameObject tile = null;
     [SerializeField] private Transform terrainParent = null;
 
-    [HideInInspector] public TileStat[,] grid;
+    [HideInInspector] public Tile[,] grid;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -26,6 +28,14 @@ public class TiledTerrainCreator : MonoBehaviour
 
     private void Awake()
     {
+        if (!inst)
+        {
+            inst = this;
+        }
+        else
+        {
+            Debug.LogError("2 managers");
+        }
         GenerateTerrain();
     }
 
@@ -55,7 +65,7 @@ public class TiledTerrainCreator : MonoBehaviour
 
     private void CreateTiles()
     {
-        grid = new TileStat[length, width];
+        grid = new Tile[length, width];
         for (int i = 0; i < length; i++)
         {
             for (int j = 0; j < width; j++)
@@ -64,7 +74,7 @@ public class TiledTerrainCreator : MonoBehaviour
                 GameObject instaTile = Instantiate(tile, pozTile, Quaternion.identity, terrainParent);
                 instaTile.name = "tile " + i + ", " + j;
 
-                TileStat stat = instaTile.GetComponent<TileStat>();
+                Tile stat = instaTile.GetComponent<Tile>();
                 stat.x = i;
                 stat.y = j;
                 grid[i, j] = stat;

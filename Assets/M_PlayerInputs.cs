@@ -31,8 +31,8 @@ public class M_PlayerInputs : MonoBehaviour
     [HideInInspector] public bool cValueChanged = false;
 
     private Camera cam;
-    private TileStat currentTile;
-    private List<TileStat> currentPathfinding;
+    private Tile currentTile;
+    private List<Tile> currentPathfinding;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -102,7 +102,7 @@ public class M_PlayerInputs : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            TileStat tile = hit.transform.GetComponent<TileStat>();
+            Tile tile = hit.transform.GetComponent<Tile>();
 
             if (!CanGo(tile)) // Isnt a tile, a hole tile or same tile
             {
@@ -114,10 +114,45 @@ public class M_PlayerInputs : MonoBehaviour
             {
                 // New current tile and pathfinding
                 currentTile = tile;
-                currentPathfinding = M_Pathfinding.inst.Pathfind(c.gridMove.x, c.gridMove.y, tile.x, tile.y).ToList();
 
-                SetLines();
-                SetSquare();
+                if (tile.IsOccupied()) // Tile occupied by somebody
+                {
+                    currentPathfinding = M_Pathfinding.inst.Pathfind(c.gridMove.x, c.gridMove.y, tile.x, tile.y);
+
+                    if(Utils.IsVoidList(currentPathfinding)) // Is closed (1 case) the target tile -> don't do anything
+                    {
+                        NoGo();
+                        return;
+                    }
+
+                    currentPathfinding = M_Pathfinding.inst.PathfindAround(c.gridMove.x, c.gridMove.y, tile.x, tile.y);
+
+                    if(Utils.IsVoidList(currentPathfinding)) // The target is unreachable -> don't do anything
+                    {
+                        NoGo();
+                        return;
+                    }
+
+                    currentPathfinding = currentPathfinding.ToList();
+                    Tile endTile = currentPathfinding.LastOrDefault();
+                    SetSquare(endTile);
+                    SetLines(endTile);
+                }
+                else // Free tile
+                {
+                    currentPathfinding = M_Pathfinding.inst.Pathfind(c.gridMove.x, c.gridMove.y, tile.x, tile.y);
+
+                    if (Utils.IsVoidList(currentPathfinding))
+                    {
+                        NoGo();
+                        return;
+                    }
+
+                    currentPathfinding = currentPathfinding.ToList();
+                    SetSquare(currentTile);
+                    SetLines(currentTile);
+                }
+
             }
         }
         else
@@ -134,17 +169,18 @@ public class M_PlayerInputs : MonoBehaviour
         M_UI.instance.DisableActionCostText();
         M_Pathfinding.inst.ClearPath();
         currentPathfinding = null;
+        currentTile = null;
     }
 
-    private bool CanGo(TileStat tile)
+    private bool CanGo(Tile tile)
     {
         if (!tile) return false; ;
         if (tile.hole) return false; ;
-        if (tile.x == c.gridMove.x && tile.y == c.gridMove.y) return false;        
+        if (tile.x == c.gridMove.x && tile.y == c.gridMove.y) return false;
         return true;
     }
     
-    private void SetLines()
+    private void SetLines(Tile tile)
     {
         int actionPoints = c.actionPoints.actionPoints;
 
@@ -154,18 +190,18 @@ public class M_PlayerInputs : MonoBehaviour
             line.positionCount = actionPoints + 1;
             lineOut.gameObject.SetActive(true);
             lineOut.positionCount = currentPathfinding.Count - actionPoints;
-            M_UI.instance.SetActionCostText((currentPathfinding.Count - 1).ToString(), currentTile.transform.position, true);
+            M_UI.instance.SetActionCostText((currentPathfinding.Count - 1).ToString(), tile.transform.position, true);
         }   
         else // IN
         {
             lineOut.gameObject.SetActive(false);
             line.positionCount = currentPathfinding.Count;
-            M_UI.instance.SetActionCostText((currentPathfinding.Count - 1).ToString(), currentTile.transform.position);
+            M_UI.instance.SetActionCostText((currentPathfinding.Count - 1).ToString(), tile.transform.position);
         }
 
         // Position line's points
         int i = 0;
-        foreach (TileStat t in currentPathfinding)
+        foreach (Tile t in currentPathfinding)
         {
             if (i <= actionPoints)
             {
@@ -186,9 +222,9 @@ public class M_PlayerInputs : MonoBehaviour
         line.gameObject.SetActive(true);
     }
 
-    private void SetSquare()
+    private void SetSquare(Tile tile)
     {
         squareTransform.gameObject.SetActive(true);
-        squareTransform.position = currentTile.transform.position + Vector3.up * squareOffset;
+        squareTransform.position = tile.transform.position + Vector3.up * squareOffset;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class TileStat : MonoBehaviour
+public class Tile : MonoBehaviour
 {
     [Header("COORDINATES (debug)")]
 
@@ -12,7 +12,7 @@ public class TileStat : MonoBehaviour
     public int cost;
     public int heuristic; // heuristic (10 = adjacent, 14 = diagonal)
     public int f; // f = cost + heuristic
-    public TileStat parent;
+    public Tile parent;
 
     [Header("MATERIALS (debug)")]
     [SerializeField] private Material basic = null;
@@ -104,6 +104,16 @@ public class TileStat : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public bool IsOccupied()
+    {
+        foreach (Character c in M_Characters.instance.characters)
+        {
+            if (c.gridMove.x == x && c.gridMove.y == y)
+                return true;
+        }
+        return false;
     }
 
     // ======================================================================

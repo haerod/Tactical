@@ -4,7 +4,7 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 
-public class GridMove : MonoBehaviour
+public class Move : MonoBehaviour
 {
     [Header("COORDINATES")]
     public int x = 1;
@@ -25,13 +25,12 @@ public class GridMove : MonoBehaviour
     
     [Header("REFERENCES")]
 
-    [SerializeField] private TiledTerrainCreator terrain = null;
     [SerializeField] private Animator anim = null;
     [SerializeField] private Character c  = null;
 
     private bool move;
-    private List<TileStat> currentPath = null;
-    private List<TileStat> currentArea = null;
+    private List<Tile> currentPath = null;
+    private List<Tile> currentArea = null;
     private int index = 0;
     private Vector3 destination;
 
@@ -41,7 +40,7 @@ public class GridMove : MonoBehaviour
 
     private void Start()
     {
-        transform.position = terrain.grid[x, y].transform.position;
+        transform.position = M_Terrain.inst.grid[x, y].transform.position;
         OrientTo(orientation);
         anim.SetFloat("speed", 0f);
     }
@@ -57,7 +56,7 @@ public class GridMove : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    public void MoveOnPath(List<TileStat> path)
+    public void MoveOnPath(List<Tile> path)
     {
         if (c.actionPoints.actionPoints <= 0) return;
 
@@ -81,17 +80,19 @@ public class GridMove : MonoBehaviour
     {
         currentArea = M_Pathfinding.inst.AreaMovementZone(x, y, c.actionPoints.actionPoints).ToList();
 
-        foreach (TileStat t in currentArea)
+        foreach (Tile t in currentArea)
         {
-            t.SetMaterial(TileStat.TileMaterial.Area);
+            if (t.IsOccupied()) continue;
+
+            t.SetMaterial(Tile.TileMaterial.Area);
         }
     }
 
     public void ClearAreaZone()
     {
-        foreach (TileStat t in currentArea)
+        foreach (Tile t in currentArea)
         {
-            t.SetMaterial(TileStat.TileMaterial.Basic);
+            t.SetMaterial(Tile.TileMaterial.Basic);
         }
 
         currentArea.Clear();

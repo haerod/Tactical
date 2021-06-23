@@ -3,6 +3,6 @@ using System.Collections;
 
 public class Character : MonoBehaviour
 {
-    public GridMove gridMove;
+    public Move gridMove;
     public ActionPoints actionPoints;
 }

@@ -7,21 +7,18 @@ public class M_Pathfinding : MonoBehaviour
 {
     public static M_Pathfinding inst;
 
-    public TiledTerrainCreator terrainCreator;
-    [Space]
-
     private int startX;
     private int startY;
     private int endX;
     private int endY;
 
-    private List<TileStat> openList = new List<TileStat>();
-    private List<TileStat> closedList = new List<TileStat>();
-    private List<TileStat> aroundList = new List<TileStat>();
-    private TileStat currentTile;
+    private List<Tile> openList = new List<Tile>();
+    private List<Tile> closedList = new List<Tile>();
+    private List<Tile> aroundList = new List<Tile>();
+    private Tile currentTile;
 
-    private TileStat[,] grid;
-    private TileStat endTile;
+    private Tile[,] grid;
+    private Tile endTile;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -45,7 +42,7 @@ public class M_Pathfinding : MonoBehaviour
     // LE PATHFINING POURRAIT ETRE AMELIORE
     // SI LORSQU'ON VERIFIE SI LE NOUVEAU COUT EST INFERIEUR, ET QUE CE N'EST PAS LE CAS
     // ALORS IL FAUDRAIT VERIFIER AVEC LE GRAND PARENT SI CE N'EST PAS PLUS COURT
-    public List<TileStat> Pathfind(int sX, int sY, int eX, int eY)
+    public List<Tile> Pathfind(int sX, int sY, int eX, int eY)
     {
         ClearPath();
 
@@ -55,7 +52,7 @@ public class M_Pathfinding : MonoBehaviour
         endX = eX;
         endY = eY;
 
-        grid = terrainCreator.grid;
+        grid = M_Terrain.inst.grid;
 
         // Set first tile
         currentTile = grid[startX, startY];
@@ -75,31 +72,37 @@ public class M_Pathfinding : MonoBehaviour
             else // Open list is void -> no direction in the path, return null
             {
                 NoDirectionEnd();
-                print("0");
                 return null;
             }
 
             // Put all tiles in around list
             aroundList.Clear();
-            AddTile(GetAround(0, 1));
-            AddTile(GetAround(1, 1));
-            AddTile(GetAround(1, 0));
-            AddTile(GetAround(1, -1));
-            AddTile(GetAround(0, -1));
-            AddTile(GetAround(-1, -1));
-            AddTile(GetAround(-1, 0));
-            AddTile(GetAround(-1, 1));
+
+            bool useDiagonals = M_GameRules.inst.useDiagonals;
+
+            AddTile(GetAroundCurrentTile(0, -1));
+            if(useDiagonals) AddTile
+                    (GetAroundCurrentTile(-1, -1));
+            AddTile(GetAroundCurrentTile(-1, 0));
+            if (useDiagonals)
+                AddTile(GetAroundCurrentTile(-1, 1));
+            AddTile(GetAroundCurrentTile(0, 1));
+            if (useDiagonals)
+                AddTile(GetAroundCurrentTile(1, 1));
+            AddTile(GetAroundCurrentTile(1, 0));
+            if (useDiagonals)
+                AddTile(GetAroundCurrentTile(1, -1));
 
             // If it's end tile -> return path
             if (aroundList.Contains(endTile))
             {
                 closedList.Add(endTile);
-                List<TileStat> toReturn = new List<TileStat>();
+                List<Tile> toReturn = new List<Tile>();
                 endTile.parent = currentTile;
                 toReturn.Add(endTile);
                 while (endTile != grid[startX, startY])
                 {
-                    TileStat t = endTile.parent;
+                    Tile t = endTile.parent;
                     endTile = t;
                     toReturn.Add(endTile);
                 }
@@ -109,7 +112,7 @@ public class M_Pathfinding : MonoBehaviour
             }
 
             // Calculation loop (f, g & h)
-            foreach (TileStat tile in aroundList)
+            foreach (Tile tile in aroundList)
             {
                 CalculateTileValues(tile);
             }
@@ -118,7 +121,7 @@ public class M_Pathfinding : MonoBehaviour
         return null;
     }
 
-    public List<TileStat> AreaMovementZone(int sX, int sY, int distance)
+    public List<Tile> AreaMovementZone(int sX, int sY, int distance)
     {
         ClearPath();
 
@@ -131,7 +134,7 @@ public class M_Pathfinding : MonoBehaviour
         startX = sX;
         startY = sY;
 
-        grid = terrainCreator.grid;
+        grid = M_Terrain.inst.grid;
 
         // Set first tile
         currentTile = grid[startX, startY];
@@ -155,17 +158,23 @@ public class M_Pathfinding : MonoBehaviour
 
             // Put all tiles in around list
             aroundList.Clear();
-            AddTile(GetAround(0, 1));
-            AddTile(GetAround(1, 1));
-            AddTile(GetAround(1, 0));
-            AddTile(GetAround(1, -1));
-            AddTile(GetAround(0, -1));
-            AddTile(GetAround(-1, -1));
-            AddTile(GetAround(-1, 0));
-            AddTile(GetAround(-1, 1));
+            bool useDiagonals = M_GameRules.inst.useDiagonals;
+
+            AddTile(GetAroundCurrentTile(0, -1));
+            if (useDiagonals) AddTile
+                     (GetAroundCurrentTile(-1, -1));
+            AddTile(GetAroundCurrentTile(-1, 0));
+            if (useDiagonals)
+                AddTile(GetAroundCurrentTile(-1, 1));
+            AddTile(GetAroundCurrentTile(0, 1));
+            if (useDiagonals)
+                AddTile(GetAroundCurrentTile(1, 1));
+            AddTile(GetAroundCurrentTile(1, 0));
+            if (useDiagonals)
+                AddTile(GetAroundCurrentTile(1, -1));
 
             // Calculation loop (f, g & h)
-            foreach (TileStat tile in aroundList)
+            foreach (Tile tile in aroundList)
             {
                 tile.parent = currentTile;
                 tile.cost = tile.parent.cost + 1;
@@ -189,14 +198,71 @@ public class M_Pathfinding : MonoBehaviour
         return closedList;
     }
 
+    public List<Tile> PathfindAround(int sX, int sY, int eX, int eY)
+    {
+        List<Tile> tilesList = new List<Tile>();
+        Tile tileToCheck = M_Terrain.inst.grid[eX, eY];
+
+        bool useDiagonals = M_GameRules.inst.useDiagonals;
+
+        // Add to tiles list
+        tilesList.Add(GetAround(0, -1, tileToCheck));
+        if (useDiagonals)
+            tilesList.Add(GetAround(-1, -1, tileToCheck));
+        tilesList.Add(GetAround(-1, 0, tileToCheck));
+        if (useDiagonals)
+            tilesList.Add(GetAround(-1, 1, tileToCheck));
+        tilesList.Add(GetAround(0, 1, tileToCheck));
+        if (useDiagonals)
+            tilesList.Add(GetAround(1, 1, tileToCheck));
+        tilesList.Add(GetAround(1, 0, tileToCheck));
+        if (useDiagonals)
+            tilesList.Add(GetAround(1, -1, tileToCheck));
+
+        List<Tile> temp = tilesList.ToList(); // LINQ
+
+        // Remove holes and null
+        foreach (Tile t in temp) 
+        {
+            if (t == null)
+            {
+                tilesList.Remove(t);
+                continue;
+            }
+
+            if (!t.hole) continue;
+
+            tilesList.Remove(t);
+        }
+
+        List<List<Tile>> pathes = new List<List<Tile>>();
+
+        // Get all non-null pathes
+        foreach (Tile t in tilesList)
+        {
+            List<Tile> current = Pathfind(sX, sY, t.x, t.y);
+
+            if (current == null || current.Count == 0) continue;
+
+            current = current.ToList();
+            pathes.Add(current);
+        }
+
+        if (pathes == null || pathes.Count == 0) return null;
+
+        return pathes
+            .Where(pathCheck => pathCheck.Count == pathes.Select(e => e.Count).Min())
+            .OrderBy(e => e.Select(t => t.cost).Sum()).FirstOrDefault().ToList();
+    }
+
     public void ClearPath()
     {
-        foreach (TileStat t in openList)
+        foreach (Tile t in openList)
         {
             t.ResetTileValues();
         }
         openList.Clear();
-        foreach (TileStat t in closedList)
+        foreach (Tile t in closedList)
         {
             t.ResetTileValues();
         }
@@ -209,33 +275,41 @@ public class M_Pathfinding : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private TileStat GetAround(int x, int y)
+    private Tile GetAroundCurrentTile(int x, int y)
     {
-        if (!InTerrainRange(x, y)) return null;
+        if (!InTerrainRange(x, y, currentTile)) return null;
 
         return grid[currentTile.x + x, currentTile.y + y];
     }
 
-    private bool IsDiagonal(TileStat tile1, TileStat tile2)
+    private Tile GetAround(int x, int y, Tile tile)
+    {
+        //print(x + ", " + y + " / " + tile.x + ", " + tile.y);
+        if (!InTerrainRange(x, y, tile)) return null;
+
+        return grid[tile.x + x, tile.y + y];
+    }
+
+    private bool IsDiagonal(Tile tile1, Tile tile2)
     {
         if (tile1.x == tile2.x || tile1.y == tile2.y) return false;
 
         return true;
     }
 
-    private int GetCost(TileStat tile, TileStat currentTile)
+    private int GetCost(Tile tile, Tile currentTile)
     {
         if (IsDiagonal(currentTile, tile)) return 14;
 
         return 10;
     }
 
-    private bool InTerrainRange(int xOffset, int yOffset)
+    private bool InTerrainRange(int xOffset, int yOffset, Tile tile)
     {
-        if (currentTile.x + xOffset < 0) return false;
-        if (currentTile.x + xOffset >= grid.GetLength(0)) return false;
-        if (currentTile.y + yOffset < 0) return false;
-        if (currentTile.y + yOffset >= grid.GetLength(1)) return false;
+        if (tile.x + xOffset < 0) return false;
+        if (tile.x + xOffset >= grid.GetLength(0)) return false;
+        if (tile.y + yOffset < 0) return false;
+        if (tile.y + yOffset >= grid.GetLength(1)) return false;
 
         return true;
     }
@@ -245,7 +319,7 @@ public class M_Pathfinding : MonoBehaviour
         Debug.Log("No direction end");
     }
 
-    private void AddTile(TileStat tile)
+    private void AddTile(Tile tile)
     {
         if (!tile) return; // if tile
         if (closedList.Contains(tile)) return; // isnt this tile in list
@@ -256,10 +330,23 @@ public class M_Pathfinding : MonoBehaviour
             if (newCost > tile.cost) return;
         }
 
+        if (tile.IsOccupied())
+        {
+            switch (M_GameRules.inst.canPassAcross)
+            {
+                case M_GameRules.PassAcross.Everybody:
+                    break;
+                case M_GameRules.PassAcross.Nobody:
+                    return;
+                default:
+                    break;
+            }
+        }
+
         aroundList.Add(tile);
     }
 
-    private void CalculateTileValues(TileStat tile)
+    private void CalculateTileValues(Tile tile)
     {
         // Calculate g, h and f
         tile.parent = currentTile;
