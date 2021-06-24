@@ -6,17 +6,10 @@ using static M__Managers;
 
 public class M_Pathfinding : MonoSingleton<M_Pathfinding>
 {
-    private int startX;
-    private int startY;
-    private int endX;
-    private int endY;
-
     private List<Tile> openList = new List<Tile>();
     private List<Tile> closedList = new List<Tile>();
     private List<Tile> aroundList = new List<Tile>();
     private Tile currentTile;
-
-    private Tile[,] grid;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -37,33 +30,27 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         ClearPath();
 
         // Set bacis values
-        startX = startTile.x;
-        startY = startTile.y;
-        endX = endTile.x;
-        endY = endTile.y;
+        //startX = startTile.x;
+        //startY = startTile.y;
+        //endX = endTile.x;
+        //endY = endTile.y;
 
-        grid = _terrain.grid;
+        //grid = _terrain.grid;
 
         // Set first tile
-        currentTile = grid[startX, startY];
+        currentTile = startTile;
         currentTile.cost = 0;
         openList.Add(currentTile);
-        endTile = grid[endX, endY];
 
         // Pathfinding loop
         while (openList.Count > 0)
         {            
-            if (openList.Count > 0) // Choose current tile in open list
-            {
-                currentTile = openList.OrderBy(o => o.f).FirstOrDefault();
-                closedList.Add(currentTile);
-                openList.Remove(currentTile);
-            }
-            else // Open list is void -> no direction in the path, return null
-            {
-                NoDirectionEnd();
-                return null;
-            }
+            if (openList.Count == 0) return null; // Open list is void -> no direction in the path
+
+            // Choose current tile in open list
+            currentTile = openList.OrderBy(o => o.f).FirstOrDefault();
+            closedList.Add(currentTile);
+            openList.Remove(currentTile);
 
             // Put all tiles in around list
             aroundList.Clear();
@@ -83,7 +70,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
                 List<Tile> toReturn = new List<Tile>();
                 endTile.parent = currentTile;
                 toReturn.Add(endTile);
-                while (endTile != grid[startX, startY])
+                while (endTile != startTile)
                 {
                     Tile t = endTile.parent;
                     endTile = t;
@@ -97,7 +84,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             // Calculation loop (f, g & h)
             foreach (Tile tile in aroundList)
             {
-                CalculateTileValues(tile);
+                CalculateTileValues(tile, endTile);
             }
         }
 
@@ -119,7 +106,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return toReturn;
     }
 
-    public List<Tile> AreaMovementZone(Tile tile, int distance)
+    public List<Tile> AreaMovementZone(Tile startTile, int distance)
     {
         ClearPath();
 
@@ -128,14 +115,8 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             return closedList;
         }
 
-        // Set bacis values
-        startX = tile.x;
-        startY = tile.y;
-
-        grid = _terrain.grid;
-
         // Set first tile
-        currentTile = grid[startX, startY];
+        currentTile = startTile;
         currentTile.cost = 0;
         openList.Add(currentTile);
 
@@ -150,7 +131,11 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             }
             else // Open list is void -> all direction founded
             {
-                closedList.Remove(grid[startX, startY]);
+                closedList.Remove(startTile);
+
+                // CHECK IT 
+                // if (Utils.IsVoidList(closedList)) return null;
+
                 return closedList;
             }
 
@@ -186,7 +171,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             }
         }
 
-        closedList.Remove(grid[startX, startY]);
+        closedList.Remove(startTile);
 
         if (Utils.IsVoidList(closedList)) return null;
 
@@ -211,11 +196,12 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
     // PRIVATE METHODS
     // ======================================================================
 
+    // Get a tile with an offset, if it exits in terrain (holes included)
     private Tile GetOffsetTile(int xOffset, int yOffset, Tile tile)
     {
         if (!InTerrainRange(xOffset, yOffset, tile)) return null;
 
-        return grid[tile.x + xOffset, tile.y + yOffset];
+        return _terrain.grid[tile.x + xOffset, tile.y + yOffset];
     }
 
     // Get all tiles around
@@ -249,6 +235,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return toReturn;
     }
 
+    // Is tile in diagonal with other tile
     private bool IsDiagonal(Tile tile1, Tile tile2)
     {
         if (tile1.x == tile2.x || tile1.y == tile2.y) return false;
@@ -256,6 +243,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return true;
     }
 
+    // Get cost of movement from tile to another
     private int GetCost(Tile tile, Tile currentTile)
     {
         if (IsDiagonal(currentTile, tile)) return 14;
@@ -263,19 +251,15 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return 10;
     }
 
+    // Is tile in terrain
     private bool InTerrainRange(int xOffset, int yOffset, Tile tile)
     {
         if (tile.x + xOffset < 0) return false;
-        if (tile.x + xOffset >= grid.GetLength(0)) return false;
+        if (tile.x + xOffset >= _terrain.grid.GetLength(0)) return false;
         if (tile.y + yOffset < 0) return false;
-        if (tile.y + yOffset >= grid.GetLength(1)) return false;
+        if (tile.y + yOffset >= _terrain.grid.GetLength(1)) return false;
 
         return true;
-    }
-
-    private void NoDirectionEnd()
-    {
-        Debug.Log("No direction end");
     }
 
     private void AddTile(Tile tile, bool passAcrossLastTile = false, Tile lastTile = null)
@@ -309,13 +293,13 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         aroundList.Add(tile);
     }
 
-    private void CalculateTileValues(Tile tile)
+    private void CalculateTileValues(Tile tile, Tile endTile)
     {
         // Calculate g, h and f
         tile.parent = currentTile;
 
         tile.cost = tile.parent.cost + GetCost(tile, currentTile);
-        tile.heuristic = (Mathf.Abs(endX - tile.x) + Mathf.Abs(endY - tile.y)) * 10;
+        tile.heuristic = (Mathf.Abs(endTile.x - tile.x) + Mathf.Abs(endTile.y - tile.y)) * 10;
         tile.f = tile.cost + tile.heuristic;
         //tile.ShowValues();
 

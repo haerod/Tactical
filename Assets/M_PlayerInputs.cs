@@ -64,9 +64,9 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         if (Input.GetMouseButtonDown(0))
         {
             if (currentPathfinding == null) return; // It's a path
-            if (c.GetComponent<ActionPoints>().actionPoints <= 0) return; // It's action points aviable
+            if (c.actionPoints.actionPoints <= 0) return; // It's action points aviable
 
-            c.gridMove.MoveOnPath(currentPathfinding);
+            c.move.MoveOnPath(currentPathfinding);
             _ui.DisableActionCostText();
         }
     }
@@ -89,7 +89,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
             {
                 // New current tile and pathfinding
                 pointedTile = tile;
-                Tile characterTile = _terrain.grid[c.gridMove.x, c.gridMove.y];
+                Tile characterTile = _terrain.grid[c.move.x, c.move.y];
 
                 if (tile.IsOccupied()) // Tile occupied by somebody
                 {
@@ -147,7 +147,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     {
         if (!tile) return false; ;
         if (tile.hole) return false; ;
-        if (tile.x == c.gridMove.x && tile.y == c.gridMove.y) return false;
+        if (tile.x == c.move.x && tile.y == c.move.y) return false;
         return true;
     }   
 }

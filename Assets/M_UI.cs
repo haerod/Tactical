@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using static M__Managers;
 
 public class M_UI : MonoSingleton<M_UI>
@@ -9,6 +10,8 @@ public class M_UI : MonoSingleton<M_UI>
 
     [SerializeField] private Text actionPointsText = null;
     [SerializeField] private Text actionCostText = null;
+    [Space]
+    [SerializeField] private Button followButton = null;
 
     [Header("ACTION COST TEXT SETTINGS")]
 
@@ -68,11 +71,50 @@ public class M_UI : MonoSingleton<M_UI>
         actionCostText.gameObject.SetActive(false);
     }
 
+    // CHEATS
+    // ======
+
     public void ClickOnAddActionPoint()
     {
         _characters.currentCharacter.actionPoints.AddActionPoints();
-        _characters.currentCharacter.gridMove.ClearAreaZone();
-        _characters.currentCharacter.gridMove.EnableMoveArea();
+        _characters.currentCharacter.move.ClearAreaZone();
+        _characters.currentCharacter.move.EnableMoveArea();
+    }
+
+    public void ClickOnFollow()
+    {
+        Character c = _characters.currentCharacter;
+
+        if (c.behaviour.target == null)
+        {
+            Debug.LogError("mauvais perso : " + c.name);
+            return;
+        }
+
+        if(c.behaviour.target == c)
+        {
+            Debug.LogError("oops, target is character itself");
+            return;
+        }
+
+        List<Tile> path = new List<Tile>();
+        path = _pathfinding.PathfindAround(
+                c.GetTile(),
+                c.behaviour.target.GetTile(),
+                _rules.canPassAcross == M_GameRules.PassAcross.Nobody);
+
+        if (Utils.IsVoidList(path))
+        {
+            Debug.LogError("no path");
+            return;
+        }
+
+        c.move.MoveOnPath(path);
+    }
+
+    public void CheckFollowButton()
+    {
+        followButton.interactable = _characters.currentCharacter.behaviour.target != null;
     }
 
     // ======================================================================

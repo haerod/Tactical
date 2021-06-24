@@ -111,7 +111,7 @@ public class Tile : MonoBehaviour
     {
         foreach (Character c in _characters.characters)
         {
-            if (c.gridMove.x == x && c.gridMove.y == y)
+            if (c.move.x == x && c.move.y == y)
                 return true;
         }
         return false;

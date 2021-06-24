@@ -26,7 +26,7 @@ public class M_Characters : MonoSingleton<M_Characters>
     public void ChangeCharacter()
     {
         // Old character
-        currentCharacter.gridMove.ClearAreaZone();
+        currentCharacter.move.ClearAreaZone();
 
         // New character
         currentCharacter = characters.Next(characters.IndexOf(currentCharacter));
@@ -49,6 +49,7 @@ public class M_Characters : MonoSingleton<M_Characters>
         _inputs.c = currentCharacter;
         _inputs.cValueChanged = true;
         _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
-        currentCharacter.gridMove.EnableMoveArea();
+        currentCharacter.move.EnableMoveArea();
+        _ui.CheckFollowButton(); // Cheat
     }
 }

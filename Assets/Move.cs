@@ -41,7 +41,7 @@ public class Move : MonoBehaviour
 
     private void Start()
     {
-        transform.position = _terrain.grid[x, y].transform.position;
+        c.transform.position = _terrain.grid[x, y].transform.position;
         OrientTo(orientation);
         anim.SetFloat("speed", 0f);
     }
@@ -50,7 +50,7 @@ public class Move : MonoBehaviour
     {
         if (!move) return;
 
-        MoveOnPath();
+        MoveToDestination();
     }
 
     // ======================================================================
@@ -112,9 +112,9 @@ public class Move : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private void MoveOnPath()
+    private void MoveToDestination()
     {
-        if (transform.position == destination)
+        if (c.transform.position == destination)
         {
             onTileEnter.Invoke();
             x = currentPath[index].x;
@@ -123,7 +123,7 @@ public class Move : MonoBehaviour
         }
         else
         {
-            transform.position = Vector3.MoveTowards(transform.position, destination, speed * Time.deltaTime);
+            c.transform.position = Vector3.MoveTowards(c.transform.position, destination, speed * Time.deltaTime);
         }
     }
 
@@ -158,7 +158,7 @@ public class Move : MonoBehaviour
         if (lookPos != Vector3.zero)
             endRotation = Quaternion.LookRotation(lookPos);
         endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
-        transform.rotation = endRotation;
+        c.transform.rotation = endRotation;
     }
 
     private void OrientTo(Orientation o)
@@ -166,28 +166,28 @@ public class Move : MonoBehaviour
         switch (o)
         {
             case Orientation.North:
-                transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));
+                c.transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));
                 break;
             case Orientation.NorthEast:
-                transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+                c.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
                 break;
             case Orientation.East:
-                transform.rotation = Quaternion.Euler(new Vector3(0, 135, 0));
+                c.transform.rotation = Quaternion.Euler(new Vector3(0, 135, 0));
                 break;
             case Orientation.SouthEst:
-                transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+                c.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
                 break;
             case Orientation.South:
-                transform.rotation = Quaternion.Euler(new Vector3(0, 245, 0));
+                c.transform.rotation = Quaternion.Euler(new Vector3(0, 245, 0));
                 break;
             case Orientation.SouthWest:
-                transform.rotation = Quaternion.Euler(new Vector3(0, 270, 0));
+                c.transform.rotation = Quaternion.Euler(new Vector3(0, 270, 0));
                 break;
             case Orientation.West:
-                transform.rotation = Quaternion.Euler(new Vector3(0, 315, 0));
+                c.transform.rotation = Quaternion.Euler(new Vector3(0, 315, 0));
                 break;
             case Orientation.NorthWest:
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                c.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                 break;
             default:
                 break;

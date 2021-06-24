@@ -40,6 +40,11 @@ public class M_Terrain : MonoSingleton<M_Terrain>
         CreateTiles();
     }
 
+    public Tile GetTile(int x, int y)
+    {
+        return grid[x, y];
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
