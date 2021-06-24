@@ -155,8 +155,8 @@ MonoBehaviour:
   actionPointsText: {fileID: 466267960}
   actionCostText: {fileID: 513173199}
   actionCostOffset: 30
-  inRangeColor: {r: 0.7254902, g: 0.6039216, b: 0, a: 0.2784314}
-  outRangeColor: {r: 0.254717, g: 0.25111252, b: 0.25111252, a: 0.4392157}
+  inRangeColor: {r: 0.6320754, g: 0.52616006, b: 0, a: 1}
+  outRangeColor: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 1}
 --- !u!4 &123727570
 Transform:
   m_ObjectHideFlags: 0
@@ -380,7 +380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.288
+      value: -1.219
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_LocalPosition.y
@@ -388,7 +388,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.592
+      value: -0.586
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_LocalRotation.x
