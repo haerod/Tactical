@@ -4,7 +4,8 @@ using static M__Managers;
 
 public class ActionPoints : MonoBehaviour
 {
-    public int actionPoints = 3;
+    public int actionPoints = 6;
+    public int maxActionPoints = 6;
 
     [Header("REFERENCES")]
 
@@ -28,6 +29,11 @@ public class ActionPoints : MonoBehaviour
     {
         actionPoints += value;
         _ui.SetActionPointText(actionPoints.ToString(), c);
+    }
+
+    public void FullActionPoints()
+    {
+        actionPoints = maxActionPoints;
     }
 
     // ======================================================================

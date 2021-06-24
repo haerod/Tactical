@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
@@ -29,7 +30,6 @@ public class Move : MonoBehaviour
     [SerializeField] private Animator anim = null;
     [SerializeField] private Character c  = null;
 
-    private bool move;
     private List<Tile> currentPath = null;
     private List<Tile> currentArea = null;
     private int index = 0;
@@ -46,23 +46,15 @@ public class Move : MonoBehaviour
         anim.SetFloat("speed", 0f);
     }
 
-    private void Update()
-    {
-        if (!move) return;
-
-        MoveToDestination();
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
-    public void MoveOnPath(List<Tile> path)
+    public void MoveOnPath(List<Tile> path, Action OnEnd)
     {
         if (c.actionPoints.actionPoints <= 0) return;
 
         EndMove();
-        move = true;
 
         currentPath = path.ToList();
 
@@ -75,6 +67,8 @@ public class Move : MonoBehaviour
         _inputs.canClick = false;
 
         ClearAreaZone();
+
+        StartCoroutine(MoveToDestination(() => OnEnd()));
     }
 
     public void EnableMoveArea()
@@ -112,42 +106,63 @@ public class Move : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private void MoveToDestination()
+    IEnumerator MoveToDestination(Action OnEnd)
     {
-        if (c.transform.position == destination)
+        while (true)
         {
-            onTileEnter.Invoke();
-            x = currentPath[index].x;
-            y = currentPath[index].y;
-            NextTile();
-        }
-        else
-        {
-            c.transform.position = Vector3.MoveTowards(c.transform.position, destination, speed * Time.deltaTime);
+            if (c.transform.position != destination) // Move
+            {
+                c.transform.position = Vector3.MoveTowards(c.transform.position, destination, speed * Time.deltaTime);
+                yield return null;
+            }
+            else // On tile enter
+            {
+                onTileEnter.Invoke();
+
+                x = currentPath[index].x;
+                y = currentPath[index].y;
+
+                if (IsEnd()) // Exit : End path
+                {
+                    EndMove(() => OnEnd());
+                    yield break;
+                }
+                else
+                {
+                    NextTile();
+                }
+                yield return null;
+            }
         }
     }
 
     private void NextTile()
     {
-        if (index + 1 < currentPath.Count && c.actionPoints.actionPoints > 0)
-        {
-            index++;
-            destination = currentPath[index].transform.position;
-            OrientTo(currentPath[index].transform.position);
-            c.actionPoints.RemoveActionPoints();
-        }
-        else
-        {
-            EndMove();
-        }
+        index++;
+        destination = currentPath[index].transform.position;
+        OrientTo(currentPath[index].transform.position);
+        c.actionPoints.RemoveActionPoints();
     }
 
-    private void EndMove()
+    private bool IsEnd()
     {
-        move = false;
+        if (index + 1 < currentPath.Count && c.actionPoints.actionPoints > 0) return false;
+        return true;
+    }
+
+    private void EndMove(Action OnEnd = default)
+    {
         anim.SetFloat("speed", 0f);
         _inputs.canClick = true;
-        EnableMoveArea();
+
+        if (_characters.currentCharacter.behaviour.playable)
+        {
+            EnableMoveArea();
+        }
+
+        if (OnEnd == default) OnEnd = (() => { });
+
+        OnEnd();
     }
 
     private void OrientTo(Vector3 targetPosition, float offset = 0)

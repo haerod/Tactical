@@ -22,20 +22,12 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
     // Returns the path
     // If no path, returns null
     // NOTE
-    // LE PATHFINING POURRAIT ETRE AMELIORE
+    // LE PATHFINDING POURRAIT ETRE AMELIORE
     // SI LORSQU'ON VERIFIE SI LE NOUVEAU COUT EST INFERIEUR, ET QUE CE N'EST PAS LE CAS
     // ALORS IL FAUDRAIT VERIFIER AVEC LE GRAND PARENT SI CE N'EST PAS PLUS COURT
     public List<Tile> Pathfind(Tile startTile, Tile endTile, bool passAcrossEndTile = false)
     {
         ClearPath();
-
-        // Set bacis values
-        //startX = startTile.x;
-        //startY = startTile.y;
-        //endX = endTile.x;
-        //endY = endTile.y;
-
-        //grid = _terrain.grid;
 
         // Set first tile
         currentTile = startTile;
@@ -133,14 +125,14 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             {
                 closedList.Remove(startTile);
 
-                // CHECK IT 
-                // if (Utils.IsVoidList(closedList)) return null;
+                if (Utils.IsVoidList(closedList)) return null;
 
                 return closedList;
             }
 
             // Put all tiles in around list
             aroundList.Clear();
+
             List<Tile> tempAround = GetAroundTiles(currentTile);
 
             if (tempAround == null) continue;
@@ -262,6 +254,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return true;
     }
 
+    // Add tiles in open list if the have conditions
     private void AddTile(Tile tile, bool passAcrossLastTile = false, Tile lastTile = null)
     {
         if (!tile) return; // if tile
@@ -293,6 +286,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         aroundList.Add(tile);
     }
 
+    // Caluclate cost, heuristic and total
     private void CalculateTileValues(Tile tile, Tile endTile)
     {
         // Calculate g, h and f

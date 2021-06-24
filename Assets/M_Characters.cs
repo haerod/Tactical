@@ -15,7 +15,24 @@ public class M_Characters : MonoSingleton<M_Characters>
 
     private void Start()
     {
-        //currentCharacter = characters.GetRandom();
+        switch (_rules.firstCharacter)
+        {
+            case M_GameRules.FirstCharacter.Random:
+                currentCharacter = characters.GetRandom();
+                break;
+            case M_GameRules.FirstCharacter.CurrentCharacter:
+                if(currentCharacter == null)
+                {
+                    Debug.LogError("current character is null in characters manager, set it", gameObject);
+                }
+                break;
+            case M_GameRules.FirstCharacter.FirstOfList:
+                currentCharacter = characters[0];
+                break;
+            default:
+                break;
+        }
+
         NewCurrentCharacter();
     }
 
@@ -23,7 +40,7 @@ public class M_Characters : MonoSingleton<M_Characters>
     // PUBLIC METHODS
     // ======================================================================
 
-    public void ChangeCharacter()
+    public void NextTurn()
     {
         // Old character
         currentCharacter.move.ClearAreaZone();
@@ -45,11 +62,31 @@ public class M_Characters : MonoSingleton<M_Characters>
 
     private void NewCurrentCharacter()
     {
-        Camera.main.GetComponent<GameCamera>().target = currentCharacter.transform;
+        // Inputs
+        _inputs.canClick = true;
+        _inputs.ClearFeedbacks();
         _inputs.c = currentCharacter;
         _inputs.cValueChanged = true;
+
+        // Camera
+        Camera.main.GetComponent<GameCamera>().target = currentCharacter.transform;
+
+        // UI
         _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
-        currentCharacter.move.EnableMoveArea();
         _ui.CheckFollowButton(); // Cheat
+
+        // Character
+        currentCharacter.actionPoints.FullActionPoints();
+
+        if(currentCharacter.behaviour.playable) // Playable
+        {
+            currentCharacter.move.EnableMoveArea();
+        }
+        else // PNJ
+        {
+            _inputs.canClick = false;
+            currentCharacter.behaviour.PlayBehaviour();
+        }
+
     }
 }

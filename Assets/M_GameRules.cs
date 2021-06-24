@@ -6,7 +6,11 @@ public class M_GameRules : MonoSingleton<M_GameRules>
 {
     public enum PassAcross { Everybody, Nobody} // Allies // EnemiesAndAllies
     public PassAcross canPassAcross = PassAcross.Nobody;
+
     public bool useDiagonals = false;
+
+    public enum FirstCharacter { Random, CurrentCharacter, FirstOfList}
+    public FirstCharacter firstCharacter = FirstCharacter.CurrentCharacter;
 
     // ======================================================================
     // MONOBEHAVIOUR

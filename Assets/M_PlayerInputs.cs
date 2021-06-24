@@ -47,6 +47,16 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     // PUBLIC METHODS
     // ======================================================================
 
+    public void ClearFeedbacks()
+    {
+        _feedbacks.square.DisableSquare();
+        _feedbacks.line.DisableLines();
+        _ui.DisableActionCostText();
+        _pathfinding.ClearPath();
+        currentPathfinding = null;
+        pointedTile = null;
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -55,7 +65,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     {
         if (Input.GetKeyDown(changeCharacterKey))
         {
-            _characters.ChangeCharacter();
+            _characters.NextTurn();
         }
     }
 
@@ -66,7 +76,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
             if (currentPathfinding == null) return; // It's a path
             if (c.actionPoints.actionPoints <= 0) return; // It's action points aviable
 
-            c.move.MoveOnPath(currentPathfinding);
+            c.move.MoveOnPath(currentPathfinding, () => { });
             _ui.DisableActionCostText();
         }
     }
@@ -81,7 +91,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
             if (!CanGo(tile)) // Isn't a tile, a hole tile or same tile
             {
-                NoGo();
+                ClearFeedbacks();
                 return;
             }
 
@@ -100,7 +110,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
                     if (Utils.IsVoidList(currentPathfinding))
                     {
-                        NoGo();
+                        ClearFeedbacks();
                         return;
                     }
 
@@ -117,7 +127,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
                     if (Utils.IsVoidList(currentPathfinding))
                     {
-                        NoGo();
+                        ClearFeedbacks();
                         return;
                     }
 
@@ -129,18 +139,8 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         }
         else
         {
-            NoGo();
+            ClearFeedbacks();
         }
-    }
-
-    private void NoGo()
-    {
-        _feedbacks.square.DisableSquare();
-        _feedbacks.line.DisableLines();
-        _ui.DisableActionCostText();
-        _pathfinding.ClearPath();
-        currentPathfinding = null;
-        pointedTile = null;
     }
 
     private bool CanGo(Tile tile)

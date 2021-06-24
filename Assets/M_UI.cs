@@ -85,31 +85,7 @@ public class M_UI : MonoSingleton<M_UI>
     {
         Character c = _characters.currentCharacter;
 
-        if (c.behaviour.target == null)
-        {
-            Debug.LogError("mauvais perso : " + c.name);
-            return;
-        }
-
-        if(c.behaviour.target == c)
-        {
-            Debug.LogError("oops, target is character itself");
-            return;
-        }
-
-        List<Tile> path = new List<Tile>();
-        path = _pathfinding.PathfindAround(
-                c.GetTile(),
-                c.behaviour.target.GetTile(),
-                _rules.canPassAcross == M_GameRules.PassAcross.Nobody);
-
-        if (Utils.IsVoidList(path))
-        {
-            Debug.LogError("no path");
-            return;
-        }
-
-        c.move.MoveOnPath(path);
+        c.behaviour.PlayBehaviour();
     }
 
     public void CheckFollowButton()
