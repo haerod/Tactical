@@ -2,29 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static M__Managers;
 
-public class M_Characters : MonoBehaviour
+public class M_Characters : MonoSingleton<M_Characters>
 {
-    public static M_Characters instance;
-
     public List<Character> characters;
     public Character currentCharacter;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
-    private void Awake()
-    {
-        if (!instance)
-        {
-            instance = this;
-        }
-        else
-        {
-            Debug.LogError("2 managers !", this);
-        }
-    }
 
     private void Start()
     {
@@ -59,9 +46,9 @@ public class M_Characters : MonoBehaviour
     private void NewCurrentCharacter()
     {
         Camera.main.GetComponent<GameCamera>().target = currentCharacter.transform;
-        M_PlayerInputs.inst.c = currentCharacter;
-        M_PlayerInputs.inst.cValueChanged = true;
-        M_UI.instance.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
+        _inputs.c = currentCharacter;
+        _inputs.cValueChanged = true;
+        _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
         currentCharacter.gridMove.EnableMoveArea();
     }
 }

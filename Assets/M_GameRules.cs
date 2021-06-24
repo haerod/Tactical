@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_GameRules : MonoBehaviour
+public class M_GameRules : MonoSingleton<M_GameRules>
 {
-    public static M_GameRules inst;
-
     public enum PassAcross { Everybody, Nobody} // Allies // EnemiesAndAllies
     public PassAcross canPassAcross = PassAcross.Nobody;
     public bool useDiagonals = false;
@@ -13,14 +11,6 @@ public class M_GameRules : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
-    private void Awake()
-    {
-        if (!inst)
-        {
-            inst = this;
-        }
-    }
 
     // ======================================================================
     // PUBLIC METHODS

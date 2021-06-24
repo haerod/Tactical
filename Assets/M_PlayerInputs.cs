@@ -4,51 +4,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using static M__Managers;
 
-public class M_PlayerInputs : MonoBehaviour
+public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 {
-    public static M_PlayerInputs inst;
     [HideInInspector] public bool canClick = true;
 
     [Header("INPUTS")]
 
     [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
 
-    [Header("REFERENCES")]
-
-    [SerializeField] private LineRenderer line = null;
-    [SerializeField] private LineRenderer lineOut = null;
-    [Range(.01f, .5f)]
-    [SerializeField] private float lineOffset = .01f;
-
-    [Space]
-    [SerializeField] private Transform squareTransform = null;
-    [Range(.01f, .5f)]
-    [SerializeField] private float squareOffset = .01f;
-
-    public Character c = null;
-
+    [HideInInspector] public Character c = null;
     [HideInInspector] public bool cValueChanged = false;
 
     private Camera cam;
-    private Tile currentTile;
+    private Tile pointedTile;
     private List<Tile> currentPathfinding;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
-    private void Awake()
-    {
-        if (!inst)
-        {
-            inst = this;
-        }
-        else
-        {
-            Debug.LogError("2 managers !", this);
-        }
-    }
 
     private void Start()
     {
@@ -80,7 +55,7 @@ public class M_PlayerInputs : MonoBehaviour
     {
         if (Input.GetKeyDown(changeCharacterKey))
         {
-            M_Characters.instance.ChangeCharacter();
+            _characters.ChangeCharacter();
         }
     }
 
@@ -92,7 +67,7 @@ public class M_PlayerInputs : MonoBehaviour
             if (c.GetComponent<ActionPoints>().actionPoints <= 0) return; // It's action points aviable
 
             c.gridMove.MoveOnPath(currentPathfinding);
-            M_UI.instance.DisableActionCostText();
+            _ui.DisableActionCostText();
         }
     }
 
@@ -104,43 +79,24 @@ public class M_PlayerInputs : MonoBehaviour
         {
             Tile tile = hit.transform.GetComponent<Tile>();
 
-            if (!CanGo(tile)) // Isnt a tile, a hole tile or same tile
+            if (!CanGo(tile)) // Isn't a tile, a hole tile or same tile
             {
                 NoGo();
                 return;
             }
 
-            if (tile != currentTile || cValueChanged) // Next operations wasn't already done on this tile OR is another character
+            if (tile != pointedTile || cValueChanged) // Next operations wasn't already done on this tile OR is another character
             {
                 // New current tile and pathfinding
-                currentTile = tile;
+                pointedTile = tile;
+                Tile characterTile = _terrain.grid[c.gridMove.x, c.gridMove.y];
 
                 if (tile.IsOccupied()) // Tile occupied by somebody
                 {
-                    currentPathfinding = M_Pathfinding.inst.Pathfind(c.gridMove.x, c.gridMove.y, tile.x, tile.y);
-
-                    if(Utils.IsVoidList(currentPathfinding)) // Is closed (1 case) the target tile -> don't do anything
-                    {
-                        NoGo();
-                        return;
-                    }
-
-                    currentPathfinding = M_Pathfinding.inst.PathfindAround(c.gridMove.x, c.gridMove.y, tile.x, tile.y);
-
-                    if(Utils.IsVoidList(currentPathfinding)) // The target is unreachable -> don't do anything
-                    {
-                        NoGo();
-                        return;
-                    }
-
-                    currentPathfinding = currentPathfinding.ToList();
-                    Tile endTile = currentPathfinding.LastOrDefault();
-                    SetSquare(endTile);
-                    SetLines(endTile);
-                }
-                else // Free tile
-                {
-                    currentPathfinding = M_Pathfinding.inst.Pathfind(c.gridMove.x, c.gridMove.y, tile.x, tile.y);
+                    currentPathfinding = _pathfinding.PathfindAround(
+                        characterTile,
+                        tile,
+                        _rules.canPassAcross == M_GameRules.PassAcross.Nobody);
 
                     if (Utils.IsVoidList(currentPathfinding))
                     {
@@ -149,10 +105,26 @@ public class M_PlayerInputs : MonoBehaviour
                     }
 
                     currentPathfinding = currentPathfinding.ToList();
-                    SetSquare(currentTile);
-                    SetLines(currentTile);
+                    Tile endTile = currentPathfinding.LastOrDefault();
+                    _feedbacks.square.SetSquare(endTile);
+                    _feedbacks.line.SetLines(currentPathfinding, c, endTile);
                 }
+                else // Free tile
+                {
+                    currentPathfinding = _pathfinding.Pathfind(
+                        characterTile,
+                        tile);
 
+                    if (Utils.IsVoidList(currentPathfinding))
+                    {
+                        NoGo();
+                        return;
+                    }
+
+                    currentPathfinding = currentPathfinding.ToList();
+                    _feedbacks.square.SetSquare(pointedTile);
+                    _feedbacks.line.SetLines(currentPathfinding, c, pointedTile);
+                }
             }
         }
         else
@@ -163,13 +135,12 @@ public class M_PlayerInputs : MonoBehaviour
 
     private void NoGo()
     {
-        squareTransform.gameObject.SetActive(false);
-        line.gameObject.SetActive(false);
-        lineOut.gameObject.SetActive(false);
-        M_UI.instance.DisableActionCostText();
-        M_Pathfinding.inst.ClearPath();
+        _feedbacks.square.DisableSquare();
+        _feedbacks.line.DisableLines();
+        _ui.DisableActionCostText();
+        _pathfinding.ClearPath();
         currentPathfinding = null;
-        currentTile = null;
+        pointedTile = null;
     }
 
     private bool CanGo(Tile tile)
@@ -178,53 +149,5 @@ public class M_PlayerInputs : MonoBehaviour
         if (tile.hole) return false; ;
         if (tile.x == c.gridMove.x && tile.y == c.gridMove.y) return false;
         return true;
-    }
-    
-    private void SetLines(Tile tile)
-    {
-        int actionPoints = c.actionPoints.actionPoints;
-
-        // Target tile is in/out action points' range
-        if (currentPathfinding.Count - 1 > actionPoints) // Out
-        {
-            line.positionCount = actionPoints + 1;
-            lineOut.gameObject.SetActive(true);
-            lineOut.positionCount = currentPathfinding.Count - actionPoints;
-            M_UI.instance.SetActionCostText((currentPathfinding.Count - 1).ToString(), tile.transform.position, true);
-        }   
-        else // IN
-        {
-            lineOut.gameObject.SetActive(false);
-            line.positionCount = currentPathfinding.Count;
-            M_UI.instance.SetActionCostText((currentPathfinding.Count - 1).ToString(), tile.transform.position);
-        }
-
-        // Position line's points
-        int i = 0;
-        foreach (Tile t in currentPathfinding)
-        {
-            if (i <= actionPoints)
-            {
-                line.SetPosition(i, t.transform.position + Vector3.up * lineOffset);
-            }
-            else
-            {
-                if (i == actionPoints + 1)
-                {
-                    lineOut.SetPosition(i - (actionPoints + 1), currentPathfinding[i - 1].transform.position + Vector3.up * lineOffset);
-                }
-                lineOut.SetPosition(i - (actionPoints), t.transform.position + Vector3.up * lineOffset);
-            }
-
-            i++;
-        }
-
-        line.gameObject.SetActive(true);
-    }
-
-    private void SetSquare(Tile tile)
-    {
-        squareTransform.gameObject.SetActive(true);
-        squareTransform.position = tile.transform.position + Vector3.up * squareOffset;
-    }
+    }   
 }

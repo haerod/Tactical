@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using static M__Managers;
 
 public class Tile : MonoBehaviour
 {
@@ -108,7 +109,7 @@ public class Tile : MonoBehaviour
 
     public bool IsOccupied()
     {
-        foreach (Character c in M_Characters.instance.characters)
+        foreach (Character c in _characters.characters)
         {
             if (c.gridMove.x == x && c.gridMove.y == y)
                 return true;

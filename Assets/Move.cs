@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using static M__Managers;
 
 public class Move : MonoBehaviour
 {
@@ -40,7 +41,7 @@ public class Move : MonoBehaviour
 
     private void Start()
     {
-        transform.position = M_Terrain.inst.grid[x, y].transform.position;
+        transform.position = _terrain.grid[x, y].transform.position;
         OrientTo(orientation);
         anim.SetFloat("speed", 0f);
     }
@@ -71,14 +72,21 @@ public class Move : MonoBehaviour
 
         anim.SetFloat("speed", animSpeed); // Blend tree anim speed
 
-        M_PlayerInputs.inst.canClick = false;
+        _inputs.canClick = false;
 
         ClearAreaZone();
     }
 
     public void EnableMoveArea()
     {
-        currentArea = M_Pathfinding.inst.AreaMovementZone(x, y, c.actionPoints.actionPoints).ToList();
+        Tile currentTile = _terrain.grid[x, y];
+        int actionPoints = c.actionPoints.actionPoints;
+
+        currentArea = _pathfinding.AreaMovementZone(currentTile, actionPoints);
+
+        if (Utils.IsVoidList(currentArea)) return; // No way to go with current action points && position
+
+        currentArea = currentArea.ToList();
 
         foreach (Tile t in currentArea)
         {
@@ -90,6 +98,8 @@ public class Move : MonoBehaviour
 
     public void ClearAreaZone()
     {
+        if (currentArea == null) return;
+
         foreach (Tile t in currentArea)
         {
             t.SetMaterial(Tile.TileMaterial.Basic);
@@ -136,7 +146,7 @@ public class Move : MonoBehaviour
     {
         move = false;
         anim.SetFloat("speed", 0f);
-        M_PlayerInputs.inst.canClick = true;
+        _inputs.canClick = true;
         EnableMoveArea();
     }
 

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using static M__Managers;
 
 public class ActionPoints : MonoBehaviour
 {
@@ -20,13 +21,13 @@ public class ActionPoints : MonoBehaviour
     public void RemoveActionPoints(int value = 1)
     {
         actionPoints -= value;
-        M_UI.instance.SetActionPointText(actionPoints.ToString(), c);
+        _ui.SetActionPointText(actionPoints.ToString(), c);
     }
 
     public void AddActionPoints(int value = 1)
     {
         actionPoints += value;
-        M_UI.instance.SetActionPointText(actionPoints.ToString(), c);
+        _ui.SetActionPointText(actionPoints.ToString(), c);
     }
 
     // ======================================================================

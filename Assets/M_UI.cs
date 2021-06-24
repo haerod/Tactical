@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using static M__Managers;
 
-public class M_UI : MonoBehaviour
+public class M_UI : MonoSingleton<M_UI>
 {
-    public static M_UI instance;
-
     [Header("REFERENCES")]
 
     [SerializeField] private Text actionPointsText = null;
@@ -17,20 +16,24 @@ public class M_UI : MonoBehaviour
     [SerializeField] private Color inRangeColor = Color.yellow;
     [SerializeField] private Color outRangeColor = Color.grey;
 
+    private Camera cam;
+    private Transform actionCostTarget;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
 
-    private void Awake()
+    private void Start()
     {
-        if (!instance)
-        {
-            instance = this;
-        }
-        else
-        {
-            Debug.LogError("2 managers !", this);
-        }
+        cam = Camera.main;
+    }
+
+    private void Update()
+    {
+        if (!actionCostTarget) return;
+
+        actionCostText.transform.position = cam.WorldToScreenPoint(actionCostTarget.position);
+        actionCostText.transform.position += Vector3.up * actionCostOffset;
     }
 
     // ======================================================================
@@ -39,17 +42,16 @@ public class M_UI : MonoBehaviour
 
     public void SetActionPointText(string text, Character c)
     {
-        if (c != M_Characters.instance.IsCurrentCharacter(c)) return;
+        if (c != _characters.IsCurrentCharacter(c)) return;
 
         actionPointsText.text = text;
     }
 
-    public void SetActionCostText(string value, Vector3 position, bool outRange = false)
+    public void SetActionCostText(string value, Transform target, bool outRange = false)
     {
         actionCostText.gameObject.SetActive(true);
         actionCostText.text = value;
-        actionCostText.transform.position = Camera.main.WorldToScreenPoint(position);
-        actionCostText.transform.position += Vector3.up * actionCostOffset;
+        actionCostTarget = target;
 
         if (outRange)
         {
@@ -68,9 +70,9 @@ public class M_UI : MonoBehaviour
 
     public void ClickOnAddActionPoint()
     {
-        M_Characters.instance.currentCharacter.actionPoints.AddActionPoints();
-        M_Characters.instance.currentCharacter.gridMove.ClearAreaZone();
-        M_Characters.instance.currentCharacter.gridMove.EnableMoveArea();
+        _characters.currentCharacter.actionPoints.AddActionPoints();
+        _characters.currentCharacter.gridMove.ClearAreaZone();
+        _characters.currentCharacter.gridMove.EnableMoveArea();
     }
 
     // ======================================================================

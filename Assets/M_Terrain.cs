@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_Terrain : MonoBehaviour
+public class M_Terrain : MonoSingleton<M_Terrain>
 {
-    public static M_Terrain inst;
-
     [Header("TERRAIN PARAMETERS")]
     [Range(1, 100)]
     public int length = 5;
@@ -26,17 +24,10 @@ public class M_Terrain : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
-    private void Awake()
+    // Replace Awake
+    protected override void Init()
     {
-        if (!inst)
-        {
-            inst = this;
-        }
-        else
-        {
-            Debug.LogError("2 managers");
-        }
-        GenerateTerrain();
+        GenerateTerrain();        
     }
 
     // ======================================================================
