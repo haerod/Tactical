@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using static M__Managers;
 
-public class Character : MonoBehaviour
+public class Health : MonoBehaviour
 {
-    public Move move;
-    public ActionPoints actionPoints;
-    public Attack attack;
-    public Health health;
-    public CharacterBehaviour behaviour;
-    public AnimatorScripts anim; // With animator
-    
+    public int health = 10;
+    public int maxHealth = 10;
+
+    [Header("REFERENCES")]
+
+    [SerializeField] private Character c = null;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -19,13 +20,28 @@ public class Character : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    public Tile Tile()
+    public void AddDamages(int damages, Character attacker)
     {
-        return _terrain.GetTile(move.x, move.y);
+        health -= damages;
+
+        if (health <= 0)
+        {
+            health = 0;
+            Death();
+        }
+        else
+        {
+            c.anim.StartHitReaction();
+        }
     }
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
+    private void Death()
+    {
+        c.anim.Death();
+        _characters.DeadCharacter(c);
+    }
 }

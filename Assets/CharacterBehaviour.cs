@@ -8,10 +8,12 @@ public class CharacterBehaviour : MonoBehaviour
 {
     public bool playable = true;
 
-    public enum Behaviour { None, Follower }
+    public enum Behaviour { None, Follower, Attacker }
     public Behaviour behaviour = Behaviour.Follower;
 
     public Character target;
+
+    [SerializeField] private Character c = null;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -26,10 +28,16 @@ public class CharacterBehaviour : MonoBehaviour
         switch (behaviour)
         {
             case Behaviour.None:
+                Wait(1,
+                    () => _characters.NextTurn());
                 break;
             case Behaviour.Follower:
                 Wait(1, 
                     () => FollowTarget());
+                break;
+            case Behaviour.Attacker:
+                Wait(1, 
+                    () => AcquireTarget());
                 break;
             default:
                 break;
@@ -38,16 +46,16 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void FollowTarget()
     {
-        Character c = _characters.currentCharacter;
+        Character currentCharacter = _characters.currentCharacter;
 
-        if (c.behaviour.target == null) // Exit : no target
+        if (currentCharacter.behaviour.target == null) // Exit : no target
         {
             Wait(2, 
                 () => _characters.NextTurn());
             return;
         }
 
-        if (target == c) // Common mistake ^^'
+        if (target == currentCharacter) // Common mistake ^^'
         {
             Debug.LogError("oops, target is character itself");
             return;
@@ -55,8 +63,8 @@ public class CharacterBehaviour : MonoBehaviour
 
         List<Tile> path = new List<Tile>();
         path = _pathfinding.PathfindAround(
-                c.GetTile(),
-                c.behaviour.target.GetTile(),
+                currentCharacter.Tile(),
+                currentCharacter.behaviour.target.Tile(),
                 _rules.canPassAcross == M_GameRules.PassAcross.Nobody);
 
         if (Utils.IsVoidList(path))  // Exit : not path
@@ -66,12 +74,25 @@ public class CharacterBehaviour : MonoBehaviour
             return;
         }
 
-        c.move.MoveOnPath(path, () => _characters.NextTurn()); // Exit : move on path
+        currentCharacter.move.MoveOnPath(path, () => _characters.NextTurn()); // Exit : move on path
     }
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    private void AcquireTarget()
+    {
+        target = c.attack.ClosestCharacterOnSight();
+
+        if(target == null) // EXIT : nobody in sight
+        {
+            _characters.NextTurn();
+            return;
+        }
+
+        c.attack.AttackTarget(target, () => _characters.NextTurn());
+    }
 
     private void Wait(float time, Action OnEnd)
     {

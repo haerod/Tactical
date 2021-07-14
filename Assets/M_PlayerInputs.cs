@@ -8,7 +8,6 @@ using static M__Managers;
 
 public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 {
-    [HideInInspector] public bool canClick = true;
 
     [Header("INPUTS")]
 
@@ -17,9 +16,11 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     [HideInInspector] public Character c = null;
     [HideInInspector] public bool cValueChanged = false;
 
+    private bool canClick = true;
     private Camera cam;
     private Tile pointedTile;
     private List<Tile> currentPathfinding;
+    private Character currentTarget;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -32,12 +33,11 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
     private void Update()
     {
-        ChangeCharacter();
-
         if (canClick && !EventSystem.current.IsPointerOverGameObject()) // can click and not over UI
         {
+            ChangeCharacter();
             CheckRaycast();
-            CheckMove();
+            CheckClick();
         }
 
         cValueChanged = false;
@@ -47,14 +47,18 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     // PUBLIC METHODS
     // ======================================================================
 
-    public void ClearFeedbacks()
+    public void ClearFeedbacksAndValues()
     {
-        _feedbacks.square.DisableSquare();
-        _feedbacks.line.DisableLines();
-        _ui.DisableActionCostText();
+        ClearFeedbacks();
         _pathfinding.ClearPath();
         currentPathfinding = null;
         pointedTile = null;
+        currentTarget = null;
+    }
+
+    public void SetClick(bool value = true)
+    {
+        canClick = value;
     }
 
     // ======================================================================
@@ -69,15 +73,20 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         }
     }
 
-    private void CheckMove()
+    private void CheckClick()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (currentPathfinding == null) return; // It's a path
-            if (c.actionPoints.actionPoints <= 0) return; // It's action points aviable
+            if (pointedTile == null) return; // No on tile
 
-            c.move.MoveOnPath(currentPathfinding, () => { });
-            _ui.DisableActionCostText();
+            if(pointedTile.IsOccupied())
+            {
+                ClickAttack();
+            }
+            else
+            {
+                ClickMove();
+            }
         }
     }
 
@@ -88,10 +97,10 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Tile tile = hit.transform.GetComponent<Tile>();
-
+    
             if (!CanGo(tile)) // Isn't a tile, a hole tile or same tile
             {
-                ClearFeedbacks();
+                ClearFeedbacksAndValues();
                 return;
             }
 
@@ -99,48 +108,109 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
             {
                 // New current tile and pathfinding
                 pointedTile = tile;
-                Tile characterTile = _terrain.grid[c.move.x, c.move.y];
 
                 if (tile.IsOccupied()) // Tile occupied by somebody
                 {
-                    currentPathfinding = _pathfinding.PathfindAround(
-                        characterTile,
-                        tile,
-                        _rules.canPassAcross == M_GameRules.PassAcross.Nobody);
-
-                    if (Utils.IsVoidList(currentPathfinding))
-                    {
-                        ClearFeedbacks();
-                        return;
-                    }
-
-                    currentPathfinding = currentPathfinding.ToList();
-                    Tile endTile = currentPathfinding.LastOrDefault();
-                    _feedbacks.square.SetSquare(endTile);
-                    _feedbacks.line.SetLines(currentPathfinding, c, endTile);
+                    OnOccupiedTile(tile);
                 }
                 else // Free tile
                 {
-                    currentPathfinding = _pathfinding.Pathfind(
-                        characterTile,
-                        tile);
-
-                    if (Utils.IsVoidList(currentPathfinding))
-                    {
-                        ClearFeedbacks();
-                        return;
-                    }
-
-                    currentPathfinding = currentPathfinding.ToList();
-                    _feedbacks.square.SetSquare(pointedTile);
-                    _feedbacks.line.SetLines(currentPathfinding, c, pointedTile);
+                    OnFreeTile(tile);
                 }
             }
         }
         else
         {
-            ClearFeedbacks();
+            if (pointedTile == null) return;
+
+            ClearFeedbacksAndValues();
         }
+    }
+
+    private void ClearFeedbacks()
+    {
+        _feedbacks.square.DisableSquare();
+        _feedbacks.line.DisableLines();
+        _ui.DisableActionCostText();
+    }
+
+    private void CheckLignOfSight()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (!Physics.Raycast(ray, out hit)) return; // Exit : no raycast
+
+        Tile tile = hit.transform.GetComponent<Tile>();
+
+
+        //if (!tile.IsOccupied()) return; // Exit : Free tile
+        //if (tile == _characters.currentCharacter.GetTile()) // Exit : current character's tile        
+        //currentLoS = _characters.currentCharacter.attack.LineOfSight(tile);
+    }
+
+    private void OnOccupiedTile(Tile tile)
+    {
+        ClearFeedbacks();
+
+        if (tile.Character() == c) return; // Exit : same character
+        // TO DO LATER : CHECK SQUAD
+        currentTarget = tile.Character();
+
+        // Move Around Behavior
+        // ====================
+
+        //currentPathfinding = _pathfinding.PathfindAround(
+        //    c.Tile(),
+        //    tile,
+        //    _rules.canPassAcross == M_GameRules.PassAcross.Nobody);
+
+        //if (Utils.IsVoidList(currentPathfinding))
+        //{
+        //    ClearFeedbacksAndValues();
+        //    return;
+        //}
+
+        //currentPathfinding = currentPathfinding.ToList();
+        //Tile endTile = currentPathfinding.LastOrDefault();
+        //_feedbacks.square.SetSquare(endTile);
+        //_feedbacks.line.SetLines(currentPathfinding, c, endTile);
+    }
+
+    private void OnFreeTile(Tile tile)
+    {
+        currentTarget = null;
+
+        currentPathfinding = _pathfinding.Pathfind(
+                        c.Tile(),
+                        tile);
+
+        if (Utils.IsVoidList(currentPathfinding)) // No path
+        {
+            ClearFeedbacksAndValues();
+            return;
+        }
+
+        currentPathfinding = currentPathfinding.ToList();
+        _feedbacks.square.SetSquare(pointedTile);
+        _feedbacks.line.SetLines(currentPathfinding, c, pointedTile);
+    }
+
+    private void ClickAttack()
+    {
+        if (currentTarget == null) return; // Exit  : It's no target
+        if (!c.attack.HasSightOn(currentTarget)) return; // Exit : Isn't in sight
+
+        c.attack.AttackTarget(currentTarget, () => { });
+    }
+
+    private void ClickMove()
+    {
+        if (currentPathfinding == null) return; // Exit  : It's no path
+        if (c.actionPoints.actionPoints <= 0) return; // Exit : no action points aviable
+
+        c.move.MoveOnPath(currentPathfinding, () => { });
+        _ui.DisableActionCostText();
     }
 
     private bool CanGo(Tile tile)

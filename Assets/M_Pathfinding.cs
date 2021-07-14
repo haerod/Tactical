@@ -19,12 +19,8 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
     // PUBLIC METHODS
     // ======================================================================
 
-    // Returns the path
+    // Returns the path, including end tile
     // If no path, returns null
-    // NOTE
-    // LE PATHFINDING POURRAIT ETRE AMELIORE
-    // SI LORSQU'ON VERIFIE SI LE NOUVEAU COUT EST INFERIEUR, ET QUE CE N'EST PAS LE CAS
-    // ALORS IL FAUDRAIT VERIFIER AVEC LE GRAND PARENT SI CE N'EST PAS PLUS COURT
     public List<Tile> Pathfind(Tile startTile, Tile endTile, bool passAcrossEndTile = false)
     {
         ClearPath();
@@ -91,7 +87,29 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         if (Utils.IsVoidList(toReturn)) return null;
 
         toReturn.ToList();
-        toReturn.Remove(toReturn.Last());
+        toReturn.Reverse();
+        List<Tile> temp = toReturn.ToList();
+
+        int i = 0;
+
+        foreach (Tile t in temp)
+        {
+            if(i == 0) // Remove first
+            {
+                toReturn.Remove(t); 
+            }
+            else if(t.IsOccupied()) // Remove the second, thrid, etc. if they are occupied
+            {
+                toReturn.Remove(t);
+            }
+            else // If is a free tile, path is good
+            {
+                break;
+            }
+            i++;
+        }
+
+        toReturn.Reverse();
 
         if (Utils.IsVoidList(toReturn)) return null;        
 
@@ -182,6 +200,38 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             t.ResetTileValues();
         }
         closedList.Clear();
+    }
+
+    public enum LoSParameters { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd }
+    public List<Tile> LineOfSight(Tile startTile, Tile endTile, LoSParameters parameters = LoSParameters.WithoutStartAndEnd)
+    {
+        // Get Vector between start and end coordinates (Start tile - end tile)
+        Vector2 v2 = new Vector2(endTile.x - startTile.x, endTile.y - startTile.y);
+
+        // Get the length of distance
+        float length = Mathf.Max(Mathf.Abs(v2.x), Mathf.Abs(v2.y));
+
+        List<Tile> toReturn = new List<Tile>();
+
+        if(parameters == LoSParameters.WithStart || parameters == LoSParameters.WithStartAndEnd)
+        {
+            toReturn.Add(startTile);
+        }
+
+        for (int i = 1; i < length+1; i++)
+        {
+            // Theoric coordinates of the segment
+            Vector2 tile = new Vector2(startTile.x, startTile.y) + i / length * v2;
+            Tile t = _terrain.GetTile(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
+            toReturn.Add(t);
+        }
+
+        if (parameters == LoSParameters.WithStart || parameters == LoSParameters.WithoutStartAndEnd)
+        {
+            toReturn.Remove(endTile);
+        }
+
+        return toReturn; 
     }
 
     // ======================================================================

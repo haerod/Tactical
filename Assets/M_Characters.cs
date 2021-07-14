@@ -56,6 +56,11 @@ public class M_Characters : MonoSingleton<M_Characters>
         else return false;
     }
 
+    public void DeadCharacter(Character dead)
+    {
+        characters.Remove(dead);
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -63,13 +68,12 @@ public class M_Characters : MonoSingleton<M_Characters>
     private void NewCurrentCharacter()
     {
         // Inputs
-        _inputs.canClick = true;
-        _inputs.ClearFeedbacks();
         _inputs.c = currentCharacter;
         _inputs.cValueChanged = true;
+        _inputs.ClearFeedbacksAndValues();
 
         // Camera
-        Camera.main.GetComponent<GameCamera>().target = currentCharacter.transform;
+        Camera.main.GetComponentInParent<GameCamera>().target = currentCharacter.transform;
 
         // UI
         _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
@@ -77,14 +81,16 @@ public class M_Characters : MonoSingleton<M_Characters>
 
         // Character
         currentCharacter.actionPoints.FullActionPoints();
+        currentCharacter.move.ClearAreaZone();
 
         if(currentCharacter.behaviour.playable) // Playable
         {
             currentCharacter.move.EnableMoveArea();
+            _inputs.SetClick();
         }
         else // PNJ
         {
-            _inputs.canClick = false;
+            _inputs.SetClick(false);
             currentCharacter.behaviour.PlayBehaviour();
         }
 

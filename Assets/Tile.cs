@@ -117,6 +117,16 @@ public class Tile : MonoBehaviour
         return false;
     }
 
+    public Character Character()
+    {
+        foreach (Character c in _characters.characters)
+        {
+            if(c.Tile() == this) return c;
+        }
+
+        return null;
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

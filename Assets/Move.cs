@@ -64,7 +64,7 @@ public class Move : MonoBehaviour
 
         anim.SetFloat("speed", animSpeed); // Blend tree anim speed
 
-        _inputs.canClick = false;
+        _inputs.SetClick(false);
 
         ClearAreaZone();
 
@@ -100,6 +100,17 @@ public class Move : MonoBehaviour
         }
 
         currentArea.Clear();
+    }
+
+    public void OrientTo(Vector3 targetPosition, float offset = 0)
+    {
+        Vector3 lookPos = targetPosition - transform.position;
+        lookPos.y = 0;
+        Quaternion endRotation = Quaternion.Euler(Vector3.zero);
+        if (lookPos != Vector3.zero)
+            endRotation = Quaternion.LookRotation(lookPos);
+        endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
+        c.transform.rotation = endRotation;
     }
 
     // ======================================================================
@@ -153,7 +164,7 @@ public class Move : MonoBehaviour
     private void EndMove(Action OnEnd = default)
     {
         anim.SetFloat("speed", 0f);
-        _inputs.canClick = true;
+        _inputs.SetClick();
 
         if (_characters.currentCharacter.behaviour.playable)
         {
@@ -163,17 +174,6 @@ public class Move : MonoBehaviour
         if (OnEnd == default) OnEnd = (() => { });
 
         OnEnd();
-    }
-
-    private void OrientTo(Vector3 targetPosition, float offset = 0)
-    {
-        Vector3 lookPos = targetPosition - transform.position;
-        lookPos.y = 0;
-        Quaternion endRotation = Quaternion.Euler(Vector3.zero);
-        if (lookPos != Vector3.zero)
-            endRotation = Quaternion.LookRotation(lookPos);
-        endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
-        c.transform.rotation = endRotation;
     }
 
     private void OrientTo(Orientation o)
