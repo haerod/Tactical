@@ -58,6 +58,11 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     public void SetClick(bool value = true)
     {
         canClick = value;
+
+        if(value == false)
+        {
+            _feedbacks.SetCursor(M_Feedbacks.CursorType.Regular);
+        }
     }
 
     // ======================================================================
@@ -96,6 +101,11 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Tile tile = hit.transform.GetComponent<Tile>();
+
+            if (hit.transform.tag == "Clickable")
+            {
+                tile = hit.transform.GetComponentInParent<Character>().Tile();
+            }
     
             if (!CanGo(tile)) // Isn't a tile, a hole tile or same tile
             {
