@@ -68,8 +68,6 @@ public class M_Characters : MonoSingleton<M_Characters>
     private void NewCurrentCharacter()
     {
         // Inputs
-        _inputs.c = currentCharacter;
-        _inputs.cValueChanged = true;
         _inputs.ClearFeedbacksAndValues();
 
         // Camera

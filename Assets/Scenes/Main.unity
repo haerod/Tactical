@@ -719,7 +719,7 @@ PrefabInstance:
       objectReference: {fileID: 1904902467}
     - target: {fileID: 4919814116171440189, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: playable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5711617042610792679, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_Name
@@ -736,6 +736,10 @@ PrefabInstance:
     - target: {fileID: 8502731826044868807, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8502731826044868807, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: orientation
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a364957ed3d26364f900081cd6196831, type: 3}
@@ -848,8 +852,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeCharacterKey: 9
-  c: {fileID: 1904902467}
-  cValueChanged: 0
 --- !u!4 &634797626
 Transform:
   m_ObjectHideFlags: 0
@@ -1667,6 +1669,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   line: {fileID: 876908834}
   square: {fileID: 885596328}
+  aimCursor: {fileID: 2800000, guid: 56df78ee021693f43a70ccbf02e7ad66, type: 3}
+  outAimCursor: {fileID: 2800000, guid: 94920d465feb08640a184bdd1fe71276, type: 3}
 --- !u!1 &1244375243
 GameObject:
   m_ObjectHideFlags: 0
