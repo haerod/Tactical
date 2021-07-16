@@ -79,39 +79,56 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return null;
     }
 
-    public List<Tile> PathfindAround(Tile startTile, Tile endTile, bool passAcrossEndTile)
+    public Tile ClosestFreeTileWithShortestPath(Tile from, Tile to, int distance = 10)
     {
-        List<Tile> toReturn = new List<Tile>();
-        toReturn = Pathfind(startTile, endTile, passAcrossEndTile);
+        if (from == null || to == null) return null; // EXIT : from or to doen't exist
+        if (from == to) return null; // EXIT : from == to
+        if (distance == 0) return null; // EXIT : no distance
 
-        if (Utils.IsVoidList(toReturn)) return null;
+        List<Tile> area = AreaMovementZone(to, distance).ToList();
 
-        toReturn.ToList();
-        toReturn.Reverse();
-        List<Tile> temp = toReturn.ToList();
+        // Get aviable tiles
+        area = area
+            .Where(o => !o.IsOccupied()) // remove occupied tiles
+            .Where(o => !o.hole) // remove occupied tiles
+            .OrderBy(o => o.cost) // order by cost
+            .ToList();
 
-        int i = 0;
+        if(Utils.IsVoidList(area)) return null; // EXIT : no unoccupied or not hole tile around
 
-        foreach (Tile t in temp)
+        int lowest = area.FirstOrDefault().cost;
+
+        // Get all the lowest cost tiles
+        area = area
+            .Where(o => o.cost == lowest)
+            .ToList();
+
+        if (area.Contains(from)) return null; // EXIT : "from" is the closest tile
+
+        Tile toReturn = null;
+        List<Tile> lowestPath = null;
+
+        // Check the shortest path
+        foreach (Tile tile in area)
         {
-            if(i == 0) // Remove first
+            List<Tile> testedPath = Pathfind(from, tile);
+
+            if (testedPath == null) continue;
+
+            if (lowestPath == null) // First aviable path
             {
-                toReturn.Remove(t); 
+                lowestPath = testedPath.ToList();
+                toReturn = tile;
+                continue;
             }
-            else if(t.IsOccupied()) // Remove the second, thrid, etc. if they are occupied
+
+            if(testedPath.Count < lowestPath.Count) // Better path
             {
-                toReturn.Remove(t);
+                lowestPath = testedPath.ToList();
+                toReturn = tile;
+                continue;
             }
-            else // If is a free tile, path is good
-            {
-                break;
-            }
-            i++;
         }
-
-        toReturn.Reverse();
-
-        if (Utils.IsVoidList(toReturn)) return null;        
 
         return toReturn;
     }

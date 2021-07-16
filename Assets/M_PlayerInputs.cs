@@ -38,8 +38,6 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
             CheckRaycast();
             CheckClick();
         }
-
-        //cValueChanged = false;
     }
 
     // ======================================================================

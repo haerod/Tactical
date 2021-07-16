@@ -46,26 +46,22 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void FollowTarget()
     {
-        Character currentCharacter = _characters.currentCharacter;
-
-        if (currentCharacter.behaviour.target == null) // Exit : no target
+        if (c.behaviour.target == null) // Exit : no target
         {
             Wait(2, 
                 () => _characters.NextTurn());
             return;
         }
 
-        if (target == currentCharacter) // Common mistake ^^'
+        if (target == c) // Common mistake ^^'
         {
             Debug.LogError("oops, target is character itself");
             return;
         }
 
-        List<Tile> path = new List<Tile>();
-        path = _pathfinding.PathfindAround(
-                currentCharacter.Tile(),
-                currentCharacter.behaviour.target.Tile(),
-                _rules.canPassAcross == M_GameRules.PassAcross.Nobody);
+        List<Tile> path = _pathfinding.Pathfind(
+            c.Tile(), 
+            _pathfinding.ClosestFreeTileWithShortestPath(c.Tile(), target.Tile()));
 
         if (Utils.IsVoidList(path))  // Exit : not path
         {
@@ -74,7 +70,7 @@ public class CharacterBehaviour : MonoBehaviour
             return;
         }
 
-        currentCharacter.move.MoveOnPath(path, () => _characters.NextTurn()); // Exit : move on path
+        c.move.MoveOnPath(path, () => _characters.NextTurn()); // Exit : move on path
     }
 
     // ======================================================================
