@@ -7,6 +7,7 @@ using static M__Managers;
 
 public class Attack : MonoBehaviour
 {
+    public int actionPointsCost = 3;
     public Vector2Int damagesRange = new Vector2Int(3, 5);
     public Character target;
 
@@ -35,10 +36,16 @@ public class Attack : MonoBehaviour
 
     public void AttackTarget(Character currentTarget, Action OnEnd)
     {
+        if (c.actionPoints.actionPoints < actionPointsCost)
+        {
+            OnEnd();
+            return; // EXIT : No action points aviable
+        }
+
         target = currentTarget;
 
-        c.ClearTilesFeedbacks();
 
+        c.ClearTilesFeedbacks();
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
 
@@ -48,10 +55,12 @@ public class Attack : MonoBehaviour
         _inputs.SetClick(false);
 
         c.anim.StartShoot();        
+        c.actionPoints.RemoveActionPoints(actionPointsCost);
+
         OnAttackDone = () => 
         {
             target.health.AddDamages(damages, c);
-            Wait(.5f, () => 
+            Wait(0.5f, () => 
             {
                 _inputs.SetClick();
                 c.EnableTilesFeedbacks();
@@ -78,6 +87,11 @@ public class Attack : MonoBehaviour
 
     public void EnableAttackTiles()
     {
+        if(c.actionPoints.actionPoints < c.attack.actionPointsCost)
+        {
+            return;
+        }
+
         foreach (Character character in _characters.characters)
         {
             if (character == c) continue;

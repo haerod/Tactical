@@ -8,6 +8,7 @@ public class Character : MonoBehaviour
     public ActionPoints actionPoints;
     public Attack attack;
     public Health health;
+    public UI_SlicedHealthBar healthBar;
     public CharacterBehaviour behaviour;
     public AnimatorScripts anim; // With animator / skinned mesh renderer
     
@@ -34,6 +35,11 @@ public class Character : MonoBehaviour
     {
         move.ClearAreaZone();
         attack.ClearAttackTiles();
+    }
+
+    public bool CanAttack()
+    {
+        return actionPoints.actionPoints >= attack.actionPointsCost;
     }
 
     // ======================================================================

@@ -13,6 +13,7 @@ public class M_Feedbacks : MonoSingleton<M_Feedbacks>
 
     [SerializeField] private Texture2D aimCursor = null;
     [SerializeField] private Texture2D outAimCursor = null;
+    [SerializeField] private Texture2D outActionPointsCursor = null;
 
     [Header("REFERENCES")]
 
@@ -33,7 +34,7 @@ public class M_Feedbacks : MonoSingleton<M_Feedbacks>
         _ui.DisableActionCostText();
     }
 
-    public enum CursorType { Regular, Aim, OutAim}
+    public enum CursorType { Regular, Aim, OutAim, OutActionPoints}
     public void SetCursor(CursorType type)
     {
         switch (type)
@@ -46,6 +47,9 @@ public class M_Feedbacks : MonoSingleton<M_Feedbacks>
                 break;
             case CursorType.OutAim:
                 Cursor.SetCursor(outAimCursor, new Vector2(16, 16), CursorMode.Auto);
+                break;
+            case CursorType.OutActionPoints:
+                Cursor.SetCursor(outActionPointsCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
             default:
                 break;

@@ -145,7 +145,14 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
         if(_characters.currentCharacter.attack.HasSightOn(currentTarget))
         {
-            _feedbacks.SetCursor(M_Feedbacks.CursorType.Aim);
+            if (_characters.currentCharacter.CanAttack())
+            {
+                _feedbacks.SetCursor(M_Feedbacks.CursorType.Aim);
+            }
+            else
+            {
+                _feedbacks.SetCursor(M_Feedbacks.CursorType.OutActionPoints);
+            }
         }
         else
         {

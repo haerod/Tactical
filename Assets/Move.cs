@@ -111,6 +111,8 @@ public class Move : MonoBehaviour
             endRotation = Quaternion.LookRotation(lookPos);
         endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
         c.transform.rotation = endRotation;
+
+        c.healthBar.GetComponentInParent<OrientToCamera>().Orient();
     }
 
     // ======================================================================

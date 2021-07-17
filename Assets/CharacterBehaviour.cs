@@ -8,7 +8,11 @@ public class CharacterBehaviour : MonoBehaviour
 {
     public bool playable = true;
 
-    public enum Behaviour { None, Follower, Attacker }
+    // * None : pass turn
+    // * Follower : follow target, if target
+    // * AttackerOnce : find the closest target, attack it and ends turn
+    // * Offensive : find a target and attack it until it doent't have any action points
+    public enum Behaviour { None, Follower, AttackerOnce, Offensive }
     public Behaviour behaviour = Behaviour.Follower;
 
     public Character target;
@@ -35,9 +39,13 @@ public class CharacterBehaviour : MonoBehaviour
                 Wait(1, 
                     () => FollowTarget());
                 break;
-            case Behaviour.Attacker:
+            case Behaviour.AttackerOnce:
                 Wait(1, 
                     () => AcquireTarget());
+                break;
+            case Behaviour.Offensive:
+                Wait(1, 
+                    () => CheckOffensive());
                 break;
             default:
                 break;
@@ -86,13 +94,39 @@ public class CharacterBehaviour : MonoBehaviour
     {
         target = c.attack.ClosestCharacterOnSight();
 
-        if(target == null) // EXIT : nobody in sight
+        if(target == null || target.health.IsDead() || _characters.IsFinalCharacter(c)) // EXIT : nobody in sight
         {
             _characters.NextTurn();
             return;
         }
 
         c.attack.AttackTarget(target, () => _characters.NextTurn());
+    }
+
+    private void CheckOffensive()
+    {
+        if (_characters.IsFinalCharacter(c)) // Victory
+        {
+            _characters.NextTurn();
+            return;
+        }
+
+        if(target && !target.health.IsDead()) // Target
+        {
+            if(c.CanAttack()) // Attack
+            {
+                c.attack.AttackTarget(target, () => CheckOffensive());
+            }
+            else // Out AP
+            {
+                _characters.NextTurn();
+            }
+        }
+        else // Find target
+        {
+            target = c.attack.ClosestCharacterOnSight();
+            CheckOffensive();
+        }
     }
 
     private void Wait(float time, Action OnEnd)

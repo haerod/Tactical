@@ -42,6 +42,15 @@ public class M_Characters : MonoSingleton<M_Characters>
 
     public void NextTurn()
     {
+        if (IsVictory())
+        {
+            print("victory");
+            _inputs.SetClick(false);
+            _inputs.ClearFeedbacksAndValues();
+            currentCharacter.ClearTilesFeedbacks();
+            return;
+        }
+
         // Old character
         currentCharacter.ClearTilesFeedbacks();
 
@@ -59,6 +68,17 @@ public class M_Characters : MonoSingleton<M_Characters>
     public void DeadCharacter(Character dead)
     {
         characters.Remove(dead);
+    }
+
+    // Is the last character // NEXT : team
+    public bool IsFinalCharacter(Character character)
+    {
+        foreach (Character c in characters)
+        {
+            if (c != character) return false;
+        }
+
+        return true;
     }
 
     // ======================================================================
@@ -81,18 +101,23 @@ public class M_Characters : MonoSingleton<M_Characters>
         currentCharacter.actionPoints.FullActionPoints();
         currentCharacter.ClearTilesFeedbacks();
 
-        if(currentCharacter.behaviour.playable) // Playable
+        if(currentCharacter.behaviour.playable) // PC
         {
             _inputs.SetClick();
             _ui.SetPlayerUIActive(true);
             currentCharacter.EnableTilesFeedbacks();
         }
-        else // PNJ
+        else // NPC
         {
             _inputs.SetClick(false);
             _ui.SetPlayerUIActive(false);
             currentCharacter.behaviour.PlayBehaviour();
         }
 
+    }
+
+    private bool IsVictory()
+    {
+        return (characters.Count <= 1);
     }
 }
