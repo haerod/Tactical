@@ -34,9 +34,9 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     {
         if (canClick && !EventSystem.current.IsPointerOverGameObject()) // can click and not over UI
         {
-            ChangeCharacter();
             CheckRaycast();
             CheckClick();
+            ChangeCharacter();
         }
     }
 

@@ -83,12 +83,14 @@ public class M_Characters : MonoSingleton<M_Characters>
 
         if(currentCharacter.behaviour.playable) // Playable
         {
-            currentCharacter.move.EnableMoveArea();
             _inputs.SetClick();
+            _ui.SetPlayerUIActive(true);
+            currentCharacter.move.EnableMoveArea();
         }
         else // PNJ
         {
             _inputs.SetClick(false);
+            _ui.SetPlayerUIActive(false);
             currentCharacter.behaviour.PlayBehaviour();
         }
 

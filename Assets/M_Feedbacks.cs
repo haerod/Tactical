@@ -14,6 +14,14 @@ public class M_Feedbacks : MonoSingleton<M_Feedbacks>
     [SerializeField] private Texture2D aimCursor = null;
     [SerializeField] private Texture2D outAimCursor = null;
 
+    // ======================================================================
+    // MONOBEHAVIOUR
+    // ======================================================================
+
+    // ======================================================================
+    // PUBLIC METHODS
+    // ======================================================================
+
     public void DisableFeedbacks()
     {
         square.DisableSquare();
@@ -39,4 +47,8 @@ public class M_Feedbacks : MonoSingleton<M_Feedbacks>
                 break;
         }
     }
+
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
 }

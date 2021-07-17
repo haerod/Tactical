@@ -12,6 +12,9 @@ public class M_UI : MonoSingleton<M_UI>
     [SerializeField] private Text actionCostText = null;
     [Space]
     [SerializeField] private Button followButton = null;
+    [SerializeField] private Button addActionPointButton = null;
+    [Space]
+    [SerializeField] private GameObject actionPointsObject = null;
 
     [Header("ACTION COST TEXT SETTINGS")]
 
@@ -69,6 +72,13 @@ public class M_UI : MonoSingleton<M_UI>
     public void DisableActionCostText()
     {
         actionCostText.gameObject.SetActive(false);
+    }
+
+    public void SetPlayerUIActive(bool value)
+    {
+        addActionPointButton.gameObject.SetActive(value);
+        followButton.gameObject.SetActive(value);
+        actionPointsObject.SetActive(value);
     }
 
     // CHEATS
