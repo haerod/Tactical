@@ -33,6 +33,8 @@ public class Health : MonoBehaviour
         {
             c.anim.StartHitReaction();
         }
+
+        _feedbacks.ActionEffectFeedback(damages.ToString(), transform.parent);
     }
 
     // ======================================================================

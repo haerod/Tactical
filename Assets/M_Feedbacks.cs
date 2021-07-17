@@ -14,6 +14,10 @@ public class M_Feedbacks : MonoSingleton<M_Feedbacks>
     [SerializeField] private Texture2D aimCursor = null;
     [SerializeField] private Texture2D outAimCursor = null;
 
+    [Header("REFERENCES")]
+
+    [SerializeField] private GameObject actionEffectPrefab = null;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -48,6 +52,13 @@ public class M_Feedbacks : MonoSingleton<M_Feedbacks>
         }
     }
 
+    public void ActionEffectFeedback(string text, Transform referenceTarget)
+    {
+        TextEffect_Feedback insta = Instantiate(actionEffectPrefab, transform).GetComponent<TextEffect_Feedback>();
+        insta.SetText(text);
+        insta.PositionAt(referenceTarget);
+    }
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

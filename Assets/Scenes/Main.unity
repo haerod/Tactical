@@ -155,6 +155,8 @@ MonoBehaviour:
   actionPointsText: {fileID: 466267960}
   actionCostText: {fileID: 513173199}
   followButton: {fileID: 462505570}
+  addActionPointButton: {fileID: 951955763}
+  actionPointsObject: {fileID: 1887550081}
   actionCostOffset: 30
   inRangeColor: {r: 0.6320754, g: 0.52616006, b: 0, a: 1}
   outRangeColor: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 1}
@@ -719,7 +721,7 @@ PrefabInstance:
       objectReference: {fileID: 1904902467}
     - target: {fileID: 4919814116171440189, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: behaviour
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4919814116171440189, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: playable
@@ -1675,6 +1677,7 @@ MonoBehaviour:
   square: {fileID: 885596328}
   aimCursor: {fileID: 2800000, guid: 56df78ee021693f43a70ccbf02e7ad66, type: 3}
   outAimCursor: {fileID: 2800000, guid: 94920d465feb08640a184bdd1fe71276, type: 3}
+  actionEffectPrefab: {fileID: 6033107118601816470, guid: ae91c46367b9c1c479def716cae07ad6, type: 3}
 --- !u!1 &1244375243
 GameObject:
   m_ObjectHideFlags: 0
