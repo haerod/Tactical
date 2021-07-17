@@ -11,8 +11,8 @@ public class M_UI : MonoSingleton<M_UI>
     [SerializeField] private Text actionPointsText = null;
     [SerializeField] private Text actionCostText = null;
     [Space]
-    [SerializeField] private Button followButton = null;
     [SerializeField] private Button addActionPointButton = null;
+    [SerializeField] private Button nextTurnButton = null;
     [Space]
     [SerializeField] private GameObject actionPointsObject = null;
 
@@ -74,11 +74,21 @@ public class M_UI : MonoSingleton<M_UI>
         actionCostText.gameObject.SetActive(false);
     }
 
-    public void SetPlayerUIActive(bool value)
+    // Enable / disable player's UI out their turn 
+    public void SetTurnPlayerUIActive(bool value)
     {
         addActionPointButton.gameObject.SetActive(value);
-        followButton.gameObject.SetActive(value);
         actionPointsObject.SetActive(value);
+        nextTurnButton.gameObject.SetActive(value);
+    }
+
+    // Enable / disable player's UI during their actions
+    public void SetActionPlayerUIActive(bool value)
+    {
+        if (value == true && !_characters.currentCharacter.behaviour.playable) return; // EXIT : it's not player's turn
+
+        addActionPointButton.gameObject.SetActive(value);
+        nextTurnButton.gameObject.SetActive(value);
     }
 
     // CHEATS
@@ -89,18 +99,6 @@ public class M_UI : MonoSingleton<M_UI>
         _characters.currentCharacter.actionPoints.AddActionPoints();
         _characters.currentCharacter.ClearTilesFeedbacks();
         _characters.currentCharacter.EnableTilesFeedbacks();
-    }
-
-    public void ClickOnFollow()
-    {
-        Character c = _characters.currentCharacter;
-
-        c.behaviour.PlayBehaviour();
-    }
-
-    public void CheckFollowButton()
-    {
-        followButton.interactable = _characters.currentCharacter.behaviour.target != null;
     }
 
     // ======================================================================

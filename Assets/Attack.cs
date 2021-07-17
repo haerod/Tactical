@@ -44,7 +44,6 @@ public class Attack : MonoBehaviour
 
         target = currentTarget;
 
-
         c.ClearTilesFeedbacks();
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
@@ -53,6 +52,8 @@ public class Attack : MonoBehaviour
 
         _inputs.ClearFeedbacksAndValues();
         _inputs.SetClick(false);
+
+        _ui.SetActionPlayerUIActive(false);
 
         c.anim.StartShoot();        
         c.actionPoints.RemoveActionPoints(actionPointsCost);
@@ -73,6 +74,7 @@ public class Attack : MonoBehaviour
     public void EndAttack()
     {
         _camera.Shake();
+        _ui.SetActionPlayerUIActive(true);
         OnAttackDone();
     }
 

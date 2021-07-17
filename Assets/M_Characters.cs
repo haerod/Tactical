@@ -95,7 +95,6 @@ public class M_Characters : MonoSingleton<M_Characters>
 
         // UI
         _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
-        _ui.CheckFollowButton(); // Cheat
 
         // Character
         currentCharacter.actionPoints.FullActionPoints();
@@ -104,13 +103,13 @@ public class M_Characters : MonoSingleton<M_Characters>
         if(currentCharacter.behaviour.playable) // PC
         {
             _inputs.SetClick();
-            _ui.SetPlayerUIActive(true);
+            _ui.SetTurnPlayerUIActive(true);
             currentCharacter.EnableTilesFeedbacks();
         }
         else // NPC
         {
             _inputs.SetClick(false);
-            _ui.SetPlayerUIActive(false);
+            _ui.SetTurnPlayerUIActive(false);
             currentCharacter.behaviour.PlayBehaviour();
         }
 
