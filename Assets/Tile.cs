@@ -20,9 +20,10 @@ public class Tile : MonoBehaviour
     [SerializeField] private Material open = null;
     [SerializeField] private Material closed = null;
     [SerializeField] private Material path = null;
+    [SerializeField] private Material area = null;
+    [SerializeField] private Material range = null;
     [Space]
-    [SerializeField] private GameObject area = null;
-    public enum TileMaterial { Basic, Open, Closed, Path, Area}
+    [SerializeField] private GameObject areaObject = null;
 
     [HideInInspector] public bool hole = false;
 
@@ -78,11 +79,12 @@ public class Tile : MonoBehaviour
         rend.enabled = false;
     }
 
+    public enum TileMaterial { Basic, Open, Closed, Path, Area, Range}
     public void SetMaterial(TileMaterial mat)
     {
-        if(mat != TileMaterial.Area)
+        if(mat != TileMaterial.Area || mat != TileMaterial.Range)
         {
-            area.SetActive(false);
+            areaObject.SetActive(false);
         }
 
         switch (mat)
@@ -100,7 +102,12 @@ public class Tile : MonoBehaviour
                 rend.material = path;
                 break;
             case TileMaterial.Area:
-                area.SetActive(true);
+                areaObject.SetActive(true);
+                areaObject.GetComponent<Renderer>().material = area;
+                break;
+            case TileMaterial.Range:
+                areaObject.SetActive(true);
+                areaObject.GetComponent<Renderer>().material = range;
                 break;
             default:
                 break;

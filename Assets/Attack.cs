@@ -13,7 +13,9 @@ public class Attack : MonoBehaviour
     [Header("REFERENCES")]
         
     [SerializeField] private Character c = null;
+
     private Action OnAttackDone;
+    private List<Tile> attackTiles = new List<Tile>();
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -34,12 +36,18 @@ public class Attack : MonoBehaviour
     public void AttackTarget(Character currentTarget, Action OnEnd)
     {
         target = currentTarget;
+
         c.move.ClearAreaZone();
+        ClearAttackTiles();
+
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
+
         int damages = UnityEngine.Random.Range(damagesRange.x, damagesRange.y + 1);
+
         _inputs.ClearFeedbacksAndValues();
         _inputs.SetClick(false);
+
         c.anim.StartShoot();        
         OnAttackDone = () => 
         {
@@ -48,6 +56,8 @@ public class Attack : MonoBehaviour
             {
                 _inputs.SetClick();
                 c.move.EnableMoveArea();
+                EnableAttackTiles();
+
                 OnEnd();
             });
         };
@@ -66,6 +76,32 @@ public class Attack : MonoBehaviour
             .Where(o => HasSightOn(o)) // get all enemies on sight
             .OrderBy(o => LineOfSight(o.Tile()).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
+    }
+
+    public void EnableAttackTiles()
+    {
+        foreach (Character character in _characters.characters)
+        {
+            if (character == c) continue;
+            if (!HasSightOn(character)) continue;
+
+            attackTiles.Add(character.Tile());
+        }
+
+        foreach (Tile t in attackTiles)
+        {
+            t.SetMaterial(Tile.TileMaterial.Range);
+        }
+    }
+
+    public void ClearAttackTiles()
+    {
+        foreach (Tile t in attackTiles)
+        {
+            t.SetMaterial(Tile.TileMaterial.Basic);
+        }
+
+        attackTiles.Clear();
     }
 
     // ======================================================================

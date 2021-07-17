@@ -44,6 +44,7 @@ public class M_Characters : MonoSingleton<M_Characters>
     {
         // Old character
         currentCharacter.move.ClearAreaZone();
+        currentCharacter.attack.ClearAttackTiles();
 
         // New character
         currentCharacter = characters.Next(characters.IndexOf(currentCharacter));
@@ -80,12 +81,14 @@ public class M_Characters : MonoSingleton<M_Characters>
         // Character
         currentCharacter.actionPoints.FullActionPoints();
         currentCharacter.move.ClearAreaZone();
+        currentCharacter.attack.ClearAttackTiles();
 
         if(currentCharacter.behaviour.playable) // Playable
         {
             _inputs.SetClick();
             _ui.SetPlayerUIActive(true);
             currentCharacter.move.EnableMoveArea();
+            currentCharacter.attack.EnableAttackTiles();
         }
         else // PNJ
         {

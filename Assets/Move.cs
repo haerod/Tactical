@@ -67,6 +67,7 @@ public class Move : MonoBehaviour
         _inputs.SetClick(false);
 
         ClearAreaZone();
+        c.attack.ClearAttackTiles();
 
         StartCoroutine(MoveToDestination(() => OnEnd()));
     }
@@ -169,6 +170,7 @@ public class Move : MonoBehaviour
         if (_characters.currentCharacter.behaviour.playable)
         {
             EnableMoveArea();
+            c.attack.EnableAttackTiles();
         }
 
         if (OnEnd == default) OnEnd = (() => { });
