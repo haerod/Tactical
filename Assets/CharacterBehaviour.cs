@@ -59,18 +59,23 @@ public class CharacterBehaviour : MonoBehaviour
             return;
         }
 
-        List<Tile> path = _pathfinding.Pathfind(
-            c.Tile(), 
-            _pathfinding.ClosestFreeTileWithShortestPath(c.Tile(), target.Tile()));
+        // Get pathfinding
+        Tile endTile = _pathfinding.ClosestFreeTileWithShortestPath(c.Tile(), target.Tile());
+        List<Tile> path = null;
+
+        if (endTile) // If is an end tile (and different of current tile)
+        {
+            path = _pathfinding.Pathfind(c.Tile(), endTile);
+        }
 
         if (Utils.IsVoidList(path))  // Exit : not path
         {
-            Wait(2, 
+            Wait(2,
                 () => _characters.NextTurn());
             return;
         }
 
-        c.move.MoveOnPath(path, () => _characters.NextTurn()); // Exit : move on path
+        c.move.MoveOnPath(path, () => _characters.NextTurn()); // EXIT : move on path
     }
 
     // ======================================================================

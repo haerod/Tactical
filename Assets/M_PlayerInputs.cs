@@ -130,6 +130,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         {
             if (pointedTile == null) return;
 
+            _feedbacks.SetCursor(M_Feedbacks.CursorType.Regular);
             ClearFeedbacksAndValues();
         }
     }

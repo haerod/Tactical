@@ -21,9 +21,12 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
 
     // Returns the path, including end tile
     // If no path, returns null
-    public List<Tile> Pathfind(Tile startTile, Tile endTile, bool passAcrossEndTile = false)
+    public List<Tile> Pathfind(Tile startTile, Tile endTile)
     {
         ClearPath();
+
+        if (startTile == null) { Debug.LogError("tile is null !"); return null; } // EXIT ERROR : Tile is null
+        if (endTile == null) { Debug.LogError("end tile is null !"); return null; } // EXIT ERROR : End tile is null
 
         // Set first tile
         currentTile = startTile;
@@ -48,7 +51,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
 
             foreach (Tile t in tempAround)
             {
-                AddTile(t, passAcrossEndTile, endTile);
+                AddTile(t, endTile);
             }
 
             // If it's end tile -> return path
@@ -85,11 +88,12 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         if (from == to) return null; // EXIT : from == to
         if (distance == 0) return null; // EXIT : no distance
 
+
         List<Tile> area = AreaMovementZone(to, distance).ToList();
 
         // Get aviable tiles
         area = area
-            .Where(o => !o.IsOccupied()) // remove occupied tiles
+            .Where(o => !o.IsOccupied() || o == from) // remove occupied tiles or get the original tile
             .Where(o => !o.hole) // remove occupied tiles
             .OrderBy(o => o.cost) // order by cost
             .ToList();
@@ -321,8 +325,8 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return true;
     }
 
-    // Add tiles in open list if the have conditions
-    private void AddTile(Tile tile, bool passAcrossLastTile = false, Tile lastTile = null)
+    // Add tiles in around list if the have conditions
+    private void AddTile(Tile tile, Tile lastTile = null)
     {
         if (!tile) return; // if tile
         if (closedList.Contains(tile)) return; // isnt this tile in list
@@ -333,21 +337,9 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             if (newCost > tile.cost) return;
         }
 
-        if (tile.IsOccupied())
+        if (tile.IsOccupied() && _rules.canPassAcross == M_GameRules.PassAcross.Nobody)
         {
-            switch (_rules.canPassAcross)
-            {
-                case M_GameRules.PassAcross.Everybody:
-                    break;
-                case M_GameRules.PassAcross.Nobody:
-                    if (!passAcrossLastTile) return;
-                    if (tile != lastTile) return;
-
-                    break;
-
-                default:
-                    break;
-            }
+            if (tile != lastTile) return;
         }
 
         aroundList.Add(tile);
@@ -356,6 +348,9 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
     // Caluclate cost, heuristic and total
     private void CalculateTileValues(Tile tile, Tile endTile)
     {
+        if(tile == null) { Debug.LogError("tile is null !"); return; } // EXIT ERROR : Tile is null
+        if(endTile == null) { Debug.LogError("end tile is null !"); return; } // EXIT ERROR : End tile is null
+            
         // Calculate g, h and f
         tile.parent = currentTile;
 
