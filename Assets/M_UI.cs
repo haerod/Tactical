@@ -87,8 +87,8 @@ public class M_UI : MonoSingleton<M_UI>
     public void ClickOnAddActionPoint()
     {
         _characters.currentCharacter.actionPoints.AddActionPoints();
-        _characters.currentCharacter.move.ClearAreaZone();
-        _characters.currentCharacter.move.EnableMoveArea();
+        _characters.currentCharacter.ClearTilesFeedbacks();
+        _characters.currentCharacter.EnableTilesFeedbacks();
     }
 
     public void ClickOnFollow()

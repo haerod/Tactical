@@ -9,7 +9,7 @@ public class Character : MonoBehaviour
     public Attack attack;
     public Health health;
     public CharacterBehaviour behaviour;
-    public AnimatorScripts anim; // With animator
+    public AnimatorScripts anim; // With animator / skinned mesh renderer
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -22,6 +22,18 @@ public class Character : MonoBehaviour
     public Tile Tile()
     {
         return _terrain.GetTile(move.x, move.y);
+    }
+
+    public void EnableTilesFeedbacks()
+    {
+        move.EnableMoveArea();
+        attack.EnableAttackTiles();
+    }
+
+    public void ClearTilesFeedbacks()
+    {
+        move.ClearAreaZone();
+        attack.ClearAttackTiles();
     }
 
     // ======================================================================

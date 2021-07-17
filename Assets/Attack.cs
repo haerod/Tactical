@@ -37,8 +37,7 @@ public class Attack : MonoBehaviour
     {
         target = currentTarget;
 
-        c.move.ClearAreaZone();
-        ClearAttackTiles();
+        c.ClearTilesFeedbacks();
 
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
@@ -55,8 +54,7 @@ public class Attack : MonoBehaviour
             Wait(.5f, () => 
             {
                 _inputs.SetClick();
-                c.move.EnableMoveArea();
-                EnableAttackTiles();
+                c.EnableTilesFeedbacks();
 
                 OnEnd();
             });
