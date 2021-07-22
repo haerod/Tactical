@@ -14,6 +14,7 @@ public class Attack : MonoBehaviour
     [Header("REFERENCES")]
         
     [SerializeField] private Character c = null;
+    [SerializeField] private GameObject muzzleFlare = null;
 
     private Action OnAttackDone;
     private List<Tile> attackTiles = new List<Tile>();
@@ -76,6 +77,10 @@ public class Attack : MonoBehaviour
         _camera.Shake();
         _ui.SetActionPlayerUIActive(true);
         OnAttackDone();
+
+        // Muzzle flare
+        muzzleFlare.SetActive(true);
+        Wait(0.1f, () => muzzleFlare.SetActive(false));
     }
 
     public Character ClosestCharacterOnSight()
