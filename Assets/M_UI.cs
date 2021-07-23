@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,11 +11,14 @@ public class M_UI : MonoSingleton<M_UI>
 
     [SerializeField] private Text actionPointsText = null;
     [SerializeField] private Text actionCostText = null;
+    [SerializeField] private Text endScreenText = null;
     [Space]
     [SerializeField] private Button addActionPointButton = null;
     [SerializeField] private Button nextTurnButton = null;
     [Space]
     [SerializeField] private GameObject actionPointsObject = null;
+    [Space]
+    [SerializeField] private GameObject endScreen = null;
 
     [Header("ACTION COST TEXT SETTINGS")]
 
@@ -89,6 +93,18 @@ public class M_UI : MonoSingleton<M_UI>
 
         addActionPointButton.gameObject.SetActive(value);
         nextTurnButton.gameObject.SetActive(value);
+    }
+
+    public void EnableEndScreen(Character winner)
+    {
+        endScreen.SetActive(true);
+        endScreenText.text = winner.infos.designation + " wins";
+    }
+
+    public void ClickOnReplay()
+    {
+        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(sceneIndex);
     }
 
     // CHEATS

@@ -8,6 +8,7 @@ public class Character : MonoBehaviour
     public ActionPoints actionPoints;
     public Attack attack;
     public Health health;
+    public Infos infos;
     public UI_SlicedHealthBar healthBar;
     public CharacterBehaviour behaviour;
     public AnimatorScripts anim; // With animator / skinned mesh renderer

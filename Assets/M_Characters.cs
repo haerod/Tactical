@@ -44,10 +44,7 @@ public class M_Characters : MonoSingleton<M_Characters>
     {
         if (IsVictory())
         {
-            print("victory");
-            _inputs.SetClick(false);
-            _inputs.ClearFeedbacksAndValues();
-            currentCharacter.ClearTilesFeedbacks();
+            Victory();
             return;
         }
 
@@ -81,6 +78,21 @@ public class M_Characters : MonoSingleton<M_Characters>
         return true;
     }
 
+    public bool IsVictory()
+    {
+        return (characters.Count <= 1);
+    }
+
+    public void Victory()
+    {
+        _ui.SetTurnPlayerUIActive(false);
+        _ui.EnableEndScreen(currentCharacter);
+        currentCharacter.ClearTilesFeedbacks();
+
+        _inputs.SetClick(false);
+        _inputs.ClearFeedbacksAndValues();
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -93,9 +105,6 @@ public class M_Characters : MonoSingleton<M_Characters>
         // Camera
         Camera.main.GetComponentInParent<GameCamera>().target = currentCharacter.transform;
 
-        // UI
-        _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
-
         // Character
         currentCharacter.actionPoints.FullActionPoints();
         currentCharacter.ClearTilesFeedbacks();
@@ -104,6 +113,7 @@ public class M_Characters : MonoSingleton<M_Characters>
         {
             _inputs.SetClick();
             _ui.SetTurnPlayerUIActive(true);
+            _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
             currentCharacter.EnableTilesFeedbacks();
         }
         else // NPC
@@ -115,8 +125,4 @@ public class M_Characters : MonoSingleton<M_Characters>
 
     }
 
-    private bool IsVictory()
-    {
-        return (characters.Count <= 1);
-    }
 }
