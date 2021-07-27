@@ -124,6 +124,8 @@ public class Move : MonoBehaviour
     {
         while (true)
         {
+            _camera.ResetPosition();
+
             if (c.transform.position != destination) // Move
             {
                 c.transform.position = Vector3.MoveTowards(c.transform.position, destination, speed * Time.deltaTime);

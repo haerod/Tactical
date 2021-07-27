@@ -103,7 +103,8 @@ public class M_Characters : MonoSingleton<M_Characters>
         _inputs.ClearFeedbacksAndValues();
 
         // Camera
-        Camera.main.GetComponentInParent<GameCamera>().target = currentCharacter.transform;
+        _camera.target = currentCharacter.transform;
+        _camera.ResetPosition();
 
         // Character
         currentCharacter.actionPoints.FullActionPoints();

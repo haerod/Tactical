@@ -8,18 +8,23 @@ using static M__Managers;
 
 public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 {
-
     [Header("INPUTS")]
 
     [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
 
+    [Header("SCREEN MOUSE MOVEMENT")]
+    [Range(1, 100)]
+    [SerializeField] private int screenPercent = 5;
+    [SerializeField] private int borderMultiplier = 1;
+
     //[HideInInspector] public Character c = null;
 
     private bool canClick = true;
-    private Camera cam;
     private Tile pointedTile;
     private List<Tile> currentPathfinding;
     private Character currentTarget;
+    private int screenWidthPercented;
+    private int screenHeightPercented;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -27,17 +32,19 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
     private void Start()
     {
-        cam = Camera.main;
+        screenWidthPercented = Screen.width * screenPercent / 100;
+        screenHeightPercented = Screen.height * screenPercent / 100;
     }
 
     private void Update()
     {
-        if (canClick && !EventSystem.current.IsPointerOverGameObject()) // can click and not over UI
-        {
-            CheckRaycast();
-            CheckClick();
-            ChangeCharacter();
-        }
+        if (!canClick) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
+        CheckRaycast();
+        CheckClick();
+        ChangeCharacter();
+        CheckMouseScreenMovement();
     }
 
     // ======================================================================
@@ -92,8 +99,50 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         }
     }
 
+    private void CheckMouseScreenMovement()
+    {
+        Vector3 direction = Vector3.zero;
+        Vector3 mousePosition = Input.mousePosition;
+
+        if (mousePosition.x >= Screen.width - screenWidthPercented) // Right
+        {
+            if (mousePosition.x >= Screen.width)
+                direction += _camera.transform.right * borderMultiplier;
+            else
+                direction += _camera.transform.right;
+        }
+        else if (mousePosition.x <= screenWidthPercented) // Left
+        {
+            if (mousePosition.x <= 0)
+                direction -= _camera.transform.right * borderMultiplier;
+            else
+                direction -= _camera.transform.right;
+        }
+
+        if (mousePosition.y >= Screen.height - screenHeightPercented) // Up
+        {
+            if (mousePosition.y >= Screen.height)
+                direction += _camera.transform.up * borderMultiplier;
+            else
+                direction += _camera.transform.up;
+        }
+        else if (mousePosition.y <= screenHeightPercented) // Down
+        {
+            if (mousePosition.y <= 0)
+                direction -= _camera.transform.up * borderMultiplier;
+            else
+                direction -= _camera.transform.up;
+        }
+
+        if (direction == Vector3.zero) return;
+
+        _camera.Move(direction);
+    }
+
     private void CheckRaycast()
     {
+        Camera cam = _camera.GetComponentInChildren<Camera>();
+
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
