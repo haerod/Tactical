@@ -12,6 +12,7 @@ public class M_Terrain : MonoSingleton<M_Terrain>
 
     [Header("SEPCIAL TILES")]
     public List<Vector2Int> holeCoordinates;
+    public List<Vector2Int> bigObstaclesCoordinates;
 
     [Header("REFERENCES")]
 
@@ -27,7 +28,7 @@ public class M_Terrain : MonoSingleton<M_Terrain>
     // Replace Awake
     protected override void Init()
     {
-        GenerateTerrain();        
+        GenerateTerrain();
     }
 
     // ======================================================================
@@ -75,12 +76,17 @@ public class M_Terrain : MonoSingleton<M_Terrain>
                 stat.y = j;
                 grid[i, j] = stat;
 
-                Vector2Int hole = new Vector2Int(i, j);
-                if (holeCoordinates.Contains(hole))
+                Vector2Int coordinates = new Vector2Int(i, j);
+                if (holeCoordinates.Contains(coordinates))
                 {
-                    stat.hole = true;
+                    stat.type = Tile.Type.Hole;
                     stat.DisableRenderer();
                     stat.HideValues();
+                }
+                else if(bigObstaclesCoordinates.Contains(coordinates))
+                {
+                    stat.type = Tile.Type.BigObstacle;
+                    stat.EnableBigObstacle();
                 }
             }
         }

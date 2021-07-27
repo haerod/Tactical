@@ -206,7 +206,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         Character c = _characters.currentCharacter;
 
         if (!tile) return false; ;
-        if (tile.hole) return false; ;
+        if (tile.type == Tile.Type.Hole) return false; ;
         if (tile.x == c.move.x && tile.y == c.move.y) return false;
         return true;
     }   

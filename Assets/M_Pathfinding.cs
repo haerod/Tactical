@@ -94,7 +94,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         // Get aviable tiles
         area = area
             .Where(o => !o.IsOccupied() || o == from) // remove occupied tiles or get the original tile
-            .Where(o => !o.hole) // remove occupied tiles
+            .Where(o => o.type != Tile.Type.Hole || o.type != Tile.Type.BigObstacle) // remove occupied tiles
             .OrderBy(o => o.cost) // order by cost
             .ToList();
 
@@ -330,7 +330,8 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
     {
         if (!tile) return; // if tile
         if (closedList.Contains(tile)) return; // isnt this tile in list
-        if (tile.hole) return; // isnt a hole
+        if (tile.type == Tile.Type.Hole) return; // isnt a hole
+        if (tile.type == Tile.Type.BigObstacle) return; // isnt a big obstacle
         if(tile.cost > 0) // new cost is lower than current (if already calculated)
         {
             int newCost = currentTile.cost + GetCost(tile, currentTile);

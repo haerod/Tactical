@@ -138,6 +138,7 @@ public class Attack : MonoBehaviour
 
         foreach (Tile t in lineOfSight)
         {
+            if (t.type == Tile.Type.BigObstacle) return true;
             if (t.Character()) return true;
         }
 

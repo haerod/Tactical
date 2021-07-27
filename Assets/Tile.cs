@@ -8,7 +8,7 @@ public class Tile : MonoBehaviour
 
     public int x;
     public int y;
-
+    
     [Header("PATHFININDING VALUES (debug)")]
     public int cost;
     public int heuristic; // heuristic (10 = adjacent, 14 = diagonal)
@@ -25,7 +25,8 @@ public class Tile : MonoBehaviour
     [Space]
     [SerializeField] private GameObject areaObject = null;
 
-    [HideInInspector] public bool hole = false;
+    public enum Type { Basic, Hole, BigObstacle}
+    public Type type = Type.Basic;
 
     [Header("REFERENCES")]
 
@@ -34,6 +35,8 @@ public class Tile : MonoBehaviour
     [SerializeField] private TextMesh cText = null;
     [SerializeField] private TextMesh hText = null;
     [SerializeField] private TextMesh fText = null;
+    [Space]
+    [SerializeField] private GameObject bigObstacle = null;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -69,7 +72,7 @@ public class Tile : MonoBehaviour
         parent = null;
     }
 
-    public void ResteTileSkin()
+    public void ResetTileSkin()
     {
         SetMaterial(TileMaterial.Basic);
     }
@@ -77,6 +80,11 @@ public class Tile : MonoBehaviour
     public void DisableRenderer()
     {
         rend.enabled = false;
+    }
+
+    public void EnableBigObstacle()
+    {
+        bigObstacle.SetActive(true);
     }
 
     public enum TileMaterial { Basic, Open, Closed, Path, Area, Range}
