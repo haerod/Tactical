@@ -189,7 +189,8 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         _feedbacks.DisableFeedbacks();
 
         if (tile.Character() == _characters.currentCharacter) return; // Exit : same character
-        // TO DO LATER : CHECK SQUAD
+        if (tile.Character().Team() == _characters.currentCharacter.Team()) return; // Exit : same team
+
         currentTarget = tile.Character();
 
         if(_characters.currentCharacter.attack.HasSightOn(currentTarget))
@@ -238,7 +239,12 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         if (currentTarget == null) return; // Exit  : It's no target
         if (!_characters.currentCharacter.attack.HasSightOn(currentTarget)) return; // Exit : Isn't in sight
 
-        _characters.currentCharacter.attack.AttackTarget(currentTarget, () => { });
+        _characters.currentCharacter.attack.AttackTarget(currentTarget, () => {
+            if (_characters.IsVictory())
+            {
+                _characters.NextTurn();
+            }
+        });
     }
 
     private void ClickMove()

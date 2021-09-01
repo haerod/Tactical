@@ -338,9 +338,16 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             if (newCost > tile.cost) return;
         }
 
-        if (tile.IsOccupied() && _rules.canPassAcross == M_GameRules.PassAcross.Nobody)
+        if (tile.IsOccupied())
         {
-            if (tile != lastTile) return;
+            if (_rules.canPassAcross == M_GameRules.PassAcross.Nobody)
+            {
+                if (tile != lastTile) return;
+            }
+            else if (_rules.canPassAcross == M_GameRules.PassAcross.AlliesOnly)
+            {
+                if (tile.Character().Team() != _characters.currentCharacter.Team()) return;
+            }
         }
 
         aroundList.Add(tile);

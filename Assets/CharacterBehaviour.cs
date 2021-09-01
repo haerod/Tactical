@@ -92,7 +92,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     private void AcquireTarget()
     {
-        target = c.attack.ClosestCharacterOnSight();
+        target = c.attack.ClosestEnemyOnSight();
 
         if(target == null || target.health.IsDead() || _characters.IsFinalCharacter(c)) // EXIT : nobody in sight
         {
@@ -124,7 +124,7 @@ public class CharacterBehaviour : MonoBehaviour
         }
         else // Find target
         {
-            target = c.attack.ClosestCharacterOnSight();
+            target = c.attack.ClosestEnemyOnSight();
             CheckOffensive();
         }
     }

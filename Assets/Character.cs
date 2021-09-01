@@ -26,6 +26,11 @@ public class Character : MonoBehaviour
         return _terrain.GetTile(move.x, move.y);
     }
 
+    public int Team()
+    {
+        return infos.team;
+    }
+
     public void EnableTilesFeedbacks()
     {
         move.EnableMoveArea();
@@ -42,7 +47,7 @@ public class Character : MonoBehaviour
     {
         return actionPoints.actionPoints >= attack.actionPointsCost;
     }
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

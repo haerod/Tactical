@@ -83,10 +83,11 @@ public class Attack : MonoBehaviour
         Wait(0.1f, () => muzzleFlare.SetActive(false));
     }
 
-    public Character ClosestCharacterOnSight()
+    public Character ClosestEnemyOnSight()
     {
         return _characters.characters
             .Where(o => o != c) // remove emitter
+            .Where(o => o.Team() != c.Team()) // remove allies
             .Where(o => HasSightOn(o)) // get all enemies on sight
             .OrderBy(o => LineOfSight(o.Tile()).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
@@ -103,6 +104,7 @@ public class Attack : MonoBehaviour
         {
             if (character == c) continue;
             if (!HasSightOn(character)) continue;
+            if (character.Team() == c.Team()) continue;
 
             attackTiles.Add(character.Tile());
         }

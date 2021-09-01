@@ -72,7 +72,7 @@ public class M_Characters : MonoSingleton<M_Characters>
     {
         foreach (Character c in characters)
         {
-            if (c != character) return false;
+            if (c != character && c.Team() != character.Team()) return false;
         }
 
         return true;
@@ -80,7 +80,23 @@ public class M_Characters : MonoSingleton<M_Characters>
 
     public bool IsVictory()
     {
-        return (characters.Count <= 1);
+        Character current = null;
+
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (i == 0)
+            {
+                current = characters[i];
+                continue;
+            }
+
+            if(current.Team() != characters[i].Team())
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void Victory()
