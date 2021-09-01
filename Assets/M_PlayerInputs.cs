@@ -11,6 +11,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     [Header("INPUTS")]
 
     [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
+    [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
 
     [Header("SCREEN MOUSE MOVEMENT")]
     [Range(1, 100)]
@@ -45,6 +46,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         CheckClick();
         ChangeCharacter();
         CheckMouseScreenMovement();
+        CheckRecenterCamera();
     }
 
     // ======================================================================
@@ -181,6 +183,14 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
             _feedbacks.SetCursor(M_Feedbacks.CursorType.Regular);
             ClearFeedbacksAndValues();
+        }
+    }
+
+    private void CheckRecenterCamera()
+    {
+        if (Input.GetKeyDown(recenterCameraKey))
+        {
+            _camera.ResetPosition();
         }
     }
 

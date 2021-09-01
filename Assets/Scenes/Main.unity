@@ -784,6 +784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeCharacterKey: 9
+  recenterCameraKey: 32
   screenPercent: 10
   borderMultiplier: 2
 --- !u!4 &634797626
@@ -2806,7 +2807,7 @@ MonoBehaviour:
   xOffset: -3
   yOffset: 5
   zOffset: -3
-  movingTime: 0.5
+  movingTime: 0.3
   movingTimeCurve:
     serializedVersion: 2
     m_Curve:
@@ -2933,7 +2934,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4919814116171440189, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: behaviour
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5571022486952568945, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: designation
@@ -2941,7 +2942,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5571022486952568945, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: team
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5711617042610792679, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_Name
