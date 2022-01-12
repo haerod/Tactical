@@ -98,7 +98,7 @@ public class M_UI : MonoSingleton<M_UI>
     public void EnableEndScreen(Character winner)
     {
         endScreen.SetActive(true);
-        endScreenText.text = string.Format("Team {0} wins", winner.infos.team);
+        endScreenText.text = string.Format("{0} are winners !", _rules.teamInfos[winner.infos.team].teamName);
     }
 
     public void ClickOnReplay()

@@ -209,6 +209,78 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return closedList;
     }
 
+    public List<Tile> AroundTiles(Tile startTile, int distance)
+    {
+        ClearPath();
+
+        if (distance == 0)
+        {
+            return closedList;
+        }
+
+        // Set first tile
+        currentTile = startTile;
+        currentTile.cost = 0;
+        openList.Add(currentTile);
+
+        // Tile search loop
+        while (openList.Count > 0)
+        {
+            if (openList.Count > 0) // Get first tile in open list
+            {
+                currentTile = openList[0];
+                closedList.Add(currentTile);
+                openList.Remove(currentTile);
+            }
+            else // Open list is void -> all direction founded
+            {
+                closedList.Remove(startTile);
+
+                if (Utils.IsVoidList(closedList)) return null;
+
+                return closedList;
+            }
+
+            // Put all tiles in around list
+            aroundList.Clear();
+
+            List<Tile> tempAround = GetAroundTiles(currentTile, true);
+
+            if (tempAround == null) continue;
+
+            foreach (Tile t in tempAround)
+            {
+                AddAnyTile(t);
+            }
+
+            // Calculation loop (f, g & h)
+            foreach (Tile t in aroundList)
+            {
+                t.parent = currentTile;
+                t.cost = t.parent.cost + 1;
+
+                // Add it in open list
+                if (!openList.Contains(t))
+                {
+                    openList.Add(t);
+                }
+
+                // Border tiles
+                if (t.cost == distance)
+                {
+                    closedList.Add(t);
+                    openList.Remove(t);
+                }
+            }
+        }
+
+        closedList.Remove(startTile);
+
+        if (Utils.IsVoidList(closedList)) return null;
+
+        return closedList;
+    }
+
     public void ClearPath()
     {
         foreach (Tile t in openList)
@@ -268,10 +340,13 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
     }
 
     // Get all tiles around
-    private List<Tile> GetAroundTiles(Tile tile)
+    private List<Tile> GetAroundTiles(Tile tile, bool forceNoDiagonals = false)
     {
         List<Tile> toReturn = new List<Tile>();
         bool useDiagonals = _rules.useDiagonals;
+
+        if (forceNoDiagonals) // Force no diagonals (aim zone for exemple)
+            useDiagonals = false;
 
         toReturn.Add(GetOffsetTile(0, -1, tile));
 
@@ -294,7 +369,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             toReturn.Add(GetOffsetTile(1, -1, tile));
 
         if (Utils.IsVoidList(toReturn)) return null;
-
+        
         return toReturn;
     }
 
@@ -325,7 +400,7 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         return true;
     }
 
-    // Add tiles in around list if the have conditions
+    // Add tiles in around list if the have conditions (Without : hole, big obstacle, other character with conditions)
     private void AddTile(Tile tile, Tile lastTile = null)
     {
         if (!tile) return; // if tile
@@ -348,6 +423,20 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
             {
                 if (tile.Character().Team() != _characters.currentCharacter.Team()) return;
             }
+        }
+
+        aroundList.Add(tile);
+    }
+
+    // Add tiles in around list if the have conditions
+    private void AddAnyTile(Tile tile)
+    {
+        if (!tile) return; // if tile
+        if (closedList.Contains(tile)) return; // isnt this tile in list
+        if(tile.cost > 0) // new cost is lower than current (if already calculated)
+        {
+            int newCost = currentTile.cost + GetCost(tile, currentTile);
+            if (newCost > tile.cost) return;
         }
 
         aroundList.Add(tile);

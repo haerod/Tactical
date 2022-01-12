@@ -27,14 +27,6 @@ public class Attack : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    public bool HasSightOn(Character target)
-    {
-        if (AreObstacles(LineOfSight(target.Tile())))
-            return false; // Exit : obstacles
-
-        return true; // Exit : has sight on target
-    }
-
     public void AttackTarget(Character currentTarget, Action OnEnd)
     {
         if (c.actionPoints.actionPoints < actionPointsCost)
@@ -85,11 +77,13 @@ public class Attack : MonoBehaviour
 
     public Character ClosestEnemyOnSight()
     {
+        Look look = c.look;
+
         return _characters.characters
             .Where(o => o != c) // remove emitter
             .Where(o => o.Team() != c.Team()) // remove allies
-            .Where(o => HasSightOn(o)) // get all enemies on sight
-            .OrderBy(o => LineOfSight(o.Tile()).Count()) // order enemies by distance
+            .Where(o => look.HasSightOn(o.Tile())) // get all enemies on sight
+            .OrderBy(o => look.LineOfSight(o.Tile()).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
     }
 
@@ -103,7 +97,7 @@ public class Attack : MonoBehaviour
         foreach (Character character in _characters.characters)
         {
             if (character == c) continue;
-            if (!HasSightOn(character)) continue;
+ 
             if (character.Team() == c.Team()) continue;
 
             attackTiles.Add(character.Tile());
@@ -111,7 +105,7 @@ public class Attack : MonoBehaviour
 
         foreach (Tile t in attackTiles)
         {
-            t.SetMaterial(Tile.TileMaterial.Range);
+            t.SetMaterial(Tile.TileMaterial.Attackable);
         }
     }
 
@@ -128,24 +122,6 @@ public class Attack : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
-    private List<Tile> LineOfSight(Tile targetTile)
-    {
-        return _pathfinding.LineOfSight(c.Tile(), targetTile).ToList();
-    }
-
-    private bool AreObstacles(List<Tile> lineOfSight)
-    {
-        if (Utils.IsVoidList(lineOfSight)) return false;
-
-        foreach (Tile t in lineOfSight)
-        {
-            if (t.type == Tile.Type.BigObstacle) return true;
-            if (t.Character()) return true;
-        }
-
-        return false;
-    }
 
     private void Wait(float time, Action OnEnd)
     {

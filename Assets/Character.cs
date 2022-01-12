@@ -5,6 +5,7 @@ using static M__Managers;
 public class Character : MonoBehaviour
 {
     public Move move;
+    public Look look;
     public ActionPoints actionPoints;
     public Attack attack;
     public Health health;

@@ -21,6 +21,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private Material closed = null;
     [SerializeField] private Material path = null;
     [SerializeField] private Material area = null;
+    [SerializeField] private Material attackable = null;
     [SerializeField] private Material range = null;
     [Space]
     [SerializeField] private GameObject areaObject = null;
@@ -87,10 +88,10 @@ public class Tile : MonoBehaviour
         bigObstacle.SetActive(true);
     }
 
-    public enum TileMaterial { Basic, Open, Closed, Path, Area, Range}
+    public enum TileMaterial { Basic, Open, Closed, Path, Area, Attackable, Range}
     public void SetMaterial(TileMaterial mat)
     {
-        if(mat != TileMaterial.Area || mat != TileMaterial.Range)
+        if(mat != TileMaterial.Area || mat != TileMaterial.Attackable)
         {
             areaObject.SetActive(false);
         }
@@ -113,9 +114,12 @@ public class Tile : MonoBehaviour
                 areaObject.SetActive(true);
                 areaObject.GetComponent<Renderer>().material = area;
                 break;
-            case TileMaterial.Range:
+            case TileMaterial.Attackable:
                 areaObject.SetActive(true);
-                areaObject.GetComponent<Renderer>().material = range;
+                areaObject.GetComponent<Renderer>().material = attackable;
+                break;
+            case TileMaterial.Range:
+                rend.material = range;
                 break;
             default:
                 break;

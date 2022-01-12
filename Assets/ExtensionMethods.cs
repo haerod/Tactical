@@ -28,4 +28,12 @@ public static class ExtensionMethods
 
         return list[UnityEngine.Random.Range(0, list.Count)];
     }
+
+    public static void Print<T>(this List<T> list)
+    {
+        foreach (var item in list)
+        {
+            Debug.Log(item);
+        }
+    }
 }

@@ -18,8 +18,6 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     [SerializeField] private int screenPercent = 5;
     [SerializeField] private int borderMultiplier = 1;
 
-    //[HideInInspector] public Character c = null;
-
     private bool canClick = true;
     private Tile pointedTile;
     private List<Tile> currentPathfinding;
@@ -44,7 +42,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
         CheckRaycast();
         CheckClick();
-        ChangeCharacter();
+        CheckChangeCharacter();
         CheckMouseScreenMovement();
         CheckRecenterCamera();
     }
@@ -76,70 +74,8 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     // PRIVATE METHODS
     // ======================================================================
 
-    private void ChangeCharacter()
-    {
-        if (Input.GetKeyDown(changeCharacterKey))
-        {
-            _characters.NextTurn();
-        }
-    }
-
-    private void CheckClick()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (pointedTile == null) return; // No on tile
-
-            if(pointedTile.IsOccupied())
-            {
-                ClickAttack();
-            }
-            else
-            {
-                ClickMove();
-            }
-        }
-    }
-
-    private void CheckMouseScreenMovement()
-    {
-        Vector3 direction = Vector3.zero;
-        Vector3 mousePosition = Input.mousePosition;
-
-        if (mousePosition.x >= Screen.width - screenWidthPercented) // Right
-        {
-            if (mousePosition.x >= Screen.width)
-                direction += _camera.transform.right * borderMultiplier;
-            else
-                direction += _camera.transform.right;
-        }
-        else if (mousePosition.x <= screenWidthPercented) // Left
-        {
-            if (mousePosition.x <= 0)
-                direction -= _camera.transform.right * borderMultiplier;
-            else
-                direction -= _camera.transform.right;
-        }
-
-        if (mousePosition.y >= Screen.height - screenHeightPercented) // Up
-        {
-            if (mousePosition.y >= Screen.height)
-                direction += _camera.transform.up * borderMultiplier;
-            else
-                direction += _camera.transform.up;
-        }
-        else if (mousePosition.y <= screenHeightPercented) // Down
-        {
-            if (mousePosition.y <= 0)
-                direction -= _camera.transform.up * borderMultiplier;
-            else
-                direction -= _camera.transform.up;
-        }
-
-        if (direction == Vector3.zero) return;
-
-        _camera.Move(direction);
-    }
+    // CHECKERS
+    // ========
 
     private void CheckRaycast()
     {
@@ -186,6 +122,71 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         }
     }
 
+    private void CheckClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (pointedTile == null) return; // No on tile
+
+            if(pointedTile.IsOccupied())
+            {
+                ClickAttack();
+            }
+            else
+            {
+                ClickMove();
+            }
+        }
+    }
+
+    private void CheckChangeCharacter()
+    {
+        if (Input.GetKeyDown(changeCharacterKey))
+        {
+            _characters.NextTurn();
+        }
+    }
+
+    private void CheckMouseScreenMovement()
+    {
+        Vector3 direction = Vector3.zero;
+        Vector3 mousePosition = Input.mousePosition;
+
+        if (mousePosition.x >= Screen.width - screenWidthPercented) // Right
+        {
+            if (mousePosition.x >= Screen.width)
+                direction += _camera.transform.right * borderMultiplier;
+            else
+                direction += _camera.transform.right;
+        }
+        else if (mousePosition.x <= screenWidthPercented) // Left
+        {
+            if (mousePosition.x <= 0)
+                direction -= _camera.transform.right * borderMultiplier;
+            else
+                direction -= _camera.transform.right;
+        }
+
+        if (mousePosition.y >= Screen.height - screenHeightPercented) // Up
+        {
+            if (mousePosition.y >= Screen.height)
+                direction += _camera.transform.up * borderMultiplier;
+            else
+                direction += _camera.transform.up;
+        }
+        else if (mousePosition.y <= screenHeightPercented) // Down
+        {
+            if (mousePosition.y <= 0)
+                direction -= _camera.transform.up * borderMultiplier;
+            else
+                direction -= _camera.transform.up;
+        }
+
+        if (direction == Vector3.zero) return;
+
+        _camera.Move(direction);
+    }
+
     private void CheckRecenterCamera()
     {
         if (Input.GetKeyDown(recenterCameraKey))
@@ -194,16 +195,20 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         }
     }
 
+    // OTHERS
+    // ======
+
     private void OnOccupiedTile(Tile tile)
     {
         _feedbacks.DisableFeedbacks();
 
+        currentTarget = tile.Character();
+
+        // Mouse feedbacks
         if (tile.Character() == _characters.currentCharacter) return; // Exit : same character
         if (tile.Character().Team() == _characters.currentCharacter.Team()) return; // Exit : same team
 
-        currentTarget = tile.Character();
-
-        if(_characters.currentCharacter.attack.HasSightOn(currentTarget))
+        if(_characters.currentCharacter.look.HasSightOn(currentTarget.Tile()))
         {
             if (_characters.currentCharacter.CanAttack())
             {
@@ -216,6 +221,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         }
         else
         {
+            print("out aim");
             _feedbacks.SetCursor(M_Feedbacks.CursorType.OutAim);
         }
     }
@@ -247,7 +253,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     private void ClickAttack()
     {
         if (currentTarget == null) return; // Exit  : It's no target
-        if (!_characters.currentCharacter.attack.HasSightOn(currentTarget)) return; // Exit : Isn't in sight
+        if (!_characters.currentCharacter.look.HasSightOn(currentTarget.Tile())) return; // Exit : Isn't in sight
 
         _characters.currentCharacter.attack.AttackTarget(currentTarget, () => {
             if (_characters.IsVictory())

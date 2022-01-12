@@ -12,6 +12,9 @@ public class M_GameRules : MonoSingleton<M_GameRules>
     public enum FirstCharacter { Random, CurrentCharacter, FirstOfList}
     public FirstCharacter firstCharacter = FirstCharacter.CurrentCharacter;
 
+    [Space]
+    public List<TeamInfos> teamInfos;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -23,4 +26,12 @@ public class M_GameRules : MonoSingleton<M_GameRules>
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+}
+
+[System.Serializable]
+public class TeamInfos
+{
+    public string teamName = "Name";
+    public Material mat1;
+    public Material mat2;
 }

@@ -341,9 +341,10 @@ MonoBehaviour:
   closed: {fileID: 2100000, guid: 3898f13509fde6a488852c74010b700a, type: 2}
   path: {fileID: 2100000, guid: 75fa95a49caba6c4486e8ea194072f5a, type: 2}
   area: {fileID: 0}
+  attackable: {fileID: 0}
   range: {fileID: 0}
   areaObject: {fileID: 0}
-  hole: 0
+  type: 0
   rend: {fileID: 435204764083352196}
   cText: {fileID: 0}
   hText: {fileID: 0}
@@ -460,9 +461,10 @@ MonoBehaviour:
   closed: {fileID: 2100000, guid: 3898f13509fde6a488852c74010b700a, type: 2}
   path: {fileID: 2100000, guid: 75fa95a49caba6c4486e8ea194072f5a, type: 2}
   area: {fileID: 2100000, guid: 0519cfb63635a594397d9492187ed754, type: 2}
-  range: {fileID: 2100000, guid: 63e02b4794e0aba43959b4567e233ee7, type: 2}
+  attackable: {fileID: 2100000, guid: 63e02b4794e0aba43959b4567e233ee7, type: 2}
+  range: {fileID: 2100000, guid: 0800e4ce18569b24b92f67381b0f4640, type: 2}
   areaObject: {fileID: 5329991644252039689}
-  hole: 0
+  type: 0
   rend: {fileID: 1112526817523277037}
   cText: {fileID: 5585971320258105102}
   hText: {fileID: 6552729457407975912}
