@@ -12,6 +12,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
     [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
+    [SerializeField] private KeyCode passTurnKey = KeyCode.Backspace;    
 
     [Header("SCREEN MOUSE MOVEMENT")]
     [Range(1, 100)]
@@ -45,6 +46,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         CheckChangeCharacter();
         CheckMouseScreenMovement();
         CheckRecenterCamera();
+        CheckNextTurn();
     }
 
     // ======================================================================
@@ -142,6 +144,14 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
     private void CheckChangeCharacter()
     {
         if (Input.GetKeyDown(changeCharacterKey))
+        {
+            _characters.NextTurn();
+        }
+    }
+
+    private void CheckNextTurn()
+    {
+        if (Input.GetKeyDown(passTurnKey))
         {
             _characters.NextTurn();
         }
