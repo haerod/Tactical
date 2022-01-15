@@ -2,13 +2,8 @@
 using System.Collections;
 using static M__Managers;
 
-public class M_Feedbacks : MonoSingleton<M_Feedbacks>
+public class M_Feedback : MonoSingleton<M_Feedback>
 {
-    [Header("MOVE FEEDBACKS")]
-
-    public MoveLine_Feedback line;
-    public Square_Feedback square;
-
     [Header("CURSORS")]
 
     [SerializeField] private Texture2D aimCursor = null;
@@ -17,6 +12,8 @@ public class M_Feedbacks : MonoSingleton<M_Feedbacks>
 
     [Header("REFERENCES")]
 
+    public MoveLine_Feedback line;
+    public Square_Feedback square;
     [SerializeField] private GameObject actionEffectPrefab = null;
 
     // ======================================================================

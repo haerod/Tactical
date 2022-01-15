@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using static M__Managers;
 
 public class M_Characters : MonoSingleton<M_Characters>
 {
-    public List<Character> characters;
     public Character currentCharacter;
+    [HideInInspector] public List<Character> characters;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -15,6 +16,8 @@ public class M_Characters : MonoSingleton<M_Characters>
 
     private void Start()
     {
+        FillCharacterList();
+
         switch (_rules.firstCharacter)
         {
             case M_GameRules.FirstCharacter.Random:
@@ -26,7 +29,7 @@ public class M_Characters : MonoSingleton<M_Characters>
                     Debug.LogError("current character is null in characters manager, set it", gameObject);
                 }
                 break;
-            case M_GameRules.FirstCharacter.FirstOfList:
+            case M_GameRules.FirstCharacter.FirstOfHierarchy:
                 currentCharacter = characters[0];
                 break;
             default:
@@ -113,6 +116,11 @@ public class M_Characters : MonoSingleton<M_Characters>
     // PRIVATE METHODS
     // ======================================================================
 
+    private void FillCharacterList()
+    {
+        characters = FindObjectsOfType<Character>().ToList();
+    }
+
     private void NewCurrentCharacter()
     {
         // Inputs
@@ -141,5 +149,4 @@ public class M_Characters : MonoSingleton<M_Characters>
         }
 
     }
-
 }

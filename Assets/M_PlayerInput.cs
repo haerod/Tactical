@@ -6,12 +6,12 @@ using System.Linq;
 using System;
 using static M__Managers;
 
-public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
+public class M_PlayerInput : MonoSingleton<M_PlayerInput>
 {
-    [Header("INPUTS")]
+    [Header("INPUT")]
 
-    [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
+    [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
     [SerializeField] private KeyCode passTurnKey = KeyCode.Backspace;    
 
     [Header("SCREEN MOUSE MOVEMENT")]
@@ -68,7 +68,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
 
         if(value == false)
         {
-            _feedbacks.SetCursor(M_Feedbacks.CursorType.Regular);
+            _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
         }
     }
 
@@ -119,7 +119,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         {
             if (pointedTile == null) return;
 
-            _feedbacks.SetCursor(M_Feedbacks.CursorType.Regular);
+            _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
             ClearFeedbacksAndValues();
         }
     }
@@ -222,17 +222,17 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
         {
             if (_characters.currentCharacter.CanAttack())
             {
-                _feedbacks.SetCursor(M_Feedbacks.CursorType.Aim);
+                _feedbacks.SetCursor(M_Feedback.CursorType.Aim);
             }
             else
             {
-                _feedbacks.SetCursor(M_Feedbacks.CursorType.OutActionPoints);
+                _feedbacks.SetCursor(M_Feedback.CursorType.OutActionPoints);
             }
         }
         else
         {
             print("out aim");
-            _feedbacks.SetCursor(M_Feedbacks.CursorType.OutAim);
+            _feedbacks.SetCursor(M_Feedback.CursorType.OutAim);
         }
     }
 
@@ -257,7 +257,7 @@ public class M_PlayerInputs : MonoSingleton<M_PlayerInputs>
             _characters.currentCharacter, 
             pointedTile);
 
-        _feedbacks.SetCursor(M_Feedbacks.CursorType.Regular);
+        _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
     }
 
     private void ClickAttack()

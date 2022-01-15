@@ -19,7 +19,7 @@ public class Infos : MonoBehaviour
 
     public void Start()
     {
-        transform.parent.name = string.Format("Character : {0} ({1})", designation, team);
+        transform.parent.name = string.Format("Character : {0} (T{1})", designation, team);
         GetTeamColors();
     }
 

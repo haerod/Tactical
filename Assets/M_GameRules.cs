@@ -9,7 +9,7 @@ public class M_GameRules : MonoSingleton<M_GameRules>
 
     public bool useDiagonals = false;
 
-    public enum FirstCharacter { Random, CurrentCharacter, FirstOfList}
+    public enum FirstCharacter { Random, CurrentCharacter, FirstOfHierarchy}
     public FirstCharacter firstCharacter = FirstCharacter.CurrentCharacter;
 
     [Space]

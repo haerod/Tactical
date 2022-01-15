@@ -7,6 +7,12 @@ using static M__Managers;
 
 public class M_UI : MonoSingleton<M_UI>
 {
+    [Header("ACTION COST TEXT SETTINGS")]
+
+    [SerializeField] private float actionCostOffset = 30f;
+    [SerializeField] private Color inRangeColor = Color.yellow;
+    [SerializeField] private Color outRangeColor = Color.grey;
+
     [Header("REFERENCES")]
 
     [SerializeField] private Text actionPointsText = null;
@@ -19,12 +25,6 @@ public class M_UI : MonoSingleton<M_UI>
     [SerializeField] private GameObject actionPointsObject = null;
     [Space]
     [SerializeField] private GameObject endScreen = null;
-
-    [Header("ACTION COST TEXT SETTINGS")]
-
-    [SerializeField] private float actionCostOffset = 30f;
-    [SerializeField] private Color inRangeColor = Color.yellow;
-    [SerializeField] private Color outRangeColor = Color.grey;
 
     private Camera cam;
     private Transform actionCostTarget;
