@@ -148,7 +148,7 @@ public class M_Characters : MonoBehaviour
         currentCharacter.actionPoints.FullActionPoints();
         currentCharacter.ClearTilesFeedbacks();
 
-        if(currentCharacter.behaviour.playable) // PC
+        if(currentCharacter.behavior.playable) // PC
         {
             _inputs.SetClick();
             _ui.SetTurnPlayerUIActive(true);
@@ -159,7 +159,7 @@ public class M_Characters : MonoBehaviour
         {
             _inputs.SetClick(false);
             _ui.SetTurnPlayerUIActive(false);
-            currentCharacter.behaviour.PlayBehaviour();
+            currentCharacter.behavior.PlayBehavior();
         }
 
     }

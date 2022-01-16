@@ -11,7 +11,7 @@ public class Character : MonoBehaviour
     public Health health;
     public Infos infos;
     public UI_SlicedHealthBar healthBar;
-    public CharacterBehaviour behaviour;
+    public CharacterBehavior behavior;
     public AnimatorScripts anim; // With animator / skinned mesh renderer
     
     // ======================================================================

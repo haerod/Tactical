@@ -103,7 +103,7 @@ public class M_UI : MonoBehaviour
     // Enable / disable player's UI during their actions
     public void SetActionPlayerUIActive(bool value)
     {
-        if (value == true && !_characters.currentCharacter.behaviour.playable) return; // EXIT : it's not player's turn
+        if (value == true && !_characters.currentCharacter.behavior.playable) return; // EXIT : it's not player's turn
 
         addActionPointButton.gameObject.SetActive(value);
         nextTurnButton.gameObject.SetActive(value);

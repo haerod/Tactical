@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class CharacterBehaviour : MonoBehaviour
+public class CharacterBehavior : MonoBehaviour
 {
     public bool playable = true;
 
@@ -12,8 +12,8 @@ public class CharacterBehaviour : MonoBehaviour
     // * Follower : follow target, if target
     // * AttackerOnce : find the closest target, attack it and ends turn
     // * Offensive : find a target and attack it until it doent't have any action points
-    public enum Behaviour { None, Follower, AttackerOnce, Offensive }
-    public Behaviour behaviour = Behaviour.Follower;
+    public enum Behavior { None, Follower, AttackerOnce, Offensive }
+    public Behavior behavior = Behavior.None;
 
     public Character target;
 
@@ -27,23 +27,23 @@ public class CharacterBehaviour : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    public void PlayBehaviour()
+    public void PlayBehavior()
     {
-        switch (behaviour)
+        switch (behavior)
         {
-            case Behaviour.None:
+            case Behavior.None:
                 Wait(1,
                     () => _characters.NextTurn());
                 break;
-            case Behaviour.Follower:
+            case Behavior.Follower:
                 Wait(1, 
                     () => FollowTarget());
                 break;
-            case Behaviour.AttackerOnce:
+            case Behavior.AttackerOnce:
                 Wait(1, 
                     () => AcquireTarget());
                 break;
-            case Behaviour.Offensive:
+            case Behavior.Offensive:
                 Wait(1, 
                     () => CheckOffensive());
                 break;
@@ -54,7 +54,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void FollowTarget()
     {
-        if (c.behaviour.target == null) // Exit : no target
+        if (c.behavior.target == null) // Exit : no target
         {
             Wait(2, 
                 () => _characters.NextTurn());

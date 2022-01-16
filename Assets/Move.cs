@@ -172,7 +172,7 @@ public class Move : MonoBehaviour
         _inputs.SetClick();
         _ui.SetActionPlayerUIActive(true);
 
-        if (_characters.currentCharacter.behaviour.playable)
+        if (_characters.currentCharacter.behavior.playable)
         {
             c.EnableTilesFeedbacks();
         }
