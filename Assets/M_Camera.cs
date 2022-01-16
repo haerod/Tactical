@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class GameCamera : MonoSingleton<GameCamera>
+public class M_Camera : MonoBehaviour
 {
 
     [Header("MOVE")]
@@ -12,16 +12,13 @@ public class GameCamera : MonoSingleton<GameCamera>
 
     [Space]
 
-    public float movingTime = .5f;
+    public float movingTime = .3f;
     public AnimationCurve movingTimeCurve = null;
-
-    [Header("SCREEN SHAKE")]
-
-    public float timeBetweenShakes = .2f;
 
     [Header("REFERENCES")]
 
     public Transform camTransform = null;
+    public static M_Camera instance;
 
     private float currentTime;
     private Vector3 positionToReach;
@@ -32,7 +29,20 @@ public class GameCamera : MonoSingleton<GameCamera>
     // MONOBEHAVIOUR
     // ======================================================================
 
-    void Update()
+    private void Awake()
+    {
+        // Singleton
+        if (!instance)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("There is more than one M_Camera in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        }
+    }
+
+    private void Update()
     {
         currentTime += Time.deltaTime;
 
@@ -46,6 +56,9 @@ public class GameCamera : MonoSingleton<GameCamera>
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Reset the camera's position to reach on its target (with the offset).
+    /// </summary>
     public void ResetPosition()
     {
         positionToReach = new Vector3(
@@ -57,26 +70,40 @@ public class GameCamera : MonoSingleton<GameCamera>
         startPosition = transform.position;
     }
 
+    /// <summary>
+    /// Move the camera in the given direction.
+    /// </summary>
+    /// <param name="direction"></param>
     public void Move(Vector3 direction)
     {
         positionToReach = transform.position + direction;
-        //positionToReach = Vector3.Lerp(target.position, positionToReach, 1);
-        //print(positionToReach);
-
         currentTime = 0f;
         startPosition = transform.position;
     }
 
-    public void Shake(float duration = .02f, float intensity = .2f)
+    /// <summary>
+    /// Camera shake for more fun.
+    /// </summary>
+    /// <param name="duration"></param>
+    /// <param name="intensity"></param>
+    /// <param name="timeBetweenShakes"></param>
+    public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f)
     {
-        StartCoroutine(Shake_Co(duration, intensity));
+        StartCoroutine(Shake_Co(duration, intensity, timeBetweenShakes));
     }
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
-    IEnumerator Shake_Co(float duration, float intensity)
+    /// <summary>
+    /// Coroutine of Shake() method. Only called by Shake().
+    /// </summary>
+    /// <param name="duration"></param>
+    /// <param name="intensity"></param>
+    /// <param name="timeBetweenShakes"></param>
+    /// <returns></returns>
+    IEnumerator Shake_Co(float duration, float intensity, float timeBetweenShakes)
     {
         float currentTime = 0;
 

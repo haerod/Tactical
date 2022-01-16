@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class M_UI : MonoSingleton<M_UI>
+public class M_UI : MonoBehaviour
 {
     [Header("ACTION COST TEXT SETTINGS")]
 
@@ -28,10 +28,24 @@ public class M_UI : MonoSingleton<M_UI>
 
     private Camera cam;
     private Transform actionCostTarget;
+    public static M_UI instance;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Awake()
+    {
+        // Singleton
+        if (!instance)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("There is more than one M_UI in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        }
+    }
 
     private void Start()
     {

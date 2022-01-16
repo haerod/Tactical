@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_Terrain : MonoSingleton<M_Terrain>
+public class M_TileBoard : MonoBehaviour
 {
-    [Header("TERRAIN PARAMETERS")]
+    [Header("BOARD PARAMETERS")]
     [Range(1, 100)]
     public int length = 5;
     [Range(1, 100)]
     public int width = 5;
 
-    [Header("SEPCIAL TILES")]
+    [Header("SPECIAL TILES")]
     public List<Vector2Int> holeCoordinates;
     public List<Vector2Int> bigObstaclesCoordinates;
 
@@ -20,14 +20,25 @@ public class M_Terrain : MonoSingleton<M_Terrain>
     [SerializeField] private Transform terrainParent = null;
 
     [HideInInspector] public Tile[,] grid;
+    public static M_TileBoard instance;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
 
-    // Replace Awake
-    protected override void Init()
+    private void Awake()
     {
+        // Singleton
+        if (!instance)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("There is more than one M_TileBoard in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        }
+
+        // Other instructions
         GenerateTerrain();
     }
 

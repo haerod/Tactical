@@ -423,10 +423,10 @@ RectTransform:
   m_Father: {fileID: 1887550082}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 37.49999, y: -1.5000114}
-  m_SizeDelta: {x: 79.0001, y: 71.00002}
+  m_AnchorMin: {x: 0.5, y: 0.058238506}
+  m_AnchorMax: {x: 0.94668806, y: 0.9417155}
+  m_AnchoredPosition: {x: 0.01499939, y: 0.000011444092}
+  m_SizeDelta: {x: 0.02999878, y: 0.099998474}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &466267960
 MonoBehaviour:
@@ -835,7 +835,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recenterCameraKey: 32
   changeCharacterKey: 9
-  passTurnKey: 8
+  endTurnKey: 8
   screenPercent: 10
   borderMultiplier: 2
 --- !u!4 &634797626
@@ -1176,7 +1176,7 @@ GameObject:
   - component: {fileID: 951955764}
   - component: {fileID: 951955763}
   m_Layer: 5
-  m_Name: Button Add
+  m_Name: Cheat - Button Add one action point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1780,8 +1780,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aimCursor: {fileID: 2800000, guid: 7492840401090ba4da3437934c1eba7b, type: 3}
-  outAimCursor: {fileID: 2800000, guid: d8a895ea0c5ac8545bcb103d4db85a02, type: 3}
-  outActionPointsCursor: {fileID: 2800000, guid: 68b226fbc4c8bde4780595c90e9119b4, type: 3}
+  noLineOfSightCursor: {fileID: 2800000, guid: d8a895ea0c5ac8545bcb103d4db85a02, type: 3}
+  outOfActionPointsCursor: {fileID: 2800000, guid: 68b226fbc4c8bde4780595c90e9119b4, type: 3}
   line: {fileID: 876908834}
   square: {fileID: 885596328}
   actionEffectPrefab: {fileID: 6033107118601816470, guid: ae91c46367b9c1c479def716cae07ad6, type: 3}
@@ -2042,10 +2042,10 @@ RectTransform:
   m_Father: {fileID: 1887550082}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -42.37, y: -1.4999008}
-  m_SizeDelta: {x: 67.398926, y: 70.99956}
+  m_AnchorMin: {x: 0.047000002, y: 0.1047615}
+  m_AnchorMax: {x: 0.48668805, y: 0.8952385}
+  m_AnchoredPosition: {x: -0.0000076293945, y: 0.0000076293945}
+  m_SizeDelta: {x: 0.0000076294, y: -0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1414558714
 MonoBehaviour:
@@ -2483,7 +2483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f83021e387e5b549bf8c011db6e945d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canPassAcross: 2
+  canPassThrough: 2
   useDiagonals: 0
   firstCharacter: 1
   teamInfos:
@@ -2711,7 +2711,7 @@ GameObject:
   - component: {fileID: 1860682910}
   - component: {fileID: 1860682909}
   m_Layer: 0
-  m_Name: M_Terrain
+  m_Name: M_TileBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2912,7 +2912,7 @@ GameObject:
   - component: {fileID: 2044546324}
   - component: {fileID: 2044546323}
   m_Layer: 0
-  m_Name: M_GameCamera
+  m_Name: M_Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2958,7 +2958,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  timeBetweenShakes: 0.02
   camTransform: {fileID: 771163069}
   target: {fileID: 0}
 --- !u!4 &2044546324

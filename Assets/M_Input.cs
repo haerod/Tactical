@@ -6,13 +6,13 @@ using System.Linq;
 using System;
 using static M__Managers;
 
-public class M_PlayerInput : MonoSingleton<M_PlayerInput>
+public class M_Input : MonoBehaviour
 {
     [Header("INPUT")]
 
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
     [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
-    [SerializeField] private KeyCode passTurnKey = KeyCode.Backspace;    
+    [SerializeField] private KeyCode endTurnKey = KeyCode.Backspace;    
 
     [Header("SCREEN MOUSE MOVEMENT")]
     [Range(1, 100)]
@@ -25,10 +25,24 @@ public class M_PlayerInput : MonoSingleton<M_PlayerInput>
     private Character currentTarget;
     private int screenWidthPercented;
     private int screenHeightPercented;
+    public static M_Input instance;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Awake()
+    {
+        // Singleton
+        if (!instance)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("There is more than one M_Input in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -151,7 +165,7 @@ public class M_PlayerInput : MonoSingleton<M_PlayerInput>
 
     private void CheckNextTurn()
     {
-        if (Input.GetKeyDown(passTurnKey))
+        if (Input.GetKeyDown(endTurnKey))
         {
             _characters.NextTurn();
         }

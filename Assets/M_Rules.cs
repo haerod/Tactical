@@ -2,22 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_GameRules : MonoSingleton<M_GameRules>
+public class M_Rules : MonoBehaviour
 {
-    public enum PassAcross { Everybody, Nobody, AlliesOnly}
-    public PassAcross canPassAcross = PassAcross.Nobody;
+    public enum PassThrough {Everybody, Nobody, AlliesOnly}
+    public PassThrough canPassThrough = PassThrough.Nobody;
 
     public bool useDiagonals = false;
 
-    public enum FirstCharacter { Random, CurrentCharacter, FirstOfHierarchy}
+    public enum FirstCharacter {Random, CurrentCharacter, FirstOfHierarchy}
     public FirstCharacter firstCharacter = FirstCharacter.CurrentCharacter;
 
     [Space]
     public List<TeamInfos> teamInfos;
 
+    public static M_Rules instance;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Awake()
+    {
+        // Singleton
+        if (!instance)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("There is more than one M_Rules in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        }
+    }
 
     // ======================================================================
     // PUBLIC METHODS

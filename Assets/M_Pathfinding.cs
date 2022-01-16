@@ -4,16 +4,31 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class M_Pathfinding : MonoSingleton<M_Pathfinding>
+public class M_Pathfinding : MonoBehaviour
 {
+    public enum LoSParameters { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd }
     private List<Tile> openList = new List<Tile>();
     private List<Tile> closedList = new List<Tile>();
     private List<Tile> aroundList = new List<Tile>();
     private Tile currentTile;
+    public static M_Pathfinding instance;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Awake()
+    {
+        // Singleton
+        if (!instance)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("There is more than one M_Pathfinding in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        }
+    }
 
     // ======================================================================
     // PUBLIC METHODS
@@ -295,7 +310,6 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
         closedList.Clear();
     }
 
-    public enum LoSParameters { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd }
     public List<Tile> LineOfSight(Tile startTile, Tile endTile, LoSParameters parameters = LoSParameters.WithoutStartAndEnd)
     {
         // Get Vector between start and end coordinates (Start tile - end tile)
@@ -415,11 +429,11 @@ public class M_Pathfinding : MonoSingleton<M_Pathfinding>
 
         if (tile.IsOccupied())
         {
-            if (_rules.canPassAcross == M_GameRules.PassAcross.Nobody)
+            if (_rules.canPassThrough == M_Rules.PassThrough.Nobody)
             {
                 if (tile != lastTile) return;
             }
-            else if (_rules.canPassAcross == M_GameRules.PassAcross.AlliesOnly)
+            else if (_rules.canPassThrough == M_Rules.PassThrough.AlliesOnly)
             {
                 if (tile.Character().Team() != _characters.currentCharacter.Team()) return;
             }

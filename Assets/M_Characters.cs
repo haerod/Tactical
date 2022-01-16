@@ -5,14 +5,28 @@ using UnityEngine;
 using System.Linq;
 using static M__Managers;
 
-public class M_Characters : MonoSingleton<M_Characters>
+public class M_Characters : MonoBehaviour
 {
     public Character currentCharacter;
+    
     [HideInInspector] public List<Character> characters;
+    public static M_Characters instance;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Awake()
+    {
+        if (!instance)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("There is more than one M_Characters in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -20,16 +34,16 @@ public class M_Characters : MonoSingleton<M_Characters>
 
         switch (_rules.firstCharacter)
         {
-            case M_GameRules.FirstCharacter.Random:
+            case M_Rules.FirstCharacter.Random:
                 currentCharacter = characters.GetRandom();
                 break;
-            case M_GameRules.FirstCharacter.CurrentCharacter:
+            case M_Rules.FirstCharacter.CurrentCharacter:
                 if(currentCharacter == null)
                 {
                     Debug.LogError("current character is null in characters manager, set it", gameObject);
                 }
                 break;
-            case M_GameRules.FirstCharacter.FirstOfHierarchy:
+            case M_Rules.FirstCharacter.FirstOfHierarchy:
                 currentCharacter = characters[0];
                 break;
             default:
