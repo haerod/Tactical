@@ -6,12 +6,13 @@ using static M__Managers;
 
 public class M_Pathfinding : MonoBehaviour
 {
-    public enum LoSParameters { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd }
     private List<Tile> openList = new List<Tile>();
     private List<Tile> closedList = new List<Tile>();
     private List<Tile> aroundList = new List<Tile>();
     private Tile currentTile;
     public static M_Pathfinding instance;
+
+    public enum LoSParameters { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd} // Options of the line of sight
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -34,8 +35,13 @@ public class M_Pathfinding : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    // Returns the path, including end tile
-    // If no path, returns null
+    /// <summary>
+    /// Returns the path, exclding start tile and including the end tile.
+    /// If no path, returns null.
+    /// </summary>
+    /// <param name="startTile"></param>
+    /// <param name="endTile"></param>
+    /// <returns></returns>
     public List<Tile> Pathfind(Tile startTile, Tile endTile)
     {
         ClearPath();
@@ -66,7 +72,7 @@ public class M_Pathfinding : MonoBehaviour
 
             foreach (Tile t in tempAround)
             {
-                AddTile(t, endTile);
+                AddAllowedTile(t, endTile);
             }
 
             // If it's end tile -> return path
@@ -97,12 +103,19 @@ public class M_Pathfinding : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Return the closest free tile from a target to its destination (with a maximum distance of this destination).
+    /// Ex : a character wants the closest free tile around its target.
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="distance"></param>
+    /// <returns></returns>
     public Tile ClosestFreeTileWithShortestPath(Tile from, Tile to, int distance = 10)
     {
         if (from == null || to == null) return null; // EXIT : from or to doen't exist
         if (from == to) return null; // EXIT : from == to
         if (distance == 0) return null; // EXIT : no distance
-
 
         List<Tile> area = AreaMovementZone(to, distance).ToList();
 
@@ -152,6 +165,12 @@ public class M_Pathfinding : MonoBehaviour
         return toReturn;
     }
 
+    /// <summary>
+    /// Return the tiles around a tile (with a defined distance), considering holes and obstacles as blocking tiles.
+    /// </summary>
+    /// <param name="startTile"></param>
+    /// <param name="distance"></param>
+    /// <returns></returns>
     public List<Tile> AreaMovementZone(Tile startTile, int distance)
     {
         ClearPath();
@@ -193,7 +212,7 @@ public class M_Pathfinding : MonoBehaviour
 
             foreach (Tile t in tempAround)
             {
-                AddTile(t);
+                AddAllowedTile(t);
             }
 
             // Calculation loop (f, g & h)
@@ -224,13 +243,19 @@ public class M_Pathfinding : MonoBehaviour
         return closedList;
     }
 
+    /// <summary>
+    /// Return ALL the tiles around a tile (with a defined distance).
+    /// </summary>
+    /// <param name="startTile"></param>
+    /// <param name="distance"></param>
+    /// <returns></returns>
     public List<Tile> AroundTiles(Tile startTile, int distance)
     {
         ClearPath();
 
         if (distance == 0)
         {
-            return closedList;
+            return null;
         }
 
         // Set first tile
@@ -296,6 +321,9 @@ public class M_Pathfinding : MonoBehaviour
         return closedList;
     }
 
+    /// <summary>
+    /// Reset the tiles pathfinding values (cost, heuristic, etc.) and clear the pathfinding lists.
+    /// </summary>
     public void ClearPath()
     {
         foreach (Tile t in openList)
@@ -310,6 +338,13 @@ public class M_Pathfinding : MonoBehaviour
         closedList.Clear();
     }
 
+    /// <summary>
+    /// Return a line of sight from a tile to another one.
+    /// </summary>
+    /// <param name="startTile"></param>
+    /// <param name="endTile"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     public List<Tile> LineOfSight(Tile startTile, Tile endTile, LoSParameters parameters = LoSParameters.WithoutStartAndEnd)
     {
         // Get Vector between start and end coordinates (Start tile - end tile)
@@ -345,15 +380,26 @@ public class M_Pathfinding : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    // Get a tile with an offset, if it exits in terrain (holes included)
+    /// <summary>
+    /// Return a tile with an offset, if it exits in the board (holes included).
+    /// </summary>
+    /// <param name="xOffset"></param>
+    /// <param name="yOffset"></param>
+    /// <param name="tile"></param>
+    /// <returns></returns>
     private Tile GetOffsetTile(int xOffset, int yOffset, Tile tile)
     {
-        if (!InTerrainRange(xOffset, yOffset, tile)) return null;
+        if (!InBoardRange(xOffset, yOffset, tile)) return null;
 
         return _terrain.grid[tile.x + xOffset, tile.y + yOffset];
     }
 
-    // Get all tiles around
+    /// <summary>
+    /// Return all the existing tiles around a tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="forceNoDiagonals"></param>
+    /// <returns></returns>
     private List<Tile> GetAroundTiles(Tile tile, bool forceNoDiagonals = false)
     {
         List<Tile> toReturn = new List<Tile>();
@@ -387,7 +433,12 @@ public class M_Pathfinding : MonoBehaviour
         return toReturn;
     }
 
-    // Is tile in diagonal with other tile
+    /// <summary>
+    /// Return true if a tile is in diagonal with another tile.
+    /// </summary>
+    /// <param name="tile1"></param>
+    /// <param name="tile2"></param>
+    /// <returns></returns>
     private bool IsDiagonal(Tile tile1, Tile tile2)
     {
         if (tile1.x == tile2.x || tile1.y == tile2.y) return false;
@@ -395,7 +446,12 @@ public class M_Pathfinding : MonoBehaviour
         return true;
     }
 
-    // Get cost of movement from tile to another
+    /// <summary>
+    /// Return the cost of movement from tile to another.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="currentTile"></param>
+    /// <returns></returns>
     private int GetCost(Tile tile, Tile currentTile)
     {
         if (IsDiagonal(currentTile, tile)) return 14;
@@ -403,8 +459,14 @@ public class M_Pathfinding : MonoBehaviour
         return 10;
     }
 
-    // Is tile in terrain
-    private bool InTerrainRange(int xOffset, int yOffset, Tile tile)
+    /// <summary>
+    /// Return true if a tile is inside the board range.
+    /// </summary>
+    /// <param name="xOffset"></param>
+    /// <param name="yOffset"></param>
+    /// <param name="tile"></param>
+    /// <returns></returns>
+    private bool InBoardRange(int xOffset, int yOffset, Tile tile)
     {
         if (tile.x + xOffset < 0) return false;
         if (tile.x + xOffset >= _terrain.grid.GetLength(0)) return false;
@@ -414,8 +476,12 @@ public class M_Pathfinding : MonoBehaviour
         return true;
     }
 
-    // Add tiles in around list if the have conditions (Without : hole, big obstacle, other character with conditions)
-    private void AddTile(Tile tile, Tile lastTile = null)
+    /// <summary>
+    /// Add tiles in around list excepts : hole, big obstacle, other character with conditions
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="lastTile"></param>
+    private void AddAllowedTile(Tile tile, Tile lastTile = null)
     {
         if (!tile) return; // if tile
         if (closedList.Contains(tile)) return; // isnt this tile in list
@@ -442,7 +508,10 @@ public class M_Pathfinding : MonoBehaviour
         aroundList.Add(tile);
     }
 
-    // Add tiles in around list if the have conditions
+    /// <summary>
+    /// Add all tiles in around list
+    /// </summary>
+    /// <param name="tile"></param>
     private void AddAnyTile(Tile tile)
     {
         if (!tile) return; // if tile
@@ -456,7 +525,11 @@ public class M_Pathfinding : MonoBehaviour
         aroundList.Add(tile);
     }
 
-    // Caluclate cost, heuristic and total
+    /// <summary>
+    /// Caluclate cost, heuristic and total of a tile and add its parent
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="endTile"></param>
     private void CalculateTileValues(Tile tile, Tile endTile)
     {
         if(tile == null) { Debug.LogError("tile is null !"); return; } // EXIT ERROR : Tile is null

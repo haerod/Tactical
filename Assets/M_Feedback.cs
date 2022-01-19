@@ -16,7 +16,8 @@ public class M_Feedback : MonoBehaviour
     public Square_Feedback square;
     [SerializeField] private GameObject actionEffectPrefab = null;
     public static M_Feedback instance;
-    public enum CursorType { Regular, Aim, OutAim, OutActionPoints}
+    
+    public enum CursorType { Regular, AimOrInSight, OutAimOrSight, OutActionPoints } // /!\ If add/remove a cursor, update the SetCusror method
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -39,6 +40,9 @@ public class M_Feedback : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Disable visual feedbacks (selection square, direction lines, action cost text)
+    /// </summary>
     public void DisableFeedbacks()
     {
         square.DisableSquare();
@@ -46,6 +50,10 @@ public class M_Feedback : MonoBehaviour
         _ui.DisableActionCostText();
     }
 
+    /// <summary>
+    /// Set cursor to its new appearance.
+    /// </summary>
+    /// <param name="type"></param>
     public void SetCursor(CursorType type)
     {
         switch (type)
@@ -53,10 +61,10 @@ public class M_Feedback : MonoBehaviour
             case CursorType.Regular:
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
-            case CursorType.Aim:
+            case CursorType.AimOrInSight:
                 Cursor.SetCursor(aimCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
-            case CursorType.OutAim:
+            case CursorType.OutAimOrSight:
                 Cursor.SetCursor(noLineOfSightCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
             case CursorType.OutActionPoints:
@@ -67,9 +75,14 @@ public class M_Feedback : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Instantiate an action effect feedback prefab over the target object.
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="referenceTarget"></param>
     public void ActionEffectFeedback(string text, Transform referenceTarget)
     {
-        TextEffect_Feedback insta = Instantiate(actionEffectPrefab, transform).GetComponent<TextEffect_Feedback>();
+        ActionEffect_Feedback insta = Instantiate(actionEffectPrefab, transform).GetComponent<ActionEffect_Feedback>();
         insta.SetText(text);
         insta.PositionAt(referenceTarget);
     }

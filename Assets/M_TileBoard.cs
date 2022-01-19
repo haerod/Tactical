@@ -17,7 +17,7 @@ public class M_TileBoard : MonoBehaviour
     [Header("REFERENCES")]
 
     [SerializeField] private GameObject tile = null;
-    [SerializeField] private Transform terrainParent = null;
+    [SerializeField] private Transform boardParent = null;
 
     [HideInInspector] public Tile[,] grid;
     public static M_TileBoard instance;
@@ -39,19 +39,19 @@ public class M_TileBoard : MonoBehaviour
         }
 
         // Other instructions
-        GenerateTerrain();
+        GenerateBoard();
     }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
-    public void GenerateTerrain()
-    {
-        DestroyTerrain();
-        CreateTiles();
-    }
-
+    /// <summary>
+    /// Return tile at (x,y) coordinates.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public Tile GetTile(int x, int y)
     {
         return grid[x, y];
@@ -61,17 +61,10 @@ public class M_TileBoard : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private void DestroyTerrain()
-    {
-        if (terrainParent.childCount == 0) return;
-
-        foreach(Transform child in terrainParent)
-        {
-            Destroy(child.gameObject);
-        }
-    }
-
-    private void CreateTiles()
+    /// <summary>
+    /// Generate the board.
+    /// </summary>
+    private void GenerateBoard()
     {
         grid = new Tile[length, width];
         for (int i = 0; i < length; i++)
@@ -79,7 +72,7 @@ public class M_TileBoard : MonoBehaviour
             for (int j = 0; j < width; j++)
             {
                 Vector3 pozTile = new Vector3(i, 0, j);
-                GameObject instaTile = Instantiate(tile, pozTile, Quaternion.identity, terrainParent);
+                GameObject instaTile = Instantiate(tile, pozTile, Quaternion.identity, boardParent);
                 instaTile.name = "tile " + i + ", " + j;
 
                 Tile stat = instaTile.GetComponent<Tile>();
@@ -94,7 +87,7 @@ public class M_TileBoard : MonoBehaviour
                     stat.DisableRenderer();
                     stat.HideValues();
                 }
-                else if(bigObstaclesCoordinates.Contains(coordinates))
+                else if (bigObstaclesCoordinates.Contains(coordinates))
                 {
                     stat.type = Tile.Type.BigObstacle;
                     stat.EnableBigObstacle();

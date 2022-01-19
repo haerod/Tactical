@@ -12,7 +12,7 @@ public class Attack : MonoBehaviour
     public Character target;
 
     [Header("REFERENCES")]
-        
+    
     [SerializeField] private Character c = null;
     [SerializeField] private GameObject muzzleFlare = null;
 

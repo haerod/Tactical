@@ -2756,7 +2756,7 @@ MonoBehaviour:
   - {x: 7, y: 6}
   - {x: 7, y: 7}
   tile: {fileID: 6860123943097857979, guid: 31c5acd16725bd64c8be4cc521b899ac, type: 3}
-  terrainParent: {fileID: 1860682910}
+  boardParent: {fileID: 1860682910}
 --- !u!4 &1860682910
 Transform:
   m_ObjectHideFlags: 0
@@ -3068,7 +3068,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5571022486952568945, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: team
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5571022486952568945, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: designation

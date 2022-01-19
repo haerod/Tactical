@@ -53,20 +53,23 @@ public class M_Input : MonoBehaviour
     private void Update()
     {
         if (!canClick) return;
-        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return; // Return if pointer over UI
 
         CheckRaycast();
         CheckClick();
-        CheckChangeCharacter();
+        CheckChangeCharacterInput();
         CheckMouseScreenMovement();
-        CheckRecenterCamera();
-        CheckNextTurn();
+        CheckRecenterCameraInput();
+        CheckEndTurnInput();
     }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Clear feedbacks and null variables (path, target, etc.)
+    /// </summary>
     public void ClearFeedbacksAndValues()
     {
         _feedbacks.DisableFeedbacks();
@@ -76,6 +79,10 @@ public class M_Input : MonoBehaviour
         currentTarget = null;
     }
 
+    /// <summary>
+    /// Set if players can click or not on board objects
+    /// </summary>
+    /// <param name="value"></param>
     public void SetClick(bool value = true)
     {
         canClick = value;
@@ -93,10 +100,12 @@ public class M_Input : MonoBehaviour
     // CHECKERS
     // ========
 
+    /// <summary>
+    /// Check over which object the pointer is (with raycast).
+    /// </summary>
     private void CheckRaycast()
     {
         Camera cam = _camera.GetComponentInChildren<Camera>();
-
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -138,11 +147,14 @@ public class M_Input : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Check if player click on a tile (or element on a tile), previously checked by CheckRaycast().
+    /// </summary>
     private void CheckClick()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (pointedTile == null) return; // No on tile
+            if (pointedTile == null) return; // Exit : Not on a tile
 
             if(pointedTile.IsOccupied())
             {
@@ -155,7 +167,10 @@ public class M_Input : MonoBehaviour
         }
     }
 
-    private void CheckChangeCharacter()
+    /// <summary>
+    /// Check input to change character to another.
+    /// </summary>
+    private void CheckChangeCharacterInput()
     {
         if (Input.GetKeyDown(changeCharacterKey))
         {
@@ -163,7 +178,10 @@ public class M_Input : MonoBehaviour
         }
     }
 
-    private void CheckNextTurn()
+    /// <summary>
+    /// Check input to end turn and pass to the next team turn.
+    /// </summary>
+    private void CheckEndTurnInput()
     {
         if (Input.GetKeyDown(endTurnKey))
         {
@@ -171,6 +189,20 @@ public class M_Input : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Check input to recenter camera on the current character
+    /// </summary>
+    private void CheckRecenterCameraInput()
+    {
+        if (Input.GetKeyDown(recenterCameraKey))
+        {
+            _camera.ResetPosition();
+        }
+    }
+
+    /// <summary>
+    /// Check if mouse is on the borders (so have to move).
+    /// </summary>
     private void CheckMouseScreenMovement()
     {
         Vector3 direction = Vector3.zero;
@@ -211,17 +243,13 @@ public class M_Input : MonoBehaviour
         _camera.Move(direction);
     }
 
-    private void CheckRecenterCamera()
-    {
-        if (Input.GetKeyDown(recenterCameraKey))
-        {
-            _camera.ResetPosition();
-        }
-    }
-
     // OTHERS
     // ======
 
+    /// <summary>
+    /// Actions happening if the pointer overlaps an occupied tile.
+    /// </summary>
+    /// <param name="tile"></param>
     private void OnOccupiedTile(Tile tile)
     {
         _feedbacks.DisableFeedbacks();
@@ -236,7 +264,7 @@ public class M_Input : MonoBehaviour
         {
             if (_characters.currentCharacter.CanAttack())
             {
-                _feedbacks.SetCursor(M_Feedback.CursorType.Aim);
+                _feedbacks.SetCursor(M_Feedback.CursorType.AimOrInSight);
             }
             else
             {
@@ -246,10 +274,14 @@ public class M_Input : MonoBehaviour
         else
         {
             print("out aim");
-            _feedbacks.SetCursor(M_Feedback.CursorType.OutAim);
+            _feedbacks.SetCursor(M_Feedback.CursorType.OutAimOrSight);
         }
     }
 
+    /// <summary>
+    /// Actions happening if the pointer overlaps a free tile.
+    /// </summary>
+    /// <param name="tile"></param>
     private void OnFreeTile(Tile tile)
     {
         currentTarget = null;
@@ -274,19 +306,25 @@ public class M_Input : MonoBehaviour
         _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
     }
 
+    /// <summary>
+    /// Actions happening if the player clicks on a tile occupied by another enemy character.
+    /// </summary>
     private void ClickAttack()
     {
         if (currentTarget == null) return; // Exit  : It's no target
         if (!_characters.currentCharacter.look.HasSightOn(currentTarget.Tile())) return; // Exit : Isn't in sight
 
         _characters.currentCharacter.attack.AttackTarget(currentTarget, () => {
-            if (_characters.IsVictory())
+            if (_characters.IsFinalTeam(_characters.currentCharacter))
             {
                 _characters.NextTurn();
             }
         });
     }
 
+    /// <summary>
+    /// Actions happening if the player clicks on a free tile to move.
+    /// </summary>
     private void ClickMove()
     {
         if (currentPathfinding == null) return; // Exit  : It's no path
@@ -296,6 +334,11 @@ public class M_Input : MonoBehaviour
         _ui.DisableActionCostText();
     }
 
+    /// <summary>
+    /// Return true if the character can go on this tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
     private bool CanGo(Tile tile)
     {
         Character c = _characters.currentCharacter;

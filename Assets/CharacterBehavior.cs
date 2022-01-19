@@ -94,7 +94,7 @@ public class CharacterBehavior : MonoBehaviour
     {
         target = c.attack.ClosestEnemyOnSight();
 
-        if(target == null || target.health.IsDead() || _characters.IsFinalCharacter(c)) // EXIT : nobody in sight
+        if(target == null || target.health.IsDead() || _characters.IsFinalTeam(c)) // EXIT : nobody in sight
         {
             _characters.NextTurn();
             return;
@@ -105,7 +105,7 @@ public class CharacterBehavior : MonoBehaviour
 
     private void CheckOffensive()
     {
-        if (_characters.IsFinalCharacter(c)) // Victory
+        if (_characters.IsFinalTeam(c)) // Victory
         {
             _characters.NextTurn();
             return;

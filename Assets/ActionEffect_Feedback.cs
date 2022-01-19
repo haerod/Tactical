@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class TextEffect_Feedback : MonoBehaviour
+public class ActionEffect_Feedback : MonoBehaviour
 {
     [SerializeField] private float destructionDelay = 2;
     [SerializeField] private float textOffset = 2;

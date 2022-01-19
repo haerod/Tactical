@@ -18,6 +18,7 @@ public class M_Characters : MonoBehaviour
 
     private void Awake()
     {
+        // Singleton
         if (!instance)
         {
             instance = this;
@@ -57,9 +58,12 @@ public class M_Characters : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Pass to the next character's turn
+    /// </summary>
     public void NextTurn()
     {
-        if (IsVictory())
+        if (IsFinalTeam(currentCharacter))
         {
             Victory();
             return;
@@ -73,19 +77,32 @@ public class M_Characters : MonoBehaviour
         NewCurrentCharacter();
     }
 
+    /// <summary>
+    /// Return true if the given character is the current character
+    /// </summary>
+    /// <param name="character"></param>
+    /// <returns></returns>
     public bool IsCurrentCharacter(Character character)
     {
         if (character == currentCharacter) return true;
         else return false;
     }
 
+    /// <summary>
+    /// Do some things when a character is dead (ex: remove it from the playable character list)
+    /// </summary>
+    /// <param name="dead"></param>
     public void DeadCharacter(Character dead)
     {
         characters.Remove(dead);
     }
 
-    // Is the last character // NEXT : team
-    public bool IsFinalCharacter(Character character)
+    /// <summary>
+    /// Return true if the character's team is the last team standing.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <returns></returns>
+    public bool IsFinalTeam(Character character)
     {
         foreach (Character c in characters)
         {
@@ -95,27 +112,9 @@ public class M_Characters : MonoBehaviour
         return true;
     }
 
-    public bool IsVictory()
-    {
-        Character current = null;
-
-        for (int i = 0; i < characters.Count; i++)
-        {
-            if (i == 0)
-            {
-                current = characters[i];
-                continue;
-            }
-
-            if(current.Team() != characters[i].Team())
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
+    /// <summary>
+    /// Enable victory screen and do the other things happening during victory
+    /// </summary>
     public void Victory()
     {
         _ui.SetTurnPlayerUIActive(false);
@@ -130,11 +129,17 @@ public class M_Characters : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Search and all characters and add them in the "characters" list
+    /// </summary>
     private void FillCharacterList()
     {
         characters = FindObjectsOfType<Character>().ToList();
     }
 
+    /// <summary>
+    /// Do all the things happening when a new current character is designated (reset camera, clear visual feedbacks, update UI, etc.)
+    /// </summary>
     private void NewCurrentCharacter()
     {
         // Inputs
