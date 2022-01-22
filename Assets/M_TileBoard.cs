@@ -85,7 +85,7 @@ public class M_TileBoard : MonoBehaviour
                 {
                     stat.type = Tile.Type.Hole;
                     stat.DisableRenderer();
-                    stat.HideValues();
+                    //stat.HideValues(); // uncomment this line in pathfinding debug mode
                 }
                 else if (bigObstaclesCoordinates.Contains(coordinates))
                 {

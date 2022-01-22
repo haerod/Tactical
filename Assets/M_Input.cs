@@ -128,7 +128,7 @@ public class M_Input : MonoBehaviour
                 // New current tile and pathfinding
                 pointedTile = tile;
 
-                if (tile.IsOccupied()) // Tile occupied by somebody
+                if (tile.IsOccupiedByCharacter()) // Tile occupied by somebody
                 {
                     OnOccupiedTile(tile);
                 }
@@ -156,7 +156,7 @@ public class M_Input : MonoBehaviour
         {
             if (pointedTile == null) return; // Exit : Not on a tile
 
-            if(pointedTile.IsOccupied())
+            if(pointedTile.IsOccupiedByCharacter())
             {
                 ClickAttack();
             }

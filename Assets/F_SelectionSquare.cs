@@ -1,35 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
-public class OrientToCamera : MonoBehaviour
+public class F_SelectionSquare : MonoBehaviour
 {
-    private Camera cam;
+    [SerializeField] private Transform squareTransform = null;
+    [Range(.01f, .5f)]
+    [SerializeField] private float squareOffset = .01f;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
-    private void Start()
-    {
-        cam = Camera.main;
-    }
-
-    private void Update()
-    {
-        Orient();
-    }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
     /// <summary>
-    /// Orient the object to the camera.
+    /// Enable and position the selection square.
     /// </summary>
-    public void Orient()
+    /// <param name="tile"></param>
+    public void SetSquare(Tile tile)
     {
-        transform.forward = cam.transform.forward;
+        squareTransform.gameObject.SetActive(true);
+        squareTransform.position = tile.transform.position + Vector3.up * squareOffset;
+    }
+
+    /// <summary>
+    /// Disable the selection square.
+    /// </summary>
+    public void DisableSquare()
+    {
+        squareTransform.gameObject.SetActive(false);
     }
 
     // ======================================================================

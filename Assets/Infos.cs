@@ -20,7 +20,7 @@ public class Infos : MonoBehaviour
     public void Start()
     {
         transform.parent.name = string.Format("Character : {0} (T{1})", designation, team);
-        GetTeamColors();
+        SetTeamMaterials();
     }
 
     // ======================================================================
@@ -31,7 +31,10 @@ public class Infos : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private void GetTeamColors()
+    /// <summary>
+    /// Set the team materials to the character.
+    /// </summary>
+    private void SetTeamMaterials()
     {
         rend1.material = _rules.teamInfos[c.Team()].mat1;
         rend2.material = _rules.teamInfos[c.Team()].mat2;

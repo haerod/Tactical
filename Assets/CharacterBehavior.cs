@@ -27,6 +27,9 @@ public class CharacterBehavior : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Start the character behavior.
+    /// </summary>
     public void PlayBehavior()
     {
         switch (behavior)
@@ -52,6 +55,9 @@ public class CharacterBehavior : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Follow the current target.
+    /// </summary>
     public void FollowTarget()
     {
         if (c.behavior.target == null) // Exit : no target
@@ -90,6 +96,9 @@ public class CharacterBehavior : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Choose the closest enemy target.
+    /// </summary>
     private void AcquireTarget()
     {
         target = c.attack.ClosestEnemyOnSight();
@@ -103,6 +112,9 @@ public class CharacterBehavior : MonoBehaviour
         c.attack.AttackTarget(target, () => _characters.NextTurn());
     }
 
+    /// <summary>
+    /// Check it the character can attack and start it if it's possible.
+    /// </summary>
     private void CheckOffensive()
     {
         if (_characters.IsFinalTeam(c)) // Victory
@@ -129,11 +141,23 @@ public class CharacterBehavior : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Start a wait for "time" seconds and execute an action.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="OnEnd"></param>
     private void Wait(float time, Action OnEnd)
     {
         StartCoroutine(Wait_Co(time, OnEnd));
     }
 
+    /// <summary>
+    /// Wait for "time" seconds and execute an action.
+    /// Called by Wait() method.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="OnEnd"></param>
+    /// <returns></returns>
     IEnumerator Wait_Co(float time, Action OnEnd)
     {
         yield return new WaitForSeconds(time);

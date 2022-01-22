@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class MoveLine_Feedback : MonoBehaviour
+public class F_MoveLine : MonoBehaviour
 {
     [Range(.01f, .5f)]
     [SerializeField] private float lineOffset = 0.05f;
@@ -13,6 +13,20 @@ public class MoveLine_Feedback : MonoBehaviour
     [SerializeField] private LineRenderer line = null;
     [SerializeField] private LineRenderer lineOut = null;
 
+    // ======================================================================
+    // MONOBEHAVIOUR
+    // ======================================================================
+
+    // ======================================================================
+    // PUBLIC METHODS
+    // ======================================================================
+
+    /// <summary>
+    /// Set the lines on the path, with the good colors.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="character"></param>
+    /// <param name="endTile"></param>
     public void SetLines(List<Tile> path, Character character, Tile endTile)
     {
         int actionPoints = character.actionPoints.actionPoints;
@@ -55,9 +69,16 @@ public class MoveLine_Feedback : MonoBehaviour
         line.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Disable the lines.
+    /// </summary>
     public void DisableLines()
     {
         line.gameObject.SetActive(false);
         lineOut.gameObject.SetActive(false);
     }
+
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
 }

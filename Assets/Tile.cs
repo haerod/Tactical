@@ -38,6 +38,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private TextMesh fText = null;
     [Space]
     [SerializeField] private GameObject bigObstacle = null;
+    public enum TileMaterial { Basic, Open, Closed, Path, Area, Attackable, Range} // Update the SetMaterial() method if add/remove a tile material.
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -47,24 +48,9 @@ public class Tile : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    public void ShowValues()
-    {
-        cText.gameObject.SetActive(true);
-        hText.gameObject.SetActive(true);
-        fText.gameObject.SetActive(true);
-
-        cText.text = cost.ToString();
-        hText.text = heuristic.ToString();
-        fText.text = f.ToString();
-    }
-
-    public void HideValues()
-    {
-        cText.gameObject.SetActive(false);
-        hText.gameObject.SetActive(false);
-        fText.gameObject.SetActive(false);
-    }
-
+    /// <summary>
+    /// Reset the pathfinding tiles value.
+    /// </summary>
     public void ResetTileValues()
     {
         cost = 0;
@@ -73,22 +59,27 @@ public class Tile : MonoBehaviour
         parent = null;
     }
 
-    public void ResetTileSkin()
-    {
-        SetMaterial(TileMaterial.Basic);
-    }
 
+    /// <summary>
+    /// Disbale the tiles renderer (ex : for holes).
+    /// </summary>
     public void DisableRenderer()
     {
         rend.enabled = false;
     }
 
+    /// <summary>
+    /// Enable the big obstacle on tile.
+    /// </summary>
     public void EnableBigObstacle()
     {
         bigObstacle.SetActive(true);
     }
 
-    public enum TileMaterial { Basic, Open, Closed, Path, Area, Attackable, Range}
+    /// <summary>
+    /// Set the appearance of a tile with the new material.
+    /// </summary>
+    /// <param name="mat"></param>
     public void SetMaterial(TileMaterial mat)
     {
         if(mat != TileMaterial.Area || mat != TileMaterial.Attackable)
@@ -126,7 +117,20 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public bool IsOccupied()
+    /// <summary>
+    /// Set the tile skin to "basic".
+    /// Short cut of SetMaterial(TileMaterial.Basic).
+    /// </summary>
+    public void ResetTileSkin()
+    {
+        SetMaterial(TileMaterial.Basic);
+    }
+
+    /// <summary>
+    /// Return true if the tile is occupied by a character.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsOccupiedByCharacter()
     {
         foreach (Character c in _characters.characters)
         {
@@ -136,6 +140,11 @@ public class Tile : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Return the character on this tile.
+    /// Return null if is nobody on this tile.
+    /// </summary>
+    /// <returns></returns>
     public Character Character()
     {
         foreach (Character c in _characters.characters)
@@ -144,6 +153,36 @@ public class Tile : MonoBehaviour
         }
 
         return null;
+    }
+
+    // DEBUG
+    // =====
+
+    /// <summary>
+    /// Debug : Show the pathfinding values visually. 
+    /// To show, enable the texts on the prefab, there are the TextMesh components in references, and call this method.
+    /// </summary>
+    public void ShowValues()
+    {
+        cText.gameObject.SetActive(true);
+        hText.gameObject.SetActive(true);
+        fText.gameObject.SetActive(true);
+
+        cText.text = cost.ToString();
+        hText.text = heuristic.ToString();
+        fText.text = f.ToString();
+    }
+
+    /// <summary>
+    /// Debug : Hide the pathfinding values visually.
+    /// To hide, enable the texts on the prefab, there are the TextMesh components in references, and call this method.
+    /// Uncomment this line in M_TileBoard, in GenerateBoard() method for a better lisibility.
+    /// </summary>
+    public void HideValues()
+    {
+        cText.gameObject.SetActive(false);
+        hText.gameObject.SetActive(false);
+        fText.gameObject.SetActive(false);
     }
 
     // ======================================================================

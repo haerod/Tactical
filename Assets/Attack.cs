@@ -27,6 +27,11 @@ public class Attack : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Attack the target and start an action in the end.
+    /// </summary>
+    /// <param name="currentTarget"></param>
+    /// <param name="OnEnd"></param>
     public void AttackTarget(Character currentTarget, Action OnEnd)
     {
         if (c.actionPoints.actionPoints < actionPointsCost)
@@ -53,7 +58,7 @@ public class Attack : MonoBehaviour
 
         OnAttackDone = () => 
         {
-            target.health.AddDamages(damages, c);
+            target.health.AddDamages(damages);
             Wait(0.5f, () => 
             {
                 _inputs.SetClick();
@@ -64,6 +69,9 @@ public class Attack : MonoBehaviour
         };
     }
 
+    /// <summary>
+    /// End the attack.
+    /// </summary>
     public void EndAttack()
     {
         _camera.Shake();
@@ -75,6 +83,10 @@ public class Attack : MonoBehaviour
         Wait(0.1f, () => muzzleFlare.SetActive(false));
     }
 
+    /// <summary>
+    /// Return the closest enemy on sight.
+    /// </summary>
+    /// <returns></returns>
     public Character ClosestEnemyOnSight()
     {
         Look look = c.look;
@@ -87,6 +99,9 @@ public class Attack : MonoBehaviour
             .FirstOrDefault(); // return the lowest
     }
 
+    /// <summary>
+    /// Find the attackable tiles and enable feeback on them.
+    /// </summary>
     public void EnableAttackTiles()
     {
         if(c.actionPoints.actionPoints < c.attack.actionPointsCost)
@@ -109,11 +124,14 @@ public class Attack : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reset the tile skin and clear the attaclable tiles list.
+    /// </summary>
     public void ClearAttackTiles()
     {
         foreach (Tile t in attackTiles)
         {
-            t.SetMaterial(Tile.TileMaterial.Basic);
+            t.ResetTileSkin();
         }
 
         attackTiles.Clear();
@@ -123,11 +141,23 @@ public class Attack : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Start a wait for "time" seconds and execute an action.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="OnEnd"></param>
     private void Wait(float time, Action OnEnd)
     {
         StartCoroutine(Wait_Co(time, OnEnd));
     }
 
+    /// <summary>
+    /// Wait for "time" seconds and execute an action.
+    /// Called by Wait() method.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="OnEnd"></param>
+    /// <returns></returns>
     IEnumerator Wait_Co(float time, Action OnEnd)
     {
         yield return new WaitForSeconds(time);

@@ -10,19 +10,24 @@ public class UI_SlicedHealthBar : MonoBehaviour
     [SerializeField] private GameObject lifeImage = null;
     [SerializeField] private Health health = null;
 
+    // ======================================================================
+    // MONOBEHAVIOUR
+    // ======================================================================
+
     private void Start()
     {
         SetLifeBarActive(true);
         InitialiseBar();
     }
 
-    public void InitialiseBar()
-    {
-        DisplayLifeMax();
-        DisplayCurrentLife();
-    }
+    // ======================================================================
+    // PUBLIC METHODS
+    // ======================================================================
 
-    public void DisplayCurrentLife()
+    /// <summary>
+    /// Display the current life on life bar.
+    /// </summary>
+    public void DisplayCurrentHealth()
     {
         GameObject currentLifeBar;
 
@@ -41,12 +46,23 @@ public class UI_SlicedHealthBar : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enable or disable the life bar.
+    /// </summary>
+    /// <param name="value"></param>
     public void SetLifeBarActive (bool value)
     {
         transform.parent.gameObject.SetActive(value);
     }
 
-    private void DisplayLifeMax()
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+
+    /// <summary>
+    /// Display max life on health bar.
+    /// </summary>
+    private void DisplayMaxHealth()
     {
         // Destroy ancient objects
         for (int i = 0; i < lifeLayoutGroup.childCount; i++)
@@ -75,5 +91,14 @@ public class UI_SlicedHealthBar : MonoBehaviour
                 0);
             rt.localPosition = localPosition;
         }
+    }
+
+    /// <summary>
+    /// Display the current life and max life on life bar.
+    /// </summary>
+    private void InitialiseBar()
+    {
+        DisplayMaxHealth();
+        DisplayCurrentHealth();
     }
 }

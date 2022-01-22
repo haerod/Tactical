@@ -50,6 +50,11 @@ public class Move : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Start the movement on a path, with and action on end of this path.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="OnEnd"></param>
     public void MoveOnPath(List<Tile> path, Action OnEnd)
     {
         if (c.actionPoints.actionPoints <= 0) return;
@@ -72,6 +77,9 @@ public class Move : MonoBehaviour
         StartCoroutine(MoveToDestination(() => OnEnd()));
     }
 
+    /// <summary>
+    /// Show the tiles of the movement area.
+    /// </summary>
     public void EnableMoveArea()
     {
         Tile currentTile = _terrain.grid[x, y];
@@ -85,24 +93,32 @@ public class Move : MonoBehaviour
 
         foreach (Tile t in currentArea)
         {
-            if (t.IsOccupied()) continue;
+            if (t.IsOccupiedByCharacter()) continue;
 
             t.SetMaterial(Tile.TileMaterial.Area);
         }
     }
 
+    /// <summary>
+    /// Reset the material of the tiles in the area zone and clear the list.
+    /// </summary>
     public void ClearAreaZone()
     {
         if (currentArea == null) return;
 
         foreach (Tile t in currentArea)
         {
-            t.SetMaterial(Tile.TileMaterial.Basic);
+            t.ResetTileSkin();
         }
 
         currentArea.Clear();
     }
 
+    /// <summary>
+    /// Orient this object to another position, except on Y axis. Possibility to add an offset (euler angles).
+    /// </summary>
+    /// <param name="targetPosition"></param>
+    /// <param name="offset"></param>
     public void OrientTo(Vector3 targetPosition, float offset = 0)
     {
         Vector3 lookPos = targetPosition - transform.position;
@@ -120,6 +136,11 @@ public class Move : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Move the object to a desination and execute an action in the end.
+    /// </summary>
+    /// <param name="OnEnd"></param>
+    /// <returns></returns>
     IEnumerator MoveToDestination(Action OnEnd)
     {
         while (true)
@@ -152,6 +173,9 @@ public class Move : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Happend when a character move to the next tile.
+    /// </summary>
     private void NextTile()
     {
         index++;
@@ -160,12 +184,20 @@ public class Move : MonoBehaviour
         c.actionPoints.RemoveActionPoints();
     }
 
+    /// <summary>
+    /// Return true if is the last tile of the movement.
+    /// </summary>
+    /// <returns></returns>
     private bool IsEnd()
     {
         if (index + 1 < currentPath.Count && c.actionPoints.actionPoints > 0) return false;
         return true;
     }
 
+    /// <summary>
+    /// Happend in the end of the movement.
+    /// </summary>
+    /// <param name="OnEnd"></param>
     private void EndMove(Action OnEnd = default)
     {
         anim.SetFloat("speed", 0f);
@@ -183,6 +215,10 @@ public class Move : MonoBehaviour
         OnEnd();
     }
 
+    /// <summary>
+    /// Orient to the defined oriention (cardinal points).
+    /// </summary>
+    /// <param name="o"></param>
     private void OrientTo(Orientation o)
     {
         switch (o)

@@ -21,7 +21,11 @@ public class Health : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    public void AddDamages(int damages, Character attacker)
+    /// <summary>
+    /// Add "damages" damage to the health and check for death.
+    /// </summary>
+    /// <param name="damages"></param>
+    public void AddDamages(int damages)
     {
         health -= damages;
 
@@ -36,15 +40,22 @@ public class Health : MonoBehaviour
         }
 
         _feedbacks.ActionEffectFeedback(damages.ToString(), transform.parent);
-        c.healthBar.DisplayCurrentLife();
+        c.healthBar.DisplayCurrentHealth();
     }
 
+    /// <summary>
+    /// Return true if the character has 0 health or less.
+    /// </summary>
+    /// <returns></returns>
     public bool IsDead() => health <= 0;
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Start the death anim, inform M_Characters of the death and disable the life bar after a second
+    /// </summary>
     private void Death()
     {
         c.anim.Death();
@@ -52,11 +63,23 @@ public class Health : MonoBehaviour
         Wait(1, () => { c.healthBar.SetLifeBarActive(false); });
     }
 
+    /// <summary>
+    /// Start a wait for "time" seconds and execute an action.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="OnEnd"></param>
     private void Wait(float time, Action OnEnd)
     {
         StartCoroutine(Wait_Co(time, OnEnd));
     }
 
+    /// <summary>
+    /// Wait for "time" seconds and execute an action.
+    /// Called by Wait() method.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="OnEnd"></param>
+    /// <returns></returns>
     IEnumerator Wait_Co(float time, Action OnEnd)
     {
         yield return new WaitForSeconds(time);

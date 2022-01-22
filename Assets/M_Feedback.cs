@@ -12,8 +12,8 @@ public class M_Feedback : MonoBehaviour
 
     [Header("REFERENCES")]
 
-    public MoveLine_Feedback line;
-    public Square_Feedback square;
+    public F_MoveLine line;
+    public F_SelectionSquare square;
     [SerializeField] private GameObject actionEffectPrefab = null;
     public static M_Feedback instance;
     
@@ -82,7 +82,7 @@ public class M_Feedback : MonoBehaviour
     /// <param name="referenceTarget"></param>
     public void ActionEffectFeedback(string text, Transform referenceTarget)
     {
-        ActionEffect_Feedback insta = Instantiate(actionEffectPrefab, transform).GetComponent<ActionEffect_Feedback>();
+        F_ActionEffect insta = Instantiate(actionEffectPrefab, transform).GetComponent<F_ActionEffect>();
         insta.SetText(text);
         insta.PositionAt(referenceTarget);
     }

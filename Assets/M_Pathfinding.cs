@@ -121,7 +121,7 @@ public class M_Pathfinding : MonoBehaviour
 
         // Get aviable tiles
         area = area
-            .Where(o => !o.IsOccupied() || o == from) // remove occupied tiles or get the original tile
+            .Where(o => !o.IsOccupiedByCharacter() || o == from) // remove occupied tiles or get the original tile
             .Where(o => o.type != Tile.Type.Hole || o.type != Tile.Type.BigObstacle) // remove occupied tiles
             .OrderBy(o => o.cost) // order by cost
             .ToList();
@@ -493,7 +493,7 @@ public class M_Pathfinding : MonoBehaviour
             if (newCost > tile.cost) return;
         }
 
-        if (tile.IsOccupied())
+        if (tile.IsOccupiedByCharacter())
         {
             if (_rules.canPassThrough == M_Rules.PassThrough.Nobody)
             {

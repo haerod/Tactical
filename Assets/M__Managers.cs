@@ -1,5 +1,9 @@
 ﻿public static class M__Managers
 {
+    // For any new singleton, add a new
+    // public static SingletonClass nameOfTheVariable => SingetonClass.nameOfTheInstance
+    // Now, you can simply use nameOfTheVariable to call the singleton
+
     public static M_Feedback _feedbacks => M_Feedback.instance;
     public static M_Input _inputs => M_Input.instance;
     public static M_Pathfinding _pathfinding => M_Pathfinding.instance;

@@ -19,18 +19,29 @@ public class ActionPoints : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Remove "value" action points (basically one).
+    /// </summary>
+    /// <param name="value"></param>
     public void RemoveActionPoints(int value = 1)
     {
         actionPoints -= value;
         _ui.SetActionPointText(actionPoints.ToString(), c);
     }
 
+    /// <summary>
+    /// Add "avalue action points (basically one).
+    /// </summary>
+    /// <param name="value"></param>
     public void AddActionPoints(int value = 1)
     {
         actionPoints += value;
         _ui.SetActionPointText(actionPoints.ToString(), c);
     }
 
+    /// <summary>
+    /// Set current action points value to max action points value.
+    /// </summary>
     public void FullActionPoints()
     {
         actionPoints = maxActionPoints;
