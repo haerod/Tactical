@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class Infos : MonoBehaviour
+public class C_Infos : MonoBehaviour
 {
     public string designation = "Name";
     public int team = 1;
 
     [Header("REFERENCES")]
-    [SerializeField] private Character c = null;
+    [SerializeField] private C__Character c = null;
     [SerializeField] private Renderer rend1 = null;
     [SerializeField] private Renderer rend2 = null;
 

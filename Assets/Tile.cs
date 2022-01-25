@@ -61,18 +61,20 @@ public class Tile : MonoBehaviour
 
 
     /// <summary>
-    /// Disbale the tiles renderer (ex : for holes).
+    /// Disable renderer and set hole tile type.
     /// </summary>
-    public void DisableRenderer()
+    public void EnableHole()
     {
+        type = Tile.Type.Hole;
         rend.enabled = false;
     }
 
     /// <summary>
-    /// Enable the big obstacle on tile.
+    /// Enable the big obstacle on tile and set big obstacle type.
     /// </summary>
     public void EnableBigObstacle()
     {
+        type = Tile.Type.BigObstacle;
         bigObstacle.SetActive(true);
     }
 
@@ -132,7 +134,7 @@ public class Tile : MonoBehaviour
     /// <returns></returns>
     public bool IsOccupiedByCharacter()
     {
-        foreach (Character c in _characters.characters)
+        foreach (C__Character c in _characters.characters)
         {
             if (c.move.x == x && c.move.y == y)
                 return true;
@@ -145,9 +147,9 @@ public class Tile : MonoBehaviour
     /// Return null if is nobody on this tile.
     /// </summary>
     /// <returns></returns>
-    public Character Character()
+    public C__Character Character()
     {
-        foreach (Character c in _characters.characters)
+        foreach (C__Character c in _characters.characters)
         {
             if(c.Tile() == this) return c;
         }
@@ -176,7 +178,7 @@ public class Tile : MonoBehaviour
     /// <summary>
     /// Debug : Hide the pathfinding values visually.
     /// To hide, enable the texts on the prefab, there are the TextMesh components in references, and call this method.
-    /// Uncomment this line in M_TileBoard, in GenerateBoard() method for a better lisibility.
+    /// Uncomment this lines in M_TileBoard, in GenerateBoard() method for a better lisibility.
     /// </summary>
     public void HideValues()
     {

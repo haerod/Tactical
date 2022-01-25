@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using static M__Managers;
 
-public class Look : MonoBehaviour
+public class C_Look : MonoBehaviour
 {
-    [SerializeField] private Character c = null;
+    [SerializeField] private C__Character c = null;
     [SerializeField] private int range = 2;
 
     [HideInInspector] public List<Tile> aimArea;

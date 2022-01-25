@@ -17,7 +17,7 @@ public class M_Feedback : MonoBehaviour
     [SerializeField] private GameObject actionEffectPrefab = null;
     public static M_Feedback instance;
     
-    public enum CursorType { Regular, AimOrInSight, OutAimOrSight, OutActionPoints } // /!\ If add/remove a cursor, update the SetCusror method
+    public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutActionPoints } // /!\ If add/remove a cursor, update the SetCusror method
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -61,7 +61,7 @@ public class M_Feedback : MonoBehaviour
             case CursorType.Regular:
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 break;
-            case CursorType.AimOrInSight:
+            case CursorType.AimAndInSight:
                 Cursor.SetCursor(aimCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
             case CursorType.OutAimOrSight:

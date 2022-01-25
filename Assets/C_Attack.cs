@@ -5,15 +5,15 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class Attack : MonoBehaviour
+public class C_Attack : MonoBehaviour
 {
     public int actionPointsCost = 3;
     public Vector2Int damagesRange = new Vector2Int(3, 5);
-    public Character target;
+    public C__Character target;
 
     [Header("REFERENCES")]
     
-    [SerializeField] private Character c = null;
+    [SerializeField] private C__Character c = null;
     [SerializeField] private GameObject muzzleFlare = null;
 
     private Action OnAttackDone;
@@ -32,13 +32,16 @@ public class Attack : MonoBehaviour
     /// </summary>
     /// <param name="currentTarget"></param>
     /// <param name="OnEnd"></param>
-    public void AttackTarget(Character currentTarget, Action OnEnd)
+    public void AttackTarget(C__Character currentTarget, Action OnEnd)
     {
+        // EXIT : No action points aviable
         if (c.actionPoints.actionPoints < actionPointsCost)
         {
             OnEnd();
-            return; // EXIT : No action points aviable
+            return; 
         }
+        // EXIT : Enemy isn't in sight
+        if (!c.look.HasSightOn(currentTarget.Tile())) return;
 
         target = currentTarget;
 
@@ -87,9 +90,9 @@ public class Attack : MonoBehaviour
     /// Return the closest enemy on sight.
     /// </summary>
     /// <returns></returns>
-    public Character ClosestEnemyOnSight()
+    public C__Character ClosestEnemyOnSight()
     {
-        Look look = c.look;
+        C_Look look = c.look;
 
         return _characters.characters
             .Where(o => o != c) // remove emitter
@@ -109,7 +112,7 @@ public class Attack : MonoBehaviour
             return;
         }
 
-        foreach (Character character in _characters.characters)
+        foreach (C__Character character in _characters.characters)
         {
             if (character == c) continue;
  

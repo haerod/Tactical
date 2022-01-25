@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class Move : MonoBehaviour
+public class C_Move : MonoBehaviour
 {
     [Header("COORDINATES")]
     public int x = 1;
@@ -28,7 +28,7 @@ public class Move : MonoBehaviour
     [Header("REFERENCES")]
 
     [SerializeField] private Animator anim = null;
-    [SerializeField] private Character c  = null;
+    [SerializeField] private C__Character c  = null;
 
     private List<Tile> currentPath = null;
     private List<Tile> currentArea = null;

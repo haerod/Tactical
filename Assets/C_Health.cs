@@ -4,14 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class Health : MonoBehaviour
+public class C_Health : MonoBehaviour
 {
     public int health = 10;
     public int maxHealth = 10;
 
     [Header("REFERENCES")]
 
-    [SerializeField] private Character c = null;
+    [SerializeField] private C__Character c = null;
 
     // ======================================================================
     // MONOBEHAVIOUR

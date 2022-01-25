@@ -22,7 +22,7 @@ public class M_Input : MonoBehaviour
     private bool canClick = true;
     private Tile pointedTile;
     private List<Tile> currentPathfinding;
-    private Character currentTarget;
+    private C__Character currentTarget;
     private int screenWidthPercented;
     private int screenHeightPercented;
     public static M_Input instance;
@@ -58,9 +58,9 @@ public class M_Input : MonoBehaviour
         CheckRaycast();
         CheckClick();
         CheckChangeCharacterInput();
-        CheckMouseScreenMovement();
-        CheckRecenterCameraInput();
         CheckEndTurnInput();
+        CheckRecenterCameraInput();
+        CheckMouseScreenMovement();
     }
 
     // ======================================================================
@@ -112,38 +112,40 @@ public class M_Input : MonoBehaviour
         {
             Tile tile = hit.transform.GetComponent<Tile>();
 
-            if (hit.transform.tag == "Clickable")
+            // On a character's collider, get the character's tile
+            if (hit.transform.tag == "Clickable") 
             {
-                tile = hit.transform.GetComponentInParent<Character>().Tile();
+                tile = hit.transform.GetComponentInParent<C__Character>().Tile();
             }
-    
-            if (!CanGo(tile)) // Isn't a tile, a hole tile or same tile
+
+            // EXIT : is on the already pointed tile (operation already done)
+            if (tile == pointedTile) return;
+
+            // EXIT : Is a hole tile, big obstacle tile or current character's tile
+            if (!CanGo(tile)) 
             {
-                ClearFeedbacksAndValues();
+                OnForbiddenTile();
                 return;
             }
 
-            if (tile != pointedTile ) // Next operations wasn't already done on this tile OR is another character
-            {
-                // New current tile and pathfinding
-                pointedTile = tile;
+            // NEXT STEP : Free tile or occupied tile
 
-                if (tile.IsOccupiedByCharacter()) // Tile occupied by somebody
-                {
-                    OnOccupiedTile(tile);
-                }
-                else // Free tile
-                {
-                    OnFreeTile(tile);
-                }
+            pointedTile = tile;
+
+            if (tile.IsOccupiedByCharacter()) // Tile occupied by somebody
+            {
+                OnOccupiedTile(tile);
+            }
+            else // Free tile
+            {
+                OnFreeTile(tile);
             }
         }
+        // EXIT : Out of tile board
         else
         {
-            if (pointedTile == null) return;
-
-            _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
-            ClearFeedbacksAndValues();
+            OnForbiddenTile();
+            return;
         }
     }
 
@@ -154,7 +156,8 @@ public class M_Input : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (pointedTile == null) return; // Exit : Not on a tile
+            // EXIT : Not on a tile
+            if (pointedTile == null) return; 
 
             if(pointedTile.IsOccupiedByCharacter())
             {
@@ -174,7 +177,7 @@ public class M_Input : MonoBehaviour
     {
         if (Input.GetKeyDown(changeCharacterKey))
         {
-            _characters.NextTurn();
+            _characters.NextTeamCharacter();
         }
     }
 
@@ -243,8 +246,8 @@ public class M_Input : MonoBehaviour
         _camera.Move(direction);
     }
 
-    // OTHERS
-    // ======
+    // ON TILE
+    // =======
 
     /// <summary>
     /// Actions happening if the pointer overlaps an occupied tile.
@@ -255,16 +258,19 @@ public class M_Input : MonoBehaviour
         _feedbacks.DisableFeedbacks();
 
         currentTarget = tile.Character();
+        C__Character c = _characters.currentCharacter;
 
-        // Mouse feedbacks
-        if (tile.Character() == _characters.currentCharacter) return; // Exit : same character
-        if (tile.Character().Team() == _characters.currentCharacter.Team()) return; // Exit : same team
+        // EXIT : same character
+        if (tile.Character() == c) return;
+        // EXIT : same team
+        if (tile.Character().Team() == c.Team()) return; 
 
-        if(_characters.currentCharacter.look.HasSightOn(currentTarget.Tile()))
+        // Mouse feedbacks depending of the line of sight on the enemy
+        if(c.look.HasSightOn(tile))
         {
-            if (_characters.currentCharacter.CanAttack())
+            if (c.CanAttack())
             {
-                _feedbacks.SetCursor(M_Feedback.CursorType.AimOrInSight);
+                _feedbacks.SetCursor(M_Feedback.CursorType.AimAndInSight);
             }
             else
             {
@@ -273,7 +279,6 @@ public class M_Input : MonoBehaviour
         }
         else
         {
-            print("out aim");
             _feedbacks.SetCursor(M_Feedback.CursorType.OutAimOrSight);
         }
     }
@@ -290,13 +295,13 @@ public class M_Input : MonoBehaviour
                         _characters.currentCharacter.Tile(),
                         tile);
 
-        if (Utils.IsVoidList(currentPathfinding)) // No path
+        // EXIT : No path
+        if (Utils.IsVoidList(currentPathfinding))
         {
-            ClearFeedbacksAndValues();
+            OnForbiddenTile();
             return;
         }
 
-        currentPathfinding = currentPathfinding.ToList();
         _feedbacks.square.SetSquare(pointedTile);
         _feedbacks.line.SetLines(
             currentPathfinding, 
@@ -307,15 +312,31 @@ public class M_Input : MonoBehaviour
     }
 
     /// <summary>
+    /// When the pointer is on a hole, an obstacle, out of board or on a blocked destination.
+    /// </summary>
+    private void OnForbiddenTile()
+    {
+        _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
+        ClearFeedbacksAndValues();
+    }
+
+    // CLICS
+    // =====
+
+    /// <summary>
     /// Actions happening if the player clicks on a tile occupied by another enemy character.
+    /// Called by CheckClick().
     /// </summary>
     private void ClickAttack()
     {
-        if (currentTarget == null) return; // Exit  : It's no target
-        if (!_characters.currentCharacter.look.HasSightOn(currentTarget.Tile())) return; // Exit : Isn't in sight
+        C__Character c = _characters.currentCharacter;
 
-        _characters.currentCharacter.attack.AttackTarget(currentTarget, () => {
-            if (_characters.IsFinalTeam(_characters.currentCharacter))
+        // EXIT : There is no target
+        if (currentTarget == null) return;
+
+        // Attack
+        c.attack.AttackTarget(currentTarget, () => {
+            if (_characters.IsFinalTeam(c))
             {
                 _characters.NextTurn();
             }
@@ -324,15 +345,21 @@ public class M_Input : MonoBehaviour
 
     /// <summary>
     /// Actions happening if the player clicks on a free tile to move.
+    /// Called by CheckClick().
     /// </summary>
     private void ClickMove()
     {
-        if (currentPathfinding == null) return; // Exit  : It's no path
-        if (_characters.currentCharacter.actionPoints.actionPoints <= 0) return; // Exit : no action points aviable
+        // EXIT : It's no path
+        if (currentPathfinding == null) return;
+        // EXIT : no action points aviable
+        if (_characters.currentCharacter.actionPoints.actionPoints <= 0) return; 
 
         _characters.currentCharacter.move.MoveOnPath(currentPathfinding, () => { });
         _ui.DisableActionCostText();
     }
+
+    // OTHER
+    // =====
 
     /// <summary>
     /// Return true if the character can go on this tile.
@@ -341,10 +368,11 @@ public class M_Input : MonoBehaviour
     /// <returns></returns>
     private bool CanGo(Tile tile)
     {
-        Character c = _characters.currentCharacter;
+        C__Character c = _characters.currentCharacter;
 
         if (!tile) return false; ;
-        if (tile.type == Tile.Type.Hole) return false; ;
+        if (tile.type == Tile.Type.Hole) return false;
+        if (tile.type == Tile.Type.BigObstacle) return false;
         if (tile.x == c.move.x && tile.y == c.move.y) return false;
         return true;
     }   

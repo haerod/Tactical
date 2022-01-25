@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class CharacterBehavior : MonoBehaviour
+public class C_CharacterBehavior : MonoBehaviour
 {
     public bool playable = true;
 
@@ -15,9 +15,9 @@ public class CharacterBehavior : MonoBehaviour
     public enum Behavior { None, Follower, AttackerOnce, Offensive }
     public Behavior behavior = Behavior.None;
 
-    public Character target;
+    public C__Character target;
 
-    [SerializeField] private Character c = null;
+    [SerializeField] private C__Character c = null;
 
     // ======================================================================
     // MONOBEHAVIOUR

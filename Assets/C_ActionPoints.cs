@@ -2,14 +2,14 @@
 using System.Collections;
 using static M__Managers;
 
-public class ActionPoints : MonoBehaviour
+public class C_ActionPoints : MonoBehaviour
 {
     public int actionPoints = 6;
     public int maxActionPoints = 6;
 
     [Header("REFERENCES")]
 
-    [SerializeField] private Character c = null;
+    [SerializeField] private C__Character c = null;
 
     // ======================================================================
     // MONOBEHAVIOUR

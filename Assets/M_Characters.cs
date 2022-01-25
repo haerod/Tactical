@@ -7,9 +7,9 @@ using static M__Managers;
 
 public class M_Characters : MonoBehaviour
 {
-    public Character currentCharacter;
+    public C__Character currentCharacter;
     
-    [HideInInspector] public List<Character> characters;
+    [HideInInspector] public List<C__Character> characters;
     public static M_Characters instance;
 
     // ======================================================================
@@ -59,7 +59,7 @@ public class M_Characters : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Pass to the next character's turn
+    /// Pass to the next player's turn
     /// </summary>
     public void NextTurn()
     {
@@ -78,11 +78,31 @@ public class M_Characters : MonoBehaviour
     }
 
     /// <summary>
+    /// Pass to the playbale teammates turn.
+    /// </summary>
+    public void NextTeamCharacter()
+    {
+        // Old character
+        currentCharacter.ClearTilesFeedbacks();
+
+        // Find the playble teamates
+        List<C__Character> team = characters
+            .Where(o => o.Team() == currentCharacter.Team() && o.behavior.playable)
+            .ToList();
+
+        // EXIT : There is no playble teammates.
+        if (team.Count <= 1) return;
+
+        currentCharacter = team.Next(team.IndexOf(currentCharacter));
+        NewCurrentCharacter();
+    }
+
+    /// <summary>
     /// Return true if the given character is the current character
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
-    public bool IsCurrentCharacter(Character character)
+    public bool IsCurrentCharacter(C__Character character)
     {
         if (character == currentCharacter) return true;
         else return false;
@@ -92,7 +112,7 @@ public class M_Characters : MonoBehaviour
     /// Do some things when a character is dead (ex: remove it from the playable character list)
     /// </summary>
     /// <param name="dead"></param>
-    public void DeadCharacter(Character dead)
+    public void DeadCharacter(C__Character dead)
     {
         characters.Remove(dead);
     }
@@ -102,9 +122,9 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
-    public bool IsFinalTeam(Character character)
+    public bool IsFinalTeam(C__Character character)
     {
-        foreach (Character c in characters)
+        foreach (C__Character c in characters)
         {
             if (c != character && c.Team() != character.Team()) return false;
         }
@@ -117,6 +137,7 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     public void Victory()
     {
+        print(transform);
         _ui.SetTurnPlayerUIActive(false);
         _ui.EnableEndScreen(currentCharacter);
         currentCharacter.ClearTilesFeedbacks();
@@ -134,7 +155,7 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     private void FillCharacterList()
     {
-        characters = FindObjectsOfType<Character>().ToList();
+        characters = FindObjectsOfType<C__Character>().ToList();
     }
 
     /// <summary>
@@ -153,14 +174,14 @@ public class M_Characters : MonoBehaviour
         currentCharacter.actionPoints.FullActionPoints();
         currentCharacter.ClearTilesFeedbacks();
 
-        if(currentCharacter.behavior.playable) // PC
+        if(currentCharacter.behavior.playable) // Playable character (PC)
         {
             _inputs.SetClick();
             _ui.SetTurnPlayerUIActive(true);
             _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
             currentCharacter.EnableTilesFeedbacks();
         }
-        else // NPC
+        else // Non playable character (NPC)
         {
             _inputs.SetClick(false);
             _ui.SetTurnPlayerUIActive(false);

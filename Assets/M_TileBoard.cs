@@ -83,14 +83,13 @@ public class M_TileBoard : MonoBehaviour
                 Vector2Int coordinates = new Vector2Int(i, j);
                 if (holeCoordinates.Contains(coordinates))
                 {
-                    stat.type = Tile.Type.Hole;
-                    stat.DisableRenderer();
+                    stat.EnableHole();
                     //stat.HideValues(); // uncomment this line in pathfinding debug mode
                 }
                 else if (bigObstaclesCoordinates.Contains(coordinates))
                 {
-                    stat.type = Tile.Type.BigObstacle;
                     stat.EnableBigObstacle();
+                    //stat.HideValues(); // uncomment this line in pathfinding debug mode
                 }
             }
         }

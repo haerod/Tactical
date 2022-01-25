@@ -8,7 +8,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
     [SerializeField] private float spacing = 2;
     [SerializeField] private RectTransform lifeLayoutGroup = null;
     [SerializeField] private GameObject lifeImage = null;
-    [SerializeField] private Health health = null;
+    [SerializeField] private C_Health health = null;
 
     // ======================================================================
     // MONOBEHAVIOUR

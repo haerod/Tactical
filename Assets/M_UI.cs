@@ -69,7 +69,7 @@ public class M_UI : MonoBehaviour
     /// </summary>
     /// <param name="text"></param>
     /// <param name="c"></param>
-    public void SetActionPointText(string text, Character c)
+    public void SetActionPointText(string text, C__Character c)
     {
         if (c != _characters.IsCurrentCharacter(c)) return;
 
@@ -161,7 +161,7 @@ public class M_UI : MonoBehaviour
     /// Enable the end screen (explaining which team is the winner).
     /// </summary>
     /// <param name="winner"></param>
-    public void EnableEndScreen(Character winner)
+    public void EnableEndScreen(C__Character winner)
     {
         endScreen.SetActive(true);
         endScreenText.text = string.Format("{0} are winners !", _rules.teamInfos[winner.infos.team].teamName);

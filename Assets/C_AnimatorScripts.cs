@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AnimatorScripts : MonoBehaviour
+public class C_AnimatorScripts : MonoBehaviour
 {
     [Header("REFERENCES")]
 
-    public Character c;
+    public C__Character c;
     public Animator anim;
 
     // ======================================================================

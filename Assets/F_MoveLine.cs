@@ -27,7 +27,7 @@ public class F_MoveLine : MonoBehaviour
     /// <param name="path"></param>
     /// <param name="character"></param>
     /// <param name="endTile"></param>
-    public void SetLines(List<Tile> path, Character character, Tile endTile)
+    public void SetLines(List<Tile> path, C__Character character, Tile endTile)
     {
         int actionPoints = character.actionPoints.actionPoints;
 

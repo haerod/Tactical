@@ -2,17 +2,17 @@
 using System.Collections;
 using static M__Managers;
 
-public class Character : MonoBehaviour
+public class C__Character : MonoBehaviour
 {
-    public Move move;
-    public Look look;
-    public ActionPoints actionPoints;
-    public Attack attack;
-    public Health health;
-    public Infos infos;
+    public C_Move move;
+    public C_Look look;
+    public C_ActionPoints actionPoints;
+    public C_Attack attack;
+    public C_Health health;
+    public C_Infos infos;
+    public C_CharacterBehavior behavior;
+    public C_AnimatorScripts anim; // With animator / skinned mesh renderer
     public UI_SlicedHealthBar healthBar;
-    public CharacterBehavior behavior;
-    public AnimatorScripts anim; // With animator / skinned mesh renderer
     
     // ======================================================================
     // MONOBEHAVIOUR
