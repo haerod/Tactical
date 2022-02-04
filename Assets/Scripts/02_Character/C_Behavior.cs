@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class C_CharacterBehavior : MonoBehaviour
+public class C_Behavior : MonoBehaviour
 {
     public bool playable = true;
 
@@ -101,7 +101,7 @@ public class C_CharacterBehavior : MonoBehaviour
     /// </summary>
     private void AcquireTarget()
     {
-        target = c.attack.ClosestEnemyOnSight();
+        target = c.look.ClosestEnemyOnSight();
 
         if(target == null || target.health.IsDead() || _characters.IsFinalTeam(c)) // EXIT : nobody in sight
         {
@@ -113,7 +113,7 @@ public class C_CharacterBehavior : MonoBehaviour
     }
 
     /// <summary>
-    /// Check it the character can attack and start it if it's possible.
+    /// Check if the character can attack and start the attack if it's possible.
     /// </summary>
     private void CheckOffensive()
     {
@@ -136,7 +136,7 @@ public class C_CharacterBehavior : MonoBehaviour
         }
         else // Find target
         {
-            target = c.attack.ClosestEnemyOnSight();
+            target = c.look.ClosestEnemyOnSight();
             CheckOffensive();
         }
     }

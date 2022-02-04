@@ -10,7 +10,7 @@ public class C__Character : MonoBehaviour
     public C_Attack attack;
     public C_Health health;
     public C_Infos infos;
-    public C_CharacterBehavior behavior;
+    public C_Behavior behavior;
     public C_AnimatorScripts anim; // With animator / skinned mesh renderer
     public UI_SlicedHealthBar healthBar;
     

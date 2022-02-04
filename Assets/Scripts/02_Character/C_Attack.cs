@@ -87,22 +87,6 @@ public class C_Attack : MonoBehaviour
     }
 
     /// <summary>
-    /// Return the closest enemy on sight.
-    /// </summary>
-    /// <returns></returns>
-    public C__Character ClosestEnemyOnSight()
-    {
-        C_Look look = c.look;
-
-        return _characters.characters
-            .Where(o => o != c) // remove emitter
-            .Where(o => o.Team() != c.Team()) // remove allies
-            .Where(o => look.HasSightOn(o.Tile())) // get all enemies on sight
-            .OrderBy(o => look.LineOfSight(o.Tile()).Count()) // order enemies by distance
-            .FirstOrDefault(); // return the lowest
-    }
-
-    /// <summary>
     /// Find the attackable tiles and enable feeback on them.
     /// </summary>
     public void EnableAttackTiles()

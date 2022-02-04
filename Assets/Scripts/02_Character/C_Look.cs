@@ -7,7 +7,7 @@ using static M__Managers;
 public class C_Look : MonoBehaviour
 {
     [SerializeField] private C__Character c = null;
-    [SerializeField] private int range = 2;
+    [SerializeField] private int range = 5;
 
     [HideInInspector] public List<Tile> aimArea;
 
@@ -27,7 +27,7 @@ public class C_Look : MonoBehaviour
     public bool HasSightOn(Tile tile)
     {
         List<Tile> los = LineOfSight(tile);
-        //print(string.Format("start : {0}, count : {1}", los[0].name, los.Count));
+        print(los.Count + 1 > range);
         if (AreObstacles(los))
             return false; // Exit : obstacles
         if (los.Count + 1 > range)
@@ -58,10 +58,27 @@ public class C_Look : MonoBehaviour
         foreach (Tile t in lineOfSight)
         {
             if (t.type == Tile.Type.BigObstacle) return true;
-            if (t.Character()) return true;
+            if (t.Character())
+            {
+                if (!t.Character().health.IsDead()) return true;
+            }
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Return the closest enemy on sight.
+    /// </summary>
+    /// <returns></returns>
+    public C__Character ClosestEnemyOnSight()
+    {
+        return _characters.characters
+            .Where(o => o != c) // remove emitter
+            .Where(o => o.Team() != c.Team()) // remove allies
+            .Where(o => HasSightOn(o.Tile())) // get all enemies on sight
+            .OrderBy(o => LineOfSight(o.Tile()).Count()) // order enemies by distance
+            .FirstOrDefault(); // return the lowest
     }
 
     // ======================================================================
