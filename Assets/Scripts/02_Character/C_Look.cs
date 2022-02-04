@@ -27,7 +27,7 @@ public class C_Look : MonoBehaviour
     public bool HasSightOn(Tile tile)
     {
         List<Tile> los = LineOfSight(tile);
-        print(los.Count + 1 > range);
+
         if (AreObstacles(los))
             return false; // Exit : obstacles
         if (los.Count + 1 > range)

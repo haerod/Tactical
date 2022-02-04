@@ -137,7 +137,16 @@ public class C_Behavior : MonoBehaviour
         else // Find target
         {
             target = c.look.ClosestEnemyOnSight();
-            CheckOffensive();
+
+            if(target)
+            {
+                CheckOffensive();
+            }
+            else
+            {
+                _characters.NextTurn();
+                return;
+            }
         }
     }
 

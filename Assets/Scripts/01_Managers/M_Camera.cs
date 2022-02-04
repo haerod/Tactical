@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
+using static M__Managers;
 
 public class M_Camera : MonoBehaviour
 {
@@ -44,12 +47,7 @@ public class M_Camera : MonoBehaviour
 
     private void Update()
     {
-        currentTime += Time.deltaTime;
-
-        transform.position = Vector3.Lerp(
-            startPosition, 
-            positionToReach, 
-            movingTimeCurve.Evaluate(Mathf.Clamp01(currentTime/movingTime)));
+        UpdateCameraPosition();
     }
 
     // ======================================================================
@@ -95,6 +93,32 @@ public class M_Camera : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Update the camera position (clamped). Called by Update().
+    /// </summary>
+    private void UpdateCameraPosition()
+    {
+        currentTime += Time.deltaTime;
+
+        Vector3 cameraPoz = Vector3.Lerp(
+            startPosition,
+            positionToReach,
+            movingTimeCurve.Evaluate(Mathf.Clamp01(currentTime / movingTime)));
+
+        transform.position = cameraPoz;
+
+        float xMin = _board.grid[0, _board.width - 1].transform.localPosition.x;
+        float xMax = _board.grid[_board.length - 1, 0].transform.localPosition.x;
+        float zMin = _board.grid[0, 0].transform.localPosition.z;
+        float zMax = _board.grid[_board.length - 1, _board.width - 1].transform.localPosition.z;
+
+        transform.localPosition = new Vector3(
+            Mathf.Clamp(transform.localPosition.x, xMin, xMax),
+            target.transform.localPosition.y + yOffset,
+            Mathf.Clamp(transform.localPosition.z, zMin, zMax)
+            );
+    }
 
     /// <summary>
     /// Coroutine of Shake() method. Only called by Shake().

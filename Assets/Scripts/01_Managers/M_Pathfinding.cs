@@ -364,7 +364,7 @@ public class M_Pathfinding : MonoBehaviour
         {
             // Theoric coordinates of the segment
             Vector2 tile = new Vector2(startTile.x, startTile.y) + i / length * v2;
-            Tile t = _terrain.GetTile(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
+            Tile t = _board.GetTile(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
             toReturn.Add(t);
         }
 
@@ -391,7 +391,7 @@ public class M_Pathfinding : MonoBehaviour
     {
         if (!InBoardRange(xOffset, yOffset, tile)) return null;
 
-        return _terrain.grid[tile.x + xOffset, tile.y + yOffset];
+        return _board.grid[tile.x + xOffset, tile.y + yOffset];
     }
 
     /// <summary>
@@ -469,9 +469,9 @@ public class M_Pathfinding : MonoBehaviour
     private bool InBoardRange(int xOffset, int yOffset, Tile tile)
     {
         if (tile.x + xOffset < 0) return false;
-        if (tile.x + xOffset >= _terrain.grid.GetLength(0)) return false;
+        if (tile.x + xOffset >= _board.grid.GetLength(0)) return false;
         if (tile.y + yOffset < 0) return false;
-        if (tile.y + yOffset >= _terrain.grid.GetLength(1)) return false;
+        if (tile.y + yOffset >= _board.grid.GetLength(1)) return false;
 
         return true;
     }

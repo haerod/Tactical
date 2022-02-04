@@ -137,7 +137,6 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     public void Victory()
     {
-        print(transform);
         _ui.SetTurnPlayerUIActive(false);
         _ui.EnableEndScreen(currentCharacter);
         currentCharacter.ClearTilesFeedbacks();

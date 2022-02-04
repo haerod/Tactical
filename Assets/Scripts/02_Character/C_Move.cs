@@ -41,7 +41,7 @@ public class C_Move : MonoBehaviour
 
     private void Start()
     {
-        c.transform.position = _terrain.grid[x, y].transform.position;
+        c.transform.position = _board.grid[x, y].transform.position;
         OrientTo(orientation);
         anim.SetFloat("speed", 0f);
     }
@@ -82,7 +82,7 @@ public class C_Move : MonoBehaviour
     /// </summary>
     public void EnableMoveArea()
     {
-        Tile currentTile = _terrain.grid[x, y];
+        Tile currentTile = _board.grid[x, y];
         int actionPoints = c.actionPoints.actionPoints;
 
         currentArea = _pathfinding.AreaMovementZone(currentTile, actionPoints);

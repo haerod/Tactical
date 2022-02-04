@@ -28,7 +28,7 @@ public class C__Character : MonoBehaviour
     /// <returns></returns>
     public Tile Tile()
     {
-        return _terrain.GetTile(move.x, move.y);
+        return _board.GetTile(move.x, move.y);
     }
 
     /// <summary>
