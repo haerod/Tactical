@@ -47,6 +47,8 @@ public class C__Character : MonoBehaviour
     {
         move.EnableMoveArea();
         attack.EnableAttackTiles();
+        _feedbacks.SetViewLinesActive(false);
+        look.EnableViewTiles();
     }
 
     /// <summary>

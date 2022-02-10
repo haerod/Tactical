@@ -66,7 +66,7 @@ public class M_Pathfinding : MonoBehaviour
 
             // Put all tiles in around list
             aroundList.Clear();
-            List<Tile> tempAround = GetAroundTiles(currentTile);
+            List<Tile> tempAround = _board.GetAroundTiles(currentTile);
 
             if (tempAround == null) continue;
 
@@ -206,7 +206,7 @@ public class M_Pathfinding : MonoBehaviour
             // Put all tiles in around list
             aroundList.Clear();
 
-            List<Tile> tempAround = GetAroundTiles(currentTile);
+            List<Tile> tempAround = _board.GetAroundTiles(currentTile);
 
             if (tempAround == null) continue;
 
@@ -249,7 +249,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="startTile"></param>
     /// <param name="distance"></param>
     /// <returns></returns>
-    public List<Tile> AroundTiles(Tile startTile, int distance)
+    public List<Tile> AroundTiles(Tile startTile, int distance, bool withDiagonals = false)
     {
         ClearPath();
 
@@ -284,7 +284,7 @@ public class M_Pathfinding : MonoBehaviour
             // Put all tiles in around list
             aroundList.Clear();
 
-            List<Tile> tempAround = GetAroundTiles(currentTile, true);
+            List<Tile> tempAround = _board.GetAroundTiles(currentTile, !withDiagonals);
 
             if (tempAround == null) continue;
 
@@ -381,59 +381,6 @@ public class M_Pathfinding : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Return a tile with an offset, if it exits in the board (holes included).
-    /// </summary>
-    /// <param name="xOffset"></param>
-    /// <param name="yOffset"></param>
-    /// <param name="tile"></param>
-    /// <returns></returns>
-    private Tile GetOffsetTile(int xOffset, int yOffset, Tile tile)
-    {
-        if (!InBoardRange(xOffset, yOffset, tile)) return null;
-
-        return _board.grid[tile.x + xOffset, tile.y + yOffset];
-    }
-
-    /// <summary>
-    /// Return all the existing tiles around a tile.
-    /// </summary>
-    /// <param name="tile"></param>
-    /// <param name="forceNoDiagonals"></param>
-    /// <returns></returns>
-    private List<Tile> GetAroundTiles(Tile tile, bool forceNoDiagonals = false)
-    {
-        List<Tile> toReturn = new List<Tile>();
-        bool useDiagonals = _rules.useDiagonals;
-
-        if (forceNoDiagonals) // Force no diagonals (aim zone for exemple)
-            useDiagonals = false;
-
-        toReturn.Add(GetOffsetTile(0, -1, tile));
-
-        if (useDiagonals)
-            toReturn.Add(GetOffsetTile(-1, -1, tile));
-
-        toReturn.Add(GetOffsetTile(-1, 0, tile));
-
-        if (useDiagonals)
-            toReturn.Add(GetOffsetTile(-1, 1, tile));
-
-        toReturn.Add(GetOffsetTile(0, 1, tile));
-
-        if (useDiagonals)
-            toReturn.Add(GetOffsetTile(1, 1, tile));
-
-        toReturn.Add(GetOffsetTile(1, 0, tile));
-
-        if (useDiagonals)
-            toReturn.Add(GetOffsetTile(1, -1, tile));
-
-        if (Utils.IsVoidList(toReturn)) return null;
-        
-        return toReturn;
-    }
-
-    /// <summary>
     /// Return true if a tile is in diagonal with another tile.
     /// </summary>
     /// <param name="tile1"></param>
@@ -457,23 +404,6 @@ public class M_Pathfinding : MonoBehaviour
         if (IsDiagonal(currentTile, tile)) return 14;
 
         return 10;
-    }
-
-    /// <summary>
-    /// Return true if a tile is inside the board range.
-    /// </summary>
-    /// <param name="xOffset"></param>
-    /// <param name="yOffset"></param>
-    /// <param name="tile"></param>
-    /// <returns></returns>
-    private bool InBoardRange(int xOffset, int yOffset, Tile tile)
-    {
-        if (tile.x + xOffset < 0) return false;
-        if (tile.x + xOffset >= _board.grid.GetLength(0)) return false;
-        if (tile.y + yOffset < 0) return false;
-        if (tile.y + yOffset >= _board.grid.GetLength(1)) return false;
-
-        return true;
     }
 
     /// <summary>

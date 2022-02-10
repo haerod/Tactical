@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static M__Managers;
 
 public class M_TileBoard : MonoBehaviour
 {
@@ -57,6 +58,59 @@ public class M_TileBoard : MonoBehaviour
         return grid[x, y];
     }
 
+    /// <summary>
+    /// Return a tile with an offset, if it exits in the board (holes included).
+    /// </summary>
+    /// <param name="xOffset"></param>
+    /// <param name="yOffset"></param>
+    /// <param name="tile"></param>
+    /// <returns></returns>
+    public Tile GetOffsetTile(int xOffset, int yOffset, Tile tile)
+    {
+        if (!InBoardRange(xOffset, yOffset, tile)) return null;
+
+        return grid[tile.x + xOffset, tile.y + yOffset];
+    }
+
+    /// <summary>
+    /// Return all the existing tiles around a tile (holes included).
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="forceNoDiagonals"></param>
+    /// <returns></returns>
+    public List<Tile> GetAroundTiles(Tile tile, bool forceNoDiagonals = false)
+    {
+        List<Tile> toReturn = new List<Tile>();
+        bool useDiagonals = _rules.useDiagonals;
+
+        if (forceNoDiagonals) // Force no diagonals (aim zone for exemple)
+            useDiagonals = false;
+
+        toReturn.Add(GetOffsetTile(0, -1, tile));
+
+        if (useDiagonals)
+            toReturn.Add(GetOffsetTile(-1, -1, tile));
+
+        toReturn.Add(GetOffsetTile(-1, 0, tile));
+
+        if (useDiagonals)
+            toReturn.Add(GetOffsetTile(-1, 1, tile));
+
+        toReturn.Add(GetOffsetTile(0, 1, tile));
+
+        if (useDiagonals)
+            toReturn.Add(GetOffsetTile(1, 1, tile));
+
+        toReturn.Add(GetOffsetTile(1, 0, tile));
+
+        if (useDiagonals)
+            toReturn.Add(GetOffsetTile(1, -1, tile));
+
+        if (Utils.IsVoidList(toReturn)) return null;
+
+        return toReturn;
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -93,5 +147,22 @@ public class M_TileBoard : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Return true if a tile is inside the board range.
+    /// </summary>
+    /// <param name="xOffset"></param>
+    /// <param name="yOffset"></param>
+    /// <param name="tile"></param>
+    /// <returns></returns>
+    private bool InBoardRange(int xOffset, int yOffset, Tile tile)
+    {
+        if (tile.x + xOffset < 0) return false;
+        if (tile.x + xOffset >= grid.GetLength(0)) return false;
+        if (tile.y + yOffset < 0) return false;
+        if (tile.y + yOffset >= grid.GetLength(1)) return false;
+
+        return true;
     }
 }

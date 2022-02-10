@@ -38,7 +38,16 @@ public class Tile : MonoBehaviour
     [SerializeField] private TextMesh fText = null;
     [Space]
     [SerializeField] private GameObject bigObstacle = null;
+    [Space]
+    [SerializeField] private GameObject topLine = null;
+    [SerializeField] private GameObject downLine = null;
+    [SerializeField] private GameObject leftLine = null;
+    [SerializeField] private GameObject rightLine = null;
+    [Space]
+    [SerializeField] private GameObject fogMask = null;
+
     public enum TileMaterial { Basic, Open, Closed, Path, Area, Attackable, Range} // Update the SetMaterial() method if add/remove a tile material.
+    public enum Directions { Top, Down, Right, Left}
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -59,7 +68,6 @@ public class Tile : MonoBehaviour
         parent = null;
     }
 
-
     /// <summary>
     /// Disable renderer and set hole tile type.
     /// </summary>
@@ -76,6 +84,52 @@ public class Tile : MonoBehaviour
     {
         type = Tile.Type.BigObstacle;
         bigObstacle.SetActive(true);
+    }
+
+    /// <summary>
+    /// Enable the view lines.
+    /// </summary>
+    public void EnableViewLine(Directions direction)
+    {
+        switch (direction)
+        {
+            case Directions.Top:
+                topLine.SetActive(true);
+                break;
+            case Directions.Down:
+                downLine.SetActive(true);
+                break;
+            case Directions.Right:
+                rightLine.SetActive(true);
+                break;
+            case Directions.Left:
+                leftLine.SetActive(true);
+                break;
+            default:
+                break;
+        }
+
+
+    }
+
+    /// <summary>
+    /// Disbale all the view lines.
+    /// </summary>
+    public void DisableViewLine()
+    {
+        topLine.SetActive(false);
+        downLine.SetActive(false);
+        rightLine.SetActive(false);
+        leftLine.SetActive(false);
+    }
+
+    /// <summary>
+    /// Enable or disable the fog mask
+    /// </summary>
+    /// <param name="value"></param>
+    public void SetFogMaskActive(bool value)
+    {
+        fogMask.SetActive(value);
     }
 
     /// <summary>
@@ -185,6 +239,21 @@ public class Tile : MonoBehaviour
         cText.gameObject.SetActive(false);
         hText.gameObject.SetActive(false);
         fText.gameObject.SetActive(false);
+    }
+
+
+    /// <summary>
+    /// Return true if the tile si framed by 4 other tiles.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFramed()
+    {
+        if (!_board.GetOffsetTile(0, 1, this)) return false;
+        if (!_board.GetOffsetTile(0, -1, this)) return false;
+        if (!_board.GetOffsetTile(1, 0, this)) return false;
+        if (!_board.GetOffsetTile(-1, 0, this)) return false;
+
+        return true;
     }
 
     // ======================================================================

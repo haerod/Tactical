@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using static M__Managers;
 
 public class M_Feedback : MonoBehaviour
@@ -14,6 +16,7 @@ public class M_Feedback : MonoBehaviour
 
     public F_MoveLine line;
     public F_SelectionSquare square;
+    public F_ViewLines viewLines;
     [SerializeField] private GameObject actionEffectPrefab = null;
     public static M_Feedback instance;
     
@@ -87,6 +90,21 @@ public class M_Feedback : MonoBehaviour
         insta.PositionAt(referenceTarget);
     }
     
+    /// <summary>
+    /// Enable/disable the view lines on border tiles and enable/disable fog mask.
+    /// </summary>
+    public void SetViewLinesActive(bool value, List<Tile> tilesInView = null)
+    {
+        if (value)
+        {
+            viewLines.EnableViewLines(tilesInView);
+        }
+        else
+        {
+            viewLines.DisableViewLines();
+        }
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

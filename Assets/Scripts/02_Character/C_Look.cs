@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using static M__Managers;
+using System;
 
 public class C_Look : MonoBehaviour
 {
     [SerializeField] private C__Character c = null;
     [SerializeField] private int range = 5;
-
-    [HideInInspector] public List<Tile> aimArea;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -20,7 +19,24 @@ public class C_Look : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Retrurn true if the character has the tile on sight.
+    /// Enable the view tiles.
+    /// </summary>
+    public void EnableViewTiles()
+    {
+        // Find all tiles in view
+        List<Tile> toEnable =
+            _pathfinding.AroundTiles(c.Tile(), range, true)
+            .Where(o => HasSightOn(o))
+            .Where(o => o.type != Tile.Type.BigObstacle)
+            .ToList();
+
+        toEnable.Add(c.Tile());
+
+        _feedbacks.SetViewLinesActive(true, toEnable);
+    }
+
+    /// <summary>
+    /// Return true if the character has the tile on sight.
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
