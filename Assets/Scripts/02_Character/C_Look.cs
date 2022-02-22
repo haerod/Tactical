@@ -23,16 +23,20 @@ public class C_Look : MonoBehaviour
     /// </summary>
     public void EnableViewTiles()
     {
+        List<Tile> aroundTiles = _pathfinding.AroundTiles(c.tile, range, true);
+
+        //if (Utils.IsVoidList(aroundTiles)) return;
+
         // Find all tiles in view
         List<Tile> toEnable =
-            _pathfinding.AroundTiles(c.Tile(), range, true)
+            _pathfinding.AroundTiles(c.tile, range, true)
             .Where(o => HasSightOn(o))
             .Where(o => o.type != Tile.Type.BigObstacle)
             .ToList();
 
-        toEnable.Add(c.Tile());
+        toEnable.Add(c.tile);
 
-        _feedbacks.SetViewLinesActive(true, toEnable);
+        _feedback.SetViewLinesActive(true, toEnable);
     }
 
     /// <summary>
@@ -59,7 +63,7 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     public List<Tile> LineOfSight(Tile targetTile)
     {
-        return _pathfinding.LineOfSight(c.Tile(), targetTile).ToList();
+        return _pathfinding.LineOfSight(c.tile, targetTile).ToList();
     }
 
     /// <summary>
@@ -92,8 +96,8 @@ public class C_Look : MonoBehaviour
         return _characters.characters
             .Where(o => o != c) // remove emitter
             .Where(o => o.Team() != c.Team()) // remove allies
-            .Where(o => HasSightOn(o.Tile())) // get all enemies on sight
-            .OrderBy(o => LineOfSight(o.Tile()).Count()) // order enemies by distance
+            .Where(o => HasSightOn(o.tile)) // get all enemies on sight
+            .OrderBy(o => LineOfSight(o.tile).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
     }
 

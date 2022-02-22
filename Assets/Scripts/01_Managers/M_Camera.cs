@@ -6,7 +6,6 @@ using static M__Managers;
 
 public class M_Camera : MonoBehaviour
 {
-
     [Header("MOVE")]
 
     public float xOffset = -3;
@@ -26,7 +25,7 @@ public class M_Camera : MonoBehaviour
     private float currentTime;
     private Vector3 positionToReach;
     private Vector3 startPosition;
-    [HideInInspector] public Transform target;
+    public Transform target;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -55,6 +54,17 @@ public class M_Camera : MonoBehaviour
     // ======================================================================
 
     /// <summary>
+    /// Move the camera in the given direction.
+    /// </summary>
+    /// <param name="direction"></param>
+    public void Move(Vector3 direction)
+    {
+        positionToReach = transform.position + direction;
+        currentTime = 0f;
+        startPosition = transform.position;
+    }
+
+    /// <summary>
     /// Reset the camera's position to reach on its target (with the offset).
     /// </summary>
     public void ResetPosition()
@@ -65,17 +75,6 @@ public class M_Camera : MonoBehaviour
             target.position.z + zOffset);
 
         currentTime = 0;
-        startPosition = transform.position;
-    }
-
-    /// <summary>
-    /// Move the camera in the given direction.
-    /// </summary>
-    /// <param name="direction"></param>
-    public void Move(Vector3 direction)
-    {
-        positionToReach = transform.position + direction;
-        currentTime = 0f;
         startPosition = transform.position;
     }
 
@@ -108,15 +107,15 @@ public class M_Camera : MonoBehaviour
 
         transform.position = cameraPoz;
 
-        float xMin = _board.grid[0, _board.width - 1].transform.localPosition.x;
-        float xMax = _board.grid[_board.length - 1, 0].transform.localPosition.x;
-        float zMin = _board.grid[0, 0].transform.localPosition.z;
-        float zMax = _board.grid[_board.length - 1, _board.width - 1].transform.localPosition.z;
+        float xMin = _board.grid.OrderBy(o => o.x).FirstOrDefault().transform.position.x;
+        float xMax = _board.grid.OrderByDescending(o => o.x).FirstOrDefault().transform.position.x;
+        float zMin = _board.grid.OrderBy(o => o.y).FirstOrDefault().transform.position.z;
+        float zMax = _board.grid.OrderByDescending(o => o.y).FirstOrDefault().transform.position.z;
 
-        transform.localPosition = new Vector3(
-            Mathf.Clamp(transform.localPosition.x, xMin, xMax),
-            target.transform.localPosition.y + yOffset,
-            Mathf.Clamp(transform.localPosition.z, zMin, zMax)
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, xMin + xOffset, xMax + xOffset),
+            target.transform.position.y + yOffset,
+            Mathf.Clamp(transform.position.z, zMin + zOffset, zMax + +zOffset)
             );
     }
 

@@ -19,10 +19,10 @@ public class F_SelectionSquare : MonoBehaviour
     /// Enable and position the selection square.
     /// </summary>
     /// <param name="tile"></param>
-    public void SetSquare(Tile tile)
+    public void SetSquare(Vector3 position)
     {
         squareTransform.gameObject.SetActive(true);
-        squareTransform.position = tile.transform.position + Vector3.up * squareOffset;
+        squareTransform.position = position + Vector3.up * squareOffset;
     }
 
     /// <summary>

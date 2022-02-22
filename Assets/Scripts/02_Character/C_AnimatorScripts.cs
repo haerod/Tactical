@@ -27,7 +27,7 @@ public class C_AnimatorScripts : MonoBehaviour
 
     /// <summary>
     /// End shoot animation.
-    /// Called by animation
+    /// Called by animation.
     /// </summary>
     public void EndShoot()
     {
@@ -45,11 +45,19 @@ public class C_AnimatorScripts : MonoBehaviour
 
     /// <summary>
     /// End the hit reaction animation.
-    /// Called by animation
+    /// Called by animation.
     /// </summary>
     public void EndHitReaction()
     {
         anim.SetBool("hit", false);
+    }
+
+    /// <summary>
+    /// Start the dodge reaction.
+    /// </summary>
+    public void StartDodge()
+    {
+        anim.SetTrigger("dodge");
     }
 
     /// <summary>

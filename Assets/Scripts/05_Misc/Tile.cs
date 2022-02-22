@@ -23,28 +23,32 @@ public class Tile : MonoBehaviour
     [SerializeField] private Material area = null;
     [SerializeField] private Material attackable = null;
     [SerializeField] private Material range = null;
-    [Space]
-    [SerializeField] private GameObject areaObject = null;
 
-    public enum Type { Basic, Hole, BigObstacle}
+    public enum Type { Basic, BigObstacle, Hole} // /!\ if Add a type :
+                                                    // - Hole is always the last type
+                                                    // - update M_Board.GenerateBoard
+                                                    // - update ChangeType() method
     public Type type = Type.Basic;
 
     [Header("REFERENCES")]
 
     [SerializeField] private MeshRenderer rend = null;
+    [SerializeField] private MeshRenderer areaRend = null;
+    [Space]
+    [SerializeField] private Animator anim = null;
     [Space]
     [SerializeField] private TextMesh cText = null;
     [SerializeField] private TextMesh hText = null;
     [SerializeField] private TextMesh fText = null;
     [Space]
     [SerializeField] private GameObject bigObstacle = null;
+    [SerializeField] private GameObject areaObject = null;
+    [SerializeField] private GameObject fogMask = null;
     [Space]
     [SerializeField] private GameObject topLine = null;
     [SerializeField] private GameObject downLine = null;
     [SerializeField] private GameObject leftLine = null;
     [SerializeField] private GameObject rightLine = null;
-    [Space]
-    [SerializeField] private GameObject fogMask = null;
 
     public enum TileMaterial { Basic, Open, Closed, Path, Area, Attackable, Range} // Update the SetMaterial() method if add/remove a tile material.
     public enum Directions { Top, Down, Right, Left}
@@ -66,24 +70,6 @@ public class Tile : MonoBehaviour
         heuristic = 0;
         f = 0;
         parent = null;
-    }
-
-    /// <summary>
-    /// Disable renderer and set hole tile type.
-    /// </summary>
-    public void EnableHole()
-    {
-        type = Tile.Type.Hole;
-        rend.enabled = false;
-    }
-
-    /// <summary>
-    /// Enable the big obstacle on tile and set big obstacle type.
-    /// </summary>
-    public void EnableBigObstacle()
-    {
-        type = Tile.Type.BigObstacle;
-        bigObstacle.SetActive(true);
     }
 
     /// <summary>
@@ -159,11 +145,11 @@ public class Tile : MonoBehaviour
                 break;
             case TileMaterial.Area:
                 areaObject.SetActive(true);
-                areaObject.GetComponent<Renderer>().material = area;
+                areaRend.material = area;
                 break;
             case TileMaterial.Attackable:
                 areaObject.SetActive(true);
-                areaObject.GetComponent<Renderer>().material = attackable;
+                areaRend.material = attackable;
                 break;
             case TileMaterial.Range:
                 rend.material = range;
@@ -180,6 +166,58 @@ public class Tile : MonoBehaviour
     public void ResetTileSkin()
     {
         SetMaterial(TileMaterial.Basic);
+    }
+
+    /// <summary>
+    /// Return true if the tile si framed by 4 other tiles.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFramed()
+    {
+        if (!_board.GetOffsetTile(0, 1, this)) return false;
+        if (!_board.GetOffsetTile(0, -1, this)) return false;
+        if (!_board.GetOffsetTile(1, 0, this)) return false;
+        if (!_board.GetOffsetTile(-1, 0, this)) return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Change the tile type to a new type and set the values in M_Board
+    /// </summary>
+    /// <param name="newType"></param>
+    public void ChangeType(Type newType)
+    {
+        // Default values
+        bigObstacle.SetActive(false);
+        // Remove from list
+        Vector2Int coordinates = new Vector2Int(x, y);
+        if (_board.holeCoordinates.Contains(coordinates))
+        {
+            _board.holeCoordinates.Remove(coordinates);
+        }
+        if (_board.bigObstaclesCoordinates.Contains(coordinates))
+        {
+            _board.bigObstaclesCoordinates.Remove(coordinates);
+        }
+
+        type = newType;
+        anim.SetInteger("type", (int)newType);
+
+        switch (newType)
+        {
+            case Type.Basic:
+                break;
+            case Type.Hole:
+                _board.holeCoordinates.Add(coordinates);
+                break;
+            case Type.BigObstacle:
+                bigObstacle.SetActive(true);
+                _board.bigObstaclesCoordinates.Add(coordinates);
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -205,7 +243,7 @@ public class Tile : MonoBehaviour
     {
         foreach (C__Character c in _characters.characters)
         {
-            if(c.Tile() == this) return c;
+            if(c.tile == this) return c;
         }
 
         return null;
@@ -239,21 +277,6 @@ public class Tile : MonoBehaviour
         cText.gameObject.SetActive(false);
         hText.gameObject.SetActive(false);
         fText.gameObject.SetActive(false);
-    }
-
-
-    /// <summary>
-    /// Return true if the tile si framed by 4 other tiles.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsFramed()
-    {
-        if (!_board.GetOffsetTile(0, 1, this)) return false;
-        if (!_board.GetOffsetTile(0, -1, this)) return false;
-        if (!_board.GetOffsetTile(1, 0, this)) return false;
-        if (!_board.GetOffsetTile(-1, 0, this)) return false;
-
-        return true;
     }
 
     // ======================================================================

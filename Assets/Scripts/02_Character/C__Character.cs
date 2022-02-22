@@ -13,6 +13,8 @@ public class C__Character : MonoBehaviour
     public C_Behavior behavior;
     public C_AnimatorScripts anim; // With animator / skinned mesh renderer
     public UI_SlicedHealthBar healthBar;
+
+    [HideInInspector] public Tile tile => Tile();
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -21,15 +23,6 @@ public class C__Character : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Return the tile of this character.
-    /// </summary>
-    /// <returns></returns>
-    public Tile Tile()
-    {
-        return _board.GetTile(move.x, move.y);
-    }
 
     /// <summary>
     /// Return the team of this character.
@@ -47,7 +40,7 @@ public class C__Character : MonoBehaviour
     {
         move.EnableMoveArea();
         attack.EnableAttackTiles();
-        _feedbacks.SetViewLinesActive(false);
+        _feedback.SetViewLinesActive(false);
         look.EnableViewTiles();
     }
 
@@ -68,9 +61,18 @@ public class C__Character : MonoBehaviour
     {
         return actionPoints.actionPoints >= attack.actionPointsCost;
     }
-    
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Return the tile of this character.
+    /// </summary>
+    /// <returns></returns>
+    private Tile Tile()
+    {
+        return _board.GetTile(move.x, move.y);
+    }
 
 }

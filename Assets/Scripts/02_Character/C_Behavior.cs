@@ -74,12 +74,12 @@ public class C_Behavior : MonoBehaviour
         }
 
         // Get pathfinding
-        Tile endTile = _pathfinding.ClosestFreeTileWithShortestPath(c.Tile(), target.Tile());
+        Tile endTile = _pathfinding.ClosestFreeTileWithShortestPath(c.tile, target.tile);
         List<Tile> path = null;
 
         if (endTile) // If is an end tile (and different of current tile)
         {
-            path = _pathfinding.Pathfind(c.Tile(), endTile);
+            path = _pathfinding.Pathfind(c.tile, endTile);
         }
 
         if (Utils.IsVoidList(path))  // Exit : not path

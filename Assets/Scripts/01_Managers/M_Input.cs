@@ -52,8 +52,8 @@ public class M_Input : MonoBehaviour
 
     private void Update()
     {
-        if (!canClick) return;
-        if (EventSystem.current.IsPointerOverGameObject()) return; // Return if pointer over UI
+        if (!canClick) return; // EXIT : Player can't click
+        if (EventSystem.current.IsPointerOverGameObject()) return; // EXIT : Pointer over UI
 
         CheckRaycast();
         CheckClick();
@@ -72,7 +72,8 @@ public class M_Input : MonoBehaviour
     /// </summary>
     public void ClearFeedbacksAndValues()
     {
-        _feedbacks.DisableFeedbacks();
+        _feedback.DisableFreeTileFeedbacks();
+        _feedback.percentText.DisablePercentShootText();
         _pathfinding.ClearPath();
         currentPathfinding = null;
         pointedTile = null;
@@ -89,7 +90,7 @@ public class M_Input : MonoBehaviour
 
         if(value == false)
         {
-            _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
+            _feedback.SetCursor(M_Feedback.CursorType.Regular);
         }
     }
 
@@ -115,7 +116,7 @@ public class M_Input : MonoBehaviour
             // On a character's collider, get the character's tile
             if (hit.transform.tag == "Clickable") 
             {
-                tile = hit.transform.GetComponentInParent<C__Character>().Tile();
+                tile = hit.transform.GetComponentInParent<C__Character>().tile;
             }
 
             // EXIT : is on the already pointed tile (operation already done)
@@ -229,16 +230,16 @@ public class M_Input : MonoBehaviour
         if (mousePosition.y >= Screen.height - screenHeightPercented) // Up
         {
             if (mousePosition.y >= Screen.height)
-                direction += _camera.transform.up * borderMultiplier;
+                direction += _camera.transform.forward * borderMultiplier;
             else
-                direction += _camera.transform.up;
+                direction += _camera.transform.forward;
         }
         else if (mousePosition.y <= screenHeightPercented) // Down
         {
             if (mousePosition.y <= 0)
-                direction -= _camera.transform.up * borderMultiplier;
+                direction -= _camera.transform.forward * borderMultiplier;
             else
-                direction -= _camera.transform.up;
+                direction -= _camera.transform.forward;
         }
 
         if (direction == Vector3.zero) return;
@@ -255,7 +256,7 @@ public class M_Input : MonoBehaviour
     /// <param name="tile"></param>
     private void OnOccupiedTile(Tile tile)
     {
-        _feedbacks.DisableFeedbacks();
+        _feedback.DisableFreeTileFeedbacks();
 
         currentTarget = tile.Character();
         C__Character c = _characters.currentCharacter;
@@ -270,16 +271,17 @@ public class M_Input : MonoBehaviour
         {
             if (c.CanAttack())
             {
-                _feedbacks.SetCursor(M_Feedback.CursorType.AimAndInSight);
+                _feedback.SetCursor(M_Feedback.CursorType.AimAndInSight);
+                _feedback.percentText.SetPercentShootText(c.attack.GetPercentToTouch(c.look.LineOfSight(tile).Count));
             }
             else
             {
-                _feedbacks.SetCursor(M_Feedback.CursorType.OutActionPoints);
+                _feedback.SetCursor(M_Feedback.CursorType.OutActionPoints);
             }
         }
         else
         {
-            _feedbacks.SetCursor(M_Feedback.CursorType.OutAimOrSight);
+            _feedback.SetCursor(M_Feedback.CursorType.OutAimOrSight);
         }
     }
 
@@ -289,10 +291,12 @@ public class M_Input : MonoBehaviour
     /// <param name="tile"></param>
     private void OnFreeTile(Tile tile)
     {
+        _feedback.percentText.DisablePercentShootText();
+
         currentTarget = null;
 
         currentPathfinding = _pathfinding.Pathfind(
-                        _characters.currentCharacter.Tile(),
+                        _characters.currentCharacter.tile,
                         tile);
 
         // EXIT : No path
@@ -302,13 +306,13 @@ public class M_Input : MonoBehaviour
             return;
         }
 
-        _feedbacks.square.SetSquare(pointedTile);
-        _feedbacks.line.SetLines(
+        _feedback.square.SetSquare(pointedTile.transform.position);
+        _feedback.line.SetLines(
             currentPathfinding, 
             _characters.currentCharacter, 
             pointedTile);
 
-        _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
+        _feedback.SetCursor(M_Feedback.CursorType.Regular);
     }
 
     /// <summary>
@@ -316,7 +320,7 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void OnForbiddenTile()
     {
-        _feedbacks.SetCursor(M_Feedback.CursorType.Regular);
+        _feedback.SetCursor(M_Feedback.CursorType.Regular);
         ClearFeedbacksAndValues();
     }
 
@@ -330,6 +334,7 @@ public class M_Input : MonoBehaviour
     private void ClickAttack()
     {
         C__Character c = _characters.currentCharacter;
+        _feedback.percentText.DisablePercentShootText();
 
         // EXIT : There is no target
         if (currentTarget == null) return;
@@ -355,7 +360,7 @@ public class M_Input : MonoBehaviour
         if (_characters.currentCharacter.actionPoints.actionPoints <= 0) return; 
 
         _characters.currentCharacter.move.MoveOnPath(currentPathfinding, () => { });
-        _ui.DisableActionCostText();
+        _feedback.actionCostText.DisableActionCostText();
     }
 
     // OTHER

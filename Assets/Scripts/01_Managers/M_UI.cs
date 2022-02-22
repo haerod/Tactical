@@ -7,27 +7,18 @@ using static M__Managers;
 
 public class M_UI : MonoBehaviour
 {
-    [Header("ACTION COST TEXT SETTINGS")]
-
-    [SerializeField] private float actionCostOffset = 30f;
-    [SerializeField] private Color inRangeColor = Color.yellow;
-    [SerializeField] private Color outRangeColor = Color.grey;
-
     [Header("REFERENCES")]
 
     [SerializeField] private Text actionPointsText = null;
-    [SerializeField] private Text actionCostText = null;
     [SerializeField] private Text endScreenText = null;
+    [SerializeField] private Text debugCoordinatesText = null;
     [Space]
     [SerializeField] private Button addActionPointButton = null;
     [SerializeField] private Button nextTurnButton = null;
     [Space]
     [SerializeField] private GameObject actionPointsObject = null;
-    [Space]
     [SerializeField] private GameObject endScreen = null;
 
-    private Camera cam;
-    private Transform actionCostTarget;
     public static M_UI instance;
 
     // ======================================================================
@@ -47,22 +38,9 @@ public class M_UI : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        cam = Camera.main;
-    }
-
-    private void Update()
-    {
-        SetActionPointTextPosition();
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    // ACTION POINT TEXT
-    // =================
 
     /// <summary>
     /// Write text in action point text if the given character is the current character.
@@ -77,33 +55,15 @@ public class M_UI : MonoBehaviour
     }
 
     /// <summary>
-    /// Write text in action cost text and specify its target and its color.
+    /// Enable/Disable coordinates text and show the values.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="target"></param>
-    /// <param name="outRange"></param>
-    public void SetActionCostText(string value, Transform target, bool outRange = false)
+    public void SetDebugCoordinatesTextActive(bool value, int x = 0, int y = 0)
     {
-        actionCostText.gameObject.SetActive(true);
-        actionCostText.text = value;
-        actionCostTarget = target;
+        debugCoordinatesText.gameObject.SetActive(value);
 
-        if (outRange)
-        {
-            actionCostText.color = outRangeColor;
-        }
-        else
-        {
-            actionCostText.color = inRangeColor;
-        }
-    }
+        if (!value) return;
 
-    /// <summary>
-    /// Disable the action point text.
-    /// </summary>
-    public void DisableActionCostText()
-    {
-        actionCostText.gameObject.SetActive(false);
+        debugCoordinatesText.text = x + " , " + y;
     }
 
     // BUTTONS
@@ -171,14 +131,4 @@ public class M_UI : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    /// <summary>
-    /// Set the position of the action point text relative to its target.
-    /// </summary>
-    private void SetActionPointTextPosition()
-    {
-        if (!actionCostTarget) return;
-
-        actionCostText.transform.position = cam.WorldToScreenPoint(actionCostTarget.position);
-        actionCostText.transform.position += Vector3.up * actionCostOffset;
-    }
 }

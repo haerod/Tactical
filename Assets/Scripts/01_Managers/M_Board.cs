@@ -1,15 +1,18 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using static M__Managers;
 
-public class M_TileBoard : MonoBehaviour
+public class M_Board : MonoBehaviour
 {
+    public bool editMode = false;
+
     [Header("BOARD PARAMETERS")]
     [Range(1, 100)]
-    public int length = 5;
+    public int length = 5; // x
     [Range(1, 100)]
-    public int width = 5;
+    public int width = 5; // y
 
     [Header("SPECIAL TILES")]
     public List<Vector2Int> holeCoordinates;
@@ -20,8 +23,8 @@ public class M_TileBoard : MonoBehaviour
     [SerializeField] private GameObject tile = null;
     [SerializeField] private Transform boardParent = null;
 
-    [HideInInspector] public Tile[,] grid;
-    public static M_TileBoard instance;
+    [HideInInspector] public List<Tile> grid;
+    public static M_Board instance;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -43,9 +46,60 @@ public class M_TileBoard : MonoBehaviour
         GenerateBoard();
     }
 
+    private void Start()
+    {
+        // Edit mode
+        if (editMode)
+        {
+            _input.enabled = false;
+            _creator.enabled = true;
+            _ui.SetTurnPlayerUIActive(false);
+        }
+        else
+        {
+            _creator.enabled = false;
+            _ui.SetDebugCoordinatesTextActive(false);
+        }
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Create a tile at given coordinates.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void CreateTileAtCoordinates(int x, int y)
+    {
+        CreateTile(x, y);
+
+        // Get new extermities of the board.
+        int xMin = _board.grid.OrderBy(o => o.x).FirstOrDefault().x;
+        int xMax = _board.grid.OrderByDescending(o => o.x).FirstOrDefault().x;
+        int yMin = _board.grid.OrderBy(o => o.y).FirstOrDefault().y;
+        int yMax = _board.grid.OrderByDescending(o => o.y).FirstOrDefault().y;
+
+        // Create a list of coordinates of all the tiles of the board.
+        List<Vector2Int> theoricalCoordinates = new List<Vector2Int>();
+
+        for (int i = xMin; i < xMax + 1; i++)
+        {
+            for (int j = yMin; j < yMax + 1; j++)
+            {
+                theoricalCoordinates.Add(new Vector2Int(i, j));
+            }
+        }
+
+        // Create holes only at the new coordinates (tiles before the new tile and previous tiles).
+        foreach (Vector2Int coordinates in theoricalCoordinates)
+        {
+            if (GetTile(coordinates.x, coordinates.y)) continue; // tile already exist
+
+            CreateTile(coordinates.x, coordinates.y, Tile.Type.Hole);
+        }
+    }
 
     /// <summary>
     /// Return tile at (x,y) coordinates.
@@ -55,7 +109,7 @@ public class M_TileBoard : MonoBehaviour
     /// <returns></returns>
     public Tile GetTile(int x, int y)
     {
-        return grid[x, y];
+        return grid.Where(o => o.x == x && o.y == y).FirstOrDefault();
     }
 
     /// <summary>
@@ -67,9 +121,12 @@ public class M_TileBoard : MonoBehaviour
     /// <returns></returns>
     public Tile GetOffsetTile(int xOffset, int yOffset, Tile tile)
     {
-        if (!InBoardRange(xOffset, yOffset, tile)) return null;
+        if (!InBoardRange(xOffset, yOffset, tile))
+        {
+            return null;
+        }
 
-        return grid[tile.x + xOffset, tile.y + yOffset];
+        return GetTile(tile.x + xOffset, tile.y + yOffset);
     }
 
     /// <summary>
@@ -83,7 +140,7 @@ public class M_TileBoard : MonoBehaviour
         List<Tile> toReturn = new List<Tile>();
         bool useDiagonals = _rules.useDiagonals;
 
-        if (forceNoDiagonals) // Force no diagonals (aim zone for exemple)
+        if (forceNoDiagonals) // Force no diagonals
             useDiagonals = false;
 
         toReturn.Add(GetOffsetTile(0, -1, tile));
@@ -106,6 +163,8 @@ public class M_TileBoard : MonoBehaviour
         if (useDiagonals)
             toReturn.Add(GetOffsetTile(1, -1, tile));
 
+        toReturn = toReturn.Where(o => o != null).ToList();
+
         if (Utils.IsVoidList(toReturn)) return null;
 
         return toReturn;
@@ -120,30 +179,26 @@ public class M_TileBoard : MonoBehaviour
     /// </summary>
     private void GenerateBoard()
     {
-        grid = new Tile[length, width];
+        grid = new List<Tile>();
         for (int i = 0; i < length; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                Vector3 pozTile = new Vector3(i, 0, j);
-                GameObject instaTile = Instantiate(tile, pozTile, Quaternion.identity, boardParent);
-                instaTile.name = "tile " + i + ", " + j;
-
-                Tile stat = instaTile.GetComponent<Tile>();
-                stat.x = i;
-                stat.y = j;
-                grid[i, j] = stat;
-
                 Vector2Int coordinates = new Vector2Int(i, j);
-                if (holeCoordinates.Contains(coordinates))
+
+                if (holeCoordinates.Contains(coordinates)) // Hole
                 {
-                    stat.EnableHole();
+                    CreateTile(i, j, Tile.Type.Hole);
                     //stat.HideValues(); // uncomment this line in pathfinding debug mode
                 }
-                else if (bigObstaclesCoordinates.Contains(coordinates))
+                else if (bigObstaclesCoordinates.Contains(coordinates)) // Big obstacle
                 {
-                    stat.EnableBigObstacle();
+                    CreateTile(i, j, Tile.Type.BigObstacle);
                     //stat.HideValues(); // uncomment this line in pathfinding debug mode
+                }
+                else // Basic
+                {
+                    CreateTile(i, j);
                 }
             }
         }
@@ -158,11 +213,31 @@ public class M_TileBoard : MonoBehaviour
     /// <returns></returns>
     private bool InBoardRange(int xOffset, int yOffset, Tile tile)
     {
-        if (tile.x + xOffset < 0) return false;
-        if (tile.x + xOffset >= grid.GetLength(0)) return false;
-        if (tile.y + yOffset < 0) return false;
-        if (tile.y + yOffset >= grid.GetLength(1)) return false;
+        if (tile.x + xOffset < grid.OrderBy(o => o.x).FirstOrDefault().x) return false; // xMin
+        if (tile.x + xOffset >= grid.OrderByDescending(o => o.x).FirstOrDefault().x) return false; // xMax
+        if (tile.y + yOffset < grid.OrderBy(o => o.y).FirstOrDefault().y) return false; // yMin
+        if (tile.y + yOffset >= grid.OrderByDescending(o => o.y).FirstOrDefault().y) return false; // yMax
 
         return true;
+    }
+
+    /// <summary>
+    /// Create a tile at coordinates.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    private void CreateTile(int x, int y, Tile.Type type = Tile.Type.Basic)
+    {
+        // Creation
+        Tile instaTile = Instantiate(tile, new Vector3(x, 0, y), Quaternion.identity, boardParent).GetComponent<Tile>();
+        instaTile.x = x;
+        instaTile.y = y;
+        instaTile.name = "tile " + x + ", " + y;
+        _board.grid.Add(instaTile);
+
+        //Type
+        if (type == Tile.Type.Basic) return; // EXIT : Tile is basic
+
+        instaTile.ChangeType(type);
     }
 }

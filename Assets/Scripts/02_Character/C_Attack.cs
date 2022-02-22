@@ -9,6 +9,7 @@ public class C_Attack : MonoBehaviour
 {
     public int actionPointsCost = 3;
     public Vector2Int damagesRange = new Vector2Int(3, 5);
+    public int percentReductionByDistance = 10;
     public C__Character target;
 
     [Header("REFERENCES")]
@@ -34,14 +35,17 @@ public class C_Attack : MonoBehaviour
     /// <param name="OnEnd"></param>
     public void AttackTarget(C__Character currentTarget, Action OnEnd)
     {
+        // TO VERIFY (are NPC using this blocker?)
         // EXIT : No action points aviable
         if (c.actionPoints.actionPoints < actionPointsCost)
         {
             OnEnd();
             return; 
         }
+
+        // TO VERIFY (are NPC using this blocker?)
         // EXIT : Enemy isn't in sight
-        if (!c.look.HasSightOn(currentTarget.Tile())) return;
+        if (!c.look.HasSightOn(currentTarget.tile)) return;
 
         target = currentTarget;
 
@@ -51,25 +55,22 @@ public class C_Attack : MonoBehaviour
 
         int damages = UnityEngine.Random.Range(damagesRange.x, damagesRange.y + 1);
 
-        _inputs.ClearFeedbacksAndValues();
-        _inputs.SetClick(false);
+        _input.ClearFeedbacksAndValues();
+        _input.SetClick(false);
 
         _ui.SetActionPlayerUIActive(false);
 
         c.anim.StartShoot();        
         c.actionPoints.RemoveActionPoints(actionPointsCost);
 
-        OnAttackDone = () => 
+        if (UnityEngine.Random.Range(0, 101) < GetPercentToTouch(c.look.LineOfSight(currentTarget.tile).Count)) // SUCCESS
         {
-            target.health.AddDamages(damages);
-            Wait(0.5f, () => 
-            {
-                _inputs.SetClick();
-                c.EnableTilesFeedbacks();
-
-                OnEnd();
-            });
-        };
+            SetOnAttackDone(true, damages, OnEnd);
+        }
+        else // MISS
+        {
+            SetOnAttackDone(false, 0, OnEnd);
+        }
     }
 
     /// <summary>
@@ -83,7 +84,7 @@ public class C_Attack : MonoBehaviour
 
         // Muzzle flare
         muzzleFlare.SetActive(true);
-        Wait(0.1f, () => muzzleFlare.SetActive(false));
+        Wait(0.2f, () => muzzleFlare.SetActive(false));
     }
 
     /// <summary>
@@ -102,7 +103,7 @@ public class C_Attack : MonoBehaviour
  
             if (character.Team() == c.Team()) continue;
 
-            attackTiles.Add(character.Tile());
+            attackTiles.Add(character.tile);
         }
 
         foreach (Tile t in attackTiles)
@@ -122,6 +123,20 @@ public class C_Attack : MonoBehaviour
         }
 
         attackTiles.Clear();
+    }
+
+    public int GetPercentToTouch(int range)
+    {
+        int toReturn = 100;
+
+        for (int i = 0; i < range; i++)
+        {
+            toReturn -= percentReductionByDistance;
+        }
+
+        toReturn = Mathf.Clamp(toReturn, 0, 100);
+
+        return toReturn;
     }
 
     // ======================================================================
@@ -150,5 +165,34 @@ public class C_Attack : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         OnEnd();
+    }
+
+    /// <summary>
+    /// Set OnAttackDone lambda.
+    /// </summary>
+    /// <param name="success"></param>
+    /// <param name="damages"></param>
+    /// <param name="OnEnd"></param>
+    private void SetOnAttackDone(bool success, int damages, Action OnEnd)
+    {
+        OnAttackDone = () =>
+        {
+            if (success)
+            {
+                target.health.AddDamages(damages);
+            }
+            else
+            {
+                target.anim.StartDodge();
+                _feedback.ActionEffectFeedback("MISS", target.transform);
+            }
+            Wait(0.5f, () =>
+            {
+                _input.SetClick();
+                c.EnableTilesFeedbacks();
+
+                OnEnd();
+            });
+        };
     }
 }

@@ -41,7 +41,7 @@ public class C_Move : MonoBehaviour
 
     private void Start()
     {
-        c.transform.position = _board.grid[x, y].transform.position;
+        c.transform.position = _board.GetTile(x,y).transform.position;
         OrientTo(orientation);
         anim.SetFloat("speed", 0f);
     }
@@ -69,7 +69,7 @@ public class C_Move : MonoBehaviour
 
         anim.SetFloat("speed", animSpeed); // Blend tree anim speed
 
-        _inputs.SetClick(false);
+        _input.SetClick(false);
         _ui.SetActionPlayerUIActive(false);
 
         c.ClearTilesFeedbacks();
@@ -82,7 +82,7 @@ public class C_Move : MonoBehaviour
     /// </summary>
     public void EnableMoveArea()
     {
-        Tile currentTile = _board.grid[x, y];
+        Tile currentTile = _board.GetTile(x,y);
         int actionPoints = c.actionPoints.actionPoints;
 
         currentArea = _pathfinding.AreaMovementZone(currentTile, actionPoints);
@@ -201,7 +201,7 @@ public class C_Move : MonoBehaviour
     private void EndMove(Action OnEnd = default)
     {
         anim.SetFloat("speed", 0f);
-        _inputs.SetClick();
+        _input.SetClick();
         _ui.SetActionPlayerUIActive(true);
 
         if (_characters.currentCharacter.behavior.playable)

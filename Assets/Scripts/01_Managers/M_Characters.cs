@@ -51,7 +51,11 @@ public class M_Characters : MonoBehaviour
                 break;
         }
 
-        NewCurrentCharacter();
+        // Board edit mode
+        if (!_board.editMode)
+        {
+            NewCurrentCharacter();
+        }
     }
 
     // ======================================================================
@@ -141,8 +145,8 @@ public class M_Characters : MonoBehaviour
         _ui.EnableEndScreen(currentCharacter);
         currentCharacter.ClearTilesFeedbacks();
 
-        _inputs.SetClick(false);
-        _inputs.ClearFeedbacksAndValues();
+        _input.SetClick(false);
+        _input.ClearFeedbacksAndValues();
     }
 
     // ======================================================================
@@ -163,7 +167,7 @@ public class M_Characters : MonoBehaviour
     private void NewCurrentCharacter()
     {
         // Inputs
-        _inputs.ClearFeedbacksAndValues();
+        _input.ClearFeedbacksAndValues();
 
         // Camera
         _camera.target = currentCharacter.transform;
@@ -175,16 +179,17 @@ public class M_Characters : MonoBehaviour
 
         if(currentCharacter.behavior.playable) // Playable character (PC)
         {
-            _inputs.SetClick();
+            _input.SetClick();
             _ui.SetTurnPlayerUIActive(true);
             _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
             currentCharacter.EnableTilesFeedbacks();
         }
         else // Non playable character (NPC)
         {
-            _inputs.SetClick(false);
+            _input.SetClick(false);
             _ui.SetTurnPlayerUIActive(false);
             currentCharacter.behavior.PlayBehavior();
+            currentCharacter.EnableTilesFeedbacks();
         }
 
     }

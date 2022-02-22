@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public static class ExtensionMethods
 {
+    // ======================================================================
+    // LISTS
+    // ======================================================================
+
     /// <summary>
     /// Return the next element of the list; after the index.
     /// Return the first one if the index is the last one.
@@ -65,5 +69,37 @@ public static class ExtensionMethods
         {
             Debug.Log(item);
         }
+    }
+
+    // ======================================================================
+    // INT
+    // ======================================================================
+
+    /// <summary>
+    /// Return incremented int until the maximum value (inclusive).
+    /// If int is more than it maximum, return 0.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="maximumInclusive"></param>
+    /// <returns></returns>
+    public static int Next(this int value, int maximumInclusive)
+    {
+        value++;
+        if (value > maximumInclusive) value = 0;
+        return value;
+    }
+
+    /// <summary>
+    /// Return decremented int from the maximum value (inclusive) to 0.
+    /// If int is less than 0, return maximum.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="maximumInclusive"></param>
+    /// <returns></returns>
+    public static int Previous(this int value, int maximumInclusive)
+    {
+        value--;
+        if (value < 0) value = maximumInclusive;
+        return value;
     }
 }

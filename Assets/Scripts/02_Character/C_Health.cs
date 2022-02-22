@@ -39,7 +39,7 @@ public class C_Health : MonoBehaviour
             c.anim.StartHitReaction();
         }
 
-        _feedbacks.ActionEffectFeedback(damages.ToString(), transform.parent);
+        _feedback.ActionEffectFeedback(damages.ToString(), transform.parent);
         c.healthBar.DisplayCurrentHealth();
     }
 

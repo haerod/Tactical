@@ -253,10 +253,7 @@ public class M_Pathfinding : MonoBehaviour
     {
         ClearPath();
 
-        if (distance == 0)
-        {
-            return null;
-        }
+        if (distance == 0) return null; // EXIT : No distance, no path
 
         // Set first tile
         currentTile = startTile;
@@ -276,17 +273,17 @@ public class M_Pathfinding : MonoBehaviour
             {
                 closedList.Remove(startTile);
 
-                if (Utils.IsVoidList(closedList)) return null;
+                if (Utils.IsVoidList(closedList)) return null; // EXIT : Nothing in closed list
 
                 return closedList;
             }
 
-            // Put all tiles in around list
+            // Put all tiles around in around list
             aroundList.Clear();
 
             List<Tile> tempAround = _board.GetAroundTiles(currentTile, !withDiagonals);
 
-            if (tempAround == null) continue;
+            if (tempAround == null) continue; // CONTINUE : No tiles around
 
             foreach (Tile t in tempAround)
             {
