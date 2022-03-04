@@ -6,6 +6,10 @@ using static M__Managers;
 
 public class M_Creator : MonoBehaviour
 {
+    [Header("SAVE")]
+
+    public bool autoSave = true;
+
     [Header("SCREEN MOUSE MOVEMENT")]
     [Range(1, 100)]
     [SerializeField] private int screenPercent = 5;
@@ -38,10 +42,14 @@ public class M_Creator : MonoBehaviour
     {
         screenWidthPercented = Screen.width * screenPercent / 100;
         screenHeightPercented = Screen.height * screenPercent / 100;
+
+        _ui.SetStartToggleValue();
     }
 
     private void Update()
     {
+        if(UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return; // EXIT : Pointer over UI
+
         CheckRaycast();
         CheckMouseScreenMovement();
         ClickOnTile();
@@ -175,6 +183,11 @@ public class M_Creator : MonoBehaviour
             else
             {
                 _board.CreateTileAtCoordinates(newTileCoordinates.x, newTileCoordinates.y);
+            }
+
+            if(autoSave)
+            {
+                _board.SaveBoard();
             }
         }
     }

@@ -8,6 +8,10 @@ public class M_Board : MonoBehaviour
 {
     public bool editMode = false;
 
+    [Header("DATA")]
+
+    public BoardData data;
+
     [Header("BOARD PARAMETERS")]
     [Range(1, 100)]
     public int length = 5; // x
@@ -43,7 +47,21 @@ public class M_Board : MonoBehaviour
         }
 
         // Other instructions
-        GenerateBoard();
+        if (editMode)
+        {
+            // EXIT : No data
+            if(!data)
+            {
+                Debug.LogError("No data, reference a scriptable object BoardData in the Unity editor (in M_Board/Data).");
+                return;
+            }
+
+            GenerateBoardFromData();
+        }
+        else
+        {
+            GenerateBoard();
+        }
     }
 
     private void Start()
@@ -54,11 +72,13 @@ public class M_Board : MonoBehaviour
             _input.enabled = false;
             _creator.enabled = true;
             _ui.SetTurnPlayerUIActive(false);
+            _ui.SetCreatorModeUIActive(true);
         }
         else
         {
             _creator.enabled = false;
             _ui.SetDebugCoordinatesTextActive(false);
+            _ui.SetCreatorModeUIActive(false);
         }
     }
 
@@ -170,6 +190,23 @@ public class M_Board : MonoBehaviour
         return toReturn;
     }
 
+    /// <summary>
+    /// Save datas in the currentData;
+    /// </summary>
+    public void SaveBoard()
+    {
+        data.board.Clear();
+
+        foreach (Tile t in grid)
+        {
+            TileData td = new TileData();
+            td.x = t.x;
+            td.y = t.y;
+            td.type = t.type;
+            data.board.Add(td);
+        }
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -201,6 +238,18 @@ public class M_Board : MonoBehaviour
                     CreateTile(i, j);
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Create a board from the given BoardData.
+    /// </summary>
+    /// <param name="currentData"></param>
+    private void GenerateBoardFromData()
+    {
+        foreach (TileData t in data.board)
+        {
+            CreateTile(t.x, t.y, t.type);
         }
     }
 
