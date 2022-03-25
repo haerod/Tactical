@@ -9,7 +9,6 @@ public class C_Attack : MonoBehaviour
 {
     public int actionPointsCost = 3;
     public Vector2Int damagesRange = new Vector2Int(3, 5);
-    public int percentReductionByDistance = 10;
     public C__Character target;
 
     [Header("REFERENCES")]
@@ -131,7 +130,7 @@ public class C_Attack : MonoBehaviour
 
         for (int i = 0; i < range; i++)
         {
-            toReturn -= percentReductionByDistance;
+            toReturn -= _rules.percentReductionByDistance;
         }
 
         toReturn = Mathf.Clamp(toReturn, 0, 100);

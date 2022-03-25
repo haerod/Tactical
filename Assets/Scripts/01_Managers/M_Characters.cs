@@ -33,6 +33,12 @@ public class M_Characters : MonoBehaviour
     {
         FillCharacterList();
 
+        foreach (C__Character c in characters)
+        {
+            c.move.MoveToBasicPosition();
+        }
+
+        // Choose the first character
         switch (_rules.firstCharacter)
         {
             case M_Rules.FirstCharacter.Random:
@@ -52,7 +58,7 @@ public class M_Characters : MonoBehaviour
         }
 
         // Board edit mode
-        if (!_board.editMode)
+        if (!_creator.editMode)
         {
             NewCurrentCharacter();
         }

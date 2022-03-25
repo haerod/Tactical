@@ -39,13 +39,6 @@ public class C_Move : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
-    private void Start()
-    {
-        c.transform.position = _board.GetTile(x,y).transform.position;
-        OrientTo(orientation);
-        anim.SetFloat("speed", 0f);
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -130,6 +123,17 @@ public class C_Move : MonoBehaviour
         c.transform.rotation = endRotation;
 
         c.healthBar.GetComponentInParent<OrientToCamera>().Orient();
+    }
+
+    /// <summary>
+    /// Position and orient character at its creation.
+    /// Called by M_Character.
+    /// </summary>
+    public void MoveToBasicPosition()
+    {
+        c.transform.position = _board.GetTile(x, y).transform.position;
+        OrientTo(orientation);
+        anim.SetFloat("speed", 0f);
     }
 
     // ======================================================================

@@ -6,8 +6,6 @@ using static M__Managers;
 
 public class M_Board : MonoBehaviour
 {
-    public bool editMode = false;
-
     [Header("DATA")]
 
     public BoardData data;
@@ -47,38 +45,20 @@ public class M_Board : MonoBehaviour
         }
 
         // Other instructions
-        if (editMode)
+        if (_creator.editMode)
         {
-            // EXIT : No data
-            if(!data)
+            if (data)
             {
-                Debug.LogError("No data, reference a scriptable object BoardData in the Unity editor (in M_Board/Data).");
-                return;
+                GenerateBoardFromData();
             }
-
-            GenerateBoardFromData();
+            else
+            {
+                GenerateBoard();
+            }
         }
         else
         {
             GenerateBoard();
-        }
-    }
-
-    private void Start()
-    {
-        // Edit mode
-        if (editMode)
-        {
-            _input.enabled = false;
-            _creator.enabled = true;
-            _ui.SetTurnPlayerUIActive(false);
-            _ui.SetCreatorModeUIActive(true);
-        }
-        else
-        {
-            _creator.enabled = false;
-            _ui.SetDebugCoordinatesTextActive(false);
-            _ui.SetCreatorModeUIActive(false);
         }
     }
 
@@ -112,12 +92,12 @@ public class M_Board : MonoBehaviour
             }
         }
 
-        // Create holes only at the new coordinates (tiles before the new tile and previous tiles).
+        // Create (void) holes only at the new coordinates (tiles before the new tile and previous tiles).
         foreach (Vector2Int coordinates in theoricalCoordinates)
         {
             if (GetTile(coordinates.x, coordinates.y)) continue; // tile already exist
 
-            CreateTile(coordinates.x, coordinates.y, Tile.Type.Hole);
+            CreateTile(coordinates.x, coordinates.y, Tile.Type.Hole, true);
         }
     }
 
@@ -195,6 +175,12 @@ public class M_Board : MonoBehaviour
     /// </summary>
     public void SaveBoard()
     {
+        if(!data)
+        {
+            Debug.LogError("You try to save but there is no data. Add a data in the M_Board / Data.");
+            return; //EXIT : No data.
+        }
+
         data.board.Clear();
 
         foreach (Tile t in grid)
@@ -271,11 +257,14 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Create a tile at coordinates.
+    /// Create a tile at coordinates, with the choosen type.
+    /// Can be a void hole (on creation of a tile on a far position).
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    private void CreateTile(int x, int y, Tile.Type type = Tile.Type.Basic)
+    /// <param name="type"></param>
+    /// <param name="isVoidHole"></param>
+    private void CreateTile(int x, int y, Tile.Type type = Tile.Type.Basic, bool isVoidHole = false)
     {
         // Creation
         Tile instaTile = Instantiate(tile, new Vector3(x, 0, y), Quaternion.identity, boardParent).GetComponent<Tile>();
@@ -288,5 +277,10 @@ public class M_Board : MonoBehaviour
         if (type == Tile.Type.Basic) return; // EXIT : Tile is basic
 
         instaTile.ChangeType(type);
+
+        // Void hole
+        if (!isVoidHole) return; // EXIT : Tile is not void hole.
+
+        instaTile.SetRendererActive(false);
     }
 }

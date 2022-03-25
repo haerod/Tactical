@@ -13,6 +13,9 @@ public class M_Rules : MonoBehaviour
     public FirstCharacter firstCharacter = FirstCharacter.CurrentCharacter;
 
     [Space]
+    public int percentReductionByDistance = 5;
+
+    [Space]
     public List<TeamInfos> teamInfos;
 
     public static M_Rules instance;

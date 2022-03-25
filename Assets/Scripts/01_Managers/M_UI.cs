@@ -18,10 +18,15 @@ public class M_UI : MonoBehaviour
     [SerializeField] private Button saveBoardButton = null;
     [Space]
     [SerializeField] private Toggle autoSaveToggle = null;
+    [Space]    
+    [SerializeField] private Dropdown creatorTutorialsDropdown = null;
     [Space]
     [SerializeField] private GameObject actionPointsObject = null;
     [SerializeField] private GameObject endScreen = null;
     [SerializeField] private GameObject canvasBoardCreation = null;
+    [SerializeField] private GameObject saveFeedbackText = null;
+    [Space]
+    [SerializeField] private Transform tutoParent = null;
 
     public static M_UI instance;
 
@@ -40,6 +45,12 @@ public class M_UI : MonoBehaviour
         {
             Debug.LogError("There is more than one M_UI in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
         }
+    }
+
+    private void Start()
+    {
+        if (_creator.editMode)
+            CheckAutoSaveOnStart();
     }
 
     // ======================================================================
@@ -150,23 +161,51 @@ public class M_UI : MonoBehaviour
     public void ClickOnSave()
     {
         _board.SaveBoard();
+
+        if (!_board.data) return; // EXIT : No data (case managed in SaveBoard()).
+
+        saveFeedbackText.SetActive(false);
+        saveFeedbackText.SetActive(true);
     }
 
     /// <summary>
     /// Enable/Disable autosave.
     /// Relied to the event on the toggle Auto save.
+    /// If is no data, autosave is automatically off.
     /// </summary>
     public void ToggleAutoSave()
     {
-        _creator.autoSave = autoSaveToggle.isOn;
-
-        if (_creator.autoSave)
+        if(_board.data)
         {
-            _board.SaveBoard();
-            saveBoardButton.gameObject.SetActive(false);
+            _creator.autoSave = autoSaveToggle.isOn;
+
+            if (_creator.autoSave)
+            {
+                _board.SaveBoard();
+                saveBoardButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                saveBoardButton.gameObject.SetActive(true);
+            }
         }
         else
         {
+            _creator.autoSave = false;
+            autoSaveToggle.isOn = false;
+            saveBoardButton.gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// DisableAutoSave if board data is empty.
+    /// </summary>
+    public void CheckAutoSaveOnStart()
+    {
+        if (!_board.data)
+        {
+            _creator.autoSave = false;
+            autoSaveToggle.isOn = false;
             saveBoardButton.gameObject.SetActive(true);
         }
     }
@@ -187,6 +226,22 @@ public class M_UI : MonoBehaviour
         {
             saveBoardButton.gameObject.SetActive(true);
         }
+    }
+
+    /// <summary>
+    /// Enable the dropdown tutorials
+    /// </summary>
+    public void EnableDropdownTutorial()
+    {
+        foreach (Transform tuto in tutoParent)
+        {
+            if(tuto)
+                tuto.gameObject.SetActive(false);
+        }
+
+        if (creatorTutorialsDropdown.value == 0) return; // EXIT : Starting option (choose a tutorial).
+
+        tutoParent.GetChild(creatorTutorialsDropdown.value - 1).gameObject.SetActive(true);
     }
 
     // ======================================================================

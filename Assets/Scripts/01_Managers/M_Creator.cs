@@ -6,6 +6,10 @@ using static M__Managers;
 
 public class M_Creator : MonoBehaviour
 {
+    [Header("EDIT MODE")]
+
+    public bool editMode = false;
+
     [Header("SAVE")]
 
     public bool autoSave = true;
@@ -40,6 +44,23 @@ public class M_Creator : MonoBehaviour
 
     private void Start()
     {
+        // Edit mode
+        if (editMode)
+        {
+            _input.enabled = false;
+            _ui.SetTurnPlayerUIActive(false);
+            _ui.SetCreatorModeUIActive(true);
+        }
+        // Play mode
+        else
+        {
+            _ui.SetDebugCoordinatesTextActive(false);
+            _ui.SetCreatorModeUIActive(false);
+            enabled = false; // last instruction, disable creator
+            return;
+        }
+
+        // Misc
         screenWidthPercented = Screen.width * screenPercent / 100;
         screenHeightPercented = Screen.height * screenPercent / 100;
 
@@ -165,7 +186,7 @@ public class M_Creator : MonoBehaviour
     }
 
     /// <summary>
-    /// When the player clicks on tile.
+    /// When the player clicks on tile or on a new tile position (unexisting tile).
     /// Called by Update.
     /// </summary>
     private void ClickOnTile()
@@ -178,6 +199,7 @@ public class M_Creator : MonoBehaviour
                 int current = (int)pointedTile.type;
                 current = current.Next(Enum.GetNames(typeof(Tile.Type)).Length -1);
                 pointedTile.ChangeType((Tile.Type) current);
+                pointedTile.SetRendererActive(true);
             }
             // Click on void tile : create a new tile
             else

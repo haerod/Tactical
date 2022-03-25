@@ -139,4 +139,10 @@ public class M_Camera : MonoBehaviour
 
         camTransform.localPosition = Vector3.zero;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(positionToReach, .5f);
+    }
 }

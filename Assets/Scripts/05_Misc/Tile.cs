@@ -279,6 +279,15 @@ public class Tile : MonoBehaviour
         fText.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Enable/Disable the renderer.
+    /// </summary>
+    /// <param name="value"></param>
+    public void SetRendererActive(bool value)
+    {
+        rend.enabled = value;
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
