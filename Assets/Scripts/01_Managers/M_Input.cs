@@ -172,13 +172,13 @@ public class M_Input : MonoBehaviour
     }
 
     /// <summary>
-    /// Check input to change character to another.
+    /// Check input to change character to another in the same team.
     /// </summary>
     private void CheckChangeCharacterInput()
     {
         if (Input.GetKeyDown(changeCharacterKey))
         {
-            _characters.NextTeamCharacter();
+            _turns.ChangeTeamCharacter();
         }
     }
 
@@ -189,7 +189,7 @@ public class M_Input : MonoBehaviour
     {
         if (Input.GetKeyDown(endTurnKey))
         {
-            _characters.NextTurn();
+            _turns.EndCurrentTeamsTurn();
         }
     }
 
@@ -297,7 +297,8 @@ public class M_Input : MonoBehaviour
 
         currentPathfinding = _pathfinding.Pathfind(
                         _characters.currentCharacter.tile,
-                        tile);
+                        tile,
+                        M_Pathfinding.TileInclusion.WithEnd);
 
         // EXIT : No path
         if (Utils.IsVoidList(currentPathfinding))
@@ -343,7 +344,7 @@ public class M_Input : MonoBehaviour
         c.attack.AttackTarget(currentTarget, () => {
             if (_characters.IsFinalTeam(c))
             {
-                _characters.NextTurn();
+                _turns.EndCurrentTeamsTurn();
             }
         });
     }

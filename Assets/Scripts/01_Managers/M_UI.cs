@@ -64,7 +64,7 @@ public class M_UI : MonoBehaviour
     /// <param name="c"></param>
     public void SetActionPointText(string text, C__Character c)
     {
-        if (c != _characters.IsCurrentCharacter(c)) return;
+        if (c != _characters.currentCharacter) return;
 
         actionPointsText.text = text;
     }

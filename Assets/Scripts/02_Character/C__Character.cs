@@ -36,12 +36,15 @@ public class C__Character : MonoBehaviour
     /// <summary>
     /// Enable the feedbacks on the movable tiles and the attackable tiles.
     /// </summary>
-    public void EnableTilesFeedbacks()
+    public void EnableTilesFeedbacks(bool showTiles = true)
     {
-        move.EnableMoveArea();
-        attack.EnableAttackTiles();
         _feedback.SetViewLinesActive(false);
         look.EnableViewTiles();
+        attack.EnableAttackTiles();
+
+        if (!showTiles) return;
+
+        move.EnableMoveArea();
     }
 
     /// <summary>

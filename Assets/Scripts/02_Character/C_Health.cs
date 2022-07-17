@@ -59,7 +59,7 @@ public class C_Health : MonoBehaviour
     private void Death()
     {
         c.anim.Death();
-        _characters.DeadCharacter(c);
+        _characters.RemoveDeadCharacter(c);
         Wait(1, () => { c.healthBar.SetLifeBarActive(false); });
     }
 

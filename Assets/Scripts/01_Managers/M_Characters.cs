@@ -7,8 +7,7 @@ using static M__Managers;
 
 public class M_Characters : MonoBehaviour
 {
-    public C__Character currentCharacter;
-    
+    [HideInInspector] public C__Character currentCharacter;    
     [HideInInspector] public List<C__Character> characters;
     public static M_Characters instance;
 
@@ -44,13 +43,13 @@ public class M_Characters : MonoBehaviour
             case M_Rules.FirstCharacter.Random:
                 currentCharacter = characters.GetRandom();
                 break;
-            case M_Rules.FirstCharacter.CurrentCharacter:
-                if(currentCharacter == null)
+            case M_Rules.FirstCharacter.ChoosenCharacter:
+                if(_rules.choosenCharacter == null)
                 {
-                    Debug.LogError("current character is null in characters manager, set it", gameObject);
+                    Debug.LogError("Choosen character is null in M_Rules, set it", _rules.gameObject);
                 }
                 break;
-            case M_Rules.FirstCharacter.FirstOfHierarchy:
+            case M_Rules.FirstCharacter.FirstCharacterOfTheFirstTeam:
                 currentCharacter = characters[0];
                 break;
             default:
@@ -60,7 +59,7 @@ public class M_Characters : MonoBehaviour
         // Board edit mode
         if (!_creator.editMode)
         {
-            NewCurrentCharacter();
+            NewCurrentCharacter(currentCharacter);
         }
     }
 
@@ -69,111 +68,39 @@ public class M_Characters : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Pass to the next player's turn
+    /// Add a new character in the character's list.
     /// </summary>
-    public void NextTurn()
+    /// <param name="newChara"></param>
+    public void AddNewCharacter(C__Character newChara)
     {
-        if (IsFinalTeam(currentCharacter))
-        {
-            Victory();
-            return;
-        }
-
-        // Old character
-        currentCharacter.ClearTilesFeedbacks();
-
-        // New character
-        currentCharacter = characters.Next(characters.IndexOf(currentCharacter));
-        NewCurrentCharacter();
+        characters.Add(newChara);
+        OrderCharacterList();
     }
 
     /// <summary>
-    /// Pass to the playbale teammates turn.
-    /// </summary>
-    public void NextTeamCharacter()
-    {
-        // Old character
-        currentCharacter.ClearTilesFeedbacks();
-
-        // Find the playble teamates
-        List<C__Character> team = characters
-            .Where(o => o.Team() == currentCharacter.Team() && o.behavior.playable)
-            .ToList();
-
-        // EXIT : There is no playble teammates.
-        if (team.Count <= 1) return;
-
-        currentCharacter = team.Next(team.IndexOf(currentCharacter));
-        NewCurrentCharacter();
-    }
-
-    /// <summary>
-    /// Return true if the given character is the current character
-    /// </summary>
-    /// <param name="character"></param>
-    /// <returns></returns>
-    public bool IsCurrentCharacter(C__Character character)
-    {
-        if (character == currentCharacter) return true;
-        else return false;
-    }
-
-    /// <summary>
-    /// Do some things when a character is dead (ex: remove it from the playable character list)
+    /// Remove the character of the character's list.
     /// </summary>
     /// <param name="dead"></param>
-    public void DeadCharacter(C__Character dead)
+    public void RemoveDeadCharacter(C__Character dead)
     {
         characters.Remove(dead);
-    }
-
-    /// <summary>
-    /// Return true if the character's team is the last team standing.
-    /// </summary>
-    /// <param name="character"></param>
-    /// <returns></returns>
-    public bool IsFinalTeam(C__Character character)
-    {
-        foreach (C__Character c in characters)
-        {
-            if (c != character && c.Team() != character.Team()) return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Enable victory screen and do the other things happening during victory
-    /// </summary>
-    public void Victory()
-    {
-        _ui.SetTurnPlayerUIActive(false);
-        _ui.EnableEndScreen(currentCharacter);
-        currentCharacter.ClearTilesFeedbacks();
-
-        _input.SetClick(false);
-        _input.ClearFeedbacksAndValues();
-    }
-
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-
-    /// <summary>
-    /// Search and all characters and add them in the "characters" list
-    /// </summary>
-    private void FillCharacterList()
-    {
-        characters = FindObjectsOfType<C__Character>().ToList();
+        OrderCharacterList();
     }
 
     /// <summary>
     /// Do all the things happening when a new current character is designated (reset camera, clear visual feedbacks, update UI, etc.)
     /// </summary>
-    private void NewCurrentCharacter()
+    public void NewCurrentCharacter(C__Character newCurrentCharacter)
     {
+        // Old character
+        if(currentCharacter)
+            currentCharacter.ClearTilesFeedbacks();
+
         // Inputs
         _input.ClearFeedbacksAndValues();
+
+        // Change current character
+        currentCharacter = newCurrentCharacter;
 
         // Camera
         _camera.target = currentCharacter.transform;
@@ -195,8 +122,60 @@ public class M_Characters : MonoBehaviour
             _input.SetClick(false);
             _ui.SetTurnPlayerUIActive(false);
             currentCharacter.behavior.PlayBehavior();
-            currentCharacter.EnableTilesFeedbacks();
+            currentCharacter.EnableTilesFeedbacks(false);
+        }
+    }
+
+    /// <summary>
+    /// Return true if the character's team is the last team standing.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <returns></returns>
+    public bool IsFinalTeam(C__Character character)
+    {
+        foreach (C__Character c in characters)
+        {
+            if (c != character && c.Team() != character.Team()) return false;
         }
 
+        return true;
+    }
+
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+
+    /// <summary>
+    /// Search and all characters and add them in the "characters" list
+    /// </summary>
+    private void FillCharacterList()
+    {
+        characters = FindObjectsOfType<C__Character>().ToList();
+        OrderCharacterList();
+    }
+
+    /// <summary>
+    /// Order the character list by team, then by PC/NPC (depending the Rules).
+    /// </summary>
+    private void OrderCharacterList()
+    {
+        switch (_rules.botsPlays)
+        {
+            case M_Rules.BotsPlayOrder.BeforePlayableCharacters:
+                characters = characters
+                    .OrderBy(o => o.Team())
+                    .ThenBy(o => o.behavior.playable)
+                    .ToList();
+                break;
+
+            case M_Rules.BotsPlayOrder.AfterPlayableCharacters:
+                characters = characters
+                    .OrderBy(o => o.Team())
+                    .ThenByDescending(o => o.behavior.playable)
+                    .ToList();
+                break;
+            default:
+                break;
+        }
     }
 }

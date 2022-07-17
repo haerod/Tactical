@@ -13,4 +13,5 @@
     public static M_UI _ui => M_UI.instance;
     public static M_Camera _camera => M_Camera.instance;
     public static M_Creator _creator => M_Creator.instance;
+    public static M_Turns _turns => M_Turns.instance;
 }

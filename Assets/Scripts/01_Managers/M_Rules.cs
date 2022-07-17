@@ -9,8 +9,12 @@ public class M_Rules : MonoBehaviour
 
     public bool useDiagonals = false;
 
-    public enum FirstCharacter {Random, CurrentCharacter, FirstOfHierarchy}
-    public FirstCharacter firstCharacter = FirstCharacter.CurrentCharacter;
+    public enum FirstCharacter {Random, ChoosenCharacter, FirstCharacterOfTheFirstTeam}
+    public FirstCharacter firstCharacter = FirstCharacter.ChoosenCharacter;
+    public C__Character choosenCharacter;
+
+    public enum BotsPlayOrder { BeforePlayableCharacters, AfterPlayableCharacters}
+    public BotsPlayOrder botsPlays = BotsPlayOrder.AfterPlayableCharacters;
 
     [Space]
     public int percentReductionByDistance = 5;

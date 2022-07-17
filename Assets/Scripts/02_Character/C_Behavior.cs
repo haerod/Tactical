@@ -36,7 +36,7 @@ public class C_Behavior : MonoBehaviour
         {
             case Behavior.None:
                 Wait(1,
-                    () => _characters.NextTurn());
+                    () => _turns.EndCurrentTeamsTurn());
                 break;
             case Behavior.Follower:
                 Wait(1, 
@@ -63,7 +63,7 @@ public class C_Behavior : MonoBehaviour
         if (c.behavior.target == null) // Exit : no target
         {
             Wait(2, 
-                () => _characters.NextTurn());
+                () => _turns.EndCurrentTeamsTurn());
             return;
         }
 
@@ -79,17 +79,17 @@ public class C_Behavior : MonoBehaviour
 
         if (endTile) // If is an end tile (and different of current tile)
         {
-            path = _pathfinding.Pathfind(c.tile, endTile);
+            path = _pathfinding.Pathfind(c.tile, endTile, M_Pathfinding.TileInclusion.WithEnd);
         }
 
         if (Utils.IsVoidList(path))  // Exit : not path
         {
             Wait(2,
-                () => _characters.NextTurn());
+                () => _turns.EndCurrentTeamsTurn());
             return;
         }
 
-        c.move.MoveOnPath(path, () => _characters.NextTurn()); // EXIT : move on path
+        c.move.MoveOnPath(path, () => _turns.EndCurrentTeamsTurn()); // EXIT : move on path
     }
 
     // ======================================================================
@@ -105,11 +105,11 @@ public class C_Behavior : MonoBehaviour
 
         if(target == null || target.health.IsDead() || _characters.IsFinalTeam(c)) // EXIT : nobody in sight
         {
-            _characters.NextTurn();
+            _turns.EndCurrentTeamsTurn();
             return;
         }
 
-        c.attack.AttackTarget(target, () => _characters.NextTurn());
+        c.attack.AttackTarget(target, () => _turns.EndCurrentTeamsTurn());
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ public class C_Behavior : MonoBehaviour
     {
         if (_characters.IsFinalTeam(c)) // Victory
         {
-            _characters.NextTurn();
+            _turns.EndCurrentTeamsTurn();
             return;
         }
 
@@ -131,7 +131,7 @@ public class C_Behavior : MonoBehaviour
             }
             else // Out AP
             {
-                _characters.NextTurn();
+                _turns.EndCurrentTeamsTurn();
             }
         }
         else // Find target
@@ -144,7 +144,7 @@ public class C_Behavior : MonoBehaviour
             }
             else
             {
-                _characters.NextTurn();
+                _turns.EndCurrentTeamsTurn();
                 return;
             }
         }

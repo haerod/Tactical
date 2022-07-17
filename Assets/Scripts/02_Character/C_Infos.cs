@@ -19,7 +19,10 @@ public class C_Infos : MonoBehaviour
 
     public void Start()
     {
-        transform.parent.name = string.Format("Character : {0} (T{1})", designation, team);
+        string playable = "PC";
+        if (!c.behavior.playable) playable = "NPC";
+
+        transform.parent.name = string.Format("{2} - {0} (T{1})", designation, team, playable);
         SetTeamMaterials();
     }
 

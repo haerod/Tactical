@@ -12,7 +12,7 @@ public class M_Pathfinding : MonoBehaviour
     private Tile currentTile;
     public static M_Pathfinding instance;
 
-    public enum LoSParameters { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd} // Options of the line of sight
+    public enum TileInclusion { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd} // Options of the line of sight
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -42,7 +42,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="startTile"></param>
     /// <param name="endTile"></param>
     /// <returns></returns>
-    public List<Tile> Pathfind(Tile startTile, Tile endTile)
+    public List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion)
     {
         ClearPath();
 
@@ -81,12 +81,21 @@ public class M_Pathfinding : MonoBehaviour
                 closedList.Add(endTile);
                 List<Tile> toReturn = new List<Tile>();
                 endTile.parent = currentTile;
-                toReturn.Add(endTile);
+
+                // Add tiles from end to start. After, reverse the list to have it from start to end.
+                if(inclusion == TileInclusion.WithEnd || inclusion == TileInclusion.WithStartAndEnd)
+                {
+                    toReturn.Add(endTile);
+                }
                 while (endTile != startTile)
                 {
                     Tile t = endTile.parent;
                     endTile = t;
                     toReturn.Add(endTile);
+                }
+                if (inclusion == TileInclusion.WithStart || inclusion == TileInclusion.WithStartAndEnd)
+                {
+                    toReturn.Add(startTile);
                 }
 
                 toReturn.Reverse();
@@ -143,7 +152,7 @@ public class M_Pathfinding : MonoBehaviour
         // Check the shortest path
         foreach (Tile tile in area)
         {
-            List<Tile> testedPath = Pathfind(from, tile);
+            List<Tile> testedPath = Pathfind(from, tile, TileInclusion.WithEnd);
 
             if (testedPath == null) continue;
 
@@ -342,7 +351,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="endTile"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    public List<Tile> LineOfSight(Tile startTile, Tile endTile, LoSParameters parameters = LoSParameters.WithoutStartAndEnd)
+    public List<Tile> LineOfSight(Tile startTile, Tile endTile, TileInclusion parameters = TileInclusion.WithoutStartAndEnd)
     {
         // Get Vector between start and end coordinates (Start tile - end tile)
         Vector2 v2 = new Vector2(endTile.x - startTile.x, endTile.y - startTile.y);
@@ -352,7 +361,7 @@ public class M_Pathfinding : MonoBehaviour
 
         List<Tile> toReturn = new List<Tile>();
 
-        if(parameters == LoSParameters.WithStart || parameters == LoSParameters.WithStartAndEnd)
+        if(parameters == TileInclusion.WithStart || parameters == TileInclusion.WithStartAndEnd)
         {
             toReturn.Add(startTile);
         }
@@ -365,7 +374,7 @@ public class M_Pathfinding : MonoBehaviour
             toReturn.Add(t);
         }
 
-        if (parameters == LoSParameters.WithStart || parameters == LoSParameters.WithoutStartAndEnd)
+        if (parameters == TileInclusion.WithStart || parameters == TileInclusion.WithoutStartAndEnd)
         {
             toReturn.Remove(endTile);
         }
