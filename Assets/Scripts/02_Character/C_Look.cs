@@ -67,27 +67,6 @@ public class C_Look : MonoBehaviour
     }
 
     /// <summary>
-    /// Return true if the character has obstacles on its line of sight.
-    /// </summary>
-    /// <param name="lineOfSight"></param>
-    /// <returns></returns>
-    public bool AreObstacles(List<Tile> lineOfSight)
-    {
-        if (Utils.IsVoidList(lineOfSight)) return false;
-
-        foreach (Tile t in lineOfSight)
-        {
-            if (t.type == Tile.Type.BigObstacle) return true;
-            if (t.Character())
-            {
-                if (!t.Character().health.IsDead()) return true;
-            }
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// Return the closest enemy on sight.
     /// </summary>
     /// <returns></returns>
@@ -104,4 +83,41 @@ public class C_Look : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Return true if the character has obstacles on its line of sight.
+    /// </summary>
+    /// <param name="lineOfSight"></param>
+    /// <returns></returns>
+    private bool AreObstacles(List<Tile> lineOfSight)
+    {
+        if (Utils.IsVoidList(lineOfSight)) return false;
+
+        foreach (Tile t in lineOfSight)
+        {
+            if (t.type == Tile.Type.BigObstacle) return true; // EXIT : Big obstacle.
+
+            C__Character chara = t.Character();
+
+            if(_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThroug.Nobody)
+            {
+                if (chara)
+                {
+                    if (!chara.health.IsDead()) return true; // EXIT : Other character.
+                }
+            }
+            else if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThroug.AlliesOnly)
+            {
+                if (chara)
+                {
+                    // Are obstacle if enemy && alive
+                    if ((chara.infos.team != c.infos.team) && (!chara.health.IsDead())) return true; // EXIT : Enemy
+                }
+            }
+        }
+
+        return false; // EXIT : No obstacle.
+    }
+
+
 }

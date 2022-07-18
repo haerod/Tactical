@@ -7,6 +7,9 @@ public class M_Rules : MonoBehaviour
     public enum PassThrough {Everybody, Nobody, AlliesOnly}
     public PassThrough canPassThrough = PassThrough.Nobody;
 
+    public enum SeeAnShotThroug { Everybody, Nobody, AlliesOnly}
+    public SeeAnShotThroug canSeeAndShotThrough = SeeAnShotThroug.Everybody;
+
     public bool useDiagonals = false;
 
     public enum FirstCharacter {Random, ChoosenCharacter, FirstCharacterOfTheFirstTeam}
