@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class F_PercentShootText : MonoBehaviour
+public class UI_PercentShootText : MonoBehaviour
 {
     [SerializeField] private float percentShootOffset = 50f;
     [Space]

@@ -47,6 +47,14 @@ public class C_ActionPoints : MonoBehaviour
         actionPoints = maxActionPoints;
     }
 
+    /// <summary>
+    /// Set action points to 0;
+    /// </summary>
+    public void EmptyActionPoints()
+    {
+        actionPoints = 0;
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

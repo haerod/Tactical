@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using static M__Managers;
 
 public class C__Character : MonoBehaviour
@@ -13,6 +14,8 @@ public class C__Character : MonoBehaviour
     public C_Behavior behavior;
     public C_AnimatorScripts anim; // With animator / skinned mesh renderer
     public UI_SlicedHealthBar healthBar;
+
+    public int team => Team();
 
     [HideInInspector] public Tile tile => Tile();
     
@@ -31,6 +34,15 @@ public class C__Character : MonoBehaviour
     public int Team()
     {
         return infos.team;
+    }
+
+    /// <summary>
+    /// Return the playable teammates with action points.
+    /// </summary>
+    /// <returns></returns>
+    public List<C__Character> PlayableTeammatesWithActionPoints()
+    {
+        return _characters.GetTeam(this, true, true, true);
     }
 
     /// <summary>

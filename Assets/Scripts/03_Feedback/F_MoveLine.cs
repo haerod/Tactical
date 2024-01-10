@@ -37,13 +37,13 @@ public class F_MoveLine : MonoBehaviour
             line.positionCount = actionPoints + 1;
             lineOut.gameObject.SetActive(true);
             lineOut.positionCount = path.Count - actionPoints;
-            _feedback.actionCostText.SetActionCostText((path.Count - 1).ToString(), endTile.transform, true);
+            _ui.actionCostText.SetActionCostText((path.Count - 1).ToString(), endTile.transform, true);
         }
         else // IN
         {
             lineOut.gameObject.SetActive(false);
             line.positionCount = path.Count;
-            _feedback.actionCostText.SetActionCostText((path.Count - 1).ToString(), endTile.transform);
+            _ui.actionCostText.SetActionCostText((path.Count - 1).ToString(), endTile.transform);
         }
 
         // Position line's points

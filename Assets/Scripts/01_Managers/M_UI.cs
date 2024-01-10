@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
+using System;
 
 public class M_UI : MonoBehaviour
 {
@@ -27,6 +28,9 @@ public class M_UI : MonoBehaviour
     [SerializeField] private GameObject saveFeedbackText = null;
     [Space]
     [SerializeField] private Transform tutoParent = null;
+    [Space]
+    public UI_PercentShootText percentText;
+    public UI_ActionCostText actionCostText;
 
     public static M_UI instance;
 
@@ -103,9 +107,9 @@ public class M_UI : MonoBehaviour
     /// <param name="value"></param>
     public void SetTurnPlayerUIActive(bool value)
     {
-        addActionPointButton.gameObject.SetActive(value);
-        actionPointsObject.SetActive(value);
+        SetActiveCheatButton(value);
         nextTurnButton.gameObject.SetActive(value);
+        SetActiveActionPointsUI(value);
     }
     
     /// <summary>
@@ -116,7 +120,7 @@ public class M_UI : MonoBehaviour
     {
         if (value == true && !_characters.currentCharacter.behavior.playable) return; // EXIT : it's not player's turn
 
-        addActionPointButton.gameObject.SetActive(value);
+        SetActiveCheatButton(value);
         nextTurnButton.gameObject.SetActive(value);
     }
 
@@ -229,7 +233,7 @@ public class M_UI : MonoBehaviour
     }
 
     /// <summary>
-    /// Enable the dropdown tutorials
+    /// Enable the dropdown tutorials.
     /// </summary>
     public void EnableDropdownTutorial()
     {
@@ -248,4 +252,27 @@ public class M_UI : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Active or desactive Action Points Object (depending the Rules).
+    /// </summary>
+    /// <param name="value"></param>
+    private void SetActiveActionPointsUI(bool value)
+    {
+        actionPointsObject.SetActive(value);
+
+        if (_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
+            actionPointsObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Active or desactive Action Points Object (depending the Rules).
+    /// </summary>
+    /// <param name="value"></param>
+    private void SetActiveCheatButton(bool value)
+    {
+        addActionPointButton.gameObject.SetActive(value);
+
+        if (_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
+            addActionPointButton.gameObject.SetActive(false);
+    }
 }

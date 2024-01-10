@@ -36,7 +36,7 @@ public class C_Behavior : MonoBehaviour
         {
             case Behavior.None:
                 Wait(1,
-                    () => _turns.EndCurrentTeamsTurn());
+                    () => _turns.EndTurnOfTeamPCs());
                 break;
             case Behavior.Follower:
                 Wait(1, 
@@ -60,10 +60,10 @@ public class C_Behavior : MonoBehaviour
     /// </summary>
     public void FollowTarget()
     {
-        if (c.behavior.target == null) // Exit : no target
+        if (c.behavior.target == null) // EXIT : no target
         {
             Wait(2, 
-                () => _turns.EndCurrentTeamsTurn());
+                () => _turns.EndTurnOfTeamPCs());
             return;
         }
 
@@ -82,14 +82,14 @@ public class C_Behavior : MonoBehaviour
             path = _pathfinding.Pathfind(c.tile, endTile, M_Pathfinding.TileInclusion.WithEnd);
         }
 
-        if (Utils.IsVoidList(path))  // Exit : not path
+        if (Utils.IsVoidList(path))  // EXIT : not path
         {
             Wait(2,
-                () => _turns.EndCurrentTeamsTurn());
+                () => _turns.EndTurnOfTeamPCs());
             return;
         }
 
-        c.move.MoveOnPath(path, () => _turns.EndCurrentTeamsTurn()); // EXIT : move on path
+        c.move.MoveOnPath(path, () => _turns.EndTurnOfTeamPCs()); // EXIT : move on path
     }
 
     // ======================================================================
@@ -105,11 +105,11 @@ public class C_Behavior : MonoBehaviour
 
         if(target == null || target.health.IsDead() || _characters.IsFinalTeam(c)) // EXIT : nobody in sight
         {
-            _turns.EndCurrentTeamsTurn();
+            _turns.EndTurnOfTeamPCs();
             return;
         }
 
-        c.attack.AttackTarget(target, () => _turns.EndCurrentTeamsTurn());
+        c.attack.AttackTarget(target, () => _turns.EndTurnOfTeamPCs());
     }
 
     /// <summary>
@@ -117,9 +117,12 @@ public class C_Behavior : MonoBehaviour
     /// </summary>
     private void CheckOffensive()
     {
+        if (_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
+            AcquireTarget();
+
         if (_characters.IsFinalTeam(c)) // Victory
         {
-            _turns.EndCurrentTeamsTurn();
+            _turns.EndTurnOfTeamPCs();
             return;
         }
 
@@ -131,7 +134,7 @@ public class C_Behavior : MonoBehaviour
             }
             else // Out AP
             {
-                _turns.EndCurrentTeamsTurn();
+                _turns.EndTurnOfTeamPCs();
             }
         }
         else // Find target
@@ -144,7 +147,7 @@ public class C_Behavior : MonoBehaviour
             }
             else
             {
-                _turns.EndCurrentTeamsTurn();
+                _turns.EndTurnOfTeamPCs();
                 return;
             }
         }

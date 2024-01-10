@@ -99,6 +99,10 @@ public class M_Characters : MonoBehaviour
         // Inputs
         _input.ClearFeedbacksAndValues();
 
+        // Check if it's a new team's turn
+        if (newCurrentCharacter.team != currentCharacter.team)
+            _turns.NewTeamTurn(GetTeam(newCurrentCharacter, false, false, false));
+
         // Change current character
         currentCharacter = newCurrentCharacter;
 
@@ -107,19 +111,18 @@ public class M_Characters : MonoBehaviour
         _camera.ResetPosition();
 
         // Character
-        currentCharacter.actionPoints.FullActionPoints();
         currentCharacter.ClearTilesFeedbacks();
 
         if(currentCharacter.behavior.playable) // Playable character (PC)
         {
-            _input.SetClick();
+            _input.SetActiveClick();
             _ui.SetTurnPlayerUIActive(true);
             _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
             currentCharacter.EnableTilesFeedbacks();
         }
         else // Non playable character (NPC)
         {
-            _input.SetClick(false);
+            _input.SetActiveClick(false);
             _ui.SetTurnPlayerUIActive(false);
             currentCharacter.behavior.PlayBehavior();
             currentCharacter.EnableTilesFeedbacks(false);
@@ -140,6 +143,37 @@ public class M_Characters : MonoBehaviour
 
         return true;
     }
+
+    /// <summary>
+    /// Return the team members.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="excludeCharacter"> if true, exclude the character of the list. </param>
+    /// <param name="excludeNPC"> if true, exclude the NPCs of the list. </param>
+    /// <param name="excludeEmptyActionPoints"> if true, exclude characters of the list without action points. </param>
+    /// <returns></returns>
+    public List<C__Character> GetTeam(C__Character character, bool excludeCharacter, bool excludeNPC, bool excludeEmptyActionPoints)
+    {
+        List<C__Character> team = characters
+            .Where(o => o.Team() == character.Team())
+            .ToList();
+
+        if (excludeCharacter)
+            team.Remove(character);
+
+        if (excludeNPC)
+            team = team
+                .Where(o => o.behavior.playable)
+                .ToList();
+        
+        if (excludeEmptyActionPoints)
+            team = team
+                .Where(o => o.actionPoints.actionPoints > 0)
+                .ToList();
+
+        return team;
+    }
+
 
     // ======================================================================
     // PRIVATE METHODS

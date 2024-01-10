@@ -62,7 +62,7 @@ public class C_Move : MonoBehaviour
 
         anim.SetFloat("speed", animSpeed); // Blend tree anim speed
 
-        _input.SetClick(false);
+        _input.SetActiveClick(false);
         _ui.SetActionPlayerUIActive(false);
 
         c.ClearTilesFeedbacks();
@@ -205,7 +205,7 @@ public class C_Move : MonoBehaviour
     private void EndMove(Action OnEnd = default)
     {
         anim.SetFloat("speed", 0f);
-        _input.SetClick();
+        _input.SetActiveClick();
         _ui.SetActionPlayerUIActive(true);
 
         if (_characters.currentCharacter.behavior.playable)
@@ -214,7 +214,6 @@ public class C_Move : MonoBehaviour
         }
 
         if (OnEnd == default) OnEnd = (() => { });
-
 
         OnEnd();
     }

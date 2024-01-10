@@ -73,7 +73,7 @@ public class M_Input : MonoBehaviour
     public void ClearFeedbacksAndValues()
     {
         _feedback.DisableFreeTileFeedbacks();
-        _feedback.percentText.DisablePercentShootText();
+        _ui.percentText.DisablePercentShootText();
         _pathfinding.ClearPath();
         currentPathfinding = null;
         pointedTile = null;
@@ -84,7 +84,7 @@ public class M_Input : MonoBehaviour
     /// Set if players can click or not on board objects
     /// </summary>
     /// <param name="value"></param>
-    public void SetClick(bool value = true)
+    public void SetActiveClick(bool value = true)
     {
         canClick = value;
 
@@ -189,7 +189,7 @@ public class M_Input : MonoBehaviour
     {
         if (Input.GetKeyDown(endTurnKey))
         {
-            _turns.EndCurrentTeamsTurn();
+            _turns.EndTurnOfTeamPCs();
         }
     }
 
@@ -272,7 +272,7 @@ public class M_Input : MonoBehaviour
             if (c.CanAttack())
             {
                 _feedback.SetCursor(M_Feedback.CursorType.AimAndInSight);
-                _feedback.percentText.SetPercentShootText(c.attack.GetPercentToTouch(c.look.LineOfSight(tile).Count));
+                _ui.percentText.SetPercentShootText(c.attack.GetPercentToTouch(c.look.LineOfSight(tile).Count));
             }
             else
             {
@@ -291,7 +291,7 @@ public class M_Input : MonoBehaviour
     /// <param name="tile"></param>
     private void OnFreeTile(Tile tile)
     {
-        _feedback.percentText.DisablePercentShootText();
+        _ui.percentText.DisablePercentShootText();
 
         currentTarget = null;
 
@@ -335,16 +335,20 @@ public class M_Input : MonoBehaviour
     private void ClickAttack()
     {
         C__Character c = _characters.currentCharacter;
-        _feedback.percentText.DisablePercentShootText();
+        _ui.percentText.DisablePercentShootText();
 
-        // EXIT : There is no target
-        if (currentTarget == null) return;
+        if (currentTarget == null) return; // EXIT : There is no target
 
         // Attack
         c.attack.AttackTarget(currentTarget, () => {
             if (_characters.IsFinalTeam(c))
             {
-                _turns.EndCurrentTeamsTurn();
+                _turns.EndTurnOfTeamPCs();
+            }
+
+            if (_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
+            {
+                _turns.EndTurnOfCurrentCharacter();
             }
         });
     }
@@ -355,13 +359,16 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void ClickMove()
     {
-        // EXIT : It's no path
-        if (currentPathfinding == null) return;
-        // EXIT : no action points aviable
-        if (_characters.currentCharacter.actionPoints.actionPoints <= 0) return; 
+        if (currentPathfinding == null) return; // EXIT : It's no path
+        if (_characters.currentCharacter.actionPoints.actionPoints <= 0) return; // EXIT : no action points aviable
 
-        _characters.currentCharacter.move.MoveOnPath(currentPathfinding, () => { });
-        _feedback.actionCostText.DisableActionCostText();
+        _characters.currentCharacter.move.MoveOnPath(currentPathfinding, () => {
+            if(_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
+            {
+                _turns.EndTurnOfCurrentCharacter();
+            }
+        });
+        _ui.actionCostText.DisableActionCostText();
     }
 
     // OTHER

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using static M__Managers;
+using System;
 
 public class M_Turns : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class M_Turns : MonoBehaviour
     /// <summary>
     /// Pass to the next player's turn, or NPC of the team (depending the Rules).
     /// </summary>
-    public void EndCurrentTeamsTurn()
+    public void EndTurnOfTeamPCs()
     {
         // New character
         C__Character current = NextAllyNPCOrEnemy();
@@ -60,6 +61,27 @@ public class M_Turns : MonoBehaviour
         _characters.NewCurrentCharacter(current);
     }
 
+    /// <summary>
+    /// Empty the action points, pass to the next allie character, else allie npc, else next team
+    /// </summary>
+    public void EndTurnOfCurrentCharacter()
+    {
+        _characters.currentCharacter.actionPoints.EmptyActionPoints();
+
+        if (_characters.currentCharacter.PlayableTeammatesWithActionPoints().Count > 0)
+            ChangeTeamCharacter();
+        else
+            EndTurnOfTeamPCs();
+    }
+
+    public void NewTeamTurn(List<C__Character> newTeam)
+    {
+        foreach (C__Character member in newTeam)
+        {
+            member.actionPoints.FullActionPoints();
+        }
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -68,16 +90,14 @@ public class M_Turns : MonoBehaviour
     /// Get the next character in the team.
     /// Return null if there is no playable teammate.
     /// </summary>
-    private  C__Character NextPlayableCharacterInTeam()
+    private C__Character NextPlayableCharacterInTeam()
     {
         C__Character current = _characters.currentCharacter;
 
-        // Find the playble teamates
-        List<C__Character> team = _characters.characters
-            .Where(o => o.Team() == current.Team() && o.behavior.playable)
-            .ToList();
-        
-        if (team.Count <= 1) return null; // EXIT : There is no playble teammates.
+        // Get the playble teammates
+        List<C__Character> team = _characters.GetTeam(current, true, true, false);
+
+        if (team.Count == 0) return null; // EXIT : There is no playble teammates.
 
         return team.Next(team.IndexOf(current));
     }
@@ -129,8 +149,7 @@ public class M_Turns : MonoBehaviour
 
         current.ClearTilesFeedbacks();
 
-        _input.SetClick(false);
+        _input.SetActiveClick(false);
         _input.ClearFeedbacksAndValues();
     }
-
 }

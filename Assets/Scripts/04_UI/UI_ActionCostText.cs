@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static M__Managers;
 
-public class F_ActionCostText : MonoBehaviour
+public class UI_ActionCostText : MonoBehaviour
 {
     [Header("ACTION COST TEXT SETTINGS")]
 
@@ -44,6 +44,12 @@ public class F_ActionCostText : MonoBehaviour
     /// <param name="outRange"></param>
     public void SetActionCostText(string value, Transform target, bool outRange = false)
     {
+        if(_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn) // EXIT : No action cost text in this mode
+        {
+            actionCostText.gameObject.SetActive(false);
+            return;
+        }
+
         actionCostText.gameObject.SetActive(true);
         actionCostText.text = value;
         actionCostTarget = target;
@@ -65,7 +71,6 @@ public class F_ActionCostText : MonoBehaviour
     {
         actionCostText.gameObject.SetActive(false);
     }
-
 
     // ======================================================================
     // PRIVATE METHODS

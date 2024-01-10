@@ -55,7 +55,7 @@ public class C_Attack : MonoBehaviour
         int damages = UnityEngine.Random.Range(damagesRange.x, damagesRange.y + 1);
 
         _input.ClearFeedbacksAndValues();
-        _input.SetClick(false);
+        _input.SetActiveClick(false);
 
         _ui.SetActionPlayerUIActive(false);
 
@@ -187,7 +187,7 @@ public class C_Attack : MonoBehaviour
             }
             Wait(0.5f, () =>
             {
-                _input.SetClick();
+                _input.SetActiveClick();
                 c.EnableTilesFeedbacks();
 
                 OnEnd();

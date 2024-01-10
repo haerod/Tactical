@@ -17,8 +17,6 @@ public class M_Feedback : MonoBehaviour
     public F_MoveLine line;
     public F_SelectionSquare square;
     public F_ViewLines viewLines;
-    public F_PercentShootText percentText;
-    public F_ActionCostText actionCostText;
     [SerializeField] private GameObject actionEffectPrefab = null;
     public static M_Feedback instance;
     
@@ -52,7 +50,7 @@ public class M_Feedback : MonoBehaviour
     {
         square.DisableSquare();
         line.DisableLines();
-        actionCostText.DisableActionCostText();
+        _ui.actionCostText.DisableActionCostText();
     }
 
     /// <summary>
