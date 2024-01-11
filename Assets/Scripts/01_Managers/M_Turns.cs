@@ -66,9 +66,9 @@ public class M_Turns : MonoBehaviour
     /// </summary>
     public void EndTurnOfCurrentCharacter()
     {
-        _characters.currentCharacter.actionPoints.EmptyActionPoints();
+        _characters.current.actionPoints.EmptyActionPoints();
 
-        if (_characters.currentCharacter.PlayableTeammatesWithActionPoints().Count > 0)
+        if (_characters.current.PlayableTeammatesWithActionPoints().Count > 0)
             ChangeTeamCharacter();
         else
             EndTurnOfTeamPCs();
@@ -92,7 +92,7 @@ public class M_Turns : MonoBehaviour
     /// </summary>
     private C__Character NextPlayableCharacterInTeam()
     {
-        C__Character current = _characters.currentCharacter;
+        C__Character current = _characters.current;
 
         // Get the playble teammates
         List<C__Character> team = _characters.GetTeam(current, true, true, false);
@@ -111,7 +111,7 @@ public class M_Turns : MonoBehaviour
     {
         //NB : M_Characters previously orders the characters by teams/PC/NPC.
 
-        C__Character current = _characters.currentCharacter;
+        C__Character current = _characters.current;
 
         // Current is playable
         // ===================
@@ -142,7 +142,7 @@ public class M_Turns : MonoBehaviour
     /// </summary>
     private void Victory()
     {
-        C__Character current = _characters.currentCharacter;
+        C__Character current = _characters.current;
 
         _ui.SetTurnPlayerUIActive(false);
         _ui.EnableEndScreen(current);

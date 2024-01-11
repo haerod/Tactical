@@ -13,6 +13,7 @@ public class C_Move : MonoBehaviour
     public int y = 1;
 
     [Header("GRID MOVE PARAMETERS")]
+    public List<TileType> walakbleTiles;
     [Range(0,10f)]
     [SerializeField] private float speed = 6;
     [Range(0,1f)]
@@ -75,10 +76,9 @@ public class C_Move : MonoBehaviour
     /// </summary>
     public void EnableMoveArea()
     {
-        Tile currentTile = _board.GetTile(x,y);
         int actionPoints = c.actionPoints.actionPoints;
 
-        currentArea = _pathfinding.AreaMovementZone(currentTile, actionPoints);
+        currentArea = _pathfinding.AreaMovementZone(c.tile, actionPoints, c.move.walakbleTiles);
 
         if (Utils.IsVoidList(currentArea)) return; // No way to go with current action points && position
 
@@ -208,7 +208,7 @@ public class C_Move : MonoBehaviour
         _input.SetActiveClick();
         _ui.SetActionPlayerUIActive(true);
 
-        if (_characters.currentCharacter.behavior.playable)
+        if (_characters.current.behavior.playable)
         {
             c.EnableTilesFeedbacks();
         }

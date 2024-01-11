@@ -68,7 +68,7 @@ public class M_UI : MonoBehaviour
     /// <param name="c"></param>
     public void SetActionPointText(string text, C__Character c)
     {
-        if (c != _characters.currentCharacter) return;
+        if (c != _characters.current) return;
 
         actionPointsText.text = text;
     }
@@ -83,9 +83,9 @@ public class M_UI : MonoBehaviour
     /// </summary>
     public void ClickOnAddActionPoint()
     {
-        _characters.currentCharacter.actionPoints.AddActionPoints();
-        _characters.currentCharacter.ClearTilesFeedbacks();
-        _characters.currentCharacter.EnableTilesFeedbacks();
+        _characters.current.actionPoints.AddActionPoints();
+        _characters.current.ClearTilesFeedbacks();
+        _characters.current.EnableTilesFeedbacks();
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public class M_UI : MonoBehaviour
     /// <param name="value"></param>
     public void SetActionPlayerUIActive(bool value)
     {
-        if (value == true && !_characters.currentCharacter.behavior.playable) return; // EXIT : it's not player's turn
+        if (value == true && !_characters.current.behavior.playable) return; // EXIT : it's not player's turn
 
         SetActiveCheatButton(value);
         nextTurnButton.gameObject.SetActive(value);

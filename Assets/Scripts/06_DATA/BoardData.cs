@@ -13,5 +13,5 @@ public class TileData
 {
     public int x;
     public int y;
-    public Tile.Type type;
+    public TileType type;
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using static M__Managers;
 
@@ -8,7 +8,15 @@ public class Tile : MonoBehaviour
 
     public int x;
     public int y;
-    
+
+    [Header("PROPERTIES")]
+
+    public TileType type;
+    // /!\ if Add a type :
+        // - Hole is always the last type
+        // - update M_Board.GenerateBoard
+        // - update ChangeType() method
+
     [Header("PATHFININDING VALUES (debug)")]
     public int cost;
     public int heuristic; // heuristic (10 = adjacent, 14 = diagonal)
@@ -23,12 +31,6 @@ public class Tile : MonoBehaviour
     [SerializeField] private Material area = null;
     [SerializeField] private Material attackable = null;
     [SerializeField] private Material range = null;
-
-    public enum Type { Basic, BigObstacle, Hole} // /!\ if Add a type :
-                                                    // - Hole is always the last type
-                                                    // - update M_Board.GenerateBoard
-                                                    // - update ChangeType() method
-    public Type type = Type.Basic;
 
     [Header("REFERENCES")]
 
@@ -186,7 +188,7 @@ public class Tile : MonoBehaviour
     /// Change the tile type to a new type and set the values in M_Board
     /// </summary>
     /// <param name="newType"></param>
-    public void ChangeType(Type newType)
+    public void ChangeType(TileType newType)
     {
         // Default values
         bigObstacle.SetActive(false);
@@ -202,16 +204,16 @@ public class Tile : MonoBehaviour
         }
 
         type = newType;
-        anim.SetInteger("type", (int)newType);
+        anim.SetInteger("type", newType.index);
 
-        switch (newType)
+        switch (newType.name)
         {
-            case Type.Basic:
+            case "Ground":
                 break;
-            case Type.Hole:
+            case "Hole":
                 _board.holeCoordinates.Add(coordinates);
                 break;
-            case Type.BigObstacle:
+            case "Big obstacle":
                 bigObstacle.SetActive(true);
                 _board.bigObstaclesCoordinates.Add(coordinates);
                 break;

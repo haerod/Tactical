@@ -42,7 +42,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="startTile"></param>
     /// <param name="endTile"></param>
     /// <returns></returns>
-    public List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion)
+    public List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion, List<TileType> allowedTiles)
     {
         ClearPath();
 
@@ -72,7 +72,7 @@ public class M_Pathfinding : MonoBehaviour
 
             foreach (Tile t in tempAround)
             {
-                AddAllowedTile(t, endTile);
+                AddAllowedTile(t, allowedTiles, endTile);
             }
 
             // If it's end tile -> return path
@@ -120,18 +120,18 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="to"></param>
     /// <param name="distance"></param>
     /// <returns></returns>
-    public Tile ClosestFreeTileWithShortestPath(Tile from, Tile to, int distance = 10)
+    public Tile ClosestFreeTileWithShortestPath(Tile from, Tile to, List<TileType> allowedTiles, int distance = 10)
     {
         if (from == null || to == null) return null; // EXIT : from or to doen't exist
         if (from == to) return null; // EXIT : from == to
         if (distance == 0) return null; // EXIT : no distance
 
-        List<Tile> area = AreaMovementZone(to, distance).ToList();
+        List<Tile> area = AreaMovementZone(to, distance, allowedTiles).ToList();
 
         // Get aviable tiles
         area = area
             .Where(o => !o.IsOccupiedByCharacter() || o == from) // remove occupied tiles or get the original tile
-            .Where(o => o.type != Tile.Type.Hole || o.type != Tile.Type.BigObstacle) // remove occupied tiles
+            .Where(o => allowedTiles.Contains(o.type)) // remove occupied tiles
             .OrderBy(o => o.cost) // order by cost
             .ToList();
 
@@ -152,7 +152,7 @@ public class M_Pathfinding : MonoBehaviour
         // Check the shortest path
         foreach (Tile tile in area)
         {
-            List<Tile> testedPath = Pathfind(from, tile, TileInclusion.WithEnd);
+            List<Tile> testedPath = Pathfind(from, tile, TileInclusion.WithEnd, allowedTiles);
 
             if (testedPath == null) continue;
 
@@ -180,7 +180,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="startTile"></param>
     /// <param name="distance"></param>
     /// <returns></returns>
-    public List<Tile> AreaMovementZone(Tile startTile, int distance)
+    public List<Tile> AreaMovementZone(Tile startTile, int distance, List<TileType> allowedTiles)
     {
         ClearPath();
 
@@ -221,7 +221,7 @@ public class M_Pathfinding : MonoBehaviour
 
             foreach (Tile t in tempAround)
             {
-                AddAllowedTile(t);
+                AddAllowedTile(t, allowedTiles);
             }
 
             // Calculation loop (f, g & h)
@@ -417,27 +417,26 @@ public class M_Pathfinding : MonoBehaviour
     /// </summary>
     /// <param name="tile"></param>
     /// <param name="lastTile"></param>
-    private void AddAllowedTile(Tile tile, Tile lastTile = null)
+    private void AddAllowedTile(Tile tile, List<TileType> allowedTiles, Tile lastTile = null)
     {
-        if (!tile) return; // if tile
-        if (closedList.Contains(tile)) return; // isnt this tile in list
-        if (tile.type == Tile.Type.Hole) return; // isnt a hole
-        if (tile.type == Tile.Type.BigObstacle) return; // isnt a big obstacle
-        if(tile.cost > 0) // new cost is lower than current (if already calculated)
+        if (!tile) return; // EXIT : There is no tile
+        if (closedList.Contains(tile)) return; // EXIT : This tile is in the closed list
+        if (!allowedTiles.Contains(tile.type)) return; // EXIT : It's a forbiddent tile type
+        if(tile.cost > 0)
         {
             int newCost = currentTile.cost + GetCost(tile, currentTile);
-            if (newCost > tile.cost) return;
+            if (newCost > tile.cost) return; // EXIT : New cost is higher than the previous (il is calculated)
         }
 
         if (tile.IsOccupiedByCharacter())
         {
             if (_rules.canPassThrough == M_Rules.PassThrough.Nobody)
             {
-                if (tile != lastTile) return;
+                if (tile != lastTile) return; // EXIT : Tile occupied by a character
             }
             else if (_rules.canPassThrough == M_Rules.PassThrough.AlliesOnly)
             {
-                if (tile.Character().Team() != _characters.currentCharacter.Team()) return;
+                if (tile.Character().Team() != _characters.current.Team()) return; // EXIT : Tile occupied by an enemy
             }
         }
 

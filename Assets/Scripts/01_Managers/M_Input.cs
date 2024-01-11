@@ -119,11 +119,9 @@ public class M_Input : MonoBehaviour
                 tile = hit.transform.GetComponentInParent<C__Character>().tile;
             }
 
-            // EXIT : is on the already pointed tile (operation already done)
-            if (tile == pointedTile) return;
+            if (tile == pointedTile) return; // EXIT : is on the already pointed tile (operation already done)
 
-            // EXIT : Is a hole tile, big obstacle tile or current character's tile
-            if (!CanGo(tile)) 
+            if (!CanGo(tile)) // EXIT : Is a hole tile, big obstacle tile or current character's tile
             {
                 OnForbiddenTile();
                 return;
@@ -259,7 +257,7 @@ public class M_Input : MonoBehaviour
         _feedback.DisableFreeTileFeedbacks();
 
         currentTarget = tile.Character();
-        C__Character c = _characters.currentCharacter;
+        C__Character c = _characters.current;
 
         // EXIT : same character
         if (tile.Character() == c) return;
@@ -296,9 +294,10 @@ public class M_Input : MonoBehaviour
         currentTarget = null;
 
         currentPathfinding = _pathfinding.Pathfind(
-                        _characters.currentCharacter.tile,
+                        _characters.current.tile,
                         tile,
-                        M_Pathfinding.TileInclusion.WithEnd);
+                        M_Pathfinding.TileInclusion.WithEnd,
+                        _characters.current.move.walakbleTiles);
 
         // EXIT : No path
         if (Utils.IsVoidList(currentPathfinding))
@@ -307,10 +306,11 @@ public class M_Input : MonoBehaviour
             return;
         }
 
-        _feedback.square.SetSquare(pointedTile.transform.position);
+        bool tileInMoveRange = (currentPathfinding.Count - 1) <= _characters.current.actionPoints.actionPoints;
+        _feedback.square.SetSquare(pointedTile.transform.position, tileInMoveRange);
         _feedback.line.SetLines(
             currentPathfinding, 
-            _characters.currentCharacter, 
+            _characters.current, 
             pointedTile);
 
         _feedback.SetCursor(M_Feedback.CursorType.Regular);
@@ -334,7 +334,7 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void ClickAttack()
     {
-        C__Character c = _characters.currentCharacter;
+        C__Character c = _characters.current;
         _ui.percentText.DisablePercentShootText();
 
         if (currentTarget == null) return; // EXIT : There is no target
@@ -360,9 +360,9 @@ public class M_Input : MonoBehaviour
     private void ClickMove()
     {
         if (currentPathfinding == null) return; // EXIT : It's no path
-        if (_characters.currentCharacter.actionPoints.actionPoints <= 0) return; // EXIT : no action points aviable
+        if (_characters.current.actionPoints.actionPoints <= 0) return; // EXIT : no action points aviable
 
-        _characters.currentCharacter.move.MoveOnPath(currentPathfinding, () => {
+        _characters.current.move.MoveOnPath(currentPathfinding, () => {
             if(_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
             {
                 _turns.EndTurnOfCurrentCharacter();
@@ -381,11 +381,10 @@ public class M_Input : MonoBehaviour
     /// <returns></returns>
     private bool CanGo(Tile tile)
     {
-        C__Character c = _characters.currentCharacter;
+        C__Character c = _characters.current;
 
-        if (!tile) return false; ;
-        if (tile.type == Tile.Type.Hole) return false;
-        if (tile.type == Tile.Type.BigObstacle) return false;
+        if (!tile) return false;
+        if (!c.move.walakbleTiles.Contains(tile.type)) return false;
         if (tile.x == c.move.x && tile.y == c.move.y) return false;
         return true;
     }   

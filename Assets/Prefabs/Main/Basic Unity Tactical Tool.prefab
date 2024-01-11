@@ -628,7 +628,6 @@ MonoBehaviour:
   firstCharacter: 2
   choosenCharacter: {fileID: 0}
   botsPlays: 1
-  endTurn: 0
   actionsByTurn: 1
   percentReductionByDistance: 5
   teamInfos:
@@ -891,6 +890,9 @@ MonoBehaviour:
   - {x: 7, y: 12}
   - {x: 6, y: 12}
   - {x: 5, y: 12}
+  groundType: {fileID: 11400000, guid: 859aa0936407b9943a71c17934cc4d62, type: 2}
+  holeType: {fileID: 11400000, guid: e5ace7720db371d439abdce08874f187, type: 2}
+  bigObstacleType: {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
   tile: {fileID: 6860123943097857979, guid: 31c5acd16725bd64c8be4cc521b899ac, type: 3}
   boardParent: {fileID: 1958866177891228965}
   grid: []
@@ -1299,6 +1301,10 @@ MonoBehaviour:
   autoSave: 1
   screenPercent: 5
   borderMultiplier: 1
+  tileTypesOrder:
+  - {fileID: 11400000, guid: 859aa0936407b9943a71c17934cc4d62, type: 2}
+  - {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
+  - {fileID: 11400000, guid: e5ace7720db371d439abdce08874f187, type: 2}
 --- !u!1 &1958866178150919871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1422,7 +1428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441ba2d337db25444b27c36634bf428d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCharacter: {fileID: 0}
+  current: {fileID: 0}
   characters: []
 --- !u!1 &1958866178297490547
 GameObject:

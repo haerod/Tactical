@@ -7,7 +7,7 @@ using static M__Managers;
 
 public class M_Characters : MonoBehaviour
 {
-    [HideInInspector] public C__Character currentCharacter;    
+    [HideInInspector] public C__Character current;    
     [HideInInspector] public List<C__Character> characters;
     public static M_Characters instance;
 
@@ -41,7 +41,7 @@ public class M_Characters : MonoBehaviour
         switch (_rules.firstCharacter)
         {
             case M_Rules.FirstCharacter.Random:
-                currentCharacter = characters.GetRandom();
+                current = characters.GetRandom();
                 break;
             case M_Rules.FirstCharacter.ChoosenCharacter:
                 if(_rules.choosenCharacter == null)
@@ -50,7 +50,7 @@ public class M_Characters : MonoBehaviour
                 }
                 break;
             case M_Rules.FirstCharacter.FirstCharacterOfTheFirstTeam:
-                currentCharacter = characters[0];
+                current = characters[0];
                 break;
             default:
                 break;
@@ -59,7 +59,7 @@ public class M_Characters : MonoBehaviour
         // Board edit mode
         if (!_creator.editMode)
         {
-            NewCurrentCharacter(currentCharacter);
+            NewCurrentCharacter(current);
         }
     }
 
@@ -93,39 +93,39 @@ public class M_Characters : MonoBehaviour
     public void NewCurrentCharacter(C__Character newCurrentCharacter)
     {
         // Old character
-        if(currentCharacter)
-            currentCharacter.ClearTilesFeedbacks();
+        if(current)
+            current.ClearTilesFeedbacks();
 
         // Inputs
         _input.ClearFeedbacksAndValues();
 
         // Check if it's a new team's turn
-        if (newCurrentCharacter.team != currentCharacter.team)
+        if (newCurrentCharacter.team != current.team)
             _turns.NewTeamTurn(GetTeam(newCurrentCharacter, false, false, false));
 
         // Change current character
-        currentCharacter = newCurrentCharacter;
+        current = newCurrentCharacter;
 
         // Camera
-        _camera.target = currentCharacter.transform;
+        _camera.target = current.transform;
         _camera.ResetPosition();
 
         // Character
-        currentCharacter.ClearTilesFeedbacks();
+        current.ClearTilesFeedbacks();
 
-        if(currentCharacter.behavior.playable) // Playable character (PC)
+        if(current.behavior.playable) // Playable character (PC)
         {
             _input.SetActiveClick();
             _ui.SetTurnPlayerUIActive(true);
-            _ui.SetActionPointText(currentCharacter.actionPoints.actionPoints.ToString(), currentCharacter);
-            currentCharacter.EnableTilesFeedbacks();
+            _ui.SetActionPointText(current.actionPoints.actionPoints.ToString(), current);
+            current.EnableTilesFeedbacks();
         }
         else // Non playable character (NPC)
         {
             _input.SetActiveClick(false);
             _ui.SetTurnPlayerUIActive(false);
-            currentCharacter.behavior.PlayBehavior();
-            currentCharacter.EnableTilesFeedbacks(false);
+            current.behavior.PlayBehavior();
+            current.EnableTilesFeedbacks(false);
         }
     }
 

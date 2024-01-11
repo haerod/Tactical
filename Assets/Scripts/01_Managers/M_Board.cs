@@ -22,6 +22,9 @@ public class M_Board : MonoBehaviour
 
     [Header("REFERENCES")]
 
+    [SerializeField] private TileType groundType;
+    [SerializeField] private TileType holeType;
+    [SerializeField] private TileType bigObstacleType;
     [SerializeField] private GameObject tile = null;
     [SerializeField] private Transform boardParent = null;
 
@@ -71,9 +74,9 @@ public class M_Board : MonoBehaviour
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    public void CreateTileAtCoordinates(int x, int y)
+    public void CreateTileAtCoordinates(int x, int y, TileType type)
     {
-        CreateTile(x, y);
+        CreateTile(x, y, type);
 
         // Get new extermities of the board.
         int xMin = _board.grid.OrderBy(o => o.x).FirstOrDefault().x;
@@ -97,7 +100,7 @@ public class M_Board : MonoBehaviour
         {
             if (GetTile(coordinates.x, coordinates.y)) continue; // tile already exist
 
-            CreateTile(coordinates.x, coordinates.y, Tile.Type.Hole, true);
+            CreateTile(coordinates.x, coordinates.y, holeType, true);
         }
     }
 
@@ -211,17 +214,17 @@ public class M_Board : MonoBehaviour
 
                 if (holeCoordinates.Contains(coordinates)) // Hole
                 {
-                    CreateTile(i, j, Tile.Type.Hole);
+                    CreateTile(i, j, holeType);
                     //stat.HideValues(); // uncomment this line in pathfinding debug mode
                 }
                 else if (bigObstaclesCoordinates.Contains(coordinates)) // Big obstacle
                 {
-                    CreateTile(i, j, Tile.Type.BigObstacle);
+                    CreateTile(i, j, bigObstacleType);
                     //stat.HideValues(); // uncomment this line in pathfinding debug mode
                 }
-                else // Basic
+                else // Ground
                 {
-                    CreateTile(i, j);
+                    CreateTile(i, j, groundType);
                 }
             }
         }
@@ -264,7 +267,7 @@ public class M_Board : MonoBehaviour
     /// <param name="y"></param>
     /// <param name="type"></param>
     /// <param name="isVoidHole"></param>
-    private void CreateTile(int x, int y, Tile.Type type = Tile.Type.Basic, bool isVoidHole = false)
+    private void CreateTile(int x, int y, TileType type, bool isVoidHole = false)
     {
         // Creation
         Tile instaTile = Instantiate(tile, new Vector3(x, 0, y), Quaternion.identity, boardParent).GetComponent<Tile>();
@@ -274,7 +277,7 @@ public class M_Board : MonoBehaviour
         _board.grid.Add(instaTile);
 
         //Type
-        if (type == Tile.Type.Basic) return; // EXIT : Tile is basic
+        if (type == groundType) return; // EXIT : Tile is basic
 
         instaTile.ChangeType(type);
 

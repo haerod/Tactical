@@ -19,6 +19,9 @@ public class M_Creator : MonoBehaviour
     [SerializeField] private int screenPercent = 5;
     [SerializeField] private int borderMultiplier = 1;
 
+    [Header("TILES")]
+    public List<TileType> tileTypesOrder;
+
     private int screenWidthPercented;
     private int screenHeightPercented;
     private Tile pointedTile;
@@ -151,15 +154,12 @@ public class M_Creator : MonoBehaviour
                 tile = hit.transform.GetComponentInParent<C__Character>().tile;
             }
 
-            // EXIT : No tile;
-            if (!tile) return;
-            // EXIT : is on the already pointed tile (operation already done)
-            if (tile == pointedTile) return;
+            if (!tile) return; // EXIT : No tile;
+            if (tile == pointedTile) return; // EXIT : is on the already pointed tile (operation already done)
 
             pointedTile = tile;
-
             _ui.SetDebugCoordinatesTextActive(true, pointedTile.x,pointedTile.y);
-            _feedback.square.SetSquare(tile.transform.position);
+            _feedback.square.SetSquare(tile.transform.position, true);
         }
         else // Out of tile board
         {
@@ -179,7 +179,7 @@ public class M_Creator : MonoBehaviour
             Vector3 newPoz = new Vector3(xPoz, 0, zPoz);
             newTileCoordinates = new Vector2Int(xPoz, zPoz);
 
-            _feedback.square.SetSquare(newPoz);
+            _feedback.square.SetSquare(newPoz, true);
 
             _ui.SetDebugCoordinatesTextActive(true, xPoz, zPoz);
         }
@@ -196,15 +196,15 @@ public class M_Creator : MonoBehaviour
             // Click on tile : modify tile's type
             if (pointedTile) 
             {
-                int current = (int)pointedTile.type;
-                current = current.Next(Enum.GetNames(typeof(Tile.Type)).Length -1);
-                pointedTile.ChangeType((Tile.Type) current);
+                //int current = (int)pointedTile.type;
+                //current = current.Next(Enum.GetNames(typeof(Tile.Type)).Length -1);
+                pointedTile.ChangeType(tileTypesOrder.Next(tileTypesOrder.IndexOf(pointedTile.type)));
                 pointedTile.SetRendererActive(true);
             }
             // Click on void tile : create a new tile
             else
             {
-                _board.CreateTileAtCoordinates(newTileCoordinates.x, newTileCoordinates.y);
+                _board.CreateTileAtCoordinates(newTileCoordinates.x, newTileCoordinates.y, tileTypesOrder[0]);
             }
 
             if(autoSave)

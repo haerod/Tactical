@@ -9,6 +9,8 @@ public class C_Look : MonoBehaviour
 {
     [SerializeField] private C__Character c = null;
     [SerializeField] private int range = 5;
+    // TODO
+    [SerializeField] private TileType bigObstacle;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -25,13 +27,11 @@ public class C_Look : MonoBehaviour
     {
         List<Tile> aroundTiles = _pathfinding.AroundTiles(c.tile, range, true);
 
-        //if (Utils.IsVoidList(aroundTiles)) return;
-
         // Find all tiles in view
         List<Tile> toEnable =
             _pathfinding.AroundTiles(c.tile, range, true)
             .Where(o => HasSightOn(o))
-            .Where(o => o.type != Tile.Type.BigObstacle)
+            .Where(o => o.type != bigObstacle)
             .ToList();
 
         toEnable.Add(c.tile);
@@ -95,7 +95,7 @@ public class C_Look : MonoBehaviour
 
         foreach (Tile t in lineOfSight)
         {
-            if (t.type == Tile.Type.BigObstacle) return true; // EXIT : Big obstacle.
+            if (t.type == bigObstacle) return true; // EXIT : Big obstacle.
 
             C__Character chara = t.Character();
 
