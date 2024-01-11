@@ -639,7 +639,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   c: {fileID: 3541061014796538876}
   range: 7
-  bigObstacle: {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
+  visualObstacles:
+  - {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
 --- !u!1 &7861959537881807382
 GameObject:
   m_ObjectHideFlags: 0

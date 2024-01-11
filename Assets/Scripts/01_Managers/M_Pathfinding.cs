@@ -66,14 +66,9 @@ public class M_Pathfinding : MonoBehaviour
 
             // Put all tiles in around list
             aroundList.Clear();
-            List<Tile> tempAround = _board.GetAroundTiles(currentTile);
-
-            if (tempAround == null) continue;
-
-            foreach (Tile t in tempAround)
-            {
-                AddAllowedTile(t, allowedTiles, endTile);
-            }
+            _board.
+                GetTilesAround(currentTile).
+                ForEach(tile => AddAllowedTile(tile, allowedTiles, endTile));
 
             // If it's end tile -> return path
             if (aroundList.Contains(endTile))
@@ -102,11 +97,7 @@ public class M_Pathfinding : MonoBehaviour
                 return toReturn;
             }
 
-            // Calculation loop (f, g & h)
-            foreach (Tile tile in aroundList)
-            {
-                CalculateTileValues(tile, endTile);
-            }
+            aroundList.ForEach(tile => CalculateTileValues(tile, endTile));
         }
 
         return null;
@@ -215,7 +206,7 @@ public class M_Pathfinding : MonoBehaviour
             // Put all tiles in around list
             aroundList.Clear();
 
-            List<Tile> tempAround = _board.GetAroundTiles(currentTile);
+            List<Tile> tempAround = _board.GetTilesAround(currentTile);
 
             if (tempAround == null) continue;
 
@@ -290,7 +281,7 @@ public class M_Pathfinding : MonoBehaviour
             // Put all tiles around in around list
             aroundList.Clear();
 
-            List<Tile> tempAround = _board.GetAroundTiles(currentTile, !withDiagonals);
+            List<Tile> tempAround = _board.GetTilesAround(currentTile, !withDiagonals);
 
             if (tempAround == null) continue; // CONTINUE : No tiles around
 
@@ -332,20 +323,18 @@ public class M_Pathfinding : MonoBehaviour
     /// </summary>
     public void ClearPath()
     {
-        foreach (Tile t in openList)
-        {
-            t.ResetTileValues();
-        }
+        openList
+            .ForEach(tile => tile.ResetTileValues());
+        closedList
+            .ForEach(tile => tile.ResetTileValues());
+
         openList.Clear();
-        foreach (Tile t in closedList)
-        {
-            t.ResetTileValues();
-        }
         closedList.Clear();
     }
 
     /// <summary>
     /// Return a line of sight from a tile to another one.
+    /// Null tiles are holes.
     /// </summary>
     /// <param name="startTile"></param>
     /// <param name="endTile"></param>
@@ -370,7 +359,8 @@ public class M_Pathfinding : MonoBehaviour
         {
             // Theoric coordinates of the segment
             Vector2 tile = new Vector2(startTile.x, startTile.y) + i / length * v2;
-            Tile t = _board.GetTile(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
+            Tile t = _board.GetTileAtCoordinates(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
+            // if t is null, its a hole
             toReturn.Add(t);
         }
 

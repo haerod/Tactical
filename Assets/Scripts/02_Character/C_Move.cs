@@ -64,7 +64,7 @@ public class C_Move : MonoBehaviour
         anim.SetFloat("speed", animSpeed); // Blend tree anim speed
 
         _input.SetActiveClick(false);
-        _ui.SetActionPlayerUIActive(false);
+        _ui.SetActivePlayerUI_Action(false);
 
         c.ClearTilesFeedbacks();
 
@@ -126,12 +126,11 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Position and orient character at its creation.
+    /// Orient character at its creation.
     /// Called by M_Character.
     /// </summary>
-    public void MoveToBasicPosition()
+    public void OrientToBasicPosition()
     {
-        c.transform.position = _board.GetTile(x, y).transform.position;
         OrientTo(orientation);
         anim.SetFloat("speed", 0f);
     }
@@ -206,7 +205,7 @@ public class C_Move : MonoBehaviour
     {
         anim.SetFloat("speed", 0f);
         _input.SetActiveClick();
-        _ui.SetActionPlayerUIActive(true);
+        _ui.SetActivePlayerUI_Action(true);
 
         if (_characters.current.behavior.playable)
         {

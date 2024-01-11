@@ -57,7 +57,7 @@ public class C_Attack : MonoBehaviour
         _input.ClearFeedbacksAndValues();
         _input.SetActiveClick(false);
 
-        _ui.SetActionPlayerUIActive(false);
+        _ui.SetActivePlayerUI_Action(false);
 
         c.anim.StartShoot();        
         c.actionPoints.RemoveActionPoints(actionPointsCost);
@@ -78,7 +78,7 @@ public class C_Attack : MonoBehaviour
     public void EndAttack()
     {
         _camera.Shake();
-        _ui.SetActionPlayerUIActive(true);
+        _ui.SetActivePlayerUI_Action(true);
         OnAttackDone();
 
         // Muzzle flare

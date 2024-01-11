@@ -30,25 +30,25 @@ public class F_ViewLines : MonoBehaviour
 
             // 4 tiles around if they are in tilesInView too
             List<Tile> aroundTiles = _board
-                .GetAroundTiles(t, true)
+                .GetTilesAround(t, true)
                 .Intersect(tilesInView)
                 .ToList();
 
             if (aroundTiles.Count == 4) continue; // CONTINUE : Is framed tile
 
-            if (!tilesInView.Contains(_board.GetOffsetTile(0, 1, t)))
+            if (!tilesInView.Contains(_board.GetTileWithOffset(0, 1, t)))
             {
                 t.EnableViewLine(Tile.Directions.Top);
             }
-            if (!tilesInView.Contains(_board.GetOffsetTile(0, -1, t)))
+            if (!tilesInView.Contains(_board.GetTileWithOffset(0, -1, t)))
             {
                 t.EnableViewLine(Tile.Directions.Down);
             }
-            if (!tilesInView.Contains(_board.GetOffsetTile(1, 0, t)))
+            if (!tilesInView.Contains(_board.GetTileWithOffset(1, 0, t)))
             {
                 t.EnableViewLine(Tile.Directions.Right);
             }
-            if (!tilesInView.Contains(_board.GetOffsetTile(-1, 0, t)))
+            if (!tilesInView.Contains(_board.GetTileWithOffset(-1, 0, t)))
             {
                 t.EnableViewLine(Tile.Directions.Left);
             }

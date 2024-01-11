@@ -32,11 +32,6 @@ public class M_Characters : MonoBehaviour
     {
         FillCharacterList();
 
-        foreach (C__Character c in characters)
-        {
-            c.move.MoveToBasicPosition();
-        }
-
         // Choose the first character
         switch (_rules.firstCharacter)
         {
@@ -56,11 +51,7 @@ public class M_Characters : MonoBehaviour
                 break;
         }
 
-        // Board edit mode
-        if (!_creator.editMode)
-        {
-            NewCurrentCharacter(current);
-        }
+        NewCurrentCharacter(current);
     }
 
     // ======================================================================
@@ -116,14 +107,14 @@ public class M_Characters : MonoBehaviour
         if(current.behavior.playable) // Playable character (PC)
         {
             _input.SetActiveClick();
-            _ui.SetTurnPlayerUIActive(true);
+            _ui.SetActivePlayerUI_Turn(true);
             _ui.SetActionPointText(current.actionPoints.actionPoints.ToString(), current);
             current.EnableTilesFeedbacks();
         }
         else // Non playable character (NPC)
         {
             _input.SetActiveClick(false);
-            _ui.SetTurnPlayerUIActive(false);
+            _ui.SetActivePlayerUI_Turn(false);
             current.behavior.PlayBehavior();
             current.EnableTilesFeedbacks(false);
         }

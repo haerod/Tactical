@@ -87,7 +87,7 @@ public class C__Character : MonoBehaviour
     /// <returns></returns>
     private Tile Tile()
     {
-        return _board.GetTile(move.x, move.y);
+        return _board.GetTileAtCoordinates(move.x, move.y);
     }
 
 }

@@ -144,7 +144,7 @@ public class M_Turns : MonoBehaviour
     {
         C__Character current = _characters.current;
 
-        _ui.SetTurnPlayerUIActive(false);
+        _ui.SetActivePlayerUI_Turn(false);
         _ui.EnableEndScreen(current);
 
         current.ClearTilesFeedbacks();

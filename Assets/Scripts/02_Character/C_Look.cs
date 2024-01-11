@@ -9,8 +9,7 @@ public class C_Look : MonoBehaviour
 {
     [SerializeField] private C__Character c = null;
     [SerializeField] private int range = 5;
-    // TODO
-    [SerializeField] private TileType bigObstacle;
+    [SerializeField] private List<TileType> visualObstacles = null;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -31,7 +30,7 @@ public class C_Look : MonoBehaviour
         List<Tile> toEnable =
             _pathfinding.AroundTiles(c.tile, range, true)
             .Where(o => HasSightOn(o))
-            .Where(o => o.type != bigObstacle)
+            .Where(o => !visualObstacles.Contains(o.type))
             .ToList();
 
         toEnable.Add(c.tile);
@@ -48,7 +47,7 @@ public class C_Look : MonoBehaviour
     {
         List<Tile> los = LineOfSight(tile);
 
-        if (AreObstacles(los))
+        if (AreObstaclesOn(los))
             return false; // Exit : obstacles
         if (los.Count + 1 > range)
             return false; // Exit : out of range
@@ -89,35 +88,30 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="lineOfSight"></param>
     /// <returns></returns>
-    private bool AreObstacles(List<Tile> lineOfSight)
+    private bool AreObstaclesOn(List<Tile> lineOfSight)
     {
         if (Utils.IsVoidList(lineOfSight)) return false;
 
         foreach (Tile t in lineOfSight)
         {
-            if (t.type == bigObstacle) return true; // EXIT : Big obstacle.
+            if (t == null) continue; // Next : it's a hole.
+            if (visualObstacles.Contains(t.type)) return true; // EXIT : Big obstacle.
 
+            // Character
             C__Character chara = t.Character();
+            if (!chara) continue; // Next : there is no character.
 
-            if(_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThroug.Nobody)
+            if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThroug.Nobody)
             {
-                if (chara)
-                {
-                    if (!chara.health.IsDead()) return true; // EXIT : Other character.
-                }
+                if (!chara.health.IsDead()) return true; // EXIT : Other character.
             }
             else if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThroug.AlliesOnly)
             {
-                if (chara)
-                {
-                    // Are obstacle if enemy && alive
-                    if ((chara.infos.team != c.infos.team) && (!chara.health.IsDead())) return true; // EXIT : Enemy
-                }
+                // Are obstacle if enemy && alive
+                if ((chara.infos.team != c.infos.team) && (!chara.health.IsDead())) return true; // EXIT : Enemy
             }
         }
 
         return false; // EXIT : No obstacle.
     }
-
-
 }

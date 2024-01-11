@@ -12,10 +12,6 @@ public class Tile : MonoBehaviour
     [Header("PROPERTIES")]
 
     public TileType type;
-    // /!\ if Add a type :
-        // - Hole is always the last type
-        // - update M_Board.GenerateBoard
-        // - update ChangeType() method
 
     [Header("PATHFININDING VALUES (debug)")]
     public int cost;
@@ -37,13 +33,10 @@ public class Tile : MonoBehaviour
     [SerializeField] private MeshRenderer rend = null;
     [SerializeField] private MeshRenderer areaRend = null;
     [Space]
-    [SerializeField] private Animator anim = null;
-    [Space]
     [SerializeField] private TextMesh cText = null;
     [SerializeField] private TextMesh hText = null;
     [SerializeField] private TextMesh fText = null;
     [Space]
-    [SerializeField] private GameObject bigObstacle = null;
     [SerializeField] private GameObject areaObject = null;
     [SerializeField] private GameObject fogMask = null;
     [Space]
@@ -168,58 +161,6 @@ public class Tile : MonoBehaviour
     public void ResetTileSkin()
     {
         SetMaterial(TileMaterial.Basic);
-    }
-
-    /// <summary>
-    /// Return true if the tile si framed by 4 other tiles.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsFramed()
-    {
-        if (!_board.GetOffsetTile(0, 1, this)) return false;
-        if (!_board.GetOffsetTile(0, -1, this)) return false;
-        if (!_board.GetOffsetTile(1, 0, this)) return false;
-        if (!_board.GetOffsetTile(-1, 0, this)) return false;
-
-        return true;
-    }
-
-    /// <summary>
-    /// Change the tile type to a new type and set the values in M_Board
-    /// </summary>
-    /// <param name="newType"></param>
-    public void ChangeType(TileType newType)
-    {
-        // Default values
-        bigObstacle.SetActive(false);
-        // Remove from list
-        Vector2Int coordinates = new Vector2Int(x, y);
-        if (_board.holeCoordinates.Contains(coordinates))
-        {
-            _board.holeCoordinates.Remove(coordinates);
-        }
-        if (_board.bigObstaclesCoordinates.Contains(coordinates))
-        {
-            _board.bigObstaclesCoordinates.Remove(coordinates);
-        }
-
-        type = newType;
-        anim.SetInteger("type", newType.index);
-
-        switch (newType.name)
-        {
-            case "Ground":
-                break;
-            case "Hole":
-                _board.holeCoordinates.Add(coordinates);
-                break;
-            case "Big obstacle":
-                bigObstacle.SetActive(true);
-                _board.bigObstaclesCoordinates.Add(coordinates);
-                break;
-            default:
-                break;
-        }
     }
 
     /// <summary>
