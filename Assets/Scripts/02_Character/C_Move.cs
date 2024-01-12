@@ -10,24 +10,22 @@ using UnityEditor;
 public class C_Move : MonoBehaviour
 {
     public int movementRange = 6;
-
-    [Header("COORDINATES")]
-    public int x = 1;
-    public int y = 1;
-
-    [Header("GRID MOVE PARAMETERS")]
     public List<TileType> walakbleTiles;
+
+    [Header("ANIMATION")]
     [Range(0,10f)]
     [SerializeField] private float speed = 6;
     [Range(0,1f)]
     [SerializeField] private float animSpeed = .5f;
-    public enum Orientation { North, NorthEast, East, SouthEst, South, SouthWest, West, NorthWest}
-    public Orientation orientation;
 
-    [Header("EVENTS")]
-    [Space]
-    public UnityEvent onTileEnter;
-    [Space]
+    //[Header("EVENTS")]
+    //[Space]
+    //public UnityEvent onTileEnter;
+    //[Space]
+
+    [Header("COORDINATES (debug)")]
+    public int x = 1;
+    public int y = 1;
     
     [Header("REFERENCES")]
 
@@ -150,7 +148,7 @@ public class C_Move : MonoBehaviour
             }
             else // On tile enter
             {
-                onTileEnter.Invoke();
+                //onTileEnter.Invoke();
 
                 x = currentPath[index].x;
                 y = currentPath[index].y;

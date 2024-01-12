@@ -478,11 +478,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_LocalRotation.w
@@ -538,11 +538,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8502731826044868807, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: x
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8502731826044868807, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: y
-      value: -5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8502731826044868807, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: orientation
@@ -2269,6 +2269,10 @@ PrefabInstance:
     - target: {fileID: 1958866178818122974, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: m_Name
       value: Basic Unity Tactical Tool
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958866179045599106, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: screenPercent
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1958866179331537171, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: outRangeColor.b
