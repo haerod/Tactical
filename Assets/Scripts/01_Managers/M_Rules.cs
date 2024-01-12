@@ -19,9 +19,6 @@ public class M_Rules : MonoBehaviour
     public enum BotsPlayOrder { BeforePlayableCharacters, AfterPlayableCharacters}
     public BotsPlayOrder botsPlays = BotsPlayOrder.AfterPlayableCharacters;
 
-    public enum ActionsByTurn {ActionPoints, OneActionByTurn}
-    public ActionsByTurn actionsByTurn = ActionsByTurn.OneActionByTurn;
-
     [Space]
     public int percentReductionByDistance = 5;
 

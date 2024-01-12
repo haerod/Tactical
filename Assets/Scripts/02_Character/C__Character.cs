@@ -7,7 +7,6 @@ public class C__Character : MonoBehaviour
 {
     public C_Move move;
     public C_Look look;
-    public C_ActionPoints actionPoints;
     public C_Attack attack;
     public C_Health health;
     public C_Infos infos;
@@ -16,8 +15,10 @@ public class C__Character : MonoBehaviour
     public UI_SlicedHealthBar healthBar;
 
     public int team => Team();
+    public int movementRange => move.movementRange;
 
     [HideInInspector] public Tile tile => Tile();
+    [HideInInspector] public bool hasPlayed = false;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -66,15 +67,6 @@ public class C__Character : MonoBehaviour
     {
         move.ClearAreaZone();
         attack.ClearAttackTiles();
-    }
-
-    /// <summary>
-    /// Return true if the character has enough action points to attack.
-    /// </summary>
-    /// <returns></returns>
-    public bool CanAttack()
-    {
-        return actionPoints.movementRange >= attack.actionPointsCost;
     }
 
     // ======================================================================

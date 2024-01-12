@@ -10,17 +10,13 @@ public class M_UI : MonoBehaviour
 {
     [Header("REFERENCES")]
 
-    [SerializeField] private Text actionPointsText = null;
     [SerializeField] private Text endScreenText = null;
     [Space]
-    [SerializeField] private Button addActionPointButton = null;
     [SerializeField] private Button nextTurnButton = null;
     [Space]
-    [SerializeField] private GameObject actionPointsObject = null;
     [SerializeField] private GameObject endScreen = null;
     [Space]
     public UI_PercentShootText percentText;
-    public UI_ActionCostText actionCostText;
 
     public static M_UI instance;
 
@@ -46,26 +42,12 @@ public class M_UI : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Write text in action point text if the given character is the current character.
-    /// </summary>
-    /// <param name="text"></param>
-    /// <param name="c"></param>
-    public void SetActionPointText(string text, C__Character c)
-    {
-        if (c != _characters.current) return;
-
-        actionPointsText.text = text;
-    }
-
-    /// <summary>
     /// Enable / disable player's UI out of its turn.
     /// </summary>
     /// <param name="value"></param>
     public void SetActivePlayerUI_Turn(bool value)
     {
-        SetActiveCheatButton(value);
         nextTurnButton.gameObject.SetActive(value);
-        SetActiveActionPointsUI(value);
     }
     
     /// <summary>
@@ -76,7 +58,6 @@ public class M_UI : MonoBehaviour
     {
         if (value == true && !_characters.current.behavior.playable) return; // EXIT : it's not player's turn
 
-        SetActiveCheatButton(value);
         nextTurnButton.gameObject.SetActive(value);
     }
 
@@ -88,21 +69,6 @@ public class M_UI : MonoBehaviour
     {
         endScreen.SetActive(true);
         endScreenText.text = string.Format("{0} are winners !", _rules.teamInfos[winner.infos.team].teamName);
-    }
-
-    // BUTTONS
-    // =======
-
-    /// <summary>
-    /// Add an action point to the current character.
-    /// Relied to the event on the button Add action point.
-    /// (CHEAT)
-    /// </summary>
-    public void ClickOnAddActionPoint()
-    {
-        _characters.current.actionPoints.AddActionPoints();
-        _characters.current.ClearTilesFeedbacks();
-        _characters.current.EnableTilesFeedbacks();
     }
 
     /// <summary>
@@ -118,28 +84,4 @@ public class M_UI : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Active or desactive Action Points Object (depending the Rules).
-    /// </summary>
-    /// <param name="value"></param>
-    private void SetActiveActionPointsUI(bool value)
-    {
-        actionPointsObject.SetActive(value);
-
-        if (_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
-            actionPointsObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Active or desactive Action Points Object (depending the Rules).
-    /// </summary>
-    /// <param name="value"></param>
-    private void SetActiveCheatButton(bool value)
-    {
-        addActionPointButton.gameObject.SetActive(value);
-
-        if (_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
-            addActionPointButton.gameObject.SetActive(false);
-    }
 }

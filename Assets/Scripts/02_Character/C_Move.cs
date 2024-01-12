@@ -9,6 +9,8 @@ using UnityEditor;
 
 public class C_Move : MonoBehaviour
 {
+    public int movementRange = 6;
+
     [Header("COORDINATES")]
     public int x = 1;
     public int y = 1;
@@ -52,7 +54,7 @@ public class C_Move : MonoBehaviour
     /// <param name="OnEnd"></param>
     public void MoveOnPath(List<Tile> path, Action OnEnd)
     {
-        if (c.actionPoints.movementRange <= 0) return;
+        if (c.movementRange <= 0) return;
 
         EndMove();
 
@@ -77,7 +79,7 @@ public class C_Move : MonoBehaviour
     /// </summary>
     public void EnableMoveArea()
     {
-        int actionPoints = c.actionPoints.movementRange;
+        int actionPoints = c.movementRange;
 
         currentArea = _pathfinding.AreaMovementZone(c.tile, actionPoints, c.move.walakbleTiles);
 
@@ -187,7 +189,6 @@ public class C_Move : MonoBehaviour
         index++;
         destination = currentPath[index].transform.position;
         OrientTo(currentPath[index].transform.position);
-        c.actionPoints.RemoveActionPoints();
     }
 
     /// <summary>
@@ -196,7 +197,7 @@ public class C_Move : MonoBehaviour
     /// <returns></returns>
     private bool IsEnd()
     {
-        if (index + 1 < currentPath.Count && c.actionPoints.movementRange > 0) return false;
+        if (index + 1 < currentPath.Count && c.movementRange > 0) return false;
         return true;
     }
 

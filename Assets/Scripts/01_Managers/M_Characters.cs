@@ -108,7 +108,6 @@ public class M_Characters : MonoBehaviour
         {
             _input.SetActiveClick();
             _ui.SetActivePlayerUI_Turn(true);
-            _ui.SetActionPointText(current.actionPoints.movementRange.ToString(), current);
             current.EnableTilesFeedbacks();
         }
         else // Non playable character (NPC)
@@ -141,9 +140,9 @@ public class M_Characters : MonoBehaviour
     /// <param name="character"></param>
     /// <param name="excludeCharacter"> if true, exclude the character of the list. </param>
     /// <param name="excludeNPC"> if true, exclude the NPCs of the list. </param>
-    /// <param name="excludeEmptyActionPoints"> if true, exclude characters of the list without action points. </param>
+    /// <param name="excludeCharactersWhoHavePlayed"> if true, exclude characters of the list without action points. </param>
     /// <returns></returns>
-    public List<C__Character> GetTeam(C__Character character, bool excludeCharacter, bool excludeNPC, bool excludeEmptyActionPoints)
+    public List<C__Character> GetTeam(C__Character character, bool excludeCharacter, bool excludeNPC, bool excludeCharactersWhoHavePlayed)
     {
         List<C__Character> team = characters
             .Where(o => o.Team() == character.Team())
@@ -157,9 +156,9 @@ public class M_Characters : MonoBehaviour
                 .Where(o => o.behavior.playable)
                 .ToList();
         
-        if (excludeEmptyActionPoints)
+        if (excludeCharactersWhoHavePlayed)
             team = team
-                .Where(o => o.actionPoints.movementRange > 0)
+                .Where(o => !o.hasPlayed)
                 .ToList();
 
         return team;

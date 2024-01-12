@@ -66,20 +66,17 @@ public class M_Turns : MonoBehaviour
     /// </summary>
     public void EndTurnOfCurrentCharacter()
     {
-        _characters.current.actionPoints.EmptyActionPoints();
-
         if (_characters.current.PlayableTeammatesWithActionPoints().Count > 0)
             ChangeTeamCharacter();
         else
             EndTurnOfTeamPCs();
+
+        _characters.current.hasPlayed = true;
     }
 
     public void NewTeamTurn(List<C__Character> newTeam)
     {
-        foreach (C__Character member in newTeam)
-        {
-            member.actionPoints.FullActionPoints();
-        }
+        newTeam.ForEach(character => character.hasPlayed = false);
     }
 
     // ======================================================================

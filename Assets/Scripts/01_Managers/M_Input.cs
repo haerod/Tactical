@@ -267,7 +267,7 @@ public class M_Input : MonoBehaviour
         // Mouse feedbacks depending of the line of sight on the enemy
         if(c.look.HasSightOn(tile))
         {
-            if (c.CanAttack())
+            if (!c.hasPlayed)
             {
                 _feedback.SetCursor(M_Feedback.CursorType.AimAndInSight);
                 _ui.percentText.SetPercentShootText(c.attack.GetPercentToTouch(c.look.LineOfSight(tile).Count));
@@ -306,7 +306,7 @@ public class M_Input : MonoBehaviour
             return;
         }
 
-        bool tileInMoveRange = (currentPathfinding.Count - 1) <= _characters.current.actionPoints.movementRange;
+        bool tileInMoveRange = (currentPathfinding.Count - 1) <= _characters.current.movementRange;
         _feedback.square.SetSquare(pointedTile.transform.position, tileInMoveRange);
         _feedback.line.SetLines(
             currentPathfinding, 
@@ -340,16 +340,14 @@ public class M_Input : MonoBehaviour
         if (currentTarget == null) return; // EXIT : There is no target
 
         // Attack
-        c.attack.AttackTarget(currentTarget, () => {
+        c.attack.AttackTarget(currentTarget, () =>
+        {
             if (_characters.IsFinalTeam(c))
             {
                 _turns.EndTurnOfTeamPCs();
             }
 
-            if (_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
-            {
-                _turns.EndTurnOfCurrentCharacter();
-            }
+            _turns.EndTurnOfCurrentCharacter();
         });
     }
 
@@ -360,15 +358,12 @@ public class M_Input : MonoBehaviour
     private void ClickMove()
     {
         if (currentPathfinding == null) return; // EXIT : It's no path
-        if (_characters.current.actionPoints.movementRange <= 0) return; // EXIT : no action points aviable
+        if (_characters.current.movementRange <= 0) return; // EXIT : no action points aviable
 
-        _characters.current.move.MoveOnPath(currentPathfinding, () => {
-            if(_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
-            {
-                _turns.EndTurnOfCurrentCharacter();
-            }
+        _characters.current.move.MoveOnPath(currentPathfinding, () =>
+        {
+            _turns.EndTurnOfCurrentCharacter();
         });
-        _ui.actionCostText.DisableActionCostText();
     }
 
     // OTHER

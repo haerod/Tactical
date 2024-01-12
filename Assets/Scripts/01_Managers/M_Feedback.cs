@@ -50,9 +50,8 @@ public class M_Feedback : MonoBehaviour
     {
         square.DisableSquare();
         line.DisableLines();
-        _ui.actionCostText.DisableActionCostText();
     }
-
+    
     /// <summary>
     /// Set cursor to its new appearance.
     /// </summary>

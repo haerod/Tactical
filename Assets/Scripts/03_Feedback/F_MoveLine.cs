@@ -29,7 +29,7 @@ public class F_MoveLine : MonoBehaviour
     /// <param name="endTile"></param>
     public void SetLines(List<Tile> path, C__Character character, Tile endTile)
     {
-        int actionPoints = character.actionPoints.movementRange;
+        int actionPoints = character.movementRange;
 
         // Target tile is in/out action points' range
         if (path.Count - 1 > actionPoints) // Out
@@ -37,13 +37,11 @@ public class F_MoveLine : MonoBehaviour
             line.positionCount = actionPoints + 1;
             lineOut.gameObject.SetActive(true);
             lineOut.positionCount = path.Count - actionPoints;
-            _ui.actionCostText.SetActionCostText((path.Count - 1).ToString(), endTile.transform, true);
         }
         else // IN
         {
             lineOut.gameObject.SetActive(false);
             line.positionCount = path.Count;
-            _ui.actionCostText.SetActionCostText((path.Count - 1).ToString(), endTile.transform);
         }
 
         // Position line's points

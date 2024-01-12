@@ -7,7 +7,6 @@ using static M__Managers;
 
 public class C_Attack : MonoBehaviour
 {
-    public int actionPointsCost = 3;
     public Vector2Int damagesRange = new Vector2Int(3, 5);
     public C__Character target;
 
@@ -34,15 +33,8 @@ public class C_Attack : MonoBehaviour
     /// <param name="OnEnd"></param>
     public void AttackTarget(C__Character currentTarget, Action OnEnd)
     {
-        // TO VERIFY (are NPC using this blocker?)
-        // EXIT : No action points aviable
-        if (c.actionPoints.movementRange < actionPointsCost)
-        {
-            OnEnd();
-            return; 
-        }
+        c.hasPlayed = true;
 
-        // TO VERIFY (are NPC using this blocker?)
         // EXIT : Enemy isn't in sight
         if (!c.look.HasSightOn(currentTarget.tile)) return;
 
@@ -60,7 +52,6 @@ public class C_Attack : MonoBehaviour
         _ui.SetActivePlayerUI_Action(false);
 
         c.anim.StartShoot();        
-        c.actionPoints.RemoveActionPoints(actionPointsCost);
 
         if (UnityEngine.Random.Range(0, 101) < GetPercentToTouch(c.look.LineOfSight(currentTarget.tile).Count)) // SUCCESS
         {
@@ -91,11 +82,6 @@ public class C_Attack : MonoBehaviour
     /// </summary>
     public void EnableAttackTiles()
     {
-        if(c.actionPoints.movementRange < c.attack.actionPointsCost)
-        {
-            return;
-        }
-
         foreach (C__Character character in _characters.characters)
         {
             if (character == c) continue;

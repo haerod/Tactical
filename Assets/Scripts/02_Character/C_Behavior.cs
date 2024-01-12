@@ -117,8 +117,7 @@ public class C_Behavior : MonoBehaviour
     /// </summary>
     private void CheckOffensive()
     {
-        if (_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)
-            AcquireTarget();
+        AcquireTarget();
 
         if (_characters.IsFinalTeam(c)) // Victory
         {
@@ -128,14 +127,7 @@ public class C_Behavior : MonoBehaviour
 
         if(target && !target.health.IsDead()) // Target
         {
-            if(c.CanAttack()) // Attack
-            {
-                c.attack.AttackTarget(target, () => CheckOffensive());
-            }
-            else // Out AP
-            {
-                _turns.EndTurnOfTeamPCs();
-            }
+            c.attack.AttackTarget(target, () => { });
         }
         else // Find target
         {
