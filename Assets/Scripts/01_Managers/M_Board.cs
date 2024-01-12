@@ -193,9 +193,8 @@ public class M_Board : MonoBehaviour
             chara.move.y = Mathf.RoundToInt(item.position.z);
 
             chara.transform.position = new Vector3(chara.move.x, 0, chara.move.y);
-            chara.move.OrientToBasicPosition();
             chara.infos.SetTeamMaterials();
-
+            
             chara.name = string.Format("{0} ({2}) - Team {1}", 
                 chara.infos.designation, 
                 rules.teamInfos[chara.infos.team].teamName,

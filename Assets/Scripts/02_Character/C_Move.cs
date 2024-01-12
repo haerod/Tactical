@@ -128,18 +128,6 @@ public class C_Move : MonoBehaviour
         c.healthBar.GetComponentInParent<OrientToCamera>().Orient();
     }
 
-    /// <summary>
-    /// Orient character at its creation.
-    /// Called by M_Board.
-    /// </summary>
-    public void OrientToBasicPosition()
-    {
-        OrientTo(orientation);
-        anim.SetFloat("speed", 0f);
-        EditorUtility.SetDirty(c.anim); // Save the character modifications
-        EditorUtility.SetDirty(c.transform); // Save the character modifications
-    }
-
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -167,7 +155,7 @@ public class C_Move : MonoBehaviour
                 x = currentPath[index].x;
                 y = currentPath[index].y;
 
-                if (IsEnd()) // Exit : End path
+                if (IsTheLastTile()) // EXIT : End path
                 {
                     EndMove(() => OnEnd());
                     yield break;
@@ -195,7 +183,7 @@ public class C_Move : MonoBehaviour
     /// Return true if is the last tile of the movement.
     /// </summary>
     /// <returns></returns>
-    private bool IsEnd()
+    private bool IsTheLastTile()
     {
         if (index + 1 < currentPath.Count && c.movementRange > 0) return false;
         return true;
@@ -220,42 +208,4 @@ public class C_Move : MonoBehaviour
 
         OnEnd();
     }
-
-    /// <summary>
-    /// Orient to the defined oriention (cardinal points).
-    /// </summary>
-    /// <param name="o"></param>
-    private void OrientTo(Orientation o)
-    {
-        switch (o)
-        {
-            case Orientation.North:
-                c.transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));
-                break;
-            case Orientation.NorthEast:
-                c.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
-                break;
-            case Orientation.East:
-                c.transform.rotation = Quaternion.Euler(new Vector3(0, 135, 0));
-                break;
-            case Orientation.SouthEst:
-                c.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
-                break;
-            case Orientation.South:
-                c.transform.rotation = Quaternion.Euler(new Vector3(0, 245, 0));
-                break;
-            case Orientation.SouthWest:
-                c.transform.rotation = Quaternion.Euler(new Vector3(0, 270, 0));
-                break;
-            case Orientation.West:
-                c.transform.rotation = Quaternion.Euler(new Vector3(0, 315, 0));
-                break;
-            case Orientation.NorthWest:
-                c.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-                break;
-            default:
-                break;
-        }
-    }
-
 }
