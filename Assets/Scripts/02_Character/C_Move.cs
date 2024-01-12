@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
+using UnityEditor;
 
 public class C_Move : MonoBehaviour
 {
@@ -51,7 +52,7 @@ public class C_Move : MonoBehaviour
     /// <param name="OnEnd"></param>
     public void MoveOnPath(List<Tile> path, Action OnEnd)
     {
-        if (c.actionPoints.actionPoints <= 0) return;
+        if (c.actionPoints.movementRange <= 0) return;
 
         EndMove();
 
@@ -76,7 +77,7 @@ public class C_Move : MonoBehaviour
     /// </summary>
     public void EnableMoveArea()
     {
-        int actionPoints = c.actionPoints.actionPoints;
+        int actionPoints = c.actionPoints.movementRange;
 
         currentArea = _pathfinding.AreaMovementZone(c.tile, actionPoints, c.move.walakbleTiles);
 
@@ -127,12 +128,14 @@ public class C_Move : MonoBehaviour
 
     /// <summary>
     /// Orient character at its creation.
-    /// Called by M_Character.
+    /// Called by M_Board.
     /// </summary>
     public void OrientToBasicPosition()
     {
         OrientTo(orientation);
         anim.SetFloat("speed", 0f);
+        EditorUtility.SetDirty(c.anim); // Save the character modifications
+        EditorUtility.SetDirty(c.transform); // Save the character modifications
     }
 
     // ======================================================================
@@ -193,7 +196,7 @@ public class C_Move : MonoBehaviour
     /// <returns></returns>
     private bool IsEnd()
     {
-        if (index + 1 < currentPath.Count && c.actionPoints.actionPoints > 0) return false;
+        if (index + 1 < currentPath.Count && c.actionPoints.movementRange > 0) return false;
         return true;
     }
 

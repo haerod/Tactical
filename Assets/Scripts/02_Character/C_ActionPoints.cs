@@ -4,7 +4,7 @@ using static M__Managers;
 
 public class C_ActionPoints : MonoBehaviour
 {
-    public int actionPoints = 6;
+    public int movementRange = 6;
     public int maxActionPoints = 6;
 
     [Header("REFERENCES")]
@@ -25,8 +25,8 @@ public class C_ActionPoints : MonoBehaviour
     /// <param name="value"></param>
     public void RemoveActionPoints(int value = 1)
     {
-        actionPoints -= value;
-        _ui.SetActionPointText(actionPoints.ToString(), c);
+        movementRange -= value;
+        _ui.SetActionPointText(movementRange.ToString(), c);
     }
 
     /// <summary>
@@ -35,8 +35,8 @@ public class C_ActionPoints : MonoBehaviour
     /// <param name="value"></param>
     public void AddActionPoints(int value = 1)
     {
-        actionPoints += value;
-        _ui.SetActionPointText(actionPoints.ToString(), c);
+        movementRange += value;
+        _ui.SetActionPointText(movementRange.ToString(), c);
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public class C_ActionPoints : MonoBehaviour
     /// </summary>
     public void FullActionPoints()
     {
-        actionPoints = maxActionPoints;
+        movementRange = maxActionPoints;
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class C_ActionPoints : MonoBehaviour
     /// </summary>
     public void EmptyActionPoints()
     {
-        actionPoints = 0;
+        movementRange = 0;
     }
 
     // ======================================================================

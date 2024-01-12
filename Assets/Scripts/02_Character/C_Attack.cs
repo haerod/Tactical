@@ -36,7 +36,7 @@ public class C_Attack : MonoBehaviour
     {
         // TO VERIFY (are NPC using this blocker?)
         // EXIT : No action points aviable
-        if (c.actionPoints.actionPoints < actionPointsCost)
+        if (c.actionPoints.movementRange < actionPointsCost)
         {
             OnEnd();
             return; 
@@ -91,7 +91,7 @@ public class C_Attack : MonoBehaviour
     /// </summary>
     public void EnableAttackTiles()
     {
-        if(c.actionPoints.actionPoints < c.attack.actionPointsCost)
+        if(c.actionPoints.movementRange < c.attack.actionPointsCost)
         {
             return;
         }

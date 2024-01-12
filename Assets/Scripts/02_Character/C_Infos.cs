@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+using UnityEditor;
 using static M__Managers;
 
 public class C_Infos : MonoBehaviour
@@ -17,29 +16,32 @@ public class C_Infos : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
-    public void Start()
-    {
-        string playable = "PC";
-        if (!c.behavior.playable) playable = "NPC";
-
-        transform.parent.name = string.Format("{2} - {0} (T{1})", designation, team, playable);
-        SetTeamMaterials();
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Set the team materials to the character.
+    /// Called by M_Board.
+    /// </summary>
+    public void SetTeamMaterials()
+    {
+        M_Rules rules = GameObject.FindAnyObjectByType<M_Rules>();
+
+        if (rend1 && rules.teamInfos[c.Team()].mat1)
+        {
+            rend1.material = rules.teamInfos[c.Team()].mat1;
+            EditorUtility.SetDirty(rend1);
+        }
+        if (rend2 && rules.teamInfos[c.Team()].mat2)
+        {
+            rend2.material = rules.teamInfos[c.Team()].mat2;
+            EditorUtility.SetDirty(rend2);
+        }
+    }
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
-    /// <summary>
-    /// Set the team materials to the character.
-    /// </summary>
-    private void SetTeamMaterials()
-    {
-        rend1.material = _rules.teamInfos[c.Team()].mat1;
-        rend2.material = _rules.teamInfos[c.Team()].mat2;
-    }
 }

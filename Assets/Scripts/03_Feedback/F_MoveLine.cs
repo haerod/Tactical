@@ -29,7 +29,7 @@ public class F_MoveLine : MonoBehaviour
     /// <param name="endTile"></param>
     public void SetLines(List<Tile> path, C__Character character, Tile endTile)
     {
-        int actionPoints = character.actionPoints.actionPoints;
+        int actionPoints = character.actionPoints.movementRange;
 
         // Target tile is in/out action points' range
         if (path.Count - 1 > actionPoints) // Out

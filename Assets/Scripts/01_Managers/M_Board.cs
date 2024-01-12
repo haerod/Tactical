@@ -3,19 +3,20 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using static M__Managers;
+using System;
 
 public class M_Board : MonoBehaviour
 {
     [Header("REFERENCES")]
 
-    [SerializeField] private TileType groundType;
-    [SerializeField] private TileType holeType;
-    [SerializeField] private TileType bigObstacleType;
     [SerializeField] private Transform charactersParent;
 
-    [HideInInspector] public List<Tile> grid;
+    [Header("DEBUG")]
+
+    public List<Tile> grid;
     public static M_Board instance;
 
     // ======================================================================
@@ -46,55 +47,11 @@ public class M_Board : MonoBehaviour
     public void BakeBoard()
     {
         grid.Clear();
-
-        foreach (Transform item in transform)
-        {
-            Tile tile = item.GetComponent<Tile>();
-            tile.x = Mathf.RoundToInt(item.position.x);
-            tile.y = Mathf.RoundToInt(item.position.z);
-
-            tile.name = string.Format("{1},{2} - {0}", tile.type, tile.x, tile.y);
-            tile.name = tile.name.Replace("(TileType)", "");
-            tile.transform.position = new Vector3(tile.x, 0, tile.y);
-
-            if (!grid.Contains(tile))
-                grid.Add(tile);
-
-            // CHECK ERROR : Double tiles
-            List<Tile> check = grid
-                .Where(o => o != tile && o.x == tile.x && o.y == tile.y)
-                .ToList();
-
-            if (check.Count != 0)
-            {
-                foreach (Tile t in check)
-                {
-                    Debug.LogError(string.Format("The tile with coordinates {0}, {1} haves a double. One was deleted.", tile.x, tile.y), tile.gameObject);
-                    grid.Remove(t);
-                    DestroyImmediate(t.gameObject);
-                }
-            }
-
-            EditorUtility.SetDirty(tile); // Save the tile modifications
-            EditorUtility.SetDirty(tile.transform); // Save the tile modifications
-            EditorUtility.SetDirty(tile.gameObject); // Save the tile modifications
-        }
-
-        foreach (Transform item in charactersParent)
-        {
-            C__Character chara = item.GetComponent<C__Character>();
-            chara.move.x = Mathf.RoundToInt(item.position.x);
-            chara.move.y = Mathf.RoundToInt(item.position.z);
-
-            chara.transform.position = new Vector3(chara.move.x, 0, chara.move.y);
-            chara.move.OrientToBasicPosition();
-
-            EditorUtility.SetDirty(chara.move); // Save the character modifications
-            EditorUtility.SetDirty(chara.anim); // Save the character modifications
-            EditorUtility.SetDirty(chara.transform); // Save the character modifications
-        }
-
-        EditorUtility.SetDirty(this); // Save the grid modifications
+        BakeTiles();
+        SortTilesInHierarchy();
+        BakeCharacters();
+        SortCharactersInHierarchy();
+        EditorUtility.SetDirty(this);
     }
 
     /// <summary>
@@ -165,4 +122,105 @@ public class M_Board : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Bake tiles in the grid, position it and give them parameters.
+    /// </summary>
+    private void BakeTiles()
+    {
+        foreach (Transform item in transform)
+        {
+            Tile tile = item.GetComponent<Tile>();
+            tile.x = Mathf.RoundToInt(item.position.x);
+            tile.y = Mathf.RoundToInt(item.position.z);
+
+            tile.name = string.Format("{1},{2} - {0}", tile.type, tile.x, tile.y);
+            tile.name = tile.name.Replace("(TileType)", "");
+            tile.transform.position = new Vector3(tile.x, 0, tile.y);
+
+            if (!grid.Contains(tile))
+                grid.Add(tile);
+
+            // CHECK ERROR : Double tiles
+            List<Tile> check = grid
+                .Where(o => o != tile && o.x == tile.x && o.y == tile.y)
+                .ToList();
+
+            if (check.Count != 0)
+            {
+                foreach (Tile t in check)
+                {
+                    Debug.LogError(string.Format("The tile with coordinates {0}, {1} haves a double. One was deleted.", tile.x, tile.y), tile.gameObject);
+                    grid.Remove(t);
+                    DestroyImmediate(t.gameObject);
+                }
+            }
+
+            EditorUtility.SetDirty(tile); // Save the tile modifications
+            EditorUtility.SetDirty(tile.transform); // Save the tile modifications
+            EditorUtility.SetDirty(tile.gameObject); // Save the tile modifications
+        }
+    }
+
+    /// <summary>
+    /// Sort tiles in hierarchy by coordinates.
+    /// </summary>
+    private void SortTilesInHierarchy()
+    {
+        List<Transform> count = transform
+            .Cast<Transform>()
+            .OrderBy(go => go.GetComponent<Tile>().x)
+            .ThenBy(go => go.GetComponent<Tile>().y)
+            .ToList();
+
+        for (int i = 0; i < count.Count; i++)
+        {
+            count[i].transform.SetSiblingIndex(i);
+        }
+    }
+
+    /// <summary>
+    /// Bake characters in the grid, give them coordinates and orientation.
+    /// </summary>
+    private void BakeCharacters()
+    {
+        M_Rules rules = FindAnyObjectByType<M_Rules>();
+
+        foreach (Transform item in charactersParent)
+        {
+            C__Character chara = item.GetComponent<C__Character>();
+            chara.move.x = Mathf.RoundToInt(item.position.x);
+            chara.move.y = Mathf.RoundToInt(item.position.z);
+
+            chara.transform.position = new Vector3(chara.move.x, 0, chara.move.y);
+            chara.move.OrientToBasicPosition();
+            chara.infos.SetTeamMaterials();
+
+            chara.name = string.Format("{0} ({2}) - Team {1}", 
+                chara.infos.designation, 
+                rules.teamInfos[chara.infos.team].teamName,
+                chara.behavior.playable ? "PC" : "NPC");
+
+            EditorUtility.SetDirty(chara.gameObject); // Save the character modifications
+            EditorUtility.SetDirty(chara.move); // Save the character modifications
+        }
+    }
+
+    /// <summary>
+    /// Sort characters in hierarchy depepending of team, PC/NPC and name.
+    /// </summary>
+    private void SortCharactersInHierarchy()
+    {
+        List<Transform> count = charactersParent
+            .Cast<Transform>()
+            .OrderBy(go => go.GetComponentInChildren<C_Infos>().team)
+            .ThenByDescending(go => go.GetComponentInChildren<C_Behavior>().playable)
+            .ThenBy(go => go.GetComponentInChildren<C_Infos>().name)
+            .ToList();
+
+        for (int i = 0; i < count.Count; i++)
+        {
+            count[i].transform.SetSiblingIndex(i);
+        }
+    }
 }

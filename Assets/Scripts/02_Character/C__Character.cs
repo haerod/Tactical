@@ -74,7 +74,7 @@ public class C__Character : MonoBehaviour
     /// <returns></returns>
     public bool CanAttack()
     {
-        return actionPoints.actionPoints >= attack.actionPointsCost;
+        return actionPoints.movementRange >= attack.actionPointsCost;
     }
 
     // ======================================================================

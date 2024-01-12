@@ -306,7 +306,7 @@ public class M_Input : MonoBehaviour
             return;
         }
 
-        bool tileInMoveRange = (currentPathfinding.Count - 1) <= _characters.current.actionPoints.actionPoints;
+        bool tileInMoveRange = (currentPathfinding.Count - 1) <= _characters.current.actionPoints.movementRange;
         _feedback.square.SetSquare(pointedTile.transform.position, tileInMoveRange);
         _feedback.line.SetLines(
             currentPathfinding, 
@@ -360,7 +360,7 @@ public class M_Input : MonoBehaviour
     private void ClickMove()
     {
         if (currentPathfinding == null) return; // EXIT : It's no path
-        if (_characters.current.actionPoints.actionPoints <= 0) return; // EXIT : no action points aviable
+        if (_characters.current.actionPoints.movementRange <= 0) return; // EXIT : no action points aviable
 
         _characters.current.move.MoveOnPath(currentPathfinding, () => {
             if(_rules.actionsByTurn == M_Rules.ActionsByTurn.OneActionByTurn)

@@ -108,7 +108,7 @@ public class M_Characters : MonoBehaviour
         {
             _input.SetActiveClick();
             _ui.SetActivePlayerUI_Turn(true);
-            _ui.SetActionPointText(current.actionPoints.actionPoints.ToString(), current);
+            _ui.SetActionPointText(current.actionPoints.movementRange.ToString(), current);
             current.EnableTilesFeedbacks();
         }
         else // Non playable character (NPC)
@@ -159,7 +159,7 @@ public class M_Characters : MonoBehaviour
         
         if (excludeEmptyActionPoints)
             team = team
-                .Where(o => o.actionPoints.actionPoints > 0)
+                .Where(o => o.actionPoints.movementRange > 0)
                 .ToList();
 
         return team;

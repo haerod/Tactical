@@ -287,14 +287,14 @@ MonoBehaviour:
   actionsByTurn: 1
   percentReductionByDistance: 5
   teamInfos:
-  - teamName: Your team
+  - teamName: Guild
     mat1: {fileID: 2100000, guid: 87d91377c647d2c4386ca86b67dc77e3, type: 2}
-    mat2: {fileID: 2100000, guid: 87d91377c647d2c4386ca86b67dc77e3, type: 2}
-  - teamName: Golden team
-    mat1: {fileID: 2100000, guid: 585990fbd9f48fb4191fbc295bf6edef, type: 2}
+    mat2: {fileID: 2100000, guid: 585990fbd9f48fb4191fbc295bf6edef, type: 2}
+  - teamName: Disith
+    mat1: {fileID: 2100000, guid: ecd6880017b578f47aaede6f398aeb9b, type: 2}
     mat2: {fileID: 2100000, guid: 6e29573ea2721f649adad926ec465f40, type: 2}
-  - teamName: Dark team
-    mat1: {fileID: 2100000, guid: 6e29573ea2721f649adad926ec465f40, type: 2}
+  - teamName: Anatoray
+    mat1: {fileID: 2100000, guid: ebe444789af26b748acaae50125e0487, type: 2}
     mat2: {fileID: 2100000, guid: 87d91377c647d2c4386ca86b67dc77e3, type: 2}
 --- !u!1 &1958866177809515059
 GameObject:
@@ -500,9 +500,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ada860813b39a4ba2b13ff7f5a3491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundType: {fileID: 11400000, guid: 859aa0936407b9943a71c17934cc4d62, type: 2}
-  holeType: {fileID: 11400000, guid: e5ace7720db371d439abdce08874f187, type: 2}
-  bigObstacleType: {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
   charactersParent: {fileID: 1958866178224547778}
   grid: []
 --- !u!1 &1958866177928788810
@@ -965,7 +962,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1958866178297490546}
   m_Layer: 0
-  m_Name: OTHERS
+  m_Name: LIGHTING
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
