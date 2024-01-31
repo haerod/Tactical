@@ -12,10 +12,12 @@ public class C_Behavior : MonoBehaviour
     // * Follower : follow target, if target
     // * AttackerOnce : find the closest target, attack it and ends turn
     // * Offensive : find a target and attack it until it doent't have any action points
-    public enum Behavior { None, Follower, AttackerOnce, Offensive }
+    public enum Behavior { None, Follower, Offensive}
     public Behavior behavior = Behavior.None;
 
     public C__Character target;
+
+    [Header("REFERENCES")]
 
     [SerializeField] private C__Character c = null;
 
@@ -42,13 +44,9 @@ public class C_Behavior : MonoBehaviour
                 Wait(1, 
                     () => FollowTarget());
                 break;
-            case Behavior.AttackerOnce:
-                Wait(1, 
-                    () => AcquireTarget());
-                break;
             case Behavior.Offensive:
                 Wait(1, 
-                    () => CheckOffensive());
+                    () => AcquireTarget());
                 break;
             default:
                 break;
@@ -110,39 +108,6 @@ public class C_Behavior : MonoBehaviour
         }
 
         c.attack.AttackTarget(target, () => _turns.EndTurnOfTeamPCs());
-    }
-
-    /// <summary>
-    /// Check if the character can attack and start the attack if it's possible.
-    /// </summary>
-    private void CheckOffensive()
-    {
-        AcquireTarget();
-
-        if (_characters.IsFinalTeam(c)) // Victory
-        {
-            _turns.EndTurnOfTeamPCs();
-            return;
-        }
-
-        if(target && !target.health.IsDead()) // Target
-        {
-            c.attack.AttackTarget(target, () => { });
-        }
-        else // Find target
-        {
-            target = c.look.ClosestEnemyOnSight();
-
-            if(target)
-            {
-                CheckOffensive();
-            }
-            else
-            {
-                _turns.EndTurnOfTeamPCs();
-                return;
-            }
-        }
     }
 
     /// <summary>

@@ -4,25 +4,31 @@ using UnityEngine;
 
 public class M_Rules : MonoBehaviour
 {
+    [Header("MOVEMENT")]
+    
+    public bool useDiagonals = false;
+
     public enum PassThrough {Everybody, Nobody, AlliesOnly}
     public PassThrough canPassThrough = PassThrough.Nobody;
+
+    [Header("VISION")]
+
+    public int percentReductionByDistance = 5;
 
     public enum SeeAnShotThroug { Everybody, Nobody, AlliesOnly}
     public SeeAnShotThroug canSeeAndShotThrough = SeeAnShotThroug.Everybody;
 
-    public bool useDiagonals = false;
+    [Header("TURNS")]
 
+    public C__Character choosenCharacter;
     public enum FirstCharacter {Random, ChoosenCharacter, FirstCharacterOfTheFirstTeam}
     public FirstCharacter firstCharacter = FirstCharacter.ChoosenCharacter;
-    public C__Character choosenCharacter;
 
     public enum BotsPlayOrder { BeforePlayableCharacters, AfterPlayableCharacters}
     public BotsPlayOrder botsPlays = BotsPlayOrder.AfterPlayableCharacters;
 
-    [Space]
-    public int percentReductionByDistance = 5;
+    [Header("TEAMS")]
 
-    [Space]
     public List<TeamInfos> teamInfos;
 
     public static M_Rules instance;

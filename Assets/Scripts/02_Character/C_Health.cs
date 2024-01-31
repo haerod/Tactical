@@ -6,8 +6,11 @@ using static M__Managers;
 
 public class C_Health : MonoBehaviour
 {
-    public int health = 10;
     public int maxHealth = 10;
+
+    [Header("DEBUG")]
+
+    public int currentHealth = 10;
 
     [Header("REFERENCES")]
 
@@ -27,11 +30,11 @@ public class C_Health : MonoBehaviour
     /// <param name="damages"></param>
     public void AddDamages(int damages)
     {
-        health -= damages;
+        currentHealth -= damages;
 
-        if (health <= 0)
+        if (currentHealth <= 0)
         {
-            health = 0;
+            currentHealth = 0;
             Death();
         }
         else
@@ -47,7 +50,7 @@ public class C_Health : MonoBehaviour
     /// Return true if the character has 0 health or less.
     /// </summary>
     /// <returns></returns>
-    public bool IsDead() => health <= 0;
+    public bool IsDead() => currentHealth <= 0;
 
     // ======================================================================
     // PRIVATE METHODS

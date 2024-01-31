@@ -39,7 +39,7 @@ public class M_Characters : MonoBehaviour
                 current = characters.GetRandom();
                 break;
             case M_Rules.FirstCharacter.ChoosenCharacter:
-                if(_rules.choosenCharacter == null)
+                if(_rules.firstCharacter == null)
                 {
                     Debug.LogError("Choosen character is null in M_Rules, set it", _rules.gameObject);
                 }

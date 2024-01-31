@@ -8,7 +8,6 @@ using static M__Managers;
 public class C_Attack : MonoBehaviour
 {
     public Vector2Int damagesRange = new Vector2Int(3, 5);
-    public C__Character target;
 
     [Header("REFERENCES")]
     
@@ -38,7 +37,7 @@ public class C_Attack : MonoBehaviour
         // EXIT : Enemy isn't in sight
         if (!c.look.HasSightOn(currentTarget.tile)) return;
 
-        target = currentTarget;
+        C__Character target = currentTarget;
 
         c.ClearTilesFeedbacks();
         c.move.OrientTo(target.transform.position);
@@ -55,11 +54,11 @@ public class C_Attack : MonoBehaviour
 
         if (UnityEngine.Random.Range(0, 101) < GetPercentToTouch(c.look.LineOfSight(currentTarget.tile).Count)) // SUCCESS
         {
-            SetOnAttackDone(true, damages, OnEnd);
+            SetOnAttackDone(true, damages, target, OnEnd);
         }
         else // MISS
         {
-            SetOnAttackDone(false, 0, OnEnd);
+            SetOnAttackDone(false, 0, target, OnEnd);
         }
     }
 
@@ -158,7 +157,7 @@ public class C_Attack : MonoBehaviour
     /// <param name="success"></param>
     /// <param name="damages"></param>
     /// <param name="OnEnd"></param>
-    private void SetOnAttackDone(bool success, int damages, Action OnEnd)
+    private void SetOnAttackDone(bool success, int damages, C__Character target, Action OnEnd)
     {
         OnAttackDone = () =>
         {

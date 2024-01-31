@@ -7,9 +7,11 @@ using System;
 
 public class C_Look : MonoBehaviour
 {
-    [SerializeField] private C__Character c = null;
     [SerializeField] private int range = 5;
     [SerializeField] private List<TileType> visualObstacles = null;
+
+    [Header("REFERENCES")]
+    [SerializeField] private C__Character c = null;
 
     // ======================================================================
     // MONOBEHAVIOUR
