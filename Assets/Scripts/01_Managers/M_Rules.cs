@@ -20,12 +20,12 @@ public class M_Rules : MonoBehaviour
 
     [Header("TURNS")]
 
-    public C__Character choosenCharacter;
-    public enum FirstCharacter {Random, ChoosenCharacter, FirstCharacterOfTheFirstTeam}
-    public FirstCharacter firstCharacter = FirstCharacter.ChoosenCharacter;
+    public C__Character chosenCharacter;
+    public enum FirstCharacter {Random, ChosenCharacter, FirstCharacterOfTheFirstTeam}
+    public FirstCharacter firstCharacter = FirstCharacter.ChosenCharacter;
 
     public enum BotsPlayOrder { BeforePlayableCharacters, AfterPlayableCharacters}
-    public BotsPlayOrder botsPlays = BotsPlayOrder.AfterPlayableCharacters;
+    public BotsPlayOrder botsPlay = BotsPlayOrder.AfterPlayableCharacters;
 
     [Header("TEAMS")]
 

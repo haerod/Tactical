@@ -107,7 +107,7 @@ public class C_Behavior : MonoBehaviour
             return;
         }
 
-        c.attack.AttackTarget(target, () => _turns.EndTurnOfTeamPCs());
+        c.attack.Attack(target);
     }
 
     /// <summary>

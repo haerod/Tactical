@@ -10,7 +10,7 @@ public class M_Feedback : MonoBehaviour
 
     [SerializeField] private Texture2D aimCursor = null;
     [SerializeField] private Texture2D noLineOfSightCursor = null;
-    [SerializeField] private Texture2D outOfActionPointsCursor = null;
+    [SerializeField] private Texture2D outOfActionsCursor = null;
 
     [Header("REFERENCES")]
 
@@ -70,7 +70,7 @@ public class M_Feedback : MonoBehaviour
                 Cursor.SetCursor(noLineOfSightCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
             case CursorType.OutActionPoints:
-                Cursor.SetCursor(outOfActionPointsCursor, new Vector2(16, 16), CursorMode.Auto);
+                Cursor.SetCursor(outOfActionsCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
             default:
                 break;

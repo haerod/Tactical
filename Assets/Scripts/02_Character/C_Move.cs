@@ -52,6 +52,8 @@ public class C_Move : MonoBehaviour
     /// <param name="OnEnd"></param>
     public void MoveOnPath(List<Tile> path, Action OnEnd)
     {
+        c.SetCanPlayValue(false);
+
         if (c.movementRange <= 0) return;
 
         EndMove();
@@ -77,20 +79,21 @@ public class C_Move : MonoBehaviour
     /// </summary>
     public void EnableMoveArea()
     {
-        int actionPoints = c.movementRange;
+        int range = 0;
 
-        currentArea = _pathfinding.AreaMovementZone(c.tile, actionPoints, c.move.walakbleTiles);
+        if(c.CanPlay()) 
+            range = c.movementRange;
+
+        currentArea = _pathfinding.AreaMovementZone(c.tile, range, c.move.walakbleTiles);
 
         if (Utils.IsVoidList(currentArea)) return; // No way to go with current action points && position
 
         currentArea = currentArea.ToList();
 
-        foreach (Tile t in currentArea)
-        {
-            if (t.IsOccupiedByCharacter()) continue;
-
-            t.SetMaterial(Tile.TileMaterial.Area);
-        }
+        currentArea
+            .Where(t => !t.IsOccupiedByCharacter())
+            .ToList()
+            .ForEach(t => t.SetMaterial(Tile.TileMaterial.Area));
     }
 
     /// <summary>

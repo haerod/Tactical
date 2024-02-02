@@ -38,8 +38,8 @@ public class M_Characters : MonoBehaviour
             case M_Rules.FirstCharacter.Random:
                 current = characters.GetRandom();
                 break;
-            case M_Rules.FirstCharacter.ChoosenCharacter:
-                if(_rules.firstCharacter == null)
+            case M_Rules.FirstCharacter.ChosenCharacter:
+                if(_rules.chosenCharacter == null)
                 {
                     Debug.LogError("Choosen character is null in M_Rules, set it", _rules.gameObject);
                 }
@@ -158,7 +158,7 @@ public class M_Characters : MonoBehaviour
         
         if (excludeCharactersWhoHavePlayed)
             team = team
-                .Where(o => !o.hasPlayed)
+                .Where(o => o.CanPlay())
                 .ToList();
 
         return team;
@@ -183,7 +183,7 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     private void OrderCharacterList()
     {
-        switch (_rules.botsPlays)
+        switch (_rules.botsPlay)
         {
             case M_Rules.BotsPlayOrder.BeforePlayableCharacters:
                 characters = characters

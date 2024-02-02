@@ -31,7 +31,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
     {
         GameObject currentLifeBar;
 
-        for (int i = 0; i < health.maxHealth; i++)
+        for (int i = 0; i < health.health; i++)
         {
             currentLifeBar = lifeLayoutGroup.GetChild(i).gameObject;
 
@@ -71,7 +71,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
         }
 
         // Display life
-        for (int i = 0; i < health.maxHealth; i++)
+        for (int i = 0; i < health.health; i++)
         {
             RectTransform rt = Instantiate(lifeImage, lifeLayoutGroup).GetComponent<RectTransform>();
             float parentWidth = lifeLayoutGroup.rect.width;
@@ -79,7 +79,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
 
             // Size
             Vector2 sizeDeltaAdjusted = new Vector2(
-                (parentWidth) / health.maxHealth - (spacing * 2),
+                (parentWidth) / health.health - (spacing * 2),
                 lifeLayoutGroup.rect.height - topDownOffset *2);
             rt.sizeDelta = sizeDeltaAdjusted;
 
@@ -87,7 +87,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
 
             // Position
             Vector2 localPosition = new Vector2(
-                ((parentWidth / health.maxHealth) * i) - (parentWidth / 2) + (lifeWidth / 2) + spacing / (health.maxHealth) + spacing,
+                ((parentWidth / health.health) * i) - (parentWidth / 2) + (lifeWidth / 2) + spacing / (health.health) + spacing,
                 0);
             rt.localPosition = localPosition;
         }

@@ -365,13 +365,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move: {fileID: 8502731826044868807}
   look: {fileID: 7012095028157842997}
-  actionPoints: {fileID: 0}
   attack: {fileID: 2979315790688333722}
   health: {fileID: 3336314116041387865}
   infos: {fileID: 5571022486952568945}
   behavior: {fileID: 4919814116171440189}
   anim: {fileID: 368585628365455985}
   healthBar: {fileID: 5364162271039580364}
+  hasPlayed: 0
 --- !u!1 &6318043065666906376
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,16 +534,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementRange: 6
-  x: 1
-  y: 1
   walakbleTiles:
   - {fileID: 11400000, guid: 859aa0936407b9943a71c17934cc4d62, type: 2}
   speed: 6.5
   animSpeed: 1
-  orientation: 1
-  onTileEnter:
-    m_PersistentCalls:
-      m_Calls: []
+  x: 1
+  y: 1
   anim: {fileID: 1790941775955150882}
   c: {fileID: 3541061014796538876}
 --- !u!1 &7219477851310167239
@@ -590,10 +586,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13bd0cb057ed7094ea70b7fe27d675d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  c: {fileID: 3541061014796538876}
   range: 7
   visualObstacles:
   - {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
+  c: {fileID: 3541061014796538876}
 --- !u!1 &7861959537881807382
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,9 +634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e44e4e97e29e5943bb9f70529ceb844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionPointsCost: 3
   damagesRange: {x: 2, y: 3}
-  target: {fileID: 0}
   c: {fileID: 3541061014796538876}
   muzzleFlare: {fileID: 6318043065666906376}
 --- !u!1 &8655900561747131834
@@ -688,7 +682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 5
-  maxHealth: 5
+  currentHealth: 5
   c: {fileID: 3541061014796538876}
 --- !u!1001 &1790941775955150880
 PrefabInstance:

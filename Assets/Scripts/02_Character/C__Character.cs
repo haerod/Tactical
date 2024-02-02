@@ -18,7 +18,7 @@ public class C__Character : MonoBehaviour
     public int movementRange => move.movementRange;
 
     [HideInInspector] public Tile tile => Tile();
-    [HideInInspector] public bool hasPlayed = false;
+    [SerializeField] private bool hasPlayed = false;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -67,6 +67,16 @@ public class C__Character : MonoBehaviour
     {
         move.ClearAreaZone();
         attack.ClearAttackTiles();
+    }
+
+    public bool CanPlay()
+    {
+        return !hasPlayed;
+    }
+
+    public void SetCanPlayValue(bool value)
+    {
+        hasPlayed = !value;
     }
 
     // ======================================================================

@@ -30,9 +30,9 @@ public class C_Attack : MonoBehaviour
     /// </summary>
     /// <param name="currentTarget"></param>
     /// <param name="OnEnd"></param>
-    public void AttackTarget(C__Character currentTarget, Action OnEnd)
+    public void Attack(C__Character currentTarget)
     {
-        c.hasPlayed = true;
+        c.SetCanPlayValue(false);
 
         // EXIT : Enemy isn't in sight
         if (!c.look.HasSightOn(currentTarget.tile)) return;
@@ -54,16 +54,17 @@ public class C_Attack : MonoBehaviour
 
         if (UnityEngine.Random.Range(0, 101) < GetPercentToTouch(c.look.LineOfSight(currentTarget.tile).Count)) // SUCCESS
         {
-            SetOnAttackDone(true, damages, target, OnEnd);
+            SetOnAttackDone(true, damages, target);
         }
         else // MISS
         {
-            SetOnAttackDone(false, 0, target, OnEnd);
+            SetOnAttackDone(false, 0, target);
         }
     }
 
     /// <summary>
     /// End the attack.
+    /// Called by C_AnimatorScripts, after the shoot animation.
     /// </summary>
     public void EndAttack()
     {
@@ -97,7 +98,7 @@ public class C_Attack : MonoBehaviour
     }
 
     /// <summary>
-    /// Reset the tile skin and clear the attaclable tiles list.
+    /// Reset the tile skin and clear the attackable tiles list.
     /// </summary>
     public void ClearAttackTiles()
     {
@@ -109,6 +110,11 @@ public class C_Attack : MonoBehaviour
         attackTiles.Clear();
     }
 
+    /// <summary>
+    /// Returns the percent of chance to touch the target, including the reduction by distance.
+    /// </summary>
+    /// <param name="range"></param>
+    /// <returns></returns>
     public int GetPercentToTouch(int range)
     {
         int toReturn = 100;
@@ -157,7 +163,7 @@ public class C_Attack : MonoBehaviour
     /// <param name="success"></param>
     /// <param name="damages"></param>
     /// <param name="OnEnd"></param>
-    private void SetOnAttackDone(bool success, int damages, C__Character target, Action OnEnd)
+    private void SetOnAttackDone(bool success, int damages, C__Character target)
     {
         OnAttackDone = () =>
         {
@@ -175,7 +181,19 @@ public class C_Attack : MonoBehaviour
                 _input.SetActiveClick();
                 c.EnableTilesFeedbacks();
 
-                OnEnd();
+                if(c.behavior.playable) // PC
+                {
+                    if (_characters.IsFinalTeam(c))
+                    {
+                        _turns.EndTurnOfTeamPCs();
+                    }
+
+                    _turns.EndTurnOfCurrentCharacter();
+                }
+                else //NPC
+                {
+                    _turns.EndTurnOfTeamPCs();
+                }
             });
         };
     }

@@ -70,13 +70,11 @@ public class M_Turns : MonoBehaviour
             ChangeTeamCharacter();
         else
             EndTurnOfTeamPCs();
-
-        _characters.current.hasPlayed = true;
     }
 
     public void NewTeamTurn(List<C__Character> newTeam)
     {
-        newTeam.ForEach(character => character.hasPlayed = false);
+        newTeam.ForEach(character => character.SetCanPlayValue (true));
     }
 
     // ======================================================================

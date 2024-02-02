@@ -14,9 +14,7 @@ public class M_Board : MonoBehaviour
 
     [SerializeField] private Transform charactersParent;
 
-    [Header("DEBUG")]
-
-    public List<Tile> grid;
+    [HideInInspector] public List<Tile> grid;
     public static M_Board instance;
 
     // ======================================================================

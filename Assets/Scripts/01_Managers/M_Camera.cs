@@ -17,6 +17,9 @@ public class M_Camera : MonoBehaviour
     public float movingTime = .3f;
     public AnimationCurve movingTimeCurve = null;
 
+    [Header("SCREEN MOUSE MOVEMENT")]
+    public int borderMultiplier = 2;
+
     [Header("REFERENCES")]
 
     public Transform camTransform = null;

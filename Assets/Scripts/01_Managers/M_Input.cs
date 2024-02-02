@@ -8,23 +8,14 @@ using static M__Managers;
 
 public class M_Input : MonoBehaviour
 {
-    [Header("INPUT")]
-
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
     [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
     [SerializeField] private KeyCode endTurnKey = KeyCode.Backspace;    
-
-    [Header("SCREEN MOUSE MOVEMENT")]
-    [Range(1, 100)]
-    [SerializeField] private int screenPercent = 5;
-    [SerializeField] private int borderMultiplier = 1;
 
     private bool canClick = true;
     private Tile pointedTile;
     private List<Tile> currentPathfinding;
     private C__Character currentTarget;
-    private int screenWidthPercented;
-    private int screenHeightPercented;
     public static M_Input instance;
 
     // ======================================================================
@@ -42,12 +33,6 @@ public class M_Input : MonoBehaviour
         {
             Debug.LogError("There is more than one M_Input in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
         }
-    }
-
-    private void Start()
-    {
-        screenWidthPercented = Screen.width * screenPercent / 100;
-        screenHeightPercented = Screen.height * screenPercent / 100;
     }
 
     private void Update()
@@ -140,8 +125,7 @@ public class M_Input : MonoBehaviour
                 OnFreeTile(tile);
             }
         }
-        // EXIT : Out of tile board
-        else
+        else // EXIT : Out of tile board
         {
             OnForbiddenTile();
             return;
@@ -209,15 +193,16 @@ public class M_Input : MonoBehaviour
     {
         Vector3 direction = Vector3.zero;
         Vector3 mousePosition = Input.mousePosition;
+        int borderMultiplier = _camera.borderMultiplier;
 
-        if (mousePosition.x >= Screen.width - screenWidthPercented) // Right
+        if (mousePosition.x >= Screen.width - 1) // Right
         {
             if (mousePosition.x >= Screen.width)
                 direction += _camera.transform.right * borderMultiplier;
             else
                 direction += _camera.transform.right;
         }
-        else if (mousePosition.x <= screenWidthPercented) // Left
+        else if (mousePosition.x <= 1) // Left
         {
             if (mousePosition.x <= 0)
                 direction -= _camera.transform.right * borderMultiplier;
@@ -225,14 +210,14 @@ public class M_Input : MonoBehaviour
                 direction -= _camera.transform.right;
         }
 
-        if (mousePosition.y >= Screen.height - screenHeightPercented) // Up
+        if (mousePosition.y >= Screen.height - 1) // Up
         {
             if (mousePosition.y >= Screen.height)
                 direction += _camera.transform.forward * borderMultiplier;
             else
                 direction += _camera.transform.forward;
         }
-        else if (mousePosition.y <= screenHeightPercented) // Down
+        else if (mousePosition.y <= 1) // Down
         {
             if (mousePosition.y <= 0)
                 direction -= _camera.transform.forward * borderMultiplier;
@@ -267,7 +252,7 @@ public class M_Input : MonoBehaviour
         // Mouse feedbacks depending of the line of sight on the enemy
         if(c.look.HasSightOn(tile))
         {
-            if (!c.hasPlayed)
+            if (c.CanPlay())
             {
                 _feedback.SetCursor(M_Feedback.CursorType.AimAndInSight);
                 _ui.percentText.SetPercentShootText(c.attack.GetPercentToTouch(c.look.LineOfSight(tile).Count));
@@ -289,15 +274,18 @@ public class M_Input : MonoBehaviour
     /// <param name="tile"></param>
     private void OnFreeTile(Tile tile)
     {
+        C__Character currentCharacter = _characters.current;
+
         _ui.percentText.DisablePercentShootText();
 
         currentTarget = null;
 
-        currentPathfinding = _pathfinding.Pathfind(
-                        _characters.current.tile,
-                        tile,
-                        M_Pathfinding.TileInclusion.WithEnd,
-                        _characters.current.move.walakbleTiles);
+        if(currentCharacter.CanPlay())
+            currentPathfinding = _pathfinding.Pathfind(
+                            _characters.current.tile,
+                            tile,
+                            M_Pathfinding.TileInclusion.WithEnd,
+                            currentCharacter.move.walakbleTiles);
 
         // EXIT : No path
         if (Utils.IsVoidList(currentPathfinding))
@@ -306,11 +294,19 @@ public class M_Input : MonoBehaviour
             return;
         }
 
-        bool tileInMoveRange = (currentPathfinding.Count - 1) <= _characters.current.movementRange;
+        int range;
+
+        if (currentCharacter.CanPlay())
+            range = currentCharacter.movementRange;
+        else
+            range = 0;
+
+        bool tileInMoveRange = (currentPathfinding.Count - 1) <= range;
+
         _feedback.square.SetSquare(pointedTile.transform.position, tileInMoveRange);
         _feedback.line.SetLines(
-            currentPathfinding, 
-            _characters.current, 
+            currentPathfinding,
+            currentCharacter, 
             pointedTile);
 
         _feedback.SetCursor(M_Feedback.CursorType.Regular);
@@ -340,15 +336,7 @@ public class M_Input : MonoBehaviour
         if (currentTarget == null) return; // EXIT : There is no target
 
         // Attack
-        c.attack.AttackTarget(currentTarget, () =>
-        {
-            if (_characters.IsFinalTeam(c))
-            {
-                _turns.EndTurnOfTeamPCs();
-            }
-
-            _turns.EndTurnOfCurrentCharacter();
-        });
+        c.attack.Attack(currentTarget);
     }
 
     /// <summary>

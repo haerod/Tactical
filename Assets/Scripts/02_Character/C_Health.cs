@@ -6,11 +6,11 @@ using static M__Managers;
 
 public class C_Health : MonoBehaviour
 {
-    public int maxHealth = 10;
+    public int health = 5;
 
     [Header("DEBUG")]
 
-    public int currentHealth = 10;
+    public int currentHealth = 5;
 
     [Header("REFERENCES")]
 
