@@ -35,8 +35,6 @@ public class C_Look : MonoBehaviour
             .Where(o => !visualObstacles.Contains(o.type))
             .ToList();
 
-        toEnable.Add(c.tile);
-
         _feedback.SetViewLinesActive(true, toEnable);
     }
 

@@ -176,13 +176,7 @@ public class C_Attack : MonoBehaviour
                 target.anim.StartDodge();
                 _feedback.ActionEffectFeedback("MISS", target.transform);
             }
-            Wait(0.5f, () =>
-            {
-                _input.SetActiveClick();
-                c.EnableTilesFeedbacks();
-
-                _turns.EndTurn();
-            });
+            Wait(0.5f, () => {_turns.EndTurn();});
         };
     }
 }
