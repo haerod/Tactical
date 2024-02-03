@@ -31,50 +31,54 @@ public class M_Turns : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Pass to the next player's turn, or NPC of the team (depending the Rules).
+    /// End the character's turn and pass to the next one (depending the rules).
     /// </summary>
-    public void EndTurnOfTeamPCs()
+    public void EndTurn()
     {
-        // New character
-        C__Character current = NextAllyNPCOrEnemy();
-
-        if (!current)
+        if (IsVictory()) // Victory
         {
             Victory();
-            return; // EXIT : There is no character in another team, Victory for this team !
         }
+        else // Choose the next character or pass to another team.
+        {
+            C__Character nextTeamCharacter = NextCharacterInTheTeam();
 
-        _characters.NewCurrentCharacter(current);
+            if (nextTeamCharacter) // Another character in the team
+            {
+                _characters.NewCurrentCharacter(nextTeamCharacter);
+            }
+            else
+            {
+                NextTeam();
+            }
+        }
     }
 
     /// <summary>
-    /// Pass to the playbale teammates turn.
+    /// Switch to another playable character of the team.
     /// </summary>
-    public void ChangeTeamCharacter()
+    public void SwitchToAnotherTeamPlayableCharacter()
     {
-        // Old character
-        C__Character current = NextAllyNPCOrEnemy();
+        C__Character current = _characters.current;
+        C__Character next = _characters.characters
+            .Where(c => c.team == current.team && c != current && c.behavior.playable == true)
+            .FirstOrDefault();
 
-        current = _turns.NextPlayableCharacterInTeam();
-        if (!current) return;
-
-        _characters.NewCurrentCharacter(current);
+        if(next)
+            _characters.NewCurrentCharacter(next);
     }
 
     /// <summary>
-    /// Empty the action points, pass to the next allie character, else allie npc, else next team
+    /// End the turn of all the playable characters of the team and pass to the next one to play.
     /// </summary>
-    public void EndTurnOfCurrentCharacter()
+    public void EndAllPlayableCharactersTurn()
     {
-        if (_characters.current.PlayableTeammatesWithActionPoints().Count > 0)
-            ChangeTeamCharacter();
-        else
-            EndTurnOfTeamPCs();
-    }
+        C__Character current = _characters.current;
 
-    public void NewTeamTurn(List<C__Character> newTeam)
-    {
-        newTeam.ForEach(character => character.SetCanPlayValue (true));
+        _characters.characters
+            .ForEach(c => c.SetCanPlayValue(false));
+
+        EndTurn();
     }
 
     // ======================================================================
@@ -82,54 +86,100 @@ public class M_Turns : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Get the next character in the team.
-    /// Return null if there is no playable teammate.
+    /// Start the next team turn, allowing them to play.
     /// </summary>
-    private C__Character NextPlayableCharacterInTeam()
+    private void NextTeam()
     {
         C__Character current = _characters.current;
+        C__Character newCharacter;
+        List<C__Character> newTeam = new List<C__Character>();
 
-        // Get the playble teammates
-        List<C__Character> team = _characters.GetTeam(current, true, true, false);
+        if (_rules.botsPlay == M_Rules.BotsPlayOrder.BeforePlayableCharacters) // NPC play first
+        {
+            newTeam = _characters.characters
+                .Where(c => c.team != current.team || c == current)
+                .OrderBy(c => c.team)
+                .ThenBy(c => c.behavior.playable)
+                .ToList();
 
-        if (team.Count == 0) return null; // EXIT : There is no playble teammates.
+            newCharacter = newTeam.Next(current);
+        }
+        else // PC play first
+        {
+            newTeam = _characters.characters
+                            .Where(c => c.team != current.team || c == current)
+                            .OrderBy(c => c.team)
+                            .ThenByDescending(c => c.behavior.playable)
+                            .ToList();
 
-        return team.Next(team.IndexOf(current));
+            newCharacter = newTeam.Next(current);
+        }
+
+        newTeam = _characters.characters
+            .Where(c => c.team == newCharacter.team)
+            .ToList();
+
+        newTeam
+            .ForEach(character => character.SetCanPlayValue(true));
+
+        _characters.NewCurrentCharacter(newCharacter);
+    }
+    
+    /// <summary>
+    /// Return the next character who haves to play in the team, depending the rules.
+    /// Return null if nobody can play.
+    /// </summary>
+    /// <returns></returns>
+    private C__Character NextCharacterInTheTeam()
+    {
+        C__Character current = _characters.current;
+        List<C__Character> group = new List<C__Character>();
+        bool currentIsPlayable = current.behavior.playable;
+
+        if (currentIsPlayable) // PC
+        {
+            group = _characters
+                .GetTeamPC(current)
+                .Where(c => c.CanPlay())
+                .ToList();
+        }
+        else // NPC
+        {
+            group = _characters
+                .GetTeamNPC(current)
+                .Where(c => c.CanPlay())
+                .ToList();
+        }
+
+        if (group.Where(c => c != current).ToList().Count == 0) // No character playable after this one.
+        {
+            if (currentIsPlayable && _rules.botsPlay == M_Rules.BotsPlayOrder.AfterPlayableCharacters) // PC
+            {
+                return _characters
+                    .GetTeamNPC(current)
+                    .Where(c => c.CanPlay())
+                    .FirstOrDefault(); // EXIT: Return the first NPC or null
+            }
+            else if (!currentIsPlayable && _rules.botsPlay == M_Rules.BotsPlayOrder.BeforePlayableCharacters) // NPC
+            {
+                return _characters
+                       .GetTeamPC(current)
+                       .Where(c => c.CanPlay())
+                       .FirstOrDefault(); // EXIT: Return the first NPC or null
+            }
+
+            return null; // EXIT: Nobody can play next.
+        }
+
+        return group.Next(group.IndexOf(current));
     }
 
     /// <summary>
-    /// Get the first character of the next team or NPC in ally team (depending Rules).
-    /// Return null if there is no enemy in next teams.
+    /// Check if it's currently victory.
     /// </summary>
-    /// <returns></returns>
-    private C__Character NextAllyNPCOrEnemy()
+    private bool IsVictory()
     {
-        //NB : M_Characters previously orders the characters by teams/PC/NPC.
-
-        C__Character current = _characters.current;
-
-        // Current is playable
-        // ===================
-
-        if(current.behavior.playable)
-        {
-            // Get everybody except other PC of the team (current character || NPC in team || all other teams' characters)
-            List<C__Character> charas = _characters.characters
-                .Where(o => (o == current) || (o.Team() == current.Team() && o.behavior.playable == false) || (o.Team() != current.Team()))
-                .ToList();
-
-            if (charas.Count <= 1) return null; // EXIT : There is only this character in the list.
-
-            return charas.Next(charas.IndexOf(current)); // EXIT : Return the next ally NPC or enemy (PC or NPC).
-        }
-
-        // Current is a NPC
-        // ================
-
-        if (_characters.characters.Count <= 1) return null; // EXIT : There is only this character in the list.
-
-        // Just return the next in the list.
-        return _characters.characters.Next(_characters.characters.IndexOf(current));
+        return _characters.IsFinalTeam(_characters.current);
     }
 
     /// <summary>

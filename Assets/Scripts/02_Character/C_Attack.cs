@@ -181,19 +181,7 @@ public class C_Attack : MonoBehaviour
                 _input.SetActiveClick();
                 c.EnableTilesFeedbacks();
 
-                if(c.behavior.playable) // PC
-                {
-                    if (_characters.IsFinalTeam(c))
-                    {
-                        _turns.EndTurnOfTeamPCs();
-                    }
-
-                    _turns.EndTurnOfCurrentCharacter();
-                }
-                else //NPC
-                {
-                    _turns.EndTurnOfTeamPCs();
-                }
+                _turns.EndTurn();
             });
         };
     }

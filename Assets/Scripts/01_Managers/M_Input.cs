@@ -158,9 +158,11 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void CheckChangeCharacterInput()
     {
+        if (!_characters.current.behavior.playable) return; // EXIT : NPC turn.
+
         if (Input.GetKeyDown(changeCharacterKey))
         {
-            _turns.ChangeTeamCharacter();
+            _turns.SwitchToAnotherTeamPlayableCharacter();
         }
     }
 
@@ -171,7 +173,7 @@ public class M_Input : MonoBehaviour
     {
         if (Input.GetKeyDown(endTurnKey))
         {
-            _turns.EndTurnOfTeamPCs();
+            _turns.EndAllPlayableCharactersTurn();
         }
     }
 
@@ -350,7 +352,7 @@ public class M_Input : MonoBehaviour
 
         _characters.current.move.MoveOnPath(currentPathfinding, () =>
         {
-            _turns.EndTurnOfCurrentCharacter();
+            _turns.EndTurn();
         });
     }
 

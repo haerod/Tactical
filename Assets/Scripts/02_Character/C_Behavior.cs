@@ -37,8 +37,9 @@ public class C_Behavior : MonoBehaviour
         switch (behavior)
         {
             case Behavior.None:
+                c.SetCanPlayValue(false);
                 Wait(1,
-                    () => _turns.EndTurnOfTeamPCs());
+                    () => _turns.EndTurn());
                 break;
             case Behavior.Follower:
                 Wait(1, 
@@ -60,8 +61,9 @@ public class C_Behavior : MonoBehaviour
     {
         if (c.behavior.target == null) // EXIT : no target
         {
+            c.SetCanPlayValue(false);
             Wait(2, 
-                () => _turns.EndTurnOfTeamPCs());
+                () => _turns.EndTurn());
             return;
         }
 
@@ -82,12 +84,13 @@ public class C_Behavior : MonoBehaviour
 
         if (Utils.IsVoidList(path))  // EXIT : not path
         {
+            c.SetCanPlayValue(false);
             Wait(2,
-                () => _turns.EndTurnOfTeamPCs());
+                () => _turns.EndTurn());
             return;
         }
 
-        c.move.MoveOnPath(path, () => _turns.EndTurnOfTeamPCs()); // EXIT : move on path
+        c.move.MoveOnPath(path, () => _turns.EndTurn()); // EXIT : move on path
     }
 
     // ======================================================================
@@ -103,7 +106,8 @@ public class C_Behavior : MonoBehaviour
 
         if(target == null || target.health.IsDead() || _characters.IsFinalTeam(c)) // EXIT : nobody in sight
         {
-            _turns.EndTurnOfTeamPCs();
+            c.SetCanPlayValue(false);
+            _turns.EndTurn();
             return;
         }
 

@@ -90,10 +90,6 @@ public class M_Characters : MonoBehaviour
         // Inputs
         _input.ClearFeedbacksAndValues();
 
-        // Check if it's a new team's turn
-        if (newCurrentCharacter.team != current.team)
-            _turns.NewTeamTurn(GetTeam(newCurrentCharacter, false, false, false));
-
         // Change current character
         current = newCurrentCharacter;
 
@@ -128,7 +124,8 @@ public class M_Characters : MonoBehaviour
     {
         foreach (C__Character c in characters)
         {
-            if (c != character && c.Team() != character.Team()) return false;
+            if (c == character) continue;
+            if (c.Team() != character.Team()) return false;
         }
 
         return true;
@@ -164,6 +161,38 @@ public class M_Characters : MonoBehaviour
         return team;
     }
 
+    public List<C__Character> GetTeam(int index)
+    {
+        return characters
+            .Where(c => c.team == index)
+            .ToList();
+    }
+
+    public List<C__Character> GetTeamPC(C__Character character, bool excludeCharacter = false)
+    {
+        List<C__Character> team = characters
+            .Where(o => o.Team() == character.Team())
+            .Where(o => o.behavior.playable)
+            .ToList();
+
+        if (excludeCharacter)
+            team.Remove(character);
+
+        return team;
+    }
+
+    public List<C__Character> GetTeamNPC(C__Character character, bool excludeCharacter = false)
+    {
+        List<C__Character> team = characters
+            .Where(o => o.Team() == character.Team())
+            .Where(o => !o.behavior.playable)
+            .ToList();
+
+        if (excludeCharacter)
+            team.Remove(character);
+
+        return team;
+    }
 
     // ======================================================================
     // PRIVATE METHODS
