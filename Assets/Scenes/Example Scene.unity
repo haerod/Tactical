@@ -1096,7 +1096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2018,6 +2018,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[0].mat1
+      value: 
+      objectReference: {fileID: 2100000, guid: 87d91377c647d2c4386ca86b67dc77e3, type: 2}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[0].mat2
+      value: 
+      objectReference: {fileID: 2100000, guid: 585990fbd9f48fb4191fbc295bf6edef, type: 2}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[1].mat1
+      value: 
+      objectReference: {fileID: 2100000, guid: ecd6880017b578f47aaede6f398aeb9b, type: 2}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[1].mat2
+      value: 
+      objectReference: {fileID: 2100000, guid: 6e29573ea2721f649adad926ec465f40, type: 2}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[2].mat1
+      value: 
+      objectReference: {fileID: 2100000, guid: ecd6880017b578f47aaede6f398aeb9b, type: 2}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[2].mat2
+      value: 
+      objectReference: {fileID: 2100000, guid: 6e29573ea2721f649adad926ec465f40, type: 2}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[0].teamName
+      value: Guild
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[1].teamName
+      value: Disith
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958866177785976467, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamInfos.Array.data[2].teamName
+      value: Disith
+      objectReference: {fileID: 0}
     - target: {fileID: 1958866177891228966, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: boardParent2
       value: 

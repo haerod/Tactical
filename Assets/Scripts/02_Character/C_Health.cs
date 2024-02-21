@@ -8,17 +8,20 @@ public class C_Health : MonoBehaviour
 {
     public int health = 5;
 
-    [Header("DEBUG")]
-
-    public int currentHealth = 5;
-
     [Header("REFERENCES")]
 
     [SerializeField] private C__Character c = null;
 
+    [HideInInspector] public int currentHealth = 5;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Awake()
+    {
+        currentHealth = health;
+    }
 
     // ======================================================================
     // PUBLIC METHODS
