@@ -5,10 +5,10 @@ using static M__Managers;
 public class C_Infos : MonoBehaviour
 {
     public string designation = "Name";
-    public int team = 1;
+    public Team team;
 
     [Header("REFERENCES")]
-    [SerializeField] private C__Character c = null;
+    //[SerializeField] private C__Character c = null;
     [SerializeField] private Renderer rend1 = null;
     [SerializeField] private Renderer rend2 = null;
 
@@ -22,20 +22,24 @@ public class C_Infos : MonoBehaviour
 
     /// <summary>
     /// Set the team materials to the character.
-    /// Called by M_Board.
+    /// Called by CharacterAutoRename.
     /// </summary>
     public void SetTeamMaterials()
     {
-        M_Rules rules = GameObject.FindAnyObjectByType<M_Rules>();
-
-        if (rend1 && rules.teamInfos[c.Team()].mat1)
+        if(!team)
         {
-            rend1.material = rules.teamInfos[c.Team()].mat1;
+            Debug.LogError(designation + " doesn't have a team. Please assign a team.");
+            return;
+        }
+
+        if (rend1 && team.mainMaterial)
+        {
+            rend1.material = team.mainMaterial;
             EditorUtility.SetDirty(rend1);
         }
-        if (rend2 && rules.teamInfos[c.Team()].mat2)
+        if (rend2 && team.secondaryMaterial)
         {
-            rend2.material = rules.teamInfos[c.Team()].mat2;
+            rend2.material = team.secondaryMaterial;
             EditorUtility.SetDirty(rend2);
         }
     }

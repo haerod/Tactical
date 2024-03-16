@@ -10,7 +10,9 @@ public class CharacterAutoSnap : MonoBehaviour
     private C__Character current;
     private M_Board board;
     private M_Characters characters;
-    private M_Rules rules;
+
+    private Vector3 previousPosition;
+    private List<TileType> previousWalkableTiles;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -36,8 +38,12 @@ public class CharacterAutoSnap : MonoBehaviour
         if (Application.isPlaying) return;
         if (PrefabStageUtility.GetCurrentPrefabStage() != null) return;
 
-        MoveCharacterAt(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-        AutoSnap();
+        if(AreModifications())
+        {
+            MoveCharacterAt(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+            AutoSnap();
+            UpdateModificationValues();
+        }
     }
 
     private void OnDestroy()
@@ -55,6 +61,24 @@ public class CharacterAutoSnap : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Check for modifications in the position, the tile under or in the walkable tiles.
+    /// </summary>
+    /// <returns></returns>
+    private bool AreModifications() => transform.position != previousPosition 
+        || current.tile == null 
+        || !previousWalkableTiles.SequenceEqual(current.move.walkableTiles);
+
+    /// <summary>
+    /// Update the modification checkers values.
+    /// </summary>
+    private void UpdateModificationValues()
+    {
+        previousPosition = transform.position;
+        previousWalkableTiles = current.move.walkableTiles.ToList();
+        EditorUtility.SetDirty(this);
+    }
 
     /// <summary>
     /// When two characters are at the same position, automatically reposition it at the closest free position.
@@ -89,23 +113,15 @@ public class CharacterAutoSnap : MonoBehaviour
 
     /// <summary>
     /// Move character position at the asked coordinates.
-    /// Rename the element.
     /// Set the new elements dirty.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
     private void MoveCharacterAt(int x, int y)
     {
-        current.move.x = Mathf.RoundToInt(x);
-        current.move.y = Mathf.RoundToInt(y);
+        current.move.x = x;
+        current.move.y = y;
         current.transform.position = new Vector3(current.x, 0, current.y);
-
-        current.infos.SetTeamMaterials();
-
-        current.name = string.Format("{0} ({2}) - Team {1}",
-            current.infos.designation,
-            rules.teamInfos[current.infos.team].teamName,
-            current.behavior.playable ? "PC" : "NPC");
 
         EditorUtility.SetDirty(current.gameObject); // Save the character modifications
         EditorUtility.SetDirty(current.move); // Save the character modifications
@@ -205,6 +221,7 @@ public class CharacterAutoSnap : MonoBehaviour
         {
             current.move.x = lastNewTile.x;
             current.move.y = lastNewTile.y;
+            previousPosition = new Vector3(lastNewTile.x, 0, lastNewTile.y);
         }
         else
         {
@@ -224,7 +241,10 @@ public class CharacterAutoSnap : MonoBehaviour
 
             current.move.x = newTile.x;
             current.move.y = newTile.y;
+            previousPosition = new Vector3(newTile.x, 0, newTile.y);
         }
+
+        EditorUtility.SetDirty(this);
     }
 
     /// <summary>
@@ -243,7 +263,7 @@ public class CharacterAutoSnap : MonoBehaviour
         current = GetComponent<C__Character>();
         board = FindAnyObjectByType<M_Board>();
         characters = FindAnyObjectByType<M_Characters>();
-        rules = FindAnyObjectByType<M_Rules>();
+        previousWalkableTiles = current.move.walkableTiles.ToList();
         EditorUtility.SetDirty(this);
     }
 }

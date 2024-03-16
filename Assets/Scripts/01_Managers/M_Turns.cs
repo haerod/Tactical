@@ -98,7 +98,7 @@ public class M_Turns : MonoBehaviour
         {
             newTeam = _characters.characters
                 .Where(c => c.team != current.team || c == current)
-                .OrderBy(c => c.team)
+                .OrderBy(c => c.team.name)
                 .ThenBy(c => c.behavior.playable)
                 .ToList();
 
@@ -108,7 +108,7 @@ public class M_Turns : MonoBehaviour
         {
             newTeam = _characters.characters
                             .Where(c => c.team != current.team || c == current)
-                            .OrderBy(c => c.team)
+                            .OrderBy(c => c.team.name)
                             .ThenByDescending(c => c.behavior.playable)
                             .ToList();
 

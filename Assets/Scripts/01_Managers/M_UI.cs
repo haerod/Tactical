@@ -68,7 +68,7 @@ public class M_UI : MonoBehaviour
     public void EnableEndScreen(C__Character winner)
     {
         endScreen.SetActive(true);
-        endScreenText.text = string.Format("{0} are winners !", _rules.teamInfos[winner.infos.team].teamName);
+        endScreenText.text = string.Format("{0} are winners !", winner.team.name);
     }
 
     /// <summary>

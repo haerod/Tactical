@@ -10,6 +10,8 @@ public class TileAutoSnap : MonoBehaviour
     private Tile tile;
     private M_Board board;
 
+    private Vector3 previousPosition;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -34,8 +36,12 @@ public class TileAutoSnap : MonoBehaviour
         if (Application.isPlaying) return;
         if (PrefabStageUtility.GetCurrentPrefabStage() != null) return;
 
-        MoveTileAt(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-        AutofixTileSuperposition();
+        if(AreModifications())
+        {
+            MoveTileAt(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+            AutofixTileSuperposition();
+            UpdateModificationValues();
+        }
     }
 
     private void OnDestroy()
@@ -53,6 +59,21 @@ public class TileAutoSnap : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Check for modifications in the position.
+    /// </summary>
+    /// <returns></returns>
+    private bool AreModifications() => previousPosition != transform.position;
+
+    /// <summary>
+    /// Update the modification checkers values.
+    /// </summary>
+    private void UpdateModificationValues()
+    {
+        previousPosition = transform.position;
+        EditorUtility.SetDirty(this);
+    }
 
     /// <summary>
     /// When two tiles are at the same position, automatically reposition it at the closest free position.
@@ -79,8 +100,8 @@ public class TileAutoSnap : MonoBehaviour
     /// <param name="y"></param>
     private void MoveTileAt(int x, int y)
     {
-        tile.x = Mathf.RoundToInt(x);
-        tile.y = Mathf.RoundToInt(y);
+        tile.x = x;
+        tile.y = y;
         tile.transform.position = new Vector3(tile.x, 0, tile.y);
 
         tile.name = string.Format("{1},{2} - {0}", tile.type, tile.x, tile.y);
@@ -133,6 +154,9 @@ public class TileAutoSnap : MonoBehaviour
             Vector2Int freeCoordinates = board.GetClosestCoordinatesWithoutTile(tile.x, tile.y);
             tile.x = freeCoordinates.x;
             tile.y = freeCoordinates.y;
+
+            previousPosition = new Vector3(freeCoordinates.x, 0, freeCoordinates.y);
+            EditorUtility.SetDirty(this);
         }
     }
 

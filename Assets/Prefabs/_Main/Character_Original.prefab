@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   designation: Name
-  team: 0
+  team: {fileID: 11400000, guid: ca99a341737608f4898402b1657e9567, type: 2}
   c: {fileID: 3541061014796538876}
   rend1: {fileID: 5193888126871477251}
   rend2: {fileID: 813525511553365662}
@@ -321,6 +321,7 @@ GameObject:
   - component: {fileID: 1422904897860799220}
   - component: {fileID: 3541061014796538876}
   - component: {fileID: 2371686734661026428}
+  - component: {fileID: 5963638360950440093}
   m_Layer: 0
   m_Name: Character_Original
   m_TagString: Untagged
@@ -372,7 +373,6 @@ MonoBehaviour:
   behavior: {fileID: 4919814116171440189}
   anim: {fileID: 368585628365455985}
   healthBar: {fileID: 5364162271039580364}
-  hasPlayed: 0
 --- !u!114 &2371686734661026428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,6 +383,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 807c1bd761d6ead4a9d0c37cb115866d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5963638360950440093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711617042610792679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 943423aaa5fa14a4caac8674c2c89f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6318043065666906376
@@ -751,7 +763,7 @@ PrefabInstance:
     - target: {fileID: -7813590141776298306, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 87d91377c647d2c4386ca86b67dc77e3, type: 2}
+      objectReference: {fileID: 2100000, guid: 585990fbd9f48fb4191fbc295bf6edef, type: 2}
     - target: {fileID: 919132149155446097, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_Name
       value: ybot (anim)

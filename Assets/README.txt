@@ -2,15 +2,14 @@ HELLO WORLD
 ===========
 
 Read the documentation in the project (Basic Unity Tactical Tool - Documentation) to have the quick start.
-It's fully illustrated and quick to read.
+It's fully illustrated and quick to read (basic and advanced steps are separated).
 
 MAIN OBJECTS
 ============
 
-Basic Unity Tactical Tool prefab is in Prefabs/Main.
-Character is in Prefabs.
-Tiles prefabs are in Prefabs/Tiles.
-Bake button is in the scene hierarchy/Basic Unity Tactical Tool/M_Board (in the inspector).
+Basic Unity Tactical Tool prefab is in Prefabs/_Main.
+Characters are in Prefabs/Game_Characters.
+Tiles prefabs are in Prefabs/Game_Tiles.
 
 SHARE
 =====

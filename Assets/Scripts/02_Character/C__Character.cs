@@ -14,7 +14,7 @@ public class C__Character : MonoBehaviour
     public C_AnimatorScripts anim; // With animator / skinned mesh renderer
     public UI_SlicedHealthBar healthBar;
 
-    public int team => Team();
+    public Team team => Team();
     public int movementRange => move.movementRange;
     public int x => move.x;
     public int y => move.y;
@@ -34,7 +34,7 @@ public class C__Character : MonoBehaviour
     /// Return the team of this character.
     /// </summary>
     /// <returns></returns>
-    public int Team()
+    public Team Team()
     {
         return infos.team;
     }

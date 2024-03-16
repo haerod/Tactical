@@ -27,10 +27,6 @@ public class M_Rules : MonoBehaviour
     public enum BotsPlayOrder { BeforePlayableCharacters, AfterPlayableCharacters}
     public BotsPlayOrder botsPlay = BotsPlayOrder.AfterPlayableCharacters;
 
-    [Header("TEAMS")]
-
-    public List<TeamInfos> teamInfos;
-
     public static M_Rules instance;
 
     // ======================================================================
@@ -57,12 +53,4 @@ public class M_Rules : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-}
-
-[System.Serializable]
-public class TeamInfos
-{
-    public string teamName = "Name";
-    public Material mat1;
-    public Material mat2;
 }

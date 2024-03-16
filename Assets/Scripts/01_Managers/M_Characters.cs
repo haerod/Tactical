@@ -32,7 +32,7 @@ public class M_Characters : MonoBehaviour
 
     private void Start()
     {
-        FillCharacterList();
+        OrderCharacterList();
 
         // Choose the first character
         switch (_rules.firstCharacter)
@@ -43,7 +43,7 @@ public class M_Characters : MonoBehaviour
             case M_Rules.FirstCharacter.ChosenCharacter:
                 if(_rules.chosenCharacter == null)
                 {
-                    Debug.LogError("Choosen character is null in M_Rules, set it", _rules.gameObject);
+                    Debug.LogError("Choosen character is null in M_Rules, set it.", _rules.gameObject);
                 }
                 break;
             case M_Rules.FirstCharacter.FirstCharacterOfTheFirstTeam:
@@ -163,13 +163,6 @@ public class M_Characters : MonoBehaviour
         return team;
     }
 
-    public List<C__Character> GetTeam(int index)
-    {
-        return characters
-            .Where(c => c.team == index)
-            .ToList();
-    }
-
     public List<C__Character> GetTeamPC(C__Character character, bool excludeCharacter = false)
     {
         List<C__Character> team = characters
@@ -201,15 +194,6 @@ public class M_Characters : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Search and all characters and add them in the "characters" list
-    /// </summary>
-    private void FillCharacterList()
-    {
-        characters = FindObjectsOfType<C__Character>().ToList();
-        OrderCharacterList();
-    }
-
-    /// <summary>
     /// Order the character list by team, then by PC/NPC (depending the Rules).
     /// </summary>
     private void OrderCharacterList()
@@ -218,14 +202,14 @@ public class M_Characters : MonoBehaviour
         {
             case M_Rules.BotsPlayOrder.BeforePlayableCharacters:
                 characters = characters
-                    .OrderBy(o => o.Team())
+                    .OrderBy(o => o.team.name)
                     .ThenBy(o => o.behavior.playable)
                     .ToList();
                 break;
 
             case M_Rules.BotsPlayOrder.AfterPlayableCharacters:
                 characters = characters
-                    .OrderBy(o => o.Team())
+                    .OrderBy(o => o.team.name)
                     .ThenByDescending(o => o.behavior.playable)
                     .ToList();
                 break;

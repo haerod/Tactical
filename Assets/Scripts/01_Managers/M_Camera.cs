@@ -145,6 +145,8 @@ public class M_Camera : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!Application.isPlaying) return; // EXIT : Editor is in edit mode.
+        
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(positionToReach, .5f);
     }
