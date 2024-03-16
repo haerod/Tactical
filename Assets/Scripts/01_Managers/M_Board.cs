@@ -3,10 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 using static M__Managers;
-using System;
 
 public class M_Board : MonoBehaviour
 {
@@ -14,7 +11,8 @@ public class M_Board : MonoBehaviour
 
     [SerializeField] private Transform charactersParent;
 
-    [HideInInspector] public List<Tile> grid;
+    [Header("DEBUG INFOS")]
+    public List<Tile> grid;
     public static M_Board instance;
 
     // ======================================================================
@@ -37,20 +35,6 @@ public class M_Board : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Bake the board tile and characters and set elements dirty.
-    /// CALLED IN EDITOR
-    /// </summary>
-    public void BakeBoard()
-    {
-        grid.Clear();
-        BakeTiles();
-        SortTilesInHierarchy();
-        BakeCharacters();
-        SortCharactersInHierarchy();
-        EditorUtility.SetDirty(this);
-    }
 
     /// <summary>
     /// Return tile at (x,y) coordinates.
@@ -117,107 +101,104 @@ public class M_Board : MonoBehaviour
         return toReturn;
     }
 
+    /// <summary>
+    /// Return all coordinates of the edges of a square of center x, y with a radius.
+    /// A radius of 0 returns the coordinates x,y.
+    /// </summary>
+    /// <param name="xCenter"></param>
+    /// <param name="yCenter"></param>
+    /// <param name="radius"></param>
+    /// <returns></returns>
+    public List<Vector2Int> GetEmptySquareCoordinates(int xCenter, int yCenter, int radius)
+    {
+        List<Vector2Int> toReturn = new List<Vector2Int>();
+
+        radius = Mathf.Abs(radius);
+        int edgeLenght = 2 * radius + 1;
+
+        if(radius == 0) // Distance = 0
+        {
+            toReturn.Add(new Vector2Int(xCenter, yCenter));
+            return toReturn;
+        }
+
+        for (int i = 0; i < edgeLenght; i++) // Top line
+        {
+            toReturn.Add(new Vector2Int(xCenter - radius, yCenter - radius + i));
+        }
+
+        for (int i = 0; i < edgeLenght; i++) // Bot line
+        {
+            toReturn.Add(new Vector2Int(xCenter + radius, yCenter - radius + i));
+        }
+
+        for (int i = 0; i < edgeLenght - 2; i++) // Left line
+        {
+            toReturn.Add(new Vector2Int(xCenter - (radius - 1) + i, yCenter - radius));
+        }
+
+        for (int i = 0; i < edgeLenght - 2; i++) // Right line
+        {
+            toReturn.Add(new Vector2Int(xCenter - (radius - 1) + i, yCenter + radius));
+        }
+
+        return toReturn;
+    }
+
+    /// <summary>
+    /// Return all the coordinates of square's points of centrer x,y with a radius.
+    /// A radius of 0 returns the coordinates x,y.
+    /// </summary>
+    /// <param name="xCenter"></param>
+    /// <param name="yCenter"></param>
+    /// <param name="radius"></param>
+    /// <returns></returns>
+
+    public List<Vector2Int> GetFullSquareCoordinates(int xCenter, int yCenter, int radius)
+    {
+        List<Vector2Int> toReturn = new List<Vector2Int>();
+
+        radius = Mathf.Abs(radius);
+
+        for (int i = 0; i < radius; i++)
+        {
+            toReturn.AddRange(GetEmptySquareCoordinates(xCenter, yCenter, i));
+        }
+
+        return toReturn;
+    }
+
+    /// <summary>
+    /// Returns the closest coordinates where there is no tile.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public Vector2Int GetClosestCoordinatesWithoutTile(int x, int y)
+    {
+        Vector2Int toReturn = new Vector2Int(x,y);
+
+        int distance = 1;
+
+        while (toReturn.x == x && toReturn.y == y)
+        {
+            List<Vector2Int> aroundCoordinates = GetEmptySquareCoordinates(x, y, distance);
+
+            foreach (Vector2Int coordinate in aroundCoordinates)
+            {
+                if (GetTileAtCoordinates(coordinate.x, coordinate.y)) continue;
+
+                toReturn.x = coordinate.x;
+                toReturn.y = coordinate.y;
+            }
+
+            distance++;
+        }
+
+        return toReturn;
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Bake tiles in the grid, position it and give them parameters.
-    /// </summary>
-    private void BakeTiles()
-    {
-        foreach (Transform item in transform)
-        {
-            Tile tile = item.GetComponent<Tile>();
-            tile.x = Mathf.RoundToInt(item.position.x);
-            tile.y = Mathf.RoundToInt(item.position.z);
-
-            tile.name = string.Format("{1},{2} - {0}", tile.type, tile.x, tile.y);
-            tile.name = tile.name.Replace("(TileType)", "");
-            tile.transform.position = new Vector3(tile.x, 0, tile.y);
-
-            if (!grid.Contains(tile))
-                grid.Add(tile);
-
-            // CHECK ERROR : Double tiles
-            List<Tile> check = grid
-                .Where(o => o != tile && o.x == tile.x && o.y == tile.y)
-                .ToList();
-
-            if (check.Count != 0)
-            {
-                foreach (Tile t in check)
-                {
-                    Debug.LogError(string.Format("The tile with coordinates {0}, {1} haves a double. One was deleted.", tile.x, tile.y), tile.gameObject);
-                    grid.Remove(t);
-                    DestroyImmediate(t.gameObject);
-                }
-            }
-
-            EditorUtility.SetDirty(tile); // Save the tile modifications
-            EditorUtility.SetDirty(tile.transform); // Save the tile modifications
-            EditorUtility.SetDirty(tile.gameObject); // Save the tile modifications
-        }
-    }
-
-    /// <summary>
-    /// Sort tiles in hierarchy by coordinates.
-    /// </summary>
-    private void SortTilesInHierarchy()
-    {
-        List<Transform> count = transform
-            .Cast<Transform>()
-            .OrderBy(go => go.GetComponent<Tile>().x)
-            .ThenBy(go => go.GetComponent<Tile>().y)
-            .ToList();
-
-        for (int i = 0; i < count.Count; i++)
-        {
-            count[i].transform.SetSiblingIndex(i);
-        }
-    }
-
-    /// <summary>
-    /// Bake characters in the grid, give them coordinates and orientation.
-    /// </summary>
-    private void BakeCharacters()
-    {
-        M_Rules rules = FindAnyObjectByType<M_Rules>();
-
-        foreach (Transform item in charactersParent)
-        {
-            C__Character chara = item.GetComponent<C__Character>();
-            chara.move.x = Mathf.RoundToInt(item.position.x);
-            chara.move.y = Mathf.RoundToInt(item.position.z);
-
-            chara.transform.position = new Vector3(chara.move.x, 0, chara.move.y);
-            chara.infos.SetTeamMaterials();
-            
-            chara.name = string.Format("{0} ({2}) - Team {1}", 
-                chara.infos.designation, 
-                rules.teamInfos[chara.infos.team].teamName,
-                chara.behavior.playable ? "PC" : "NPC");
-
-            EditorUtility.SetDirty(chara.gameObject); // Save the character modifications
-            EditorUtility.SetDirty(chara.move); // Save the character modifications
-        }
-    }
-
-    /// <summary>
-    /// Sort characters in hierarchy depepending of team, PC/NPC and name.
-    /// </summary>
-    private void SortCharactersInHierarchy()
-    {
-        List<Transform> count = charactersParent
-            .Cast<Transform>()
-            .OrderBy(go => go.GetComponentInChildren<C_Infos>().team)
-            .ThenByDescending(go => go.GetComponentInChildren<C_Behavior>().playable)
-            .ThenBy(go => go.GetComponentInChildren<C_Infos>().name)
-            .ToList();
-
-        for (int i = 0; i < count.Count; i++)
-        {
-            count[i].transform.SetSiblingIndex(i);
-        }
-    }
 }

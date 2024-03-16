@@ -10,7 +10,7 @@ using UnityEditor;
 public class C_Move : MonoBehaviour
 {
     public int movementRange = 6;
-    public List<TileType> walakbleTiles;
+    public List<TileType> walkableTiles;
 
     [Header("ANIMATION")]
     [Range(0,10f)]
@@ -84,7 +84,7 @@ public class C_Move : MonoBehaviour
         if(c.CanPlay()) 
             range = c.movementRange;
 
-        currentArea = _pathfinding.AreaMovementZone(c.tile, range, c.move.walakbleTiles);
+        currentArea = _pathfinding.AreaMovementZone(c.tile, range, c.move.walkableTiles);
 
         if (Utils.IsVoidList(currentArea)) return; // No way to go with current action points && position
 
@@ -126,7 +126,17 @@ public class C_Move : MonoBehaviour
         endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
         c.transform.rotation = endRotation;
 
-        c.healthBar.GetComponentInParent<OrientToCamera>().Orient();
+        c.healthBar.GetComponentInParent<UI_OrientToCamera>().Orient();
+    }
+
+    /// <summary>
+    /// Return true if the character can walk on this type of tile.
+    /// </summary>
+    /// <param name="tileType"></param>
+    /// <returns></returns>
+    public bool CanWalkOn(TileType tileType)
+    {
+        return walkableTiles.Contains(tileType);
     }
 
     // ======================================================================

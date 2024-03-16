@@ -287,7 +287,7 @@ public class M_Input : MonoBehaviour
                             _characters.current.tile,
                             tile,
                             M_Pathfinding.TileInclusion.WithEnd,
-                            currentCharacter.move.walakbleTiles);
+                            currentCharacter.move.walkableTiles);
 
         // EXIT : No path
         if (Utils.IsVoidList(currentPathfinding))
@@ -369,7 +369,7 @@ public class M_Input : MonoBehaviour
         C__Character c = _characters.current;
 
         if (!tile) return false;
-        if (!c.move.walakbleTiles.Contains(tile.type)) return false;
+        if (!c.move.walkableTiles.Contains(tile.type)) return false;
         if (tile.x == c.move.x && tile.y == c.move.y) return false;
         return true;
     }   

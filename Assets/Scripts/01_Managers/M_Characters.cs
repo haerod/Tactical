@@ -7,8 +7,10 @@ using static M__Managers;
 
 public class M_Characters : MonoBehaviour
 {
-    [HideInInspector] public C__Character current;    
-    [HideInInspector] public List<C__Character> characters;
+    [Header("DEBUG")]
+    public C__Character current;    
+    public List<C__Character> characters;
+    
     public static M_Characters instance;
 
     // ======================================================================

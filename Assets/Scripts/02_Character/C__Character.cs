@@ -16,9 +16,11 @@ public class C__Character : MonoBehaviour
 
     public int team => Team();
     public int movementRange => move.movementRange;
+    public int x => move.x;
+    public int y => move.y;
 
     [HideInInspector] public Tile tile => Tile();
-    [SerializeField] private bool hasPlayed = false;
+    private bool hasPlayed = false;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -89,7 +91,10 @@ public class C__Character : MonoBehaviour
     /// <returns></returns>
     private Tile Tile()
     {
-        return _board.GetTileAtCoordinates(move.x, move.y);
+        if(_board) // M__Managers isn't initialized in editor
+            return _board.GetTileAtCoordinates(move.x, move.y);
+        else
+            return FindAnyObjectByType<M_Board>().GetTileAtCoordinates(move.x, move.y);
     }
 
 }
