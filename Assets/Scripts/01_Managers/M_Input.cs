@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +37,7 @@ public class M_Input : MonoBehaviour
     private void Update()
     {
         if (!canClick) return; // EXIT : Player can't click
-        if (EventSystem.current.IsPointerOverGameObject()) return; // EXIT : Pointer over UI
+        if (_ui.IsMouseOverUI()) return; // EXIT : Pointer over UI
 
         CheckRaycast();
         CheckClick();

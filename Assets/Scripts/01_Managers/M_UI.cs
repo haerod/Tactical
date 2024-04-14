@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
-using System;
 
 public class M_UI : MonoBehaviour
 {
@@ -80,6 +80,8 @@ public class M_UI : MonoBehaviour
         int sceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(sceneIndex);
     }
+
+    public bool IsMouseOverUI() => EventSystem.current.IsPointerOverGameObject();
 
     // ======================================================================
     // PRIVATE METHODS
