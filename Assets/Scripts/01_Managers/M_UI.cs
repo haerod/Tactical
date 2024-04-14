@@ -81,7 +81,11 @@ public class M_UI : MonoBehaviour
         SceneManager.LoadScene(sceneIndex);
     }
 
-    public bool IsMouseOverUI() => EventSystem.current.IsPointerOverGameObject();
+    /// <summary>
+    /// Return true if pointer is over UI. Else, return false.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
 
     // ======================================================================
     // PRIVATE METHODS

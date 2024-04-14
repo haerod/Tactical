@@ -10,7 +10,7 @@ public class M_Feedback : MonoBehaviour
 
     [SerializeField] private Texture2D aimCursor = null;
     [SerializeField] private Texture2D noLineOfSightCursor = null;
-    [SerializeField] private Texture2D outOfActionsCursor = null;
+    [SerializeField] private Texture2D cantGoCursor = null;
 
     [Header("REFERENCES")]
 
@@ -20,7 +20,7 @@ public class M_Feedback : MonoBehaviour
     [SerializeField] private GameObject actionEffectPrefab = null;
     public static M_Feedback instance;
     
-    public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutActionPoints } // /!\ If add/remove a cursor, update the SetCusror method
+    public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement } // /!\ If add/remove a cursor, update the SetCusror method
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -69,8 +69,8 @@ public class M_Feedback : MonoBehaviour
             case CursorType.OutAimOrSight:
                 Cursor.SetCursor(noLineOfSightCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
-            case CursorType.OutActionPoints:
-                Cursor.SetCursor(outOfActionsCursor, new Vector2(16, 16), CursorMode.Auto);
+            case CursorType.OutMovement:
+                Cursor.SetCursor(cantGoCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
             default:
                 break;

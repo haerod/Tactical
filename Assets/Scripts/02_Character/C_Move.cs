@@ -139,6 +139,13 @@ public class C_Move : MonoBehaviour
         return walkableTiles.Contains(tileType);
     }
 
+    /// <summary>
+    /// Return true if the path length (with end) is inferior to movement range.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public bool IsInPathInRange(List<Tile> path) => path.Count -1 <= movementRange;
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

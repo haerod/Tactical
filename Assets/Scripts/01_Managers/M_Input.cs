@@ -37,7 +37,7 @@ public class M_Input : MonoBehaviour
     private void Update()
     {
         if (!canClick) return; // EXIT : Player can't click
-        if (_ui.IsMouseOverUI()) return; // EXIT : Pointer over UI
+        if (_ui.IsPointerOverUI()) return; // EXIT : Pointer over UI
 
         CheckRaycast();
         CheckClick();
@@ -136,19 +136,16 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void CheckClick()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            // EXIT : Not on a tile
-            if (pointedTile == null) return; 
+        if (!Input.GetMouseButtonDown(0)) return; // EXIT : No click
+        if (pointedTile == null) return; // EXIT : Not on a tile
 
-            if(pointedTile.IsOccupiedByCharacter())
-            {
-                ClickAttack();
-            }
-            else
-            {
-                ClickMove();
-            }
+        if (pointedTile.IsOccupiedByCharacter())
+        {
+            ClickAttack();
+        }
+        else
+        {
+            ClickMove();
         }
     }
 
@@ -260,7 +257,7 @@ public class M_Input : MonoBehaviour
             }
             else
             {
-                _feedback.SetCursor(M_Feedback.CursorType.OutActionPoints);
+                _feedback.SetCursor(M_Feedback.CursorType.OutMovement);
             }
         }
         else
@@ -295,14 +292,8 @@ public class M_Input : MonoBehaviour
             return;
         }
 
-        int range;
-
-        if (currentCharacter.CanPlay())
-            range = currentCharacter.movementRange;
-        else
-            range = 0;
-
-        bool tileInMoveRange = (currentPathfinding.Count - 1) <= range;
+        bool tileInMoveRange = _characters.current.move.IsInPathInRange(currentPathfinding);
+        if (!currentCharacter.CanPlay()) tileInMoveRange = false;
 
         _feedback.square.SetSquare(pointedTile.transform.position, tileInMoveRange);
         _feedback.line.SetLines(
@@ -310,7 +301,10 @@ public class M_Input : MonoBehaviour
             currentCharacter, 
             pointedTile);
 
-        _feedback.SetCursor(M_Feedback.CursorType.Regular);
+        if (tileInMoveRange)
+            _feedback.SetCursor(M_Feedback.CursorType.Regular);
+        else
+            _feedback.SetCursor(M_Feedback.CursorType.OutMovement);
     }
 
     /// <summary>
@@ -318,7 +312,7 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void OnForbiddenTile()
     {
-        _feedback.SetCursor(M_Feedback.CursorType.Regular);
+        _feedback.SetCursor(M_Feedback.CursorType.OutMovement);
         ClearFeedbacksAndValues();
     }
 
@@ -347,7 +341,7 @@ public class M_Input : MonoBehaviour
     private void ClickMove()
     {
         if (currentPathfinding == null) return; // EXIT : It's no path
-        if (_characters.current.movementRange <= 0) return; // EXIT : no action points aviable
+        if (!_characters.current.move.IsInPathInRange(currentPathfinding)) return; // EXIT : click out of movement range
 
         _characters.current.move.MoveOnPath(currentPathfinding, () =>
         {
