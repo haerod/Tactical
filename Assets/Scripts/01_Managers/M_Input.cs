@@ -329,6 +329,7 @@ public class M_Input : MonoBehaviour
         _ui.percentText.DisablePercentShootText();
 
         if (currentTarget == null) return; // EXIT : There is no target
+        if(currentTarget.team == _characters.current.team) return; // EXIT : Same team
 
         // Attack
         c.attack.Attack(currentTarget);
