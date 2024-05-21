@@ -126,29 +126,6 @@ public class M_Pathfinding : MonoBehaviour
     }
 
     /// <summary>
-    /// Return the tiles around a tile (with a defined distance), considering the allowed tiles.
-    /// </summary>
-    /// <param name="startTile"></param>
-    /// <param name="distance"></param>
-    /// <returns></returns>
-    public List<Tile> AreaMovementZone(Tile startTile, int distance, List<Tile> blockers)
-    {
-        List<Tile> toReturn = new List<Tile>();
-
-        foreach (Tile tile in _board.GetTilesAround(startTile, distance, _rules.useDiagonals))
-        {
-            if (!tile)
-                continue;
-            if (blockers.Contains(tile))
-                continue;
-
-            toReturn.Add(tile);
-        }
-
-        return toReturn;
-    }
-
-    /// <summary>
     /// Return a line of sight from a tile to another one.
     /// Null tiles are holes.
     /// </summary>

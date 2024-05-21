@@ -52,21 +52,24 @@ public class C_Move : MonoBehaviour
 
         // Fog of war disabled
         if (!_rules.enableFogOfWar) 
-            return _pathfinding
-                .AreaMovementZone(c.tile, movementRange, Blockers())
+            return _board
+                .GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
+                .Except(Blockers())
                 .Where(t => !t.IsOccupiedByCharacter())
                 .ToList();
 
         // Fog of war && can walk in fog of war
         if (movementInFogOfWarAllowed)
-            return _pathfinding
-                .AreaMovementZone(c.tile, movementRange, Blockers())
+            return _board
+                .GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
+                .Except(Blockers())
                 .Where(t => !t.IsOccupiedByCharacter() || (t.IsOccupiedByCharacter() && !c.look.HasSightOn(t)))
                 .ToList();
 
         // Fog of war && can not walk in fog of war
-        return _pathfinding
-            .AreaMovementZone(c.tile, movementRange, Blockers())
+        return _board
+            .GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
+            .Except(Blockers())
             .Intersect(c.look.VisibleTiles())
             .Where(t => !t.IsOccupiedByCharacter())
             .ToList();
