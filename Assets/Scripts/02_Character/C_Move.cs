@@ -22,9 +22,9 @@ public class C_Move : MonoBehaviour
     [SerializeField] private float animSpeed = .5f;
 
     [Header("COORDINATES (debug)")]
-    public int x = 1;
-    public int y = 1;
-    
+    public int x = 1; // Let it serialized to set it dirty.
+    public int y = 1; // Let it serialized to set it dirty.
+
     [Header("REFERENCES")]
 
     [SerializeField] private Animator anim = null;
