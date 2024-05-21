@@ -103,7 +103,7 @@ public class M_Feedback : MonoBehaviour
     /// <summary>
     /// Show visible elements of the fog of war.
     /// </summary>
-    public void ShowVisibleElements(List<Tile> visibleTiles) => _feedback.SetFogVisualsActive(true, visibleTiles);
+    public void ShowVisibleElements(List<Tile> visibleTiles) => SetFogVisualsActive(true, visibleTiles);
 
     /// <summary>
     /// Set cursor to its new appearance.
@@ -147,7 +147,8 @@ public class M_Feedback : MonoBehaviour
     /// </summary>
     public void SetFogVisualsActive(bool value, List<Tile> tilesInView = null)
     {
-        if (!_rules.enableFogOfWar) return; // EXIT : No fog of war
+        if (!_rules.enableFogOfWar) 
+            return; // No fog of war
 
         if (value)
         {

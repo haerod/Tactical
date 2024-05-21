@@ -153,10 +153,10 @@ public class C_Look : MonoBehaviour
     private List<Tile> GetVisibleTiles()
     {
         List<Tile> toReturn =
-            _pathfinding.ZoneAround(c.tile, range, false)
-            .Where(o => HasSightOn(o))
-            .Where(o => !visualObstacles.Contains(o.type))
-            .ToList();
+            _board.GetTilesAround(c.tile, range, false)
+                .Where(o => HasSightOn(o))
+                .Where(o => !visualObstacles.Contains(o.type))
+                .ToList();
 
         toReturn.Add(c.tile);
 

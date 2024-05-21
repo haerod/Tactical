@@ -24,33 +24,33 @@ public class F_ViewLines : MonoBehaviour
     {
         viewArea = tilesInView;
 
-        foreach (Tile t in tilesInView)
+        foreach (Tile tile in tilesInView)
         {
-            t.SetFogMaskActive(true);
+            tile.SetFogMaskActive(true);
 
             // 4 tiles around if they are in tilesInView too
             List<Tile> aroundTiles = _board
-                .GetTilesAround(t, true)
+                .GetTilesAround(tile, 1, false)
                 .Intersect(tilesInView)
                 .ToList();
 
             if (aroundTiles.Count == 4) continue; // CONTINUE : Is framed tile
 
-            if (!tilesInView.Contains(_board.GetTileWithOffset(0, 1, t)))
+            if (!tilesInView.Contains(_board.GetTileWithOffset(0, 1, tile)))
             {
-                t.EnableViewLine(Tile.Directions.Top);
+                tile.EnableViewLine(Tile.Directions.Top);
             }
-            if (!tilesInView.Contains(_board.GetTileWithOffset(0, -1, t)))
+            if (!tilesInView.Contains(_board.GetTileWithOffset(0, -1, tile)))
             {
-                t.EnableViewLine(Tile.Directions.Down);
+                tile.EnableViewLine(Tile.Directions.Down);
             }
-            if (!tilesInView.Contains(_board.GetTileWithOffset(1, 0, t)))
+            if (!tilesInView.Contains(_board.GetTileWithOffset(1, 0, tile)))
             {
-                t.EnableViewLine(Tile.Directions.Right);
+                tile.EnableViewLine(Tile.Directions.Right);
             }
-            if (!tilesInView.Contains(_board.GetTileWithOffset(-1, 0, t)))
+            if (!tilesInView.Contains(_board.GetTileWithOffset(-1, 0, tile)))
             {
-                t.EnableViewLine(Tile.Directions.Left);
+                tile.EnableViewLine(Tile.Directions.Left);
             }
         }
     }

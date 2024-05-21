@@ -71,41 +71,39 @@ public class M_Board : MonoBehaviour
     public Tile GetTileWithOffset(int xOffset, int yOffset, Tile tile) => GetTileAtCoordinates(tile.x + xOffset, tile.y + yOffset);
 
     /// <summary>
-    /// Return all the existing tiles around a tile.
+    /// Return the tiles around the start tile, with a radius.
     /// </summary>
-    /// <param name="tile"></param>
-    /// <param name="forceNoDiagonals"></param>
+    /// <param name="startTile"></param>
+    /// <param name="radius"></param>
     /// <returns></returns>
-    public List<Tile> GetTilesAround(Tile tile, bool forceNoDiagonals = false)
+    public List<Tile> GetTilesAround(Tile startTile, int distance, bool useDiagonals)
     {
         List<Tile> toReturn = new List<Tile>();
-        bool useDiagonals = _rules.useDiagonals;
 
-        if (forceNoDiagonals) // Force no diagonals
-            useDiagonals = false;
+        for (int x = -distance; x <= distance; x++)
+        {
+            for (int y = -distance; y <= distance; y++)
+            {
+                Tile tile = _board.GetTileAtCoordinates(x + startTile.x, y + startTile.y);
 
-        toReturn.Add(GetTileWithOffset(0, -1, tile));
+                if (!tile)
+                    continue; // No tile
+                if (tile == startTile)
+                    continue; // Start tile
+                if (useDiagonals)
+                {
+                    toReturn.Add(tile);
+                    continue; // Not using diagonals
+                }
 
-        if (useDiagonals)
-            toReturn.Add(GetTileWithOffset(-1, -1, tile));
+                int testDistance = Mathf.Abs(x) + Mathf.Abs(y);
 
-        toReturn.Add(GetTileWithOffset(-1, 0, tile));
+                if (testDistance > distance)
+                    continue; // Not in diagonal
 
-        if (useDiagonals)
-            toReturn.Add(GetTileWithOffset(-1, 1, tile));
-
-        toReturn.Add(GetTileWithOffset(0, 1, tile));
-
-        if (useDiagonals)
-            toReturn.Add(GetTileWithOffset(1, 1, tile));
-
-        toReturn.Add(GetTileWithOffset(1, 0, tile));
-
-        if (useDiagonals)
-            toReturn.Add(GetTileWithOffset(1, -1, tile));
-
-        //Remove null tiles
-        toReturn = toReturn.Where(o => o != null).ToList();
+                toReturn.Add(tile);
+            }
+        }
 
         return toReturn;
     }

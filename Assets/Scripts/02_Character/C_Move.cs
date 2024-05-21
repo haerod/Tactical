@@ -81,7 +81,7 @@ public class C_Move : MonoBehaviour
         List<Tile> toReturn = new List<Tile>();
 
         // Add not walkableTiles
-        toReturn.AddRange(_pathfinding.ZoneAround(c.tile, movementRange, _rules.useDiagonals)
+        toReturn.AddRange(_board.GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
             .Where(t => !CanWalkOn(t.type))
             .ToList());
 

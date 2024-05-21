@@ -78,7 +78,7 @@ public class M_Pathfinding : MonoBehaviour
             // Put all tiles in around list
             aroundList.Clear();
             _board
-                .GetTilesAround(currentTile)
+                .GetTilesAround(currentTile, 1, _rules.useDiagonals)
                 .Except(closedList)
                 .ToList()
                 .ForEach(tile => aroundList.Add(tile));
@@ -135,7 +135,7 @@ public class M_Pathfinding : MonoBehaviour
     {
         List<Tile> toReturn = new List<Tile>();
 
-        foreach (Tile tile in ZoneAround(startTile, distance, _rules.useDiagonals))
+        foreach (Tile tile in _board.GetTilesAround(startTile, distance, _rules.useDiagonals))
         {
             if (!tile)
                 continue;
@@ -143,44 +143,6 @@ public class M_Pathfinding : MonoBehaviour
                 continue;
 
             toReturn.Add(tile);
-        }
-
-        return toReturn;
-    }
-
-    /// <summary>
-    /// Return the tiles around the start tile, with a radius.
-    /// </summary>
-    /// <param name="startTile"></param>
-    /// <param name="radius"></param>
-    /// <returns></returns>
-    public List<Tile> ZoneAround(Tile startTile, int radius, bool useDiagonals)
-    {
-        List<Tile> toReturn = new List<Tile>();
-
-        for (int x = -radius; x <= radius; x++)
-        {
-            for (int y = -radius; y <= radius; y++)
-            {
-                Tile tile = _board.GetTileAtCoordinates(x + startTile.x, y + startTile.y);
-
-                if (!tile)
-                    continue; // No tile
-                if (tile == startTile)
-                    continue; // Start tile
-                if (useDiagonals)
-                {
-                    toReturn.Add(tile);
-                    continue; // Not using diagonals
-                }
-
-                int testDistance = Mathf.Abs(x) + Mathf.Abs(y);
-
-                if (testDistance > radius)
-                    continue; // Not in diagonal
-
-                toReturn.Add(tile);
-            }
         }
 
         return toReturn;
