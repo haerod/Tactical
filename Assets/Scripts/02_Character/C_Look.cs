@@ -9,6 +9,8 @@ public class C_Look : MonoBehaviour
 {
     [SerializeField] private int range = 5;
     [SerializeField] private List<TileType> visualObstacles = null;
+    public enum VisionType { SingleVision, GroupVision}
+    public VisionType visionType = VisionType.GroupVision;
 
     [Header("REFERENCES")]
     [SerializeField] private C__Character c = null;
@@ -22,20 +24,52 @@ public class C_Look : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Enable the view tiles.
+    /// Return all tiles in view depending the rules.
     /// </summary>
-    public void EnableViewTiles()
+    /// <returns></returns>
+    public List<Tile> VisibleTiles()
     {
-        List<Tile> aroundTiles = _pathfinding.AroundTiles(c.tile, range, true);
+        List<Tile> toReturn = new List<Tile>();
 
-        // Find all tiles in view
-        List<Tile> toEnable =
-            _pathfinding.AroundTiles(c.tile, range, true)
-            .Where(o => HasSightOn(o))
-            .Where(o => !visualObstacles.Contains(o.type))
+        if (visionType == VisionType.SingleVision)
+            return GetVisibleTiles()
+                .ToList();
+
+        else if(visionType == VisionType.GroupVision)
+        {
+            _characters
+                .GetTeam(c, false, false, false)
+                .ForEach(chara => toReturn.AddRange(chara.look.GetVisibleTiles()));
+
+            toReturn = toReturn
+                .Distinct()
+                .ToList();
+        }
+
+        return toReturn;
+    }
+
+    /// <summary>
+    /// Return the other characters visible by this character, depending the rules.
+    /// </summary>
+    /// <returns></returns>
+    public List<C__Character> CharactersInView()
+    {
+        return _characters.characters
+            .Where(chara =>
+            {
+                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
+                    return true;
+                else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
+                    return VisibleTiles().Contains(chara.tile) || c.team == _characters.current.team;
+                else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
+                    return VisibleTiles().Contains(c.tile);
+                else
+                    Debug.LogError("No rule, please add one here.");
+
+                return false;
+            })
             .ToList();
-
-        _feedback.SetViewLinesActive(true, toEnable);
     }
 
     /// <summary>
@@ -48,11 +82,11 @@ public class C_Look : MonoBehaviour
         List<Tile> los = LineOfSight(tile);
 
         if (AreObstaclesOn(los))
-            return false; // Exit : obstacles
+            return false; // Obstacles
         if (los.Count + 1 > range)
-            return false; // Exit : out of range
+            return false; // Out of range
 
-        return true; // Exit : has sight on target
+        return true; // Has sight on target
     }
 
     /// <summary>
@@ -60,10 +94,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
-    public List<Tile> LineOfSight(Tile targetTile)
-    {
-        return _pathfinding.LineOfSight(c.tile, targetTile).ToList();
-    }
+    public List<Tile> LineOfSight(Tile targetTile) => _pathfinding.LineOfSight(c.tile, targetTile).ToList();
 
     /// <summary>
     /// Return the closest enemy on sight.
@@ -113,5 +144,22 @@ public class C_Look : MonoBehaviour
         }
 
         return false; // EXIT : No obstacle.
+    }
+
+    /// <summary>
+    /// Return all tiles in view of THIS character.
+    /// </summary>
+    /// <returns></returns>
+    private List<Tile> GetVisibleTiles()
+    {
+        List<Tile> toReturn =
+            _pathfinding.ZoneAround(c.tile, range, false)
+            .Where(o => HasSightOn(o))
+            .Where(o => !visualObstacles.Contains(o.type))
+            .ToList();
+
+        toReturn.Add(c.tile);
+
+        return toReturn;
     }
 }

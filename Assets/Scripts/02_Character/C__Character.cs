@@ -31,6 +31,18 @@ public class C__Character : MonoBehaviour
     // ======================================================================
 
     /// <summary>
+    /// Move the character at coordinates in world space and set Move to values.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void MoveAt(int x, int y)
+    {
+        move.x = x;
+        move.y = y;
+        transform.position = new Vector3(x, 0, y);
+    }
+
+    /// <summary>
     /// Return the team of this character.
     /// </summary>
     /// <returns></returns>
@@ -51,35 +63,40 @@ public class C__Character : MonoBehaviour
     /// <summary>
     /// Enable the feedbacks on the movable tiles and the attackable tiles.
     /// </summary>
-    public void EnableTilesFeedbacks(bool showTiles = true)
+    public void EnableTilesFeedbacks()
     {
-        _feedback.SetViewLinesActive(false);
-        look.EnableViewTiles();
-        attack.EnableAttackTiles();
+        _feedback.SetFogVisualsActive(false);
+        _feedback.ShowVisibleElements(look.VisibleTiles());
 
-        if (!showTiles) return;
+        if (!behavior.playable) 
+            return; // NPC
+        if(!CanPlay()) 
+            return; // Can't play
 
-        move.EnableMoveArea();
+        _feedback.ShowAttackableTiles(attack.AttackableTiles());
+        _feedback.ShowMovementArea(move.MovementArea());
     }
 
     /// <summary>
     /// Clear the feedbacks on the movable tiles and the attackable tiles and clear the linked lists.
     /// </summary>
-    public void ClearTilesFeedbacks()
+    public void HideTilesFeedbacks()
     {
-        move.ClearAreaZone();
-        attack.ClearAttackTiles();
+        _feedback.HideMovementArea();
+        _feedback.HideAttackableTiles();
     }
 
-    public bool CanPlay()
-    {
-        return !hasPlayed;
-    }
+    /// <summary>
+    /// Return if the character has already play.
+    /// </summary>
+    /// <returns></returns>
+    public bool CanPlay() => !hasPlayed;
 
-    public void SetCanPlayValue(bool value)
-    {
-        hasPlayed = !value;
-    }
+    /// <summary>
+    /// Set hasPlay to true or false;
+    /// </summary>
+    /// <param name="value"></param>
+    public void SetCanPlayValue(bool value) => hasPlayed = !value;
 
     // ======================================================================
     // PRIVATE METHODS

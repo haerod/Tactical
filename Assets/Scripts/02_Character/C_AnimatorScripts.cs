@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class C_AnimatorScripts : MonoBehaviour
 {
     [Header("REFERENCES")]
 
     public C__Character c;
-    public Animator anim;
+
+    [SerializeField] private Animator anim = null;
+    [SerializeField] private List<GameObject> visuals = null;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -66,6 +69,15 @@ public class C_AnimatorScripts : MonoBehaviour
     public void Death()
     {
         anim.SetBool("death", true);
+    }
+
+    /// <summary>
+    /// Enable or disable visuals of the characters.
+    /// </summary>
+    public void SetVisualActives(bool value)
+    {
+        visuals
+            .ForEach(o => o.SetActive(value));
     }
 
     // ======================================================================

@@ -1,16 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
 [ExecuteInEditMode]
 public class TileAutoSnap : MonoBehaviour
 {
-    private Tile tile;
-    private M_Board board;
+    public Tile tile { get; private set; }
 
-    private Vector3 previousPosition;
+    [HideInInspector] public M_Board board;
+    [HideInInspector] public bool isLocated; // Note : Let it public to be dirty.
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -20,36 +20,58 @@ public class TileAutoSnap : MonoBehaviour
     {
         if (Application.isPlaying)
         {
-            Destroy(this);
-            return;
-        }
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null) return;
+            if (!isLocated)
+                Destroy(gameObject);
 
-        SetBaseParameters();
-        SetParent();
-        SetBaseCoordinates();
-        AddToManager();
+            Destroy(this);    
+            return; // Play mode
+        }
+        if (PrefabStageUtility.GetCurrentPrefabStage() != null) 
+            return; // Play mode
+
+        tile = GetComponent<Tile>();
+        board = FindAnyObjectByType<M_Board>();
+        transform.parent = board.transform;         
+        transform.hasChanged = true;
     }
 
     private void Update()
     {
-        if (Application.isPlaying) return;
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null) return;
+        if (Application.isPlaying)
+            return; // Play mode
+        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+            return; // Prefab mode
+        if (!transform.hasChanged)
+            return; // Didnt move
 
-        if(AreModifications())
-        {
-            MoveTileAt(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-            AutofixTileSuperposition();
-            UpdateModificationValues();
-        }
+        CheckGridPosition();
+
+        EditorUtility.SetDirty(this);
+        EditorUtility.SetDirty(gameObject);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (isLocated)
+            return; // Is located
+
+        Gizmos.color = Color.red;
+        Vector3 cubeSize = Vector3.one;
+        cubeSize.y = .2f;
+        Gizmos.DrawCube(transform.position, cubeSize);
     }
 
     private void OnDestroy()
     {
-        if (Application.isPlaying) return;
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null) return;
+        if (Application.isPlaying) 
+            return; // Play mode
+        if (PrefabStageUtility.GetCurrentPrefabStage() != null) 
+            return; // Prefab mode
+        if (!board)
+            return; // Exit prefab mode
 
-        RemoveFromManagersList();
+        board.tileGrid.RemoveTile(tile);
+        EditorUtility.SetDirty(board);
     }
 
     // ======================================================================
@@ -61,114 +83,53 @@ public class TileAutoSnap : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Check for modifications in the position.
+    /// Check if it collides a tile
     /// </summary>
     /// <returns></returns>
-    private bool AreModifications() => previousPosition != transform.position;
-
-    /// <summary>
-    /// Update the modification checkers values.
-    /// </summary>
-    private void UpdateModificationValues()
+    private bool IsCollidingAnotherTile()
     {
-        previousPosition = transform.position;
-        EditorUtility.SetDirty(this);
-    }
+        Collider[] colliders = Physics.OverlapBox(transform.position, Vector3.one * .4f);
 
-    /// <summary>
-    /// When two tiles are at the same position, automatically reposition it at the closest free position.
-    /// </summary>
-    private void AutofixTileSuperposition()
-    {
-        Tile sameTile = board.grid
-            .Where(o => o != tile && o.x == tile.x && o.y == tile.y)
-            .FirstOrDefault();
-
-        if (sameTile)
+        foreach (Collider collider in colliders)
         {
-            Vector2Int closestFreeCoordinates = board.GetClosestCoordinatesWithoutTile(tile.x, tile.y);
-            MoveTileAt(closestFreeCoordinates.x, closestFreeCoordinates.y);
+            Tile testedTile = collider.GetComponent<Tile>();
+
+            if (!testedTile)
+                continue; // No tile
+            if (testedTile == tile)
+                continue; // Same tile
+
+            return true;
         }
+
+        return false;
     }
 
     /// <summary>
-    /// Move tile position at the asked coordinates.
-    /// Rename the element.
-    /// Set the new elements dirty.
+    /// Check if the tile is snapping somewhere
     /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    private void MoveTileAt(int x, int y)
+    private void CheckGridPosition()
     {
-        tile.x = x;
-        tile.y = y;
-        tile.transform.position = new Vector3(tile.x, 0, tile.y);
+        Vector2Int coordinates = new Vector2Int(
+                Mathf.RoundToInt(transform.position.x),
+                Mathf.RoundToInt(transform.position.z));
 
-        tile.name = string.Format("{1},{2} - {0}", tile.type, tile.x, tile.y);
-        tile.name = tile.name.Replace("(TileType)", "");
+        board.tileGrid.RemoveTile(tile);
 
-        EditorUtility.SetDirty(tile); // Save the tile modifications
-        EditorUtility.SetDirty(tile.transform); // Save the tile modifications
-        EditorUtility.SetDirty(tile.gameObject); // Save the tile modifications
-    }
-
-    /// <summary>
-    /// Set the element parent.
-    /// </summary>
-    private void SetParent()
-    {
-        transform.parent = board.transform;
-    }
-
-    /// <summary>
-    /// Set the basic parameters.
-    /// </summary>
-    private void SetBaseParameters()
-    {
-        tile = GetComponent<Tile>();
-        board = FindAnyObjectByType<M_Board>();
-        EditorUtility.SetDirty(this);
-    }
-
-    /// <summary>
-    /// Add the element to its manager.
-    /// </summary>
-    private void AddToManager()
-    {
-        if (!board.grid.Contains(tile))
+        if (IsCollidingAnotherTile())
         {
-            board.grid.Add(tile);
-            EditorUtility.SetDirty(board);
+            isLocated = false;
         }
-    }
-
-    /// <summary>
-    /// Set the base coordinates of the element.
-    /// </summary>
-    private void SetBaseCoordinates()
-    {
-        Tile tileAtCoordinates = board.GetTileAtCoordinates(tile.x, tile.y);
-
-        if (tileAtCoordinates && tileAtCoordinates != tile)
+        else
         {
-            Vector2Int freeCoordinates = board.GetClosestCoordinatesWithoutTile(tile.x, tile.y);
-            tile.x = freeCoordinates.x;
-            tile.y = freeCoordinates.y;
-
-            previousPosition = new Vector3(freeCoordinates.x, 0, freeCoordinates.y);
-            EditorUtility.SetDirty(this);
+            tile.Setup(coordinates);
+            tile.MoveAtGridPosition(coordinates.x, coordinates.y);
+            board.tileGrid.AddTile(tile);
+            isLocated = true;
         }
-    }
 
-    /// <summary>
-    /// Remove the object for its manager's list.
-    /// </summary>
-    private void RemoveFromManagersList()
-    {
-        if (board) // Called on exit of the prefab stage
-        {
-            board.grid.Remove(tile);
-            EditorUtility.SetDirty(board);
-        }
+        transform.hasChanged = false;
+
+        EditorUtility.SetDirty(board);
     }
 }

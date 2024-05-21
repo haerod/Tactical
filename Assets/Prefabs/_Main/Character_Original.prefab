@@ -46,7 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   designation: Name
   team: {fileID: 11400000, guid: ca99a341737608f4898402b1657e9567, type: 2}
-  c: {fileID: 3541061014796538876}
   rend1: {fileID: 5193888126871477251}
   rend2: {fileID: 813525511553365662}
 --- !u!1 &2089087891139880543
@@ -561,6 +560,7 @@ MonoBehaviour:
   movementRange: 6
   walkableTiles:
   - {fileID: 11400000, guid: 859aa0936407b9943a71c17934cc4d62, type: 2}
+  movementInFogOfWarAllowed: 1
   speed: 6.5
   animSpeed: 1
   x: 1
@@ -614,6 +614,7 @@ MonoBehaviour:
   range: 7
   visualObstacles:
   - {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
+  visionType: 1
   c: {fileID: 3541061014796538876}
 --- !u!1 &7861959537881807382
 GameObject:
@@ -768,6 +769,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ybot (anim)
       objectReference: {fileID: 0}
+    - target: {fileID: 1082271958561512970, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5822821947120931875, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -824,14 +829,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   c: {fileID: 3541061014796538876}
   anim: {fileID: 1790941775955150882}
+  visuals:
+  - {fileID: 2768211447390340978}
+  - {fileID: 5602950855472273378}
+  - {fileID: 1720292125215168042}
+  - {fileID: 5364162270567414129}
+--- !u!1 &1720292125215168042 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1082271958561512970, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
+  m_PrefabInstance: {fileID: 1790941775955150880}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2256318201145831371 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
   m_PrefabInstance: {fileID: 1790941775955150880}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2768211447390340978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -4706228988682842286, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
+  m_PrefabInstance: {fileID: 1790941775955150880}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &5193888126871477251 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5822821947120931875, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
+  m_PrefabInstance: {fileID: 1790941775955150880}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5602950855472273378 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3090848061168836670, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
   m_PrefabInstance: {fileID: 1790941775955150880}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3331233582057166460
@@ -1033,6 +1058,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a70d915e0d8df43a2240116f7c9754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5364162270567414129 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7227079351083708173, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
+  m_PrefabInstance: {fileID: 3331233582057166460}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5364162271039580364 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7227079351546904240, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}

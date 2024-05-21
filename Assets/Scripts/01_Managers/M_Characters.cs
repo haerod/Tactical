@@ -87,7 +87,7 @@ public class M_Characters : MonoBehaviour
     {
         // Old character
         if(current)
-            current.ClearTilesFeedbacks();
+            current.HideTilesFeedbacks();
 
         // Inputs
         _input.ClearFeedbacksAndValues();
@@ -96,25 +96,27 @@ public class M_Characters : MonoBehaviour
         current = newCurrentCharacter;
 
         // Camera
-        _camera.target = current.transform;
+        _camera.SetTarget(current.transform);
         _camera.ResetPosition();
 
         // Character
-        current.ClearTilesFeedbacks();
+        current.HideTilesFeedbacks();
 
-        if(current.behavior.playable) // Playable character (PC)
+        // Playable character (PC)
+        if (current.behavior.playable) 
         {
             _input.SetActiveClick();
             _ui.SetActivePlayerUI_Turn(true);
-            current.EnableTilesFeedbacks();
         }
-        else // Non playable character (NPC)
+        // Non playable character (NPC)
+        else
         {
             _input.SetActiveClick(false);
             _ui.SetActivePlayerUI_Turn(false);
             current.behavior.PlayBehavior();
-            current.EnableTilesFeedbacks(false);
         }
+
+        current.EnableTilesFeedbacks();
     }
 
     /// <summary>
@@ -163,6 +165,12 @@ public class M_Characters : MonoBehaviour
         return team;
     }
 
+    /// <summary>
+    /// Return the team playable characters.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="excludeCharacter"></param>
+    /// <returns></returns>
     public List<C__Character> GetTeamPC(C__Character character, bool excludeCharacter = false)
     {
         List<C__Character> team = characters
@@ -176,6 +184,12 @@ public class M_Characters : MonoBehaviour
         return team;
     }
 
+    /// <summary>
+    /// Return the team non playable characters.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="excludeCharacter"></param>
+    /// <returns></returns>
     public List<C__Character> GetTeamNPC(C__Character character, bool excludeCharacter = false)
     {
         List<C__Character> team = characters

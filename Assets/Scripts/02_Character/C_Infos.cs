@@ -44,6 +44,13 @@ public class C_Infos : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Return if the character in parameter is in the same team than this character.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool IsAlliedTo(C__Character other) => team == other.team;
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

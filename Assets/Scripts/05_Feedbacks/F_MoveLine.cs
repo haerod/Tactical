@@ -27,44 +27,39 @@ public class F_MoveLine : MonoBehaviour
     /// <param name="path"></param>
     /// <param name="character"></param>
     /// <param name="endTile"></param>
-    public void SetLines(List<Tile> path, C__Character character, Tile endTile)
+    public void SetLines(List<Tile> path, int movementRange, Tile endTile)
     {
-        int actionPoints = character.movementRange;
+        bool isEndTileInMovementRange = path.Count - 1 <= movementRange;
 
-        // Target tile is in/out action points' range
-        if (path.Count - 1 > actionPoints) // Out
-        {
-            line.positionCount = actionPoints + 1;
-            lineOut.gameObject.SetActive(true);
-            lineOut.positionCount = path.Count - actionPoints;
-        }
-        else // IN
-        {
-            lineOut.gameObject.SetActive(false);
+        //Set line in and out active
+        line.gameObject.SetActive(true);
+        lineOut.gameObject.SetActive(!isEndTileInMovementRange);
+
+        if (isEndTileInMovementRange)
             line.positionCount = path.Count;
+        else
+        {
+            line.positionCount = movementRange + 1;
+            lineOut.positionCount = path.Count - movementRange;
         }
 
         // Position line's points
         int i = 0;
-        foreach (Tile t in path)
-        {
-            if (i <= actionPoints)
-            {
-                line.SetPosition(i, t.transform.position + Vector3.up * lineOffset);
-            }
-            else
-            {
-                if (i == actionPoints + 1)
+        path
+            .ForEach(tile => {
+                if (i <= movementRange)
+                    line.SetPosition(i, tile.transform.position + Vector3.up * lineOffset);
+                else
                 {
-                    lineOut.SetPosition(i - (actionPoints + 1), path[i - 1].transform.position + Vector3.up * lineOffset);
+                    if (i == movementRange + 1)
+                    {
+                        lineOut.SetPosition(i - (movementRange + 1), path[i - 1].transform.position + Vector3.up * lineOffset);
+                    }
+                    lineOut.SetPosition(i - (movementRange), tile.transform.position + Vector3.up * lineOffset);
                 }
-                lineOut.SetPosition(i - (actionPoints), t.transform.position + Vector3.up * lineOffset);
-            }
 
-            i++;
-        }
-
-        line.gameObject.SetActive(true);
+                i++;
+            });
     }
 
     /// <summary>

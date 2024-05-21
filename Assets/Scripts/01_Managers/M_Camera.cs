@@ -28,7 +28,7 @@ public class M_Camera : MonoBehaviour
     private float currentTime;
     private Vector3 positionToReach;
     private Vector3 startPosition;
-    public Transform target;
+    private Transform target;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -55,6 +55,11 @@ public class M_Camera : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
+    }
 
     /// <summary>
     /// Move the camera in the given direction.
@@ -110,10 +115,10 @@ public class M_Camera : MonoBehaviour
 
         transform.position = cameraPoz;
 
-        float xMin = _board.grid.OrderBy(o => o.x).FirstOrDefault().transform.position.x;
-        float xMax = _board.grid.OrderByDescending(o => o.x).FirstOrDefault().transform.position.x;
-        float zMin = _board.grid.OrderBy(o => o.y).FirstOrDefault().transform.position.z;
-        float zMax = _board.grid.OrderByDescending(o => o.y).FirstOrDefault().transform.position.z;
+        float xMin = _board.tileGrid.lowestX;
+        float xMax = _board.tileGrid.higherX;
+        float zMin = _board.tileGrid.lowestY;
+        float zMax = _board.tileGrid.higherY;
 
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, xMin + xOffset, xMax + xOffset),

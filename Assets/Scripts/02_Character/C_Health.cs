@@ -60,12 +60,13 @@ public class C_Health : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Start the death anim, inform M_Characters of the death and disable the life bar after a second
+    /// Start the death anim, inform M_Characters of the death and disable the life bar after a second and the collider
     /// </summary>
     private void Death()
     {
         c.anim.Death();
         _characters.RemoveDeadCharacter(c);
+        c.GetComponentInChildren<Collider>().gameObject.SetActive(false);
         Wait(1, () => { c.healthBar.SetLifeBarActive(false); });
     }
 

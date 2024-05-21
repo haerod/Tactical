@@ -1,41 +1,37 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using static M__Managers;
 
 public class Tile : MonoBehaviour
 {
-    [Header("COORDINATES (debug)")]
-
-    public int x;
-    public int y;
-
     [Header("PROPERTIES")]
 
     public TileType type;
 
-    [Header("PATHFININDING VALUES (debug)")]
-    public int cost;
-    public int heuristic; // heuristic (10 = adjacent, 14 = diagonal)
-    public int f; // f = cost + heuristic
-    public Tile parent;
+    [Header("COORDINATES")]
 
-    [Header("MATERIALS (debug)")]
-    [SerializeField] private Material basic = null;
-    [SerializeField] private Material open = null;
-    [SerializeField] private Material closed = null;
-    [SerializeField] private Material path = null;
-    [SerializeField] private Material area = null;
-    [SerializeField] private Material attackable = null;
-    [SerializeField] private Material range = null;
+    public int x; // Let it serialized to let Tile be dirty.
+    public int y; // Let it serialized to let Tile be dirty.
+
+    [HideInInspector] public int cost;
+    [HideInInspector] public int heuristic;
+    [HideInInspector] public int f;
+    [HideInInspector] public Tile parent;
+
+    public enum TileMaterial { Yellow, Grey, Red, Green, Blue }
+    public enum Directions { Top, Down, Right, Left }
+    public C__Character character => Character();
 
     [Header("REFERENCES")]
 
-    [SerializeField] private MeshRenderer rend = null;
     [SerializeField] private MeshRenderer areaRend = null;
     [Space]
-    [SerializeField] private TextMesh cText = null;
-    [SerializeField] private TextMesh hText = null;
-    [SerializeField] private TextMesh fText = null;
+    [SerializeField] private Material green = null;
+    [SerializeField] private Material blue = null;
+    [SerializeField] private Material red = null;
+    [SerializeField] private Material yellow = null;
+    [SerializeField] private Material grey = null;
     [Space]
     [SerializeField] private GameObject areaObject = null;
     [SerializeField] private GameObject fogMask = null;
@@ -45,9 +41,6 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject leftLine = null;
     [SerializeField] private GameObject rightLine = null;
 
-    public enum TileMaterial { Basic, Open, Closed, Path, Area, Attackable, Range} // Update the SetMaterial() method if add/remove a tile material.
-    public enum Directions { Top, Down, Right, Left}
-
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -55,6 +48,56 @@ public class Tile : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Give the values to the tile.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="tileName"></param>
+    public void Setup(Vector2Int newCoordinates)
+    {
+        x = newCoordinates.x;
+        y = newCoordinates.y;
+
+        string newName = $"{type} ({x},{y}) ";
+        newName = newName.Replace("(TileType)", "");
+
+        gameObject.name = newName;
+
+        EditorUtility.SetDirty(this);
+        EditorUtility.SetDirty(gameObject);
+    }
+
+    /// <summary>
+    /// Move tile position at the asked coordinates.
+    /// Rename the element.
+    /// Set the new elements dirty.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void MoveAtGridPosition(int x, int y) => transform.position = new Vector3(x, 0, y);
+
+    /// <summary>
+    /// Calculate f, cost and heuristic and set the parent
+    /// </summary>
+    /// <param name="endTile"></param>
+    /// <param name="parentTile"></param>
+    public void CalulateValues(Tile endTile, Tile parentTile)
+    {
+        parent = parentTile;
+        cost = parent.cost + GetCost(parentTile);
+        heuristic = (Mathf.Abs(endTile.x - x) + Mathf.Abs(endTile.y - y)) * 10;
+        f = cost + heuristic;
+    }
+
+    /// <summary>
+    /// Return the cost of movement from tile to another.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="currentTile"></param>
+    /// <returns></returns>
+    public int GetCost(Tile currentTile) => _board.IsDiagonal(currentTile, this) ? 14 : 10;
 
     /// <summary>
     /// Reset the pathfinding tiles value.
@@ -116,52 +159,30 @@ public class Tile : MonoBehaviour
     /// <summary>
     /// Set the appearance of a tile with the new material.
     /// </summary>
-    /// <param name="mat"></param>
-    public void SetMaterial(TileMaterial mat)
+    /// <param name="tileMaterial"></param>
+    public void SetMaterial(TileMaterial tileMaterial)
     {
-        if(mat != TileMaterial.Area || mat != TileMaterial.Attackable)
-        {
-            areaObject.SetActive(false);
-        }
+        areaObject.SetActive(true);
 
-        switch (mat)
-        {
-            case TileMaterial.Basic:
-                rend.material = basic;
-                break;
-            case TileMaterial.Open:
-                rend.material = open;
-                break;
-            case TileMaterial.Closed:
-                rend.material = closed;
-                break;
-            case TileMaterial.Path:
-                rend.material = path;
-                break;
-            case TileMaterial.Area:
-                areaObject.SetActive(true);
-                areaRend.material = area;
-                break;
-            case TileMaterial.Attackable:
-                areaObject.SetActive(true);
-                areaRend.material = attackable;
-                break;
-            case TileMaterial.Range:
-                rend.material = range;
-                break;
-            default:
-                break;
-        }
+        if (tileMaterial == TileMaterial.Yellow)
+            areaRend.material = yellow;
+        else if (tileMaterial == TileMaterial.Grey)
+            areaRend.material = grey;
+        else if (tileMaterial == TileMaterial.Blue)
+            areaRend.material = blue;
+        else if (tileMaterial == TileMaterial.Green)
+            areaRend.material = green;
+        else if (tileMaterial == TileMaterial.Red)
+            areaRend.material = red;
+        else
+            Debug.LogError("Add a material here");
     }
 
     /// <summary>
     /// Set the tile skin to "basic".
     /// Short cut of SetMaterial(TileMaterial.Basic).
     /// </summary>
-    public void ResetTileSkin()
-    {
-        SetMaterial(TileMaterial.Basic);
-    }
+    public void ResetTileSkin() => areaObject.SetActive(false);
 
     /// <summary>
     /// Return true if the tile is occupied by a character.
@@ -169,13 +190,7 @@ public class Tile : MonoBehaviour
     /// <returns></returns>
     public bool IsOccupiedByCharacter()
     {
-        List<C__Character> characters;
-        if (_characters) // M__Characters isn't initalized in editor
-            characters = _characters.characters;
-        else
-            characters = FindAnyObjectByType<M_Characters>().characters;
-
-        foreach (C__Character c in characters)
+        foreach (C__Character c in _characters.characters)
         {
             if (c.move.x == x && c.move.y == y)
                 return true;
@@ -192,49 +207,11 @@ public class Tile : MonoBehaviour
     {
         foreach (C__Character c in _characters.characters)
         {
-            if(c.tile == this) return c;
+            if(c.tile == this) 
+                return c;
         }
 
         return null;
-    }
-
-    // DEBUG
-    // =====
-
-    /// <summary>
-    /// Debug : Show the pathfinding values visually. 
-    /// To show, enable the texts on the prefab, there are the TextMesh components in references, and call this method.
-    /// </summary>
-    public void ShowValues()
-    {
-        cText.gameObject.SetActive(true);
-        hText.gameObject.SetActive(true);
-        fText.gameObject.SetActive(true);
-
-        cText.text = cost.ToString();
-        hText.text = heuristic.ToString();
-        fText.text = f.ToString();
-    }
-
-    /// <summary>
-    /// Debug : Hide the pathfinding values visually.
-    /// To hide, enable the texts on the prefab, there are the TextMesh components in references, and call this method.
-    /// Uncomment this lines in M_TileBoard, in GenerateBoard() method for a better lisibility.
-    /// </summary>
-    public void HideValues()
-    {
-        cText.gameObject.SetActive(false);
-        hText.gameObject.SetActive(false);
-        fText.gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Enable/Disable the renderer.
-    /// </summary>
-    /// <param name="value"></param>
-    public void SetRendererActive(bool value)
-    {
-        rend.enabled = value;
     }
 
     // ======================================================================

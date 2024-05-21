@@ -15,7 +15,6 @@ public class C_Attack : MonoBehaviour
     [SerializeField] private GameObject muzzleFlare = null;
 
     private Action OnAttackDone;
-    private List<Tile> attackTiles = new List<Tile>();
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -24,6 +23,17 @@ public class C_Attack : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Return the attackable tiles, depending the rules.
+    /// </summary>
+    /// <returns></returns>
+    public List<Tile> AttackableTiles() => 
+        c.look.CharactersInView()
+            .Where(chara => chara.team != c.team)
+            .Where(chara => c.look.HasSightOn(chara.tile))
+            .Select(chara => chara.tile)
+            .ToList();
 
     /// <summary>
     /// Attack the target and start an action in the end.
@@ -39,7 +49,7 @@ public class C_Attack : MonoBehaviour
 
         C__Character target = currentTarget;
 
-        c.ClearTilesFeedbacks();
+        c.HideTilesFeedbacks();
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
 
@@ -75,39 +85,6 @@ public class C_Attack : MonoBehaviour
         // Muzzle flare
         muzzleFlare.SetActive(true);
         Wait(0.2f, () => muzzleFlare.SetActive(false));
-    }
-
-    /// <summary>
-    /// Find the attackable tiles and enable feeback on them.
-    /// </summary>
-    public void EnableAttackTiles()
-    {
-        foreach (C__Character character in _characters.characters)
-        {
-            if (character == c) continue;
- 
-            if (character.Team() == c.Team()) continue;
-
-            attackTiles.Add(character.tile);
-        }
-
-        foreach (Tile t in attackTiles)
-        {
-            t.SetMaterial(Tile.TileMaterial.Attackable);
-        }
-    }
-
-    /// <summary>
-    /// Reset the tile skin and clear the attackable tiles list.
-    /// </summary>
-    public void ClearAttackTiles()
-    {
-        foreach (Tile t in attackTiles)
-        {
-            t.ResetTileSkin();
-        }
-
-        attackTiles.Clear();
     }
 
     /// <summary>

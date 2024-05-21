@@ -99,10 +99,35 @@ public static class ExtensionMethods
     /// <param name="list"></param>
     public static void Print<T>(this List<T> list)
     {
-        foreach (var item in list)
+        for (int i = 0; i < list.Count; i++)
         {
-            Debug.Log(item);
+            Debug.Log($"Item {i}: {list[i]}");
         }
+    }
+
+    /// <summary>
+    /// Add only if it doensn't exist in the list.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <param name="newItem"></param>
+    public static void AddIfNew<T>(this List<T> list, T newItem)
+    {
+        if (!list.Contains(newItem))
+            list.Add(newItem);
+    }
+
+    /// <summary>
+    /// Add if the condition is true.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <param name="item"></param>
+    /// <param name="condition"></param>
+    public static void AddIf<T>(this List<T> list, T item, bool condition)
+    {
+        if (condition)
+            list.Add(item);
     }
 
     // ======================================================================
@@ -135,5 +160,89 @@ public static class ExtensionMethods
         value--;
         if (value < 0) value = maximumInclusive;
         return value;
+    }
+
+    // ======================================================================
+    // ARRAY[] (one dimension)
+    // ======================================================================
+
+    /// <summary>
+    /// Print all the elements of a two dimensional array in the console.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    public static void Print<T>(this T[] array, bool withIndex = false)
+    {
+        for (int i = 0; i < array.GetLength(0); i++)
+        {
+            if (withIndex)
+                Debug.Log($"Index {i}: {array[i]}");
+            else
+                Debug.Log(array[i]);
+        }
+    }
+
+    /// <summary>
+    /// Return true if the item [index0] is out of the array bounds.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public static bool IsInBounds<T>(this T[] array, int index)
+    {
+        if (index < 0) return false;
+        if (index >= array.Length) return false;
+        return true;
+    }
+
+    // ======================================================================
+    // ARRAY[,] (two dimensions)
+    // ======================================================================
+
+    /// <summary>
+    /// Print all the elements of a two dimensional array in the console.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    public static void Print<T>(this T[,] array, bool withIndex = false)
+    {
+        for (int i = 0; i < array.GetLength(0); i++)
+        {
+            for (int j = 0; j < array.GetLength(1); j++)
+            {
+                if (withIndex)
+                    Debug.Log($"{array[i, j]} ({i},{j})");
+                else
+                    Debug.Log(array[i, j]);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Print the first and second lenghtes of a two dimensional array in the console.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    public static void PrintLengthes<T>(this T[,] array)
+    {
+        Debug.Log($"{array}: {array.GetLength(0)},{array.GetLength(1)}");
+    }
+
+    /// <summary>
+    /// Return true if the item [index0, index1] is out of the array bounds.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="index0"></param>
+    /// <param name="index1"></param>
+    /// <returns></returns>
+    public static bool IsInBounds<T>(this T[,] array, int index0, int index1)
+    {
+        if (index0 < 0) return false;
+        if (index1 < 0) return false;
+        if (index0 >= array.GetLength(0)) return false;
+        if (index1 >= array.GetLength(1)) return false;
+        return true;
     }
 }

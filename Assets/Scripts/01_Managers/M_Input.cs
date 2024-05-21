@@ -17,6 +17,8 @@ public class M_Input : MonoBehaviour
     private C__Character currentTarget;
     public static M_Input instance;
 
+    private C__Character currentCharacter => _characters.current;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -57,8 +59,7 @@ public class M_Input : MonoBehaviour
     public void ClearFeedbacksAndValues()
     {
         _feedback.DisableFreeTileFeedbacks();
-        _ui.percentText.DisablePercentShootText();
-        _pathfinding.ClearPath();
+        _ui.HidePercentText();
         currentPathfinding = null;
         pointedTile = null;
         currentTarget = null;
@@ -103,31 +104,38 @@ public class M_Input : MonoBehaviour
                 tile = hit.transform.GetComponentInParent<C__Character>().tile;
             }
 
-            if (tile == pointedTile) return; // EXIT : is on the already pointed tile (operation already done)
+            if (tile == pointedTile) 
+                return; // Already on pointed tile
 
-            if (!CanGo(tile)) // EXIT : Is a hole tile, big obstacle tile or current character's tile
+            if (!CanGo(tile) || !currentCharacter.CanPlay()) 
             {
                 OnForbiddenTile();
-                return;
+                return; // Can't go on this tile or can't play
             }
 
             // NEXT STEP : Free tile or occupied tile
 
             pointedTile = tile;
+            bool pointedCharacterIsVisible = 
+                currentCharacter.look.VisibleTiles().Contains(tile)
+                || _rules.enableFogOfWar == false;
 
             if (tile.IsOccupiedByCharacter()) // Tile occupied by somebody
             {
-                OnOccupiedTile(tile);
+                if (pointedCharacterIsVisible)
+                    OnOccupiedTile(tile);
+                else
+                    OnFreeTile(tile);
             }
-            else // Free tile
+            else // Free tile OR invisible tile
             {
                 OnFreeTile(tile);
             }
         }
-        else // EXIT : Out of tile board
+        else
         {
             OnForbiddenTile();
-            return;
+            return; // Out of tile board
         }
     }
 
@@ -154,7 +162,7 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void CheckChangeCharacterInput()
     {
-        if (!_characters.current.behavior.playable) return; // EXIT : NPC turn.
+        if (!currentCharacter.behavior.playable) return; // EXIT : NPC turn.
 
         if (Input.GetKeyDown(changeCharacterKey))
         {
@@ -240,24 +248,19 @@ public class M_Input : MonoBehaviour
         _feedback.DisableFreeTileFeedbacks();
 
         currentTarget = tile.Character();
-        C__Character c = _characters.current;
-
-        // EXIT : same character
-        if (tile.Character() == c) return;
-        // EXIT : same team
-        if (tile.Character().Team() == c.Team()) return; 
 
         // Mouse feedbacks depending of the line of sight on the enemy
-        if(c.look.HasSightOn(tile))
+        if (currentCharacter.look.HasSightOn(tile))
         {
-            if (c.CanPlay())
+            if (tile.character == currentCharacter || tile.character.team == currentCharacter.team) // Character or allie
+            {
+                _feedback.SetCursor(M_Feedback.CursorType.Regular);
+                _ui.HidePercentText();
+            }
+            else // Enemy
             {
                 _feedback.SetCursor(M_Feedback.CursorType.AimAndInSight);
-                _ui.percentText.SetPercentShootText(c.attack.GetPercentToTouch(c.look.LineOfSight(tile).Count));
-            }
-            else
-            {
-                _feedback.SetCursor(M_Feedback.CursorType.OutMovement);
+                _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(currentCharacter.look.LineOfSight(tile).Count));                
             }
         }
         else
@@ -272,35 +275,34 @@ public class M_Input : MonoBehaviour
     /// <param name="tile"></param>
     private void OnFreeTile(Tile tile)
     {
-        C__Character currentCharacter = _characters.current;
-
-        _ui.percentText.DisablePercentShootText();
-
+        // Disable fight
+        _ui.HidePercentText();
         currentTarget = null;
 
-        if(currentCharacter.CanPlay())
-            currentPathfinding = _pathfinding.Pathfind(
-                            _characters.current.tile,
-                            tile,
-                            M_Pathfinding.TileInclusion.WithEnd,
-                            currentCharacter.move.walkableTiles);
+        // Get pathfinding
+        currentPathfinding = _pathfinding.Pathfind(
+                        currentCharacter.tile,
+                        tile,
+                        M_Pathfinding.TileInclusion.WithStartAndEnd,
+                        currentCharacter.move.Blockers(),
+                        currentCharacter.move.MovementArea());
 
-        // EXIT : No path
-        if (Utils.IsVoidList(currentPathfinding))
+        if (currentPathfinding.Count == 0)
         {
-            OnForbiddenTile();
-            return;
+            OnForbiddenTile(); 
+            return; // No path 
         }
 
-        bool tileInMoveRange = _characters.current.move.IsInPathInRange(currentPathfinding);
-        if (!currentCharacter.CanPlay()) tileInMoveRange = false;
+        bool tileInMoveRange = currentCharacter.move.CanMoveTo(pointedTile);
 
+        // Show movement feedbacks (square and line)
         _feedback.square.SetSquare(pointedTile.transform.position, tileInMoveRange);
         _feedback.line.SetLines(
             currentPathfinding,
-            currentCharacter, 
+            currentCharacter.move.movementRange, 
             pointedTile);
 
+        // Set cursor
         if (tileInMoveRange)
             _feedback.SetCursor(M_Feedback.CursorType.Regular);
         else
@@ -325,14 +327,13 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void ClickAttack()
     {
-        C__Character c = _characters.current;
-        _ui.percentText.DisablePercentShootText();
+        _ui.HidePercentText();
 
         if (currentTarget == null) return; // EXIT : There is no target
-        if(currentTarget.team == _characters.current.team) return; // EXIT : Same team
+        if(currentTarget.team == currentCharacter.team) return; // EXIT : Same team
 
         // Attack
-        c.attack.Attack(currentTarget);
+        currentCharacter.attack.Attack(currentTarget);
     }
 
     /// <summary>
@@ -342,12 +343,9 @@ public class M_Input : MonoBehaviour
     private void ClickMove()
     {
         if (currentPathfinding == null) return; // EXIT : It's no path
-        if (!_characters.current.move.IsInPathInRange(currentPathfinding)) return; // EXIT : click out of movement range
+        if (!currentCharacter.move.CanMoveTo(pointedTile)) return; // EXIT : click out of movement range
 
-        _characters.current.move.MoveOnPath(currentPathfinding, () =>
-        {
-            _turns.EndTurn();
-        });
+        currentCharacter.move.MoveOnPath(currentPathfinding);
     }
 
     // OTHER
@@ -360,11 +358,9 @@ public class M_Input : MonoBehaviour
     /// <returns></returns>
     private bool CanGo(Tile tile)
     {
-        C__Character c = _characters.current;
-
         if (!tile) return false;
-        if (!c.move.walkableTiles.Contains(tile.type)) return false;
-        if (tile.x == c.move.x && tile.y == c.move.y) return false;
+        if (!currentCharacter.move.walkableTiles.Contains(tile.type)) return false;
+        if (tile.x == currentCharacter.move.x && tile.y == currentCharacter.move.y) return false;
         return true;
     }   
 }

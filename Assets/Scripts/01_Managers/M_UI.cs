@@ -11,12 +11,9 @@ public class M_UI : MonoBehaviour
     [Header("REFERENCES")]
 
     [SerializeField] private Text endScreenText = null;
-    [Space]
     [SerializeField] private Button nextTurnButton = null;
-    [Space]
     [SerializeField] private GameObject endScreen = null;
-    [Space]
-    public UI_PercentShootText percentText;
+    [SerializeField] private UI_PercentShootText percentText;
 
     public static M_UI instance;
 
@@ -69,6 +66,23 @@ public class M_UI : MonoBehaviour
     {
         endScreen.SetActive(true);
         endScreenText.text = string.Format("{0} are winners !", winner.team.name);
+    }
+
+    /// <summary>
+    /// Enable percent shoot text and set the value.
+    /// </summary>
+    /// <param name="percent"></param>
+    public void ShowPercentText(int percent)
+    {
+        percentText.SetPercentShootText(percent);
+    }
+
+    /// <summary>
+    /// Disable percent shoot text.
+    /// </summary>
+    public void HidePercentText()
+    {
+        percentText.DisablePercentShootText();
     }
 
     /// <summary>

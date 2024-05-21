@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,9 @@ using static M__Managers;
 public class M_Board : MonoBehaviour
 {
     [Header("REFERENCES")]
-
     [SerializeField] private Transform charactersParent;
 
-    [Header("DEBUG INFOS")]
-    public List<Tile> grid;
+    public TileGrid tileGrid;
     public static M_Board instance;
 
     // ======================================================================
@@ -28,8 +27,11 @@ public class M_Board : MonoBehaviour
         }
         else
         {
-            Debug.LogError("There is more than one M_TileBoard in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+            Debug.LogError("There is more than one M_Board in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
         }
+
+        if (Application.isPlaying)
+            tileGrid.Setup();
     }
 
     // ======================================================================
@@ -42,9 +44,20 @@ public class M_Board : MonoBehaviour
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns></returns>
-    public Tile GetTileAtCoordinates(int x, int y)
+    public Tile GetTileAtCoordinates(int x, int y) => tileGrid[x, y];
+
+    /// <summary>
+    /// Return true if a tile is in diagonal with another tile.
+    /// </summary>
+    /// <param name="tile1"></param>
+    /// <param name="tile2"></param>
+    /// <returns></returns>
+    public bool IsDiagonal(Tile tile1, Tile tile2)
     {
-        return grid.Where(o => o.x == x && o.y == y).FirstOrDefault();
+        if (tile1.x == tile2.x || tile1.y == tile2.y)
+            return false;
+
+        return true;
     }
 
     /// <summary>
@@ -55,13 +68,10 @@ public class M_Board : MonoBehaviour
     /// <param name="yOffset"></param>
     /// <param name="tile"></param>
     /// <returns></returns>
-    public Tile GetTileWithOffset(int xOffset, int yOffset, Tile tile)
-    {
-        return GetTileAtCoordinates(tile.x + xOffset, tile.y + yOffset);
-    }
+    public Tile GetTileWithOffset(int xOffset, int yOffset, Tile tile) => GetTileAtCoordinates(tile.x + xOffset, tile.y + yOffset);
 
     /// <summary>
-    /// Return all the existing tiles around a tile (holes included).
+    /// Return all the existing tiles around a tile.
     /// </summary>
     /// <param name="tile"></param>
     /// <param name="forceNoDiagonals"></param>
@@ -94,9 +104,8 @@ public class M_Board : MonoBehaviour
         if (useDiagonals)
             toReturn.Add(GetTileWithOffset(1, -1, tile));
 
+        //Remove null tiles
         toReturn = toReturn.Where(o => o != null).ToList();
-
-        if (Utils.IsVoidList(toReturn)) return null;
 
         return toReturn;
     }
@@ -116,7 +125,7 @@ public class M_Board : MonoBehaviour
         radius = Mathf.Abs(radius);
         int edgeLenght = 2 * radius + 1;
 
-        if(radius == 0) // Distance = 0
+        if (radius == 0) // Distance = 0
         {
             toReturn.Add(new Vector2Int(xCenter, yCenter));
             return toReturn;
@@ -153,7 +162,6 @@ public class M_Board : MonoBehaviour
     /// <param name="yCenter"></param>
     /// <param name="radius"></param>
     /// <returns></returns>
-
     public List<Vector2Int> GetFullSquareCoordinates(int xCenter, int yCenter, int radius)
     {
         List<Vector2Int> toReturn = new List<Vector2Int>();
@@ -169,27 +177,50 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the closest coordinates where there is no tile.
+    /// Returns the closest coordinates where there is no tile around, except the tile sending.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
+    /// <param name="except"></param>
     /// <returns></returns>
-    public Vector2Int GetClosestCoordinatesWithoutTile(int x, int y)
+    public Vector2Int GetClosestFreePositionAround(Vector2Int coordinates, Vector3 selectionPosition, Tile senderTile)
     {
-        Vector2Int toReturn = new Vector2Int(x,y);
+        Vector2Int toReturn = coordinates;
 
         int distance = 1;
+        bool founded = false;
+        float bestDistance = 0;
 
-        while (toReturn.x == x && toReturn.y == y)
+        while (!founded)
         {
-            List<Vector2Int> aroundCoordinates = GetEmptySquareCoordinates(x, y, distance);
+            List<Vector2Int> aroundCoordinates = GetEmptySquareCoordinates(coordinates.x, coordinates.y, distance);
 
-            foreach (Vector2Int coordinate in aroundCoordinates)
+            foreach (Vector2Int testedCoordinate in aroundCoordinates)
             {
-                if (GetTileAtCoordinates(coordinate.x, coordinate.y)) continue;
+                Tile testedTile = GetTileAtCoordinates(testedCoordinate.x, testedCoordinate.y);
 
-                toReturn.x = coordinate.x;
-                toReturn.y = coordinate.y;
+                if (testedTile && testedTile != senderTile) 
+                    continue;
+
+                founded = true;
+                toReturn.x = testedCoordinate.x;
+                toReturn.y = testedCoordinate.y;
+
+                if (founded)
+                {
+                    if (Vector3.Distance(new Vector3(testedCoordinate.x, 0, testedCoordinate.y), selectionPosition) < bestDistance)
+                    {
+                        toReturn.x = testedCoordinate.x;
+                        toReturn.y = testedCoordinate.y;
+                    }
+                }
+                else
+                {
+                    founded = true;
+                    toReturn.x = testedCoordinate.x;
+                    toReturn.y = testedCoordinate.y;
+                    bestDistance = Vector3.Distance(new Vector3(testedCoordinate.x, 0, testedCoordinate.y), selectionPosition);
+                }
             }
 
             distance++;

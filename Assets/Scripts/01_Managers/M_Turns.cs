@@ -192,7 +192,7 @@ public class M_Turns : MonoBehaviour
         _ui.SetActivePlayerUI_Turn(false);
         _ui.EnableEndScreen(current);
 
-        current.ClearTilesFeedbacks();
+        current.HideTilesFeedbacks();
 
         _input.SetActiveClick(false);
         _input.ClearFeedbacksAndValues();

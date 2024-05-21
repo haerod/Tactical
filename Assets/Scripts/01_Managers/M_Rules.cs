@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class M_Rules : MonoBehaviour
 {
+    [Header("FOG OF WAR")]
+    public bool enableFogOfWar = true;
+
     [Header("MOVEMENT")]
     
     public bool useDiagonals = false;
@@ -17,6 +20,8 @@ public class M_Rules : MonoBehaviour
 
     public enum SeeAnShotThroug { Everybody, Nobody, AlliesOnly}
     public SeeAnShotThroug canSeeAndShotThrough = SeeAnShotThroug.Everybody;
+    public enum VisibleInFogOfWar { InView, Allies, Everybody}
+    public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
 
     [Header("TURNS")]
 

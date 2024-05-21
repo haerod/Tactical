@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
@@ -59,38 +60,38 @@ public class C_Behavior : MonoBehaviour
     /// </summary>
     public void FollowTarget()
     {
-        if (c.behavior.target == null) // EXIT : no target
-        {
-            c.SetCanPlayValue(false);
-            Wait(2, 
-                () => _turns.EndTurn());
-            return;
-        }
+        //if (c.behavior.target == null) // EXIT : no target
+        //{
+        //    c.SetCanPlayValue(false);
+        //    Wait(2, 
+        //        () => _turns.EndTurn());
+        //    return;
+        //}
 
-        if (target == c) // Common mistake ^^'
-        {
-            Debug.LogError("oops, target is character itself");
-            return;
-        }
+        //if (target == c) // Common mistake ^^'
+        //{
+        //    Debug.LogError("oops, target is character itself");
+        //    return;
+        //}
 
-        // Get pathfinding
-        Tile endTile = _pathfinding.ClosestFreeTileWithShortestPath(c.tile, target.tile, c.move.walkableTiles);
-        List<Tile> path = null;
+        //// Get pathfinding
+        //Tile endTile = _pathfinding.ClosestFreeTileWithShortestPath(c.tile, target.tile, c.move.Blockers());
+        //List<Tile> path = null;
 
-        if (endTile) // If is an end tile (and different of current tile)
-        {
-            path = _pathfinding.Pathfind(c.tile, endTile, M_Pathfinding.TileInclusion.WithEnd, c.move.walkableTiles);
-        }
+        //if (endTile) // If is an end tile (and different of current tile)
+        //{
+        //    path = _pathfinding.Pathfind(c.tile, endTile, M_Pathfinding.TileInclusion.WithEnd, c.move.Blockers());
+        //}
 
-        if (Utils.IsVoidList(path))  // EXIT : not path
-        {
-            c.SetCanPlayValue(false);
-            Wait(2,
-                () => _turns.EndTurn());
-            return;
-        }
+        //if (Utils.IsVoidList(path))  // EXIT : not path
+        //{
+        //    c.SetCanPlayValue(false);
+        //    Wait(2,
+        //        () => _turns.EndTurn());
+        //    return;
+        //}
 
-        c.move.MoveOnPath(path, () => _turns.EndTurn()); // EXIT : move on path
+        //c.move.MoveOnPath(path); // EXIT : move on path
     }
 
     // ======================================================================

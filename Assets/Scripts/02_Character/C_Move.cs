@@ -12,16 +12,14 @@ public class C_Move : MonoBehaviour
     public int movementRange = 6;
     public List<TileType> walkableTiles;
 
+    [Header("FOG OF WAR")]
+    public bool movementInFogOfWarAllowed = false;
+
     [Header("ANIMATION")]
     [Range(0,10f)]
     [SerializeField] private float speed = 6;
     [Range(0,1f)]
     [SerializeField] private float animSpeed = .5f;
-
-    //[Header("EVENTS")]
-    //[Space]
-    //public UnityEvent onTileEnter;
-    //[Space]
 
     [Header("COORDINATES (debug)")]
     public int x = 1;
@@ -33,7 +31,6 @@ public class C_Move : MonoBehaviour
     [SerializeField] private C__Character c  = null;
 
     private List<Tile> currentPath = null;
-    private List<Tile> currentArea = null;
     private int index = 0;
     private Vector3 destination;
 
@@ -46,17 +43,72 @@ public class C_Move : MonoBehaviour
     // ======================================================================
 
     /// <summary>
+    /// Returns the move area depending the rules.
+    /// </summary>
+    public List<Tile> MovementArea()
+    {
+        if (!c.CanPlay())
+            return new List<Tile>();
+
+        // Fog of war disabled
+        if (!_rules.enableFogOfWar) 
+            return _pathfinding
+                .AreaMovementZone(c.tile, movementRange, Blockers())
+                .Where(t => !t.IsOccupiedByCharacter())
+                .ToList();
+
+        // Fog of war && can walk in fog of war
+        if (movementInFogOfWarAllowed)
+            return _pathfinding
+                .AreaMovementZone(c.tile, movementRange, Blockers())
+                .Where(t => !t.IsOccupiedByCharacter() || (t.IsOccupiedByCharacter() && !c.look.HasSightOn(t)))
+                .ToList();
+
+        // Fog of war && can not walk in fog of war
+        return _pathfinding
+            .AreaMovementZone(c.tile, movementRange, Blockers())
+            .Intersect(c.look.VisibleTiles())
+            .Where(t => !t.IsOccupiedByCharacter())
+            .ToList();
+    }
+
+    /// <summary>
+    /// Return the characters which block the movement (depending the rules).
+    /// </summary>
+    /// <returns></returns>
+    public List<Tile> Blockers()
+    {
+        List<Tile> toReturn = new List<Tile>();
+
+        // Add not walkableTiles
+        toReturn.AddRange(_pathfinding.ZoneAround(c.tile, movementRange, _rules.useDiagonals)
+            .Where(t => !CanWalkOn(t.type))
+            .ToList());
+
+        // Add characters
+        if(_rules.enableFogOfWar)
+            toReturn.AddRange(_characters.characters
+                .Where(chara => IsBlockingPath(chara))
+                .Intersect(c.look.CharactersInView())
+                .Select(chara => chara.tile)
+                .ToList());
+
+        toReturn.AddRange(_characters.characters
+            .Where(chara => IsBlockingPath(chara))
+            .Select(chara => chara.tile)
+            .ToList());
+
+        return toReturn;
+    }
+
+    /// <summary>
     /// Start the movement on a path, with and action on end of this path.
     /// </summary>
     /// <param name="path"></param>
     /// <param name="OnEnd"></param>
-    public void MoveOnPath(List<Tile> path, Action OnEnd)
+    public void MoveOnPath(List<Tile> path)
     {
         c.SetCanPlayValue(false);
-
-        if (c.movementRange <= 0) return;
-
-        EndMove();
 
         currentPath = path.ToList();
 
@@ -69,46 +121,9 @@ public class C_Move : MonoBehaviour
         _input.SetActiveClick(false);
         _ui.SetActivePlayerUI_Action(false);
 
-        c.ClearTilesFeedbacks();
+        c.HideTilesFeedbacks();
 
-        StartCoroutine(MoveToDestination(() => OnEnd()));
-    }
-
-    /// <summary>
-    /// Show the tiles of the movement area.
-    /// </summary>
-    public void EnableMoveArea()
-    {
-        int range = 0;
-
-        if(c.CanPlay()) 
-            range = c.movementRange;
-
-        currentArea = _pathfinding.AreaMovementZone(c.tile, range, c.move.walkableTiles);
-
-        if (Utils.IsVoidList(currentArea)) return; // No way to go with current action points && position
-
-        currentArea = currentArea.ToList();
-
-        currentArea
-            .Where(t => !t.IsOccupiedByCharacter())
-            .ToList()
-            .ForEach(t => t.SetMaterial(Tile.TileMaterial.Area));
-    }
-
-    /// <summary>
-    /// Reset the material of the tiles in the area zone and clear the list.
-    /// </summary>
-    public void ClearAreaZone()
-    {
-        if (currentArea == null) return;
-
-        foreach (Tile t in currentArea)
-        {
-            t.ResetTileSkin();
-        }
-
-        currentArea.Clear();
+        StartCoroutine(MoveToDestination());
     }
 
     /// <summary>
@@ -134,17 +149,31 @@ public class C_Move : MonoBehaviour
     /// </summary>
     /// <param name="tileType"></param>
     /// <returns></returns>
-    public bool CanWalkOn(TileType tileType)
-    {
-        return walkableTiles.Contains(tileType);
-    }
+    public bool CanWalkOn(TileType tileType) => walkableTiles.Contains(tileType);
 
     /// <summary>
-    /// Return true if the path length (with end) is inferior to movement range.
+    /// Return true if the character can move to the tile.
     /// </summary>
-    /// <param name="path"></param>
+    /// <param name="tile"></param>
     /// <returns></returns>
-    public bool IsInPathInRange(List<Tile> path) => path.Count -1 <= movementRange;
+    public bool CanMoveTo(Tile tile)
+    {
+        if (!c.CanPlay()) return false; // Can't play
+
+        bool tileInFog =_rules.enableFogOfWar && !c.look.VisibleTiles().Contains(tile);
+        if (tileInFog && !c.move.movementInFogOfWarAllowed) return false; // Tile in fog
+
+        List<Tile> path = _pathfinding.Pathfind(
+            c.tile, 
+            tile, 
+            M_Pathfinding.TileInclusion.WithEnd, 
+            c.move.Blockers(),
+            MovementArea());
+        if (path.Count == 0) return false; // No path
+        if (path.Count > movementRange) return false; // Out range
+
+        return true; // In range
+    }
 
     // ======================================================================
     // PRIVATE METHODS
@@ -155,7 +184,7 @@ public class C_Move : MonoBehaviour
     /// </summary>
     /// <param name="OnEnd"></param>
     /// <returns></returns>
-    IEnumerator MoveToDestination(Action OnEnd)
+    IEnumerator MoveToDestination()
     {
         while (true)
         {
@@ -168,15 +197,15 @@ public class C_Move : MonoBehaviour
             }
             else // On tile enter
             {
-                //onTileEnter.Invoke();
+                OnTileEnter();
 
                 x = currentPath[index].x;
                 y = currentPath[index].y;
 
-                if (IsTheLastTile()) // EXIT : End path
+                if (IsTheLastTile()) 
                 {
-                    EndMove(() => OnEnd());
-                    yield break;
+                    EndMove();
+                    yield break; // EXIT : End path
                 }
                 else
                 {
@@ -211,7 +240,7 @@ public class C_Move : MonoBehaviour
     /// Happend in the end of the movement.
     /// </summary>
     /// <param name="OnEnd"></param>
-    private void EndMove(Action OnEnd = default)
+    private void EndMove()
     {
         anim.SetFloat("speed", 0f);
         _input.SetActiveClick();
@@ -222,8 +251,30 @@ public class C_Move : MonoBehaviour
             c.EnableTilesFeedbacks();
         }
 
-        if (OnEnd == default) OnEnd = (() => { });
+        _turns.EndTurn();
+    }
 
-        OnEnd();
+    /// <summary>
+    /// Played when the character enters a tile.
+    /// </summary>
+    private void OnTileEnter()
+    {
+
+    }
+
+    /// <summary>
+    /// Return true if the character blocks the path, depending the capacity to pass through other characters.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <returns></returns>
+    private bool IsBlockingPath(C__Character character)
+    {
+        if (_rules.canPassThrough == M_Rules.PassThrough.Nobody)
+            return true;
+        else if (_rules.canPassThrough == M_Rules.PassThrough.AlliesOnly && c.infos.IsAlliedTo(character))
+            return false;
+
+        return false;
+
     }
 }
