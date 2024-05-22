@@ -1238,10 +1238,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bot (NPC) - Team Blue
       objectReference: {fileID: 0}
-    - target: {fileID: 4299237806330091947, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
-      propertyPath: behavior
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6847347587014458346, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
       propertyPath: character
       value: 
@@ -2677,10 +2673,6 @@ PrefabInstance:
     - target: {fileID: 3507454937469014385, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
       propertyPath: m_Name
       value: Bot (NPC) - Team Blue
-      objectReference: {fileID: 0}
-    - target: {fileID: 4299237806330091947, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
-      propertyPath: behavior
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6847347587014458346, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
       propertyPath: character
@@ -8505,15 +8497,15 @@ PrefabInstance:
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[0]
       value: 
-      objectReference: {fileID: 1983743528}
+      objectReference: {fileID: 1382555227}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[1]
       value: 
-      objectReference: {fileID: 1382555227}
+      objectReference: {fileID: 736059113}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[2]
       value: 
-      objectReference: {fileID: 736059113}
+      objectReference: {fileID: 199504200}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[3]
       value: 
@@ -8521,11 +8513,11 @@ PrefabInstance:
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[4]
       value: 
-      objectReference: {fileID: 226545057}
+      objectReference: {fileID: 1983743528}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[5]
       value: 
-      objectReference: {fileID: 199504200}
+      objectReference: {fileID: 226545057}
     - target: {fileID: 1958866178818122973, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: m_RootOrder
       value: 0
