@@ -90,13 +90,13 @@ public class C_Move : MonoBehaviour
 
         // Add characters
         if(_rules.enableFogOfWar)
-            toReturn.AddRange(_characters.characters
+            toReturn.AddRange(_characters.GetCharacterList()
                 .Where(chara => IsBlockingPath(chara))
                 .Intersect(c.look.CharactersInView())
                 .Select(chara => chara.tile)
                 .ToList());
 
-        toReturn.AddRange(_characters.characters
+        toReturn.AddRange(_characters.GetCharacterList()
             .Where(chara => IsBlockingPath(chara))
             .Select(chara => chara.tile)
             .ToList());

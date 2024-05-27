@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
 
     public int x; // Let it serialized to let Tile be dirty.
     public int y; // Let it serialized to let Tile be dirty.
+    public Vector2Int coordinates => new Vector2Int(x, y);
 
     [HideInInspector] public int cost;
     [HideInInspector] public int heuristic;
@@ -97,7 +98,14 @@ public class Tile : MonoBehaviour
     /// <param name="tile"></param>
     /// <param name="currentTile"></param>
     /// <returns></returns>
-    public int GetCost(Tile currentTile) => _board.IsDiagonal(currentTile, this) ? 14 : 10;
+    public int GetCost(Tile currentTile) => IsDiagonalWith(currentTile) ? 14 : 10;
+
+    /// <summary>
+    /// Return true if a tile is in diagonal with another tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
+    public bool IsDiagonalWith(Tile tile) => x == tile.x ^ y == tile.y; // ^ : XOR
 
     /// <summary>
     /// Reset the pathfinding tiles value.
@@ -190,7 +198,7 @@ public class Tile : MonoBehaviour
     /// <returns></returns>
     public bool IsOccupiedByCharacter()
     {
-        foreach (C__Character c in _characters.characters)
+        foreach (C__Character c in _characters.GetCharacterList())
         {
             if (c.move.x == x && c.move.y == y)
                 return true;
@@ -205,7 +213,7 @@ public class Tile : MonoBehaviour
     /// <returns></returns>
     public C__Character Character()
     {
-        foreach (C__Character c in _characters.characters)
+        foreach (C__Character c in _characters.GetCharacterList())
         {
             if(c.tile == this) 
                 return c;

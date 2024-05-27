@@ -1,72 +1,63 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.SceneManagement;
-using System.Linq;
 using UnityEditor;
 using System;
 
 [ExecuteInEditMode]
-public class CharacterAutoSnap : MonoBehaviour
+public class CharacterAutoSnap : BaseAutoSnap
 {
-    [HideInInspector] public C__Character character;
-    [HideInInspector] public M_Characters characters;
-    [HideInInspector] public bool isLocated; // Note : Let it public to be dirty.
+    [HideInInspector] public C__Character character; // Note : Let it serializable to be dirty.
+    [HideInInspector] public M_Characters characters; // Note : Let it serializable to be dirty.
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
 
-    private void Awake()
-    {
-        if (Application.isPlaying)
-        {
-            if (!isLocated)
-                Destroy(gameObject);
-
-            Destroy(this);
-            return; // Play mode
-        }
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null) 
-            return; // Prefab mode
-
-        character = GetComponent<C__Character>();
-        characters = FindAnyObjectByType<M_Characters>();
-        transform.parent = characters.transform; 
-        transform.hasChanged = true;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (isLocated)
-            return;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawCube(transform.position + Vector3.up * -.5f, Vector3.one);
-    }
-
-    private void Update()
-    {
-        if (Application.isPlaying)
-            return; // Play mode
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
-            return; // Prefab stage
-
-        CheckGridPosition();
-
-        EditorUtility.SetDirty(this);
-        EditorUtility.SetDirty(gameObject);
-    }
+#if UNITY_EDITOR
 
     private void OnDestroy()
     {
-        if (Application.isPlaying) 
-            return; // Play mode
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null) 
-            return; // Prefab mode
+        if (!IsInEditor())
+            return; // Not in editor mode
         if (!characters)
             return; // Exit prefab mode
 
-        characters.characters.Remove(character);
+        characters.RemoveCharacter(character);
+        EditorUtility.SetDirty(characters);
+    }
+
+#endif
+
+    // ======================================================================
+    // INHERITED
+    // ======================================================================
+
+    protected override void SetParameters()
+    {
+        character = GetComponent<C__Character>();
+        characters = FindAnyObjectByType<M_Characters>();
+        transform.parent = characters.transform;
+    }
+    protected override void MoveObject(Vector2Int coordinates)
+    {
+        character.MoveAt(coordinates.x, coordinates.y);
+    }
+    protected override void AddToManager() => characters.AddCharacter(character);
+    protected override void RemoveFromManager() => characters.RemoveCharacter(character);
+    protected override bool IsOnValidPosition()
+    {
+        Tile validTile = GetWalkableTileUnder();
+
+        if (!validTile)
+            return false;
+        if (GetOtherCharacterOnTile(validTile))
+            return false;
+
+        return true;
+    }
+    protected override void SetParametersDirty()
+    {
+        EditorUtility.SetDirty(this);
+        EditorUtility.SetDirty(gameObject);
         EditorUtility.SetDirty(characters);
     }
 
@@ -77,33 +68,6 @@ public class CharacterAutoSnap : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Check if the character is snapping somewhere.
-    /// </summary>
-    private void CheckGridPosition()
-    {
-        isLocated = false;
-        Tile allowedTile = GetWalkableTileUnder();
-
-        characters.characters.Remove(character);
-
-        if (!allowedTile)
-            return; // No allowed tile
-        if (GetOtherCharacterOnTile(allowedTile))
-            return; // Occupied
-
-        isLocated = true;
-        characters.characters.Add(character);
-
-        if (!transform.hasChanged)
-            return; // Didn't move
-
-        character.MoveAt(allowedTile.x, allowedTile.y);
-        transform.hasChanged = false;
-
-        EditorUtility.SetDirty(characters);
-    }
 
     /// <summary>
     /// Get the tile under the character, if it can walk on.

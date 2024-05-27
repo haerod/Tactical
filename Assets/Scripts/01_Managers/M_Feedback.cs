@@ -172,7 +172,7 @@ public class M_Feedback : MonoBehaviour
     /// <param name="visibleTiles"></param>
     private void DisplayCharactersInFogOfWar(List<Tile> visibleTiles)
     {
-        List<C__Character> visibleCharacters = _characters.characters
+        List<C__Character> visibleCharacters = _characters.GetCharacterList()
             .Where(c =>
                {
                    if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
@@ -193,7 +193,7 @@ public class M_Feedback : MonoBehaviour
             .ForEach(c => c.anim.SetVisualActives(true));
 
         // Hide invisible characters
-        _characters.characters
+        _characters.GetCharacterList()
             .Except(visibleCharacters)
             .ToList()
             .ForEach(c => c.anim.SetVisualActives(false));

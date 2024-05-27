@@ -55,7 +55,7 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     public List<C__Character> CharactersInView()
     {
-        return _characters.characters
+        return _characters.GetCharacterList()
             .Where(chara =>
             {
                 if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
@@ -102,7 +102,7 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     public C__Character ClosestEnemyOnSight()
     {
-        return _characters.characters
+        return _characters.GetCharacterList()
             .Where(o => o != c) // remove emitter
             .Where(o => o.Team() != c.Team()) // remove allies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight

@@ -596,6 +596,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: {fileID: 11400000, guid: 859aa0936407b9943a71c17934cc4d62, type: 2}
+  x: 0
+  y: 0
   cost: 0
   heuristic: 0
   f: 0
@@ -638,8 +640,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5362778612753c94193cfc01384338fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  board: {fileID: 0}
+  gizmoType: 1
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
+  gizmoSize: {x: 1, y: 0.2, z: 1}
+  gizmoOffset: {x: 0, y: 0, z: 0}
   isLocated: 0
+  tile: {fileID: 0}
+  board: {fileID: 0}
 --- !u!1 &9214442802075879578
 GameObject:
   m_ObjectHideFlags: 0

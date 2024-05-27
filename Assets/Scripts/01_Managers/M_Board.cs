@@ -11,6 +11,7 @@ public class M_Board : MonoBehaviour
     [Header("REFERENCES")]
     [SerializeField] private Transform charactersParent;
 
+    [Header("DEBUG")]
     public TileGrid tileGrid;
     public static M_Board instance;
 
@@ -45,20 +46,7 @@ public class M_Board : MonoBehaviour
     /// <param name="y"></param>
     /// <returns></returns>
     public Tile GetTileAtCoordinates(int x, int y) => tileGrid[x, y];
-
-    /// <summary>
-    /// Return true if a tile is in diagonal with another tile.
-    /// </summary>
-    /// <param name="tile1"></param>
-    /// <param name="tile2"></param>
-    /// <returns></returns>
-    public bool IsDiagonal(Tile tile1, Tile tile2)
-    {
-        if (tile1.x == tile2.x || tile1.y == tile2.y)
-            return false;
-
-        return true;
-    }
+    public Tile GetTileAtCoordinates(Vector2Int coordinates) => tileGrid[coordinates.x, coordinates.y];
 
     /// <summary>
     /// Return a tile with an offset.
@@ -164,11 +152,12 @@ public class M_Board : MonoBehaviour
     {
         List<Vector2Int> toReturn = new List<Vector2Int>();
 
-        radius = Mathf.Abs(radius);
-
-        for (int i = 0; i < radius; i++)
+        for (int x = -radius; x <= radius; x++)
         {
-            toReturn.AddRange(GetEmptySquareCoordinates(xCenter, yCenter, i));
+            for (int y = -radius; y <= radius; y++)
+            {
+                toReturn.Add(new Vector2Int(x, y));
+            }
         }
 
         return toReturn;

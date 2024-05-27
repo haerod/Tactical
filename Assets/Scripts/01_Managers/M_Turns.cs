@@ -60,7 +60,7 @@ public class M_Turns : MonoBehaviour
     public void SwitchToAnotherTeamPlayableCharacter()
     {
         C__Character current = _characters.current;
-        C__Character next = _characters.characters
+        C__Character next = _characters.GetCharacterList()
             .Where(c => c.team == current.team && c != current && c.behavior.playable == true)
             .FirstOrDefault();
 
@@ -75,7 +75,7 @@ public class M_Turns : MonoBehaviour
     {
         C__Character current = _characters.current;
 
-        _characters.characters
+        _characters.GetCharacterList()
             .ForEach(c => c.SetCanPlayValue(false));
 
         EndTurn();
@@ -96,7 +96,7 @@ public class M_Turns : MonoBehaviour
 
         if (_rules.botsPlay == M_Rules.BotsPlayOrder.BeforePlayableCharacters) // NPC play first
         {
-            newTeam = _characters.characters
+            newTeam = _characters.GetCharacterList()
                 .Where(c => c.team != current.team || c == current)
                 .OrderBy(c => c.team.name)
                 .ThenBy(c => c.behavior.playable)
@@ -106,7 +106,7 @@ public class M_Turns : MonoBehaviour
         }
         else // PC play first
         {
-            newTeam = _characters.characters
+            newTeam = _characters.GetCharacterList()
                             .Where(c => c.team != current.team || c == current)
                             .OrderBy(c => c.team.name)
                             .ThenByDescending(c => c.behavior.playable)
@@ -115,7 +115,7 @@ public class M_Turns : MonoBehaviour
             newCharacter = newTeam.Next(current);
         }
 
-        newTeam = _characters.characters
+        newTeam = _characters.GetCharacterList()
             .Where(c => c.team == newCharacter.team)
             .ToList();
 

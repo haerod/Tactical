@@ -7,8 +7,8 @@ using UnityEngine;
 [Serializable]
 public class TileGrid
 {
-    [SerializeField] private List<Tile> tilesToAdd;
-    [SerializeField] private Tile[,] grid;
+    [SerializeField] private List<Tile> tilesToAdd; // Note : Let it serializable to be dirty.
+    [SerializeField] private Tile[,] grid; // Note : Let it serializable to be dirty.
 
     public int lowestX { get; private set; }
     public int higherX { get; private set; }
