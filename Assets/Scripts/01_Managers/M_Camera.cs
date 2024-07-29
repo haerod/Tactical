@@ -6,19 +6,18 @@ using static M__Managers;
 
 public class M_Camera : MonoBehaviour
 {
-    [Header("MOVE")]
+    [Header("OFFSET")]
 
     public float xOffset = -3;
     public float yOffset = 5;
     public float zOffset = -3;
 
+    [Header("SPEED")]
+
+    [SerializeField] private int movingSpeedMultiplier = 2;
     [Space]
-
-    public float movingTime = .3f;
-    public AnimationCurve movingTimeCurve = null;
-
-    [Header("SCREEN MOUSE MOVEMENT")]
-    public int borderMultiplier = 2;
+    public float smoothMovingTime = .3f;
+    public AnimationCurve smoothMovingCurve = null;
 
     [Header("REFERENCES")]
 
@@ -38,39 +37,40 @@ public class M_Camera : MonoBehaviour
     {
         // Singleton
         if (!instance)
-        {
             instance = this;
-        }
         else
-        {
             Debug.LogError("There is more than one M_Camera in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-        }
+    }
+
+    private void Start()
+    {
+        _input.OnMovingCameraInput += Input_OnMovingCameraInput;
     }
 
     private void Update()
     {
-        UpdateCameraPosition();
+        if (currentTime < smoothMovingTime)
+            UpdateCameraPosition();
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying) 
+            return; // Editor is in edit mode.
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(positionToReach, .5f);
     }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
-    public void SetTarget(Transform target)
-    {
-        this.target = target;
-    }
-
     /// <summary>
-    /// Move the camera in the given direction.
+    /// Set the camera's target.
     /// </summary>
-    /// <param name="direction"></param>
-    public void Move(Vector3 direction)
-    {
-        positionToReach = transform.position + direction;
-        currentTime = 0f;
-        startPosition = transform.position;
-    }
+    /// <param name="target"></param>
+    public void SetTarget(Transform target) => this.target = target;
 
     /// <summary>
     /// Reset the camera's position to reach on its target (with the offset).
@@ -108,17 +108,19 @@ public class M_Camera : MonoBehaviour
     {
         currentTime += Time.deltaTime;
 
-        Vector3 cameraPoz = Vector3.Lerp(
+        Vector3 cameraPosition = Vector3.Lerp(
             startPosition,
             positionToReach,
-            movingTimeCurve.Evaluate(Mathf.Clamp01(currentTime / movingTime)));
+            smoothMovingCurve.Evaluate(Mathf.Clamp01((currentTime * movingSpeedMultiplier) / smoothMovingTime)));
 
-        transform.position = cameraPoz;
+        transform.position = cameraPosition;
 
-        float xMin = _board.tileGrid.lowestX;
-        float xMax = _board.tileGrid.higherX;
-        float zMin = _board.tileGrid.lowestY;
-        float zMax = _board.tileGrid.higherY;
+        TileGrid boardTileGrid = _board.tileGrid;
+
+        float xMin = boardTileGrid.lowestX;
+        float xMax = boardTileGrid.higherX;
+        float zMin = boardTileGrid.lowestY;
+        float zMax = boardTileGrid.higherY;
 
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, xMin + xOffset, xMax + xOffset),
@@ -134,7 +136,7 @@ public class M_Camera : MonoBehaviour
     /// <param name="intensity"></param>
     /// <param name="timeBetweenShakes"></param>
     /// <returns></returns>
-    IEnumerator Shake_Co(float duration, float intensity, float timeBetweenShakes)
+    private IEnumerator Shake_Co(float duration, float intensity, float timeBetweenShakes)
     {
         float currentTime = 0;
 
@@ -148,11 +150,16 @@ public class M_Camera : MonoBehaviour
         camTransform.localPosition = Vector3.zero;
     }
 
-    private void OnDrawGizmos()
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+
+    private void Input_OnMovingCameraInput(object sender, Vector2Int inputMoveDirection)
     {
-        if (!Application.isPlaying) return; // EXIT : Editor is in edit mode.
-        
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(positionToReach, .5f);
+        positionToReach = transform.position
+            + transform.forward * inputMoveDirection.y 
+            + transform.right * inputMoveDirection.x;
+        startPosition = transform.position;
+        currentTime = 0f;
     }
 }

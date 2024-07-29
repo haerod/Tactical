@@ -492,15 +492,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   charactersParent: {fileID: 1958866178224547778}
-  grid:
-    _width: 100
-    _height: 100
-    maxCoordinates: {x: 0, y: 0}
-    arrayXYPositive: []
-    arrayXNegative: []
-    arrayYNegative: []
-    arrayXYNegative: []
-  lastTile: {fileID: 0}
+  tileGrid:
+    tilesToAdd: []
 --- !u!1 &1958866177973267472
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,8 +714,9 @@ MonoBehaviour:
   xOffset: -3
   yOffset: 7.5
   zOffset: -3
-  movingTime: 0.3
-  movingTimeCurve:
+  movingSpeedMultiplier: 2
+  smoothMovingTime: 0.3
+  smoothMovingCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -746,9 +740,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  borderMultiplier: 2
   camTransform: {fileID: 1958866178913540614}
-  target: {fileID: 1958866177823873688}
 --- !u!1 &1958866178150919871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1624,6 +1616,10 @@ MonoBehaviour:
   recenterCameraKey: 32
   changeCharacterKey: 9
   endTurnKey: 8
+  upKey: 122
+  downKey: 115
+  leftKey: 113
+  rightKey: 100
 --- !u!1 &1958866179069805156
 GameObject:
   m_ObjectHideFlags: 0

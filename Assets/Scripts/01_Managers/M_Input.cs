@@ -7,9 +7,20 @@ using static M__Managers;
 
 public class M_Input : MonoBehaviour
 {
+    [Header("GAMEPLAY")]
+
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
     [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
-    [SerializeField] private KeyCode endTurnKey = KeyCode.Backspace;    
+    [SerializeField] private KeyCode endTurnKey = KeyCode.Backspace;
+
+    [Header("CAMERA")]
+
+    [SerializeField] private KeyCode upKey = KeyCode.Z;
+    [SerializeField] private KeyCode downKey = KeyCode.S;
+    [SerializeField] private KeyCode leftKey = KeyCode.Q;
+    [SerializeField] private KeyCode rightKey = KeyCode.D;
+
+    public event EventHandler<Vector2Int> OnMovingCameraInput;
 
     private bool canClick = true;
     private Tile pointedTile;
@@ -27,26 +38,24 @@ public class M_Input : MonoBehaviour
     {
         // Singleton
         if (!instance)
-        {
             instance = this;
-        }
         else
-        {
             Debug.LogError("There is more than one M_Input in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-        }
     }
 
     private void Update()
     {
-        if (!canClick) return; // EXIT : Player can't click
-        if (_ui.IsPointerOverUI()) return; // EXIT : Pointer over UI
+        if (!canClick) 
+            return; // Player can't click
+        if (_ui.IsPointerOverUI()) 
+            return; // Pointer over UI
 
         CheckRaycast();
         CheckClick();
         CheckChangeCharacterInput();
         CheckEndTurnInput();
         CheckRecenterCameraInput();
-        CheckMouseScreenMovement();
+        CheckCameraMovementInput();
     }
 
     // ======================================================================
@@ -162,7 +171,8 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void CheckChangeCharacterInput()
     {
-        if (!currentCharacter.behavior.playable) return; // EXIT : NPC turn.
+        if (!currentCharacter.behavior.playable) 
+            return; // NPC turn.
 
         if (Input.GetKeyDown(changeCharacterKey))
         {
@@ -195,45 +205,25 @@ public class M_Input : MonoBehaviour
     /// <summary>
     /// Check if mouse is on the borders (so have to move).
     /// </summary>
-    private void CheckMouseScreenMovement()
+    private void CheckCameraMovementInput()
     {
-        Vector3 direction = Vector3.zero;
         Vector3 mousePosition = Input.mousePosition;
-        int borderMultiplier = _camera.borderMultiplier;
+        bool upInput = mousePosition.y >= Screen.height || Input.GetKey(upKey);
+        bool downInput = mousePosition.y <= 0 || Input.GetKey(downKey);
+        bool leftInput = mousePosition.x <= 0 || Input.GetKey(leftKey);
+        bool rightInput = mousePosition.x >= Screen.width || Input.GetKey(rightKey);
+        Vector2Int direction = Vector2Int.zero;
 
-        if (mousePosition.x >= Screen.width - 1) // Right
-        {
-            if (mousePosition.x >= Screen.width)
-                direction += _camera.transform.right * borderMultiplier;
-            else
-                direction += _camera.transform.right;
-        }
-        else if (mousePosition.x <= 1) // Left
-        {
-            if (mousePosition.x <= 0)
-                direction -= _camera.transform.right * borderMultiplier;
-            else
-                direction -= _camera.transform.right;
-        }
+        if (upInput)
+            direction += Vector2Int.up;
+        if (downInput)
+            direction += Vector2Int.down;
+        if (leftInput)
+            direction += Vector2Int.left;
+        if (rightInput)
+            direction += Vector2Int.right;
 
-        if (mousePosition.y >= Screen.height - 1) // Up
-        {
-            if (mousePosition.y >= Screen.height)
-                direction += _camera.transform.forward * borderMultiplier;
-            else
-                direction += _camera.transform.forward;
-        }
-        else if (mousePosition.y <= 1) // Down
-        {
-            if (mousePosition.y <= 0)
-                direction -= _camera.transform.forward * borderMultiplier;
-            else
-                direction -= _camera.transform.forward;
-        }
-
-        if (direction == Vector3.zero) return;
-
-        _camera.Move(direction);
+        OnMovingCameraInput?.Invoke(this, direction);
     }
 
     // ON TILE

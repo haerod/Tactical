@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using static M__Managers;
 
 public class M_Board : MonoBehaviour
@@ -23,13 +19,9 @@ public class M_Board : MonoBehaviour
     {
         // Singleton
         if (!instance)
-        {
             instance = this;
-        }
         else
-        {
             Debug.LogError("There is more than one M_Board in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-        }
 
         if (Application.isPlaying)
             tileGrid.Setup();
