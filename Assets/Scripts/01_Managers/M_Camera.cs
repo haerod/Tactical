@@ -6,23 +6,29 @@ using static M__Managers;
 
 public class M_Camera : MonoBehaviour
 {
-    [Header("OFFSET")]
+    [Header("MOVEMENT")]
+
+    [SerializeField] private int movingSpeedMultiplier = 2;
+    [Space]
+    [SerializeField] private float smoothMovingTime = .3f;
+    [SerializeField] private AnimationCurve smoothMovingCurve = null;
+
+    [Header("CAMERA OFFSET")]
 
     public float xOffset = -3;
     public float yOffset = 5;
     public float zOffset = -3;
 
-    [Header("SPEED")]
+    [Header("ORTHOGRAPHIC ZOOM")]
 
-    [SerializeField] private int movingSpeedMultiplier = 2;
-    [Space]
-    public float smoothMovingTime = .3f;
-    public AnimationCurve smoothMovingCurve = null;
+    public float zoomMin = 1;
+    public float zoomMax = 5;
 
     [Header("REFERENCES")]
 
-    public Transform camTransform = null;
     public static M_Camera instance;
+
+    [SerializeField] private Camera currentCamera;
 
     private float currentTime;
     private Vector3 positionToReach;
@@ -45,21 +51,13 @@ public class M_Camera : MonoBehaviour
     private void Start()
     {
         _input.OnMovingCameraInput += Input_OnMovingCameraInput;
+        _input.OnZoomingCameraInput += Input_OnZoomingCameraInput;
     }
 
     private void Update()
     {
         if (currentTime < smoothMovingTime)
             UpdateCameraPosition();
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (!Application.isPlaying) 
-            return; // Editor is in edit mode.
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(positionToReach, .5f);
     }
 
     // ======================================================================
@@ -142,12 +140,12 @@ public class M_Camera : MonoBehaviour
 
         while(currentTime < duration)
         {
-            camTransform.localPosition = Random.onUnitSphere * intensity;
+            currentCamera.transform.localPosition = Random.onUnitSphere * intensity;
             yield return new WaitForSeconds(timeBetweenShakes);
             currentTime += timeBetweenShakes;
         }
 
-        camTransform.localPosition = Vector3.zero;
+        currentCamera.transform.localPosition = Vector3.zero;
     }
 
     // ======================================================================
@@ -161,5 +159,11 @@ public class M_Camera : MonoBehaviour
             + transform.right * inputMoveDirection.x;
         startPosition = transform.position;
         currentTime = 0f;
+    }
+
+    private void Input_OnZoomingCameraInput(object sender, int zoomAmount)
+    {
+        currentCamera.orthographicSize += zoomAmount;
+        currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize, zoomMin, zoomMax);
     }
 }

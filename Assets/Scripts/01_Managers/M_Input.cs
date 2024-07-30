@@ -19,8 +19,12 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode downKey = KeyCode.S;
     [SerializeField] private KeyCode leftKey = KeyCode.Q;
     [SerializeField] private KeyCode rightKey = KeyCode.D;
+    [Space]
+    [SerializeField] private KeyCode zoomInKey = KeyCode.T;
+    [SerializeField] private KeyCode zoomOutKey = KeyCode.G;
 
     public event EventHandler<Vector2Int> OnMovingCameraInput;
+    public event EventHandler<int> OnZoomingCameraInput;
 
     private bool canClick = true;
     private Tile pointedTile;
@@ -56,6 +60,7 @@ public class M_Input : MonoBehaviour
         CheckEndTurnInput();
         CheckRecenterCameraInput();
         CheckCameraMovementInput();
+        CheckCameraZoomInput();
     }
 
     // ======================================================================
@@ -203,7 +208,7 @@ public class M_Input : MonoBehaviour
     }
 
     /// <summary>
-    /// Check if mouse is on the borders (so have to move).
+    /// Check if mouse is on the borders (so have to move) or movement keys are pressed.
     /// </summary>
     private void CheckCameraMovementInput()
     {
@@ -224,6 +229,24 @@ public class M_Input : MonoBehaviour
             direction += Vector2Int.right;
 
         OnMovingCameraInput?.Invoke(this, direction);
+    }
+
+    /// <summary>
+    /// Check if zoom input is pressed.
+    /// </summary>
+    private void CheckCameraZoomInput()
+    {
+        int zoomAmount = 0;
+
+        if (Input.GetKey(zoomInKey) || Input.mouseScrollDelta.y > 0)
+            zoomAmount -= 1;
+        if (Input.GetKey(zoomOutKey) || Input.mouseScrollDelta.y < 0)
+            zoomAmount += 1;
+
+        if (zoomAmount == 0)
+            return; // No input
+
+        OnZoomingCameraInput?.Invoke(this, zoomAmount);
     }
 
     // ON TILE

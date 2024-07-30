@@ -714,6 +714,8 @@ MonoBehaviour:
   xOffset: -3
   yOffset: 7.5
   zOffset: -3
+  zoomMin: 1
+  zoomMax: 5
   movingSpeedMultiplier: 2
   smoothMovingTime: 0.3
   smoothMovingCurve:
@@ -740,7 +742,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  zoomSpeed: 3
   camTransform: {fileID: 1958866178913540614}
+  currentCamera: {fileID: 1958866178913540615}
 --- !u!1 &1958866178150919871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1616,10 +1620,12 @@ MonoBehaviour:
   recenterCameraKey: 32
   changeCharacterKey: 9
   endTurnKey: 8
-  upKey: 122
+  upKey: 119
   downKey: 115
-  leftKey: 113
+  leftKey: 97
   rightKey: 100
+  zoomInKey: 116
+  zoomOutKey: 103
 --- !u!1 &1958866179069805156
 GameObject:
   m_ObjectHideFlags: 0
