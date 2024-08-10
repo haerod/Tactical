@@ -12,6 +12,7 @@ public class C__Character : MonoBehaviour
     public C_Infos infos;
     public C_Behavior behavior;
     public C_AnimatorScripts anim; // With animator / skinned mesh renderer
+    public C_WeaponHolder weaponHolder;
     public UI_SlicedHealthBar healthBar;
 
     public Team team => Team();

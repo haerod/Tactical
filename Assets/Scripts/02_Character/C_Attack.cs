@@ -7,12 +7,11 @@ using static M__Managers;
 
 public class C_Attack : MonoBehaviour
 {
-    public Vector2Int damagesRange = new Vector2Int(3, 5);
+    public Weapon currentWeapon;
 
     [Header("REFERENCES")]
     
     [SerializeField] private C__Character c = null;
-    [SerializeField] private GameObject muzzleFlare = null;
 
     private Action OnAttackDone;
 
@@ -53,7 +52,7 @@ public class C_Attack : MonoBehaviour
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
 
-        int damages = UnityEngine.Random.Range(damagesRange.x, damagesRange.y + 1);
+        int damages = UnityEngine.Random.Range(currentWeapon.damagesRange.x, currentWeapon.damagesRange.y + 1);
 
         _input.ClearFeedbacksAndValues();
         _input.SetActiveClick(false);
@@ -83,8 +82,14 @@ public class C_Attack : MonoBehaviour
         OnAttackDone();
 
         // Muzzle flare
-        muzzleFlare.SetActive(true);
-        Wait(0.2f, () => muzzleFlare.SetActive(false));
+
+        GameObject muzzleFlash = c.weaponHolder.GetCurrentWeaponGraphics().muzzleFlash;
+
+        if(muzzleFlash)
+        {
+            muzzleFlash.SetActive(true);
+            Wait(0.2f, () => muzzleFlash.SetActive(false));
+        }
     }
 
     /// <summary>
