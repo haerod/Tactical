@@ -7,4 +7,5 @@ public class Weapon : ScriptableObject
 {
     public string weaponName;
     public Vector2Int damagesRange = new Vector2Int(3, 5);
+    public List<DamageType> damageType;
 }

@@ -6024,19 +6024,19 @@ PrefabInstance:
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[4]
       value: 
-      objectReference: {fileID: 1466952805}
+      objectReference: {fileID: 1213740235}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[5]
       value: 
-      objectReference: {fileID: 1213740235}
+      objectReference: {fileID: 983237735}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[6]
       value: 
-      objectReference: {fileID: 983237735}
+      objectReference: {fileID: 773377278}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[7]
       value: 
-      objectReference: {fileID: 773377278}
+      objectReference: {fileID: 172214915}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[8]
       value: 
@@ -6044,7 +6044,7 @@ PrefabInstance:
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[9]
       value: 
-      objectReference: {fileID: 172214915}
+      objectReference: {fileID: 1466952805}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[10]
       value: 
@@ -11014,6 +11014,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1470988910}
     m_Modifications:
+    - target: {fileID: 1298178860832744792, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1839518269879080444, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -11041,6 +11045,10 @@ PrefabInstance:
     - target: {fileID: 2624727970125762872, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: movementRange
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4645553542827357393, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4768188108386124555, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_RootOrder
@@ -11102,6 +11110,10 @@ PrefabInstance:
       propertyPath: characters
       value: 
       objectReference: {fileID: 795598612}
+    - target: {fileID: 8704202748226201189, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: currentWeapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 750e76deb0678ee45948176160a19a8d, type: 2}
     - target: {fileID: 8704202748226201189, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: damagesRange.x
       value: 4

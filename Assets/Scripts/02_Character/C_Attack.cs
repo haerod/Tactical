@@ -151,7 +151,7 @@ public class C_Attack : MonoBehaviour
         {
             if (success)
             {
-                target.health.AddDamages(damages);
+                target.health.AddDamages(damages, currentWeapon.damageType);
             }
             else
             {
