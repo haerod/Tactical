@@ -2,7 +2,7 @@
 # IF RETURN
 
 if(condition)
-	return; // Description
+	return; // Description without point in the end
 
 if(character == null)
 	return; // No character allowed
@@ -34,6 +34,21 @@ if (!instance)
     instance = this;
 else
     Debug.LogError("There is more than one InsertNameHere in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+
+------------------------------------------------------------------------------------------------------
+# DESCRIPTIONS
+
+/// <summary>
+/// Verb without "s" in the end, finishing with a point.
+/// </summary>
+/// <param name="nameOfTheParameter"></param>
+/// <returns></returns>
+
+------------------------------------------------------------------------------------------------------
+#
+
+------------------------------------------------------------------------------------------------------
+#
 
 ------------------------------------------------------------------------------------------------------
 #
