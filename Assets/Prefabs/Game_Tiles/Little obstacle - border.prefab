@@ -138,8 +138,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8494549904505113954}
   - component: {fileID: 1154124735854434048}
+  - component: {fileID: 2313183811182661076}
   m_Layer: 0
-  m_Name: Little obstacle - intersection
+  m_Name: Little obstacle - border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -180,3 +181,15 @@ MonoBehaviour:
   gizmoSize: {x: 1, y: 1, z: 1}
   gizmoOffset: {x: 0, y: -0.5, z: 0}
   tested: 0
+--- !u!114 &2313183811182661076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511001791859697996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e5316c5a038b343b72abf5719596b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

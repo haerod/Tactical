@@ -22,6 +22,7 @@ public class Tile : MonoBehaviour
 
     public enum TileMaterial { Yellow, Grey, Red, Green, Blue }
     public enum Directions { Top, Down, Right, Left }
+
     public C__Character character => Character();
 
     [Header("REFERENCES")]
@@ -41,6 +42,8 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject downLine = null;
     [SerializeField] private GameObject leftLine = null;
     [SerializeField] private GameObject rightLine = null;
+
+    public List<Cover> covers;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -90,6 +93,58 @@ public class Tile : MonoBehaviour
         cost = parent.cost + GetCost(parentTile);
         heuristic = (Mathf.Abs(endTile.x - x) + Mathf.Abs(endTile.y - y)) * 10;
         f = cost + heuristic;
+    }
+
+    /// <summary>
+    /// Add a cover in covers list.
+    /// </summary>
+    /// <param name="cover"></param>
+    public void AddCover(Cover cover)
+    {
+        if (covers.Contains(cover))
+            return; // Already this cover in the list
+
+        covers.Add(cover);
+        EditorUtility.SetDirty(this);
+    }
+
+    /// <summary>
+    /// Remove a cover form covers list.
+    /// </summary>
+    /// <param name="cover"></param>
+    public void RemoveCover(Cover cover)
+    {
+        if (!covers.Contains(cover))
+            return; // This cover doesn't in the list
+
+        covers.Remove(cover);
+        EditorUtility.SetDirty(this);
+    }
+
+    /// <summary>
+    /// Get covers list.
+    /// </summary>
+    /// <returns></returns>
+    public List<Cover> GetCovers() => covers;
+
+    /// <summary>
+    /// Return true if it's a cover between this tile and another tile.
+    /// </summary>
+    /// <param name="otherTile"></param>
+    /// <returns></returns>
+    public bool IsCoverBetween(Tile otherTile)
+    {
+        List<Cover> testedCovers = new List<Cover>();
+        testedCovers.AddRange(covers);
+        testedCovers.AddRange(otherTile.covers);
+
+        foreach (Cover testedCover in testedCovers)
+        {
+            if (testedCover.IsBetweenTiles(this, otherTile))
+                return true;
+        }
+
+        return false;
     }
 
     /// <summary>

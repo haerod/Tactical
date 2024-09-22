@@ -80,11 +80,13 @@ public class M_Pathfinding : MonoBehaviour
             _board
                 .GetTilesAround(currentTile, 1, _rules.useDiagonals)
                 .Except(closedList)
+                .Where(t => !currentTile.IsCoverBetween(t))
                 .ToList()
                 .ForEach(tile => aroundList.Add(tile));
-
+            
             foreach (Tile tile in aroundList)
             {
+                // Caluclate values
                 tile.CalulateValues(endTile, currentTile);
 
                 if (tile.cost > 0 && currentTile.cost + tile.GetCost(currentTile) < currentTile.cost)

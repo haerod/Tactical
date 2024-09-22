@@ -5,24 +5,27 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using System;
 
+[RequireComponent(typeof (Cover))]
 [ExecuteInEditMode]
 public class CoverAutoSnap : MonoBehaviour
 {
-    [HideInInspector] public M_Board board; // Note : Let it serializable to be dirty.
     public bool isLocated; // Note : Let it serializable to be dirty.
+
     [SerializeField] private Color gizmoColor = Color.red;
     [SerializeField] private Vector3 gizmoSize = Vector3.one;
     [SerializeField] private Vector3 gizmoOffset = Vector3.zero;
+
+    [HideInInspector] public M_Board board; // Note : Let it serializable to be dirty.
+    [HideInInspector] public Cover cover; // Note : Let it serializable to be dirty.
+    [HideInInspector] public Tile parentTile; // Note : Let it serializable to be dirty.
+
     public bool tested;
 
     private void Start()
     {
         board = FindAnyObjectByType<M_Board>();
+        cover = GetComponent<Cover>();
     }
-
-    // ======================================================================
-    // PUBLIC METHODS
-    // ======================================================================
 
     private void Update()
     {
@@ -30,6 +33,9 @@ public class CoverAutoSnap : MonoBehaviour
             return; // Not in editor
         if (!transform.hasChanged)
             return; // Didnt move
+
+        RemoveFromParent();
+
         if (!IsOnValidPosition())
             return; // Not a valid position
 
@@ -59,6 +65,7 @@ public class CoverAutoSnap : MonoBehaviour
 
         MoveObject(coordinates);
         AutoRotateObject();
+        AddToParent();
     }
 
     private void OnDrawGizmos()
@@ -73,6 +80,15 @@ public class CoverAutoSnap : MonoBehaviour
         Gizmos.color = gizmoColor;
         Gizmos.DrawCube(transform.position + gizmoOffset, gizmoSize);
     }
+
+    private void OnDestroy()
+    {
+        RemoveFromParent();
+    }
+
+    // ======================================================================
+    // PUBLIC METHODS
+    // ======================================================================
 
     // ======================================================================
     // PRIVATE METHODS
@@ -124,6 +140,28 @@ public class CoverAutoSnap : MonoBehaviour
 
         return true;
     }
+
+    private void AddToParent()
+    {
+        Tile validTile = GetTileUnder();
+
+        if (!validTile)
+            return; // No valid tile
+
+        validTile.AddCover(cover);
+        parentTile = validTile;
+        EditorUtility.SetDirty(this);
+    }
+
+    private void RemoveFromParent()
+    {
+        if (parentTile)
+        {
+            parentTile.RemoveCover(cover);
+            EditorUtility.SetDirty(this);
+        }
+    }
+
 
     /// <summary>
     /// Get the tile under the character, if it can walk on.
