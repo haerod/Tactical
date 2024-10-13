@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2464412689547735887
 Transform:
   m_ObjectHideFlags: 0
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 58192136462483085}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.02, z: 0}
-  m_LocalScale: {x: 1000, y: 1000, z: 1}
+  m_LocalScale: {x: 100, y: 100, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 342081523400903856}
@@ -108,8 +108,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044828751644659729}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: -4.741, y: -0, z: 0}
-  m_LocalScale: {x: 994.7494, y: 50, z: 1}
+  m_LocalPosition: {x: -0.5, y: -0, z: 0}
+  m_LocalScale: {x: 100, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1284887860408528366}
@@ -192,8 +192,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1137831457787088772}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 4.732}
-  m_LocalScale: {x: 994.7494, y: 50, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 100, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1284887860408528366}
@@ -278,7 +278,7 @@ Transform:
   m_GameObject: {fileID: 3926012722416152738}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 342081523400903856}
@@ -359,8 +359,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5051290916272941764}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0, z: -4.74}
-  m_LocalScale: {x: 994.7494, y: 50, z: 1}
+  m_LocalPosition: {x: 0, y: -0, z: -0.5}
+  m_LocalScale: {x: 100, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1284887860408528366}
@@ -445,7 +445,7 @@ Transform:
   m_GameObject: {fileID: 5329991644252039689}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.001, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 342081523400903856}
@@ -555,8 +555,8 @@ GameObject:
   m_Component:
   - component: {fileID: 342081523400903856}
   - component: {fileID: -1600153904307248980}
-  - component: {fileID: 3654935721792417744}
   - component: {fileID: -5638765507918872196}
+  - component: {fileID: 8876705116196320866}
   m_Layer: 0
   m_Name: Tile_Original
   m_TagString: Terrain
@@ -573,7 +573,7 @@ Transform:
   m_GameObject: {fileID: 6860123943097857979}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.46, y: -0.17236, z: 1.34}
-  m_LocalScale: {x: 0.1, y: 1, z: 0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2649314990280726917}
@@ -614,20 +614,7 @@ MonoBehaviour:
   downLine: {fileID: 5051290916272941764}
   leftLine: {fileID: 1044828751644659729}
   rightLine: {fileID: 9214442802075879578}
---- !u!64 &3654935721792417744
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6860123943097857979}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  covers: []
 --- !u!114 &-5638765507918872196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,13 +627,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5362778612753c94193cfc01384338fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gizmoType: 1
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   gizmoSize: {x: 1, y: 0.2, z: 1}
   gizmoOffset: {x: 0, y: 0, z: 0}
   isLocated: 0
   tile: {fileID: 0}
   board: {fileID: 0}
+--- !u!65 &8876705116196320866
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6860123943097857979}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.01, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9214442802075879578
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,8 +671,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9214442802075879578}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 4.73, y: -0, z: 0}
-  m_LocalScale: {x: 994.7494, y: 50, z: 1}
+  m_LocalPosition: {x: 0.5, y: -0, z: 0}
+  m_LocalScale: {x: 100, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1284887860408528366}

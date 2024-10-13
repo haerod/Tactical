@@ -19,12 +19,12 @@ public class CoverAutoSnap : MonoBehaviour
     [HideInInspector] public Cover cover; // Note : Let it serializable to be dirty.
     [HideInInspector] public Tile parentTile; // Note : Let it serializable to be dirty.
 
-    public bool tested;
-
     private void Start()
     {
-        board = FindAnyObjectByType<M_Board>();
-        cover = GetComponent<Cover>();
+        if (!IsInEditor())
+            return;
+
+        SetParameters();
     }
 
     private void Update()
@@ -34,6 +34,44 @@ public class CoverAutoSnap : MonoBehaviour
         if (!transform.hasChanged)
             return; // Didnt move
 
+        CheckGridPosition();
+        SetParametersDirty();
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+            return; // Play mode
+        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+            return; // Prefab mode
+        if (isLocated)
+            return; // Is located
+
+        Gizmos.color = gizmoColor;
+        Gizmos.DrawCube(transform.position + gizmoOffset, gizmoSize);
+    }
+
+    private void OnDestroy()
+    {
+        RemoveFromParent();
+    }
+
+    // ======================================================================
+    // PUBLIC METHODS
+    // ======================================================================    
+    
+    // ======================================================================
+    // INHERITED
+    // ======================================================================
+
+    private void SetParameters()
+    {
+        board = FindAnyObjectByType<M_Board>();
+        cover = GetComponent<Cover>();
+    }
+
+    private void CheckGridPosition()
+    {
         RemoveFromParent();
 
         if (!IsOnValidPosition())
@@ -68,27 +106,10 @@ public class CoverAutoSnap : MonoBehaviour
         AddToParent();
     }
 
-    private void OnDrawGizmos()
+    private void SetParametersDirty()
     {
-        if (EditorApplication.isPlayingOrWillChangePlaymode)
-            return; // Play mode
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
-            return; // Prefab mode
-        if (isLocated)
-            return; // Is located
 
-        Gizmos.color = gizmoColor;
-        Gizmos.DrawCube(transform.position + gizmoOffset, gizmoSize);
     }
-
-    private void OnDestroy()
-    {
-        RemoveFromParent();
-    }
-
-    // ======================================================================
-    // PUBLIC METHODS
-    // ======================================================================
 
     // ======================================================================
     // PRIVATE METHODS

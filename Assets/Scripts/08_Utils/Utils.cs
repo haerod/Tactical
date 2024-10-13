@@ -16,4 +16,11 @@ public static class Utils
 
         return false;
     }
+
+    /// <summary>
+    /// Round to the closest value + 0.5 (ex : 0.5, 1.5, 2.5, ...).
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static float RoundToHalf(float value) => Mathf.Sign(value) * (Mathf.Abs((int)value) + 0.5f);
 }

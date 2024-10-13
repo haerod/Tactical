@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Cover : MonoBehaviour
 {
+    public Vector2 coverPosition;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -11,6 +13,8 @@ public class Cover : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    public void SetCoverPosition(Vector2 position) => coverPosition = position;
 
     /// <summary>
     /// Return true if it's beteween two asked tiles.
@@ -22,12 +26,12 @@ public class Cover : MonoBehaviour
     {
         if (tile1.x == tile2.x)
         {
-            if ((tile1.y + tile2.y) / 2f == transform.position.z)
+            if ((tile1.y + tile2.y) / 2f == coverPosition.y)
                 return true;
         }
 
         if (tile1.y == tile2.y)
-            if ((tile1.x + tile2.x) / 2f == transform.position.x)
+            if ((tile1.x + tile2.x) / 2f == coverPosition.x)
                 return true;
 
         return false;

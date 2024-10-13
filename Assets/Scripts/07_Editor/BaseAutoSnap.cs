@@ -12,7 +12,7 @@ public abstract class BaseAutoSnap : MonoBehaviour
     [SerializeField] private Vector3 gizmoSize = Vector3.one;
     [SerializeField] private Vector3 gizmoOffset = Vector3.zero;
 
-    [HideInInspector] public bool isLocated = true; // Note : Let it serializable to be dirty.
+    public bool isLocated = true; // Note : Let it serializable to be dirty.
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -63,7 +63,7 @@ public abstract class BaseAutoSnap : MonoBehaviour
     /// <summary>
     /// Check if the tile is snapping somewhere
     /// </summary>
-    protected void CheckGridPosition()
+    protected virtual void CheckGridPosition()
     {
         Vector2Int coordinates = new Vector2Int(
                 Mathf.RoundToInt(transform.position.x),
@@ -129,4 +129,9 @@ public abstract class BaseAutoSnap : MonoBehaviour
 
         return true;
     }
+
+    /// <summary>
+    /// Get the object position before the movement
+    /// </summary>
+    protected Vector3 GetPositionBeforeMovement() => transform.position;
 }
