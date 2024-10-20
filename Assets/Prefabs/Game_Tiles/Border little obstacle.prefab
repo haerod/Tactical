@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 461920283813862496}
   - component: {fileID: 2313183811182661076}
   m_Layer: 0
-  m_Name: Little obstacle - border
+  m_Name: Border little obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -195,6 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e5316c5a038b343b72abf5719596b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: {fileID: 11400000, guid: b8148e897a136154ca877f10c4025a85, type: 2}
   coverPosition: {x: 0, y: 0}
 --- !u!1 &6839885580050274853
 GameObject:

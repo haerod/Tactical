@@ -208,7 +208,71 @@ public class M_Board : MonoBehaviour
         return toReturn;
     }
 
+    /// <summary>
+    /// With two tiles in diagonal, return the two other tiles to make a square.
+    /// </summary>
+    /// <param name="tileFrom"></param>
+    /// <param name="tileTo"></param>
+    /// <returns></returns>
+    public List<Tile> GetTilesOfASquareWithDiagonals(Tile tileFrom, Tile tileTo)
+    {
+        if (!tileFrom.IsDiagonalWith(tileTo))
+            return null; // They are not in diagonal
+
+        Tile tile1 = GetTileWithBiggestX(tileFrom, tileTo);
+        Tile tile2 = GetTileWithLowestX(tileFrom, tileTo);
+        Tile tile3, tile4;
+
+        if(tile1.y > tile2.y)
+        {
+            tile3 = GetTileAtCoordinates(tile1.x, tile2.y);
+            tile4 = GetTileAtCoordinates(tile2.x, tile1.y);
+        }
+        else
+        {
+            tile3 = GetTileAtCoordinates(tile2.x, tile1.y);
+            tile4 = GetTileAtCoordinates(tile1.x, tile2.y);
+        }
+
+        return new List<Tile> { tile3, tile4 };
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Return the tile with the biggest x coordinate, or null if two x are equal.
+    /// </summary>
+    /// <param name="tile1"></param>
+    /// <param name="tile2"></param>
+    /// <returns></returns>
+    private Tile GetTileWithBiggestX(Tile tile1, Tile tile2)
+    {
+        if(tile1.x == tile2.x)
+            return null;
+
+        if(tile1.x > tile2.x)
+            return tile1;
+
+        return tile2;
+    }
+
+    /// <summary>
+    /// Return the tile with the lowest x coordinate, or null if two x are equal.
+    /// </summary>
+    /// <param name="tile1"></param>
+    /// <param name="tile2"></param>
+    /// <returns></returns>
+    private Tile GetTileWithLowestX(Tile tile1, Tile tile2)
+    {
+        if (tile1.x == tile2.x)
+            return null;
+
+        if (tile1.x < tile2.x)
+            return tile1;
+
+        return tile2;
+    }
+
 }

@@ -2,167 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.SceneManagement;
-using System;
 
-[RequireComponent(typeof (Cover))]
 [ExecuteInEditMode]
-public class CoverAutoSnap : MonoBehaviour
+public class CoverAutoSnap : BaseAutoSnap
 {
-    public bool isLocated; // Note : Let it serializable to be dirty.
+    [SerializeField] private bool flipVisuals;
 
-    [SerializeField] private Color gizmoColor = Color.red;
-    [SerializeField] private Vector3 gizmoSize = Vector3.one;
-    [SerializeField] private Vector3 gizmoOffset = Vector3.zero;
+    [Header("REFERENCES")]
+
+    [SerializeField] private Transform coverTransform;
 
     [HideInInspector] public M_Board board; // Note : Let it serializable to be dirty.
     [HideInInspector] public Cover cover; // Note : Let it serializable to be dirty.
     [HideInInspector] public Tile parentTile; // Note : Let it serializable to be dirty.
 
-    private void Start()
-    {
-        if (!IsInEditor())
-            return;
+    private Vector3 positionBeforeMovement;
+    private bool firstFrame = true;
 
-        SetParameters();
-    }
-
-    private void Update()
-    {
-        if (!IsInEditor())
-            return; // Not in editor
-        if (!transform.hasChanged)
-            return; // Didnt move
-
-        CheckGridPosition();
-        SetParametersDirty();
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (EditorApplication.isPlayingOrWillChangePlaymode)
-            return; // Play mode
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
-            return; // Prefab mode
-        if (isLocated)
-            return; // Is located
-
-        Gizmos.color = gizmoColor;
-        Gizmos.DrawCube(transform.position + gizmoOffset, gizmoSize);
-    }
+    // ======================================================================
+    // MONOBEHAVIOUR
+    // ======================================================================
 
     private void OnDestroy()
     {
-        RemoveFromParent();
+        if (!IsInEditor())
+            return; // Not in editor mode
+        if (!board)
+            return; // Exit prefab mode
+
+        RemoveFromManager();
     }
 
-    // ======================================================================
-    // PUBLIC METHODS
-    // ======================================================================    
-    
     // ======================================================================
     // INHERITED
     // ======================================================================
 
-    private void SetParameters()
+    protected override void CheckGridPosition()
     {
-        board = FindAnyObjectByType<M_Board>();
-        cover = GetComponent<Cover>();
+        positionBeforeMovement = GetPositionBeforeMovement();
+        base.CheckGridPosition();
     }
 
-    private void CheckGridPosition()
-    {
-        RemoveFromParent();
-
-        if (!IsOnValidPosition())
-            return; // Not a valid position
-
-        float decimalsX = transform.position.x % 1;
-        float decimalsY = transform.position.z % 1;
-        float xDelta = Mathf.Abs(1 - decimalsX);
-        float yDelta = Mathf.Abs(1 - decimalsY);
-
-        Vector2 coordinates = new Vector2();
-
-        if (xDelta > yDelta)
-        {
-            coordinates.x = Mathf.RoundToInt(transform.position.x);
-            coordinates.y = RoundToHalf(transform.position.z);
-        }
-        else
-        {
-            coordinates.x = RoundToHalf(transform.position.x);
-            coordinates.y = Mathf.RoundToInt(transform.position.z);
-        }
-
-        if (GetOtherCoverAtPosition(new Vector3(coordinates.x, 0, coordinates.y)))
-        {
-            isLocated = false;
-            return; // Already a cover at this position
-        }
-
-        MoveObject(coordinates);
-        AutoRotateObject();
-        AddToParent();
-    }
-
-    private void SetParametersDirty()
-    {
-
-    }
-
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-
-    /// <summary>
-    /// Move the object and setup parameters if necessary.
-    /// </summary>
-    private void MoveObject(Vector2 coordinates)
-    {
-        transform.position = new Vector3(coordinates.x, 0, coordinates.y);
-        isLocated = true;
-    }
-
-    /// <summary>
-    /// Round to the closest value + 0.5 (ex : 0.5, 1.5, 2.5, ...).
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private float RoundToHalf(float value) => Mathf.Sign(value) * (Mathf.Abs((int)value) + 0.5f);
-
-    private void AutoRotateObject()
-    {
-        if (transform.position.x % 1 == 0)
-            transform.eulerAngles = Vector3.up * 90f;
-        else
-            transform.eulerAngles = Vector3.zero;
-    }
-
-    private bool IsInEditor()
-    {
-        if (EditorApplication.isPlayingOrWillChangePlaymode)
-            return false; // Play mode
-        if (UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null)
-            return false; // Prefab mode
-
-        return true;
-    }
-
-    private bool IsOnValidPosition()
-    {
-        Tile validTile = GetTileUnder();
-
-        if (!validTile)
-        {
-            isLocated = false;
-            return false;
-        }
-
-        return true;
-    }
-
-    private void AddToParent()
+    protected override void AddToManager()
     {
         Tile validTile = GetTileUnder();
 
@@ -171,10 +52,44 @@ public class CoverAutoSnap : MonoBehaviour
 
         validTile.AddCover(cover);
         parentTile = validTile;
+
+        cover.SetCoverPosition(new Vector2(
+            coverTransform.position.x, 
+            coverTransform.position.z));
+
         EditorUtility.SetDirty(this);
+        EditorUtility.SetDirty(cover);
     }
 
-    private void RemoveFromParent()
+    protected override bool IsOnValidPosition()
+    {
+        Tile validTile = GetTileUnder();
+        Cover otherCover = GetOtherCoverAtPosition();
+
+        if (!validTile || otherCover)
+        {
+            isLocated = false;
+            return false;
+        }
+
+        return true;
+    }
+
+    protected override void MoveObject(Vector2Int coordinates)
+    {
+        transform.position = new Vector3(coordinates.x, 0, coordinates.y);
+        MoveCoverOnBorder();
+    }
+
+    protected override void SetParameters()
+    {
+        base.SetParameters();
+        board = FindAnyObjectByType<M_Board>();
+        cover = GetComponent<Cover>();
+        transform.parent = board.transform;
+    }
+
+    protected override void RemoveFromManager()
     {
         if (parentTile)
         {
@@ -183,6 +98,19 @@ public class CoverAutoSnap : MonoBehaviour
         }
     }
 
+    protected override void SetParametersDirty()
+    {
+        EditorUtility.SetDirty(this);
+        EditorUtility.SetDirty(gameObject);
+    }
+
+    // ======================================================================
+    // PUBLIC METHODS
+    // ======================================================================
+
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
 
     /// <summary>
     /// Get the tile under the character, if it can walk on.
@@ -198,8 +126,6 @@ public class CoverAutoSnap : MonoBehaviour
 
             if (!testedTile)
                 continue; // No tile
-            //if (!character.move.CanWalkOn(testedTile.type))
-            //    continue; // Not walkable
 
             return testedTile;
         }
@@ -207,27 +133,71 @@ public class CoverAutoSnap : MonoBehaviour
         return null;
     }
 
-    /// <summary>
-    /// Get other cover at position if it's not itself.
-    /// </summary>
-    /// <param name="tile"></param>
-    /// <returns></returns>
-    private bool GetOtherCoverAtPosition(Vector3 testedPosition)
+    private Cover GetOtherCoverAtPosition()
     {
-        Collider[] colliders = Physics.OverlapSphere(testedPosition, .1f);
+        Collider[] colliderCoverArray = Physics.OverlapSphere(coverTransform.position, .1f);
 
-        foreach (Collider collider in colliders)
+        foreach (Collider colliderCover in colliderCoverArray)
         {
-            CoverAutoSnap testedCollider = collider.GetComponentInParent<CoverAutoSnap>();
+            Cover testedCover = colliderCover.GetComponentInParent<Cover>();
 
-            if (!testedCollider)
-                continue; // No collider
-            if (testedCollider == this)
-                continue; // Current cover
+            if (!testedCover)
+                continue; // No cover
+            if (testedCover == cover)
+                continue; // Same cover
 
-            return true;
+            return testedCover;
         }
 
-        return false;
+        return null;
     }
+
+    /// <summary>
+    /// Auto rotate the cover.
+    /// </summary>
+    private void MoveCoverOnBorder()
+    {
+        if (firstFrame)
+        {
+            firstFrame = false;
+            return; // Quickfix for the first frame
+        }
+
+        Vector3 positionOnSnap = positionBeforeMovement - transform.position;
+
+        float absX = Mathf.Abs(positionOnSnap.x);
+        float absZ = Mathf.Abs(positionOnSnap.z);
+
+        if (absX > absZ)
+        {
+            coverTransform.transform.localPosition = new Vector3(
+                .5f * Mathf.Sign(positionOnSnap.x),
+                transform.localPosition.y,
+                0);
+        }
+        else
+        {
+            coverTransform.transform.localPosition = new Vector3(
+                0,
+                transform.localPosition.y,
+                .5f * Mathf.Sign(positionOnSnap.z));
+        }
+
+        AutoRotateCover();
+    }
+
+    /// <summary>
+    /// Rotate the cover depending the border (and the visual flipping).
+    /// </summary>
+    private void AutoRotateCover()
+    {
+        if (coverTransform.localPosition.x % 1 == 0)
+            coverTransform.eulerAngles = Vector3.up * 90f;
+        else
+            coverTransform.eulerAngles = Vector3.zero;
+
+        if (flipVisuals)
+            coverTransform.eulerAngles += Vector3.up * 180f;
+    }
+
 }

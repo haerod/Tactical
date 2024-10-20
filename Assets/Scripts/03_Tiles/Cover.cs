@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Cover : MonoBehaviour
 {
+    public TileType type;
+
+    [Header("DEBUG")]
+
     public Vector2 coverPosition;
 
     // ======================================================================

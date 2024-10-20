@@ -40,7 +40,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="inclusion"></param>
     /// <param name="allowedTiles"></param>
     /// <returns></returns>
-    public List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion, List<Tile> blockers, List<Tile> searchZone)
+    public List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion, MovementRules rules)
     {
         List<Tile> openList = new List<Tile>();
         List<Tile> closedList = new List<Tile>();
@@ -49,12 +49,12 @@ public class M_Pathfinding : MonoBehaviour
         Tile currentTile;
 
         if (startTile == null) 
-        { 
+        {
             Debug.LogError("tile is null !"); 
             return null; // ERROR: Start tile is null
         }
         if (endTile == null) 
-        { 
+        {
             Debug.LogError("end tile is null !"); 
             return null; // ERROR : End tile is null
         }
@@ -63,7 +63,6 @@ public class M_Pathfinding : MonoBehaviour
         currentTile = startTile;
         currentTile.cost = 0;
         openList.Add(currentTile);
-        closedList.AddRange(blockers);
 
         // Pathfinding loop
         while (openList.Count > 0)
@@ -75,15 +74,14 @@ public class M_Pathfinding : MonoBehaviour
             closedList.Add(currentTile);
             openList.Remove(currentTile);
 
-            // Put all tiles in around list
+            // Put adjacent tiles in around list
             aroundList.Clear();
-            _board
+            aroundList.AddRange(_board
                 .GetTilesAround(currentTile, 1, _rules.useDiagonals)
                 .Except(closedList)
-                .Where(t => !currentTile.IsCoverBetween(t))
-                .ToList()
-                .ForEach(tile => aroundList.Add(tile));
-            
+                .Where(t => IsPathWalkable(t, currentTile, rules))
+                .ToList());
+
             foreach (Tile tile in aroundList)
             {
                 // Caluclate values
@@ -169,5 +167,71 @@ public class M_Pathfinding : MonoBehaviour
 
     // ======================================================================
     // PRIVATE METHODS
-    // ======================================================================    
+    // ======================================================================
+
+    /// <summary>
+    /// Return true if it's a path between the current and the tested tile.
+    /// </summary>
+    /// <param name="testedTile"></param>
+    /// <param name="currentTile"></param>
+    /// <param name="rules"></param>
+    /// <returns></returns>
+    private bool IsPathWalkable(Tile testedTile, Tile currentTile, MovementRules rules)
+    {
+        if (rules.blockingCharacterTiles.Contains(testedTile))
+            return false; // Blocking character
+
+        if (!rules.allowedTileTypes.Contains(testedTile.type))
+            return false; // Not walkable
+
+        if (testedTile.hasCovers)
+            if (currentTile.IsCoverBetween(testedTile, rules.allowedTileTypes))
+                return false; // Cover between start and end and not walkable
+
+        if (_rules.useDiagonals)
+            if (currentTile.IsDiagonalWith(testedTile))
+                if (IsDiagonalTileABlocker(testedTile, currentTile, rules))
+                    return false; // False : A tile in diagonal blocks the movement
+
+        return true;
+    }
+
+    /// <summary>
+    /// Return true if the path if the tiles in diagonal between the tested and current tile is a blocker.
+    /// </summary>
+    /// <param name="testedTile"></param>
+    /// <param name="currentTile"></param>
+    /// <param name="rules"></param>
+    /// <returns></returns>
+    private bool IsDiagonalTileABlocker(Tile testedTile, Tile currentTile, MovementRules rules)
+    {
+        foreach (Tile t in _board.GetTilesOfASquareWithDiagonals(currentTile, testedTile))
+        {
+            if(!t)
+                return true; // A diagonal is void
+
+            if (!rules.allowedTileTypes.Contains(t.type))
+                return true; // A diagonal contains a blocker
+
+            if (testedTile.IsCoverBetween(t, rules.allowedTileTypes))
+                return true; // A diagonal contains cover
+
+            if (currentTile.IsCoverBetween(t, rules.allowedTileTypes))
+                return true; // A diagonal contains cover
+        }
+
+        return false;
+    }
+}
+
+public class MovementRules
+{
+    public List<TileType> allowedTileTypes;
+    public List<Tile> blockingCharacterTiles;
+
+    public MovementRules(List<TileType> allowedTileTypes, List<Tile> blockingCharacterTiles)
+    {
+        this.allowedTileTypes = allowedTileTypes;
+        this.blockingCharacterTiles = blockingCharacterTiles;
+    }
 }

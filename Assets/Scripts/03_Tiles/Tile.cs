@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 using static M__Managers;
 
 public class Tile : MonoBehaviour
@@ -44,6 +45,8 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject rightLine = null;
 
     public List<Cover> covers;
+
+    [HideInInspector] public bool hasCovers => covers.Count > 0;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -131,20 +134,21 @@ public class Tile : MonoBehaviour
     /// Return true if it's a cover between this tile and another tile.
     /// </summary>
     /// <param name="otherTile"></param>
+    /// <param name="allowedWalkableTypes"></param>
     /// <returns></returns>
-    public bool IsCoverBetween(Tile otherTile)
-    {
+    public bool IsCoverBetween(Tile otherTile, List<TileType> allowedWalkableTypes)
+    {            
         List<Cover> testedCovers = new List<Cover>();
-        testedCovers.AddRange(covers);
-        testedCovers.AddRange(otherTile.covers);
 
-        foreach (Cover testedCover in testedCovers)
-        {
-            if (testedCover.IsBetweenTiles(this, otherTile))
-                return true;
-        }
+        if(!Utils.IsVoidList(GetCovers()))
+            testedCovers.AddRange(GetCovers());
+        if(!Utils.IsVoidList(otherTile.GetCovers()))
+            testedCovers.AddRange(otherTile.GetCovers());
 
-        return false;
+        return testedCovers
+            .Where(c => !allowedWalkableTypes.Contains(c.type))
+            .Where(c => c.IsBetweenTiles(this, otherTile))
+            .FirstOrDefault() != null;
     }
 
     /// <summary>
@@ -160,7 +164,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
-    public bool IsDiagonalWith(Tile tile) => x == tile.x ^ y == tile.y; // ^ : XOR
+    public bool IsDiagonalWith(Tile tile) => x != tile.x && y != tile.y;
 
     /// <summary>
     /// Reset the pathfinding tiles value.

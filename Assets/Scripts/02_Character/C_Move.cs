@@ -51,7 +51,7 @@ public class C_Move : MonoBehaviour
             return new List<Tile>();
 
         // Fog of war disabled
-        if (!_rules.enableFogOfWar) 
+        if (!_rules.enableFogOfWar)
             return _board
                 .GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
                 .Except(Blockers())
@@ -75,10 +75,6 @@ public class C_Move : MonoBehaviour
             .ToList();
     }
 
-    /// <summary>
-    /// Return the characters which block the movement (depending the rules).
-    /// </summary>
-    /// <returns></returns>
     public List<Tile> Blockers()
     {
         List<Tile> toReturn = new List<Tile>();
@@ -89,7 +85,20 @@ public class C_Move : MonoBehaviour
             .ToList());
 
         // Add characters
-        if(_rules.enableFogOfWar)
+        toReturn.AddRange(GetTraversableCharacterTiles());
+
+        return toReturn;
+    }
+
+    /// <summary>
+    /// Return the characters which block the movement (depending the rules).
+    /// </summary>
+    /// <returns></returns>
+    public List<Tile> GetTraversableCharacterTiles()
+    {
+        List<Tile> toReturn = new List<Tile>();
+
+        if (_rules.enableFogOfWar)
             toReturn.AddRange(_characters.GetCharacterList()
                 .Where(chara => IsBlockingPath(chara))
                 .Intersect(c.look.CharactersInView())
@@ -167,11 +176,10 @@ public class C_Move : MonoBehaviour
         if (tileInFog && !c.move.movementInFogOfWarAllowed) return false; // Tile in fog
 
         List<Tile> path = _pathfinding.Pathfind(
-            c.tile, 
-            tile, 
-            M_Pathfinding.TileInclusion.WithEnd, 
-            c.move.Blockers(),
-            MovementArea());
+            c.tile,
+            tile,
+            M_Pathfinding.TileInclusion.WithEnd,
+            new MovementRules(walkableTiles, GetTraversableCharacterTiles()));
         if (path.Count == 0) return false; // No path
         if (path.Count > movementRange) return false; // Out range
 
