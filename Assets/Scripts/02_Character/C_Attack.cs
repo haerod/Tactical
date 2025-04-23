@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class CAttack : MonoBehaviour
+public class C_Attack : MonoBehaviour
 {
     public Weapon currentWeapon;
 

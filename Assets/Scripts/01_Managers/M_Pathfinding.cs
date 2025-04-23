@@ -46,7 +46,6 @@ public class M_Pathfinding : MonoBehaviour
         List<Tile> alreadyTestedTiles = new List<Tile>();
         List<Tile> adjacentTiles = new List<Tile>();
         List<Tile> toReturn = new List<Tile>();
-        Tile currentTile;
 
         if (!startTile) 
         {
@@ -60,7 +59,7 @@ public class M_Pathfinding : MonoBehaviour
         }
 
         // Set first tile
-        currentTile = startTile;
+        Tile currentTile = startTile;
         currentTile.cost = 0;
         tilesToTest.Add(currentTile);
 
@@ -84,7 +83,7 @@ public class M_Pathfinding : MonoBehaviour
 
             foreach (Tile tile in adjacentTiles)
             {
-                // Caluclate values
+                // Calculate values
                 tile.CalculateValues(endTile, currentTile);
 
                 if (tile.cost > 0 && currentTile.cost + tile.GetCost(currentTile) < currentTile.cost)
@@ -133,7 +132,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="endTile"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    public List<Tile> LineOfSight(Tile startTile, Tile endTile, TileInclusion parameters = TileInclusion.WithoutStartAndEnd)
+    public static List<Tile> LineOfSight(Tile startTile, Tile endTile, TileInclusion parameters = TileInclusion.WithoutStartAndEnd)
     {
         // Get Vector between start and end coordinates (Start tile - end tile)
         Vector2 v2 = new Vector2(endTile.x - startTile.x, endTile.y - startTile.y);
