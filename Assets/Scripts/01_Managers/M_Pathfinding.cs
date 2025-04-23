@@ -42,9 +42,9 @@ public class M_Pathfinding : MonoBehaviour
     /// <returns></returns>
     public List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion, MovementRules rules)
     {
-        List<Tile> openList = new List<Tile>();
-        List<Tile> closedList = new List<Tile>();
-        List<Tile> aroundList = new List<Tile>();
+        List<Tile> tilesToTest = new List<Tile>();
+        List<Tile> alreadyTestedTiles = new List<Tile>();
+        List<Tile> adjacentTiles = new List<Tile>();
         List<Tile> toReturn = new List<Tile>();
         Tile currentTile;
 
@@ -62,39 +62,39 @@ public class M_Pathfinding : MonoBehaviour
         // Set first tile
         currentTile = startTile;
         currentTile.cost = 0;
-        openList.Add(currentTile);
+        tilesToTest.Add(currentTile);
 
         // Pathfinding loop
-        while (openList.Count > 0)
+        while (tilesToTest.Count > 0)
         {
             // Choose current tile in open list
-            currentTile = openList
+            currentTile = tilesToTest
                 .OrderBy(o => o.f)
                 .FirstOrDefault();
-            closedList.Add(currentTile);
-            openList.Remove(currentTile);
+            alreadyTestedTiles.Add(currentTile);
+            tilesToTest.Remove(currentTile);
 
             // Put adjacent tiles in around list
-            aroundList.Clear();
-            aroundList.AddRange(_board
+            adjacentTiles.Clear();
+            adjacentTiles.AddRange(_board
                 .GetTilesAround(currentTile, 1, _rules.useDiagonals)
-                .Except(closedList)
-                .Where(t => IsPathWalkable(t, currentTile, rules))
+                .Except(alreadyTestedTiles)
+                .Where(t => IsDirectionWalkable(t, currentTile, rules))
                 .ToList());
 
-            foreach (Tile tile in aroundList)
+            foreach (Tile tile in adjacentTiles)
             {
                 // Caluclate values
                 tile.CalculateValues(endTile, currentTile);
 
                 if (tile.cost > 0 && currentTile.cost + tile.GetCost(currentTile) < currentTile.cost)
-                    openList.AddIfNew(tile);
+                    tilesToTest.AddIfNew(tile);
             }
 
             // If it's end tile -> return path
-            if (aroundList.Contains(endTile))
+            if (adjacentTiles.Contains(endTile))
             {
-                closedList.Add(endTile);
+                alreadyTestedTiles.Add(endTile);
                 endTile.parent = currentTile;
 
                 // Add tiles from last to fist (without start and end)
@@ -112,16 +112,16 @@ public class M_Pathfinding : MonoBehaviour
                 if (inclusion is TileInclusion.WithEnd or TileInclusion.WithStartAndEnd)
                     toReturn.Add(endTile);
 
-                openList.ForEach(tile => tile.ResetTileValues());
-                closedList.ForEach(tile => tile.ResetTileValues());
+                tilesToTest.ForEach(tile => tile.ResetTileValues());
+                alreadyTestedTiles.ForEach(tile => tile.ResetTileValues());
                 return toReturn; // Found a path
             }
 
-            aroundList.ForEach(tile => openList.AddIfNew(tile));
+            adjacentTiles.ForEach(tile => tilesToTest.AddIfNew(tile));
         }
 
-        openList.ForEach(tile => tile.ResetTileValues());
-        closedList.ForEach(tile => tile.ResetTileValues());
+        tilesToTest.ForEach(tile => tile.ResetTileValues());
+        alreadyTestedTiles.ForEach(tile => tile.ResetTileValues());
         return toReturn;
     }
 
@@ -172,25 +172,25 @@ public class M_Pathfinding : MonoBehaviour
     /// <summary>
     /// Return true if it's a path between the current and the tested tile.
     /// </summary>
-    /// <param name="testedTile"></param>
+    /// <param name="destinationTile"></param>
     /// <param name="currentTile"></param>
     /// <param name="rules"></param>
     /// <returns></returns>
-    private bool IsPathWalkable(Tile testedTile, Tile currentTile, MovementRules rules)
+    private bool IsDirectionWalkable(Tile destinationTile, Tile currentTile, MovementRules rules)
     {
-        if (rules.blockingCharacterTiles.Contains(testedTile))
+        if (rules.blockingCharacterTiles.Contains(destinationTile))
             return false; // Blocking character
 
-        if (!rules.allowedTileTypes.Contains(testedTile.type))
+        if (!rules.allowedTileTypes.Contains(destinationTile.type))
             return false; // Not walkable
 
-        if (testedTile.hasCovers)
-            if (currentTile.IsCoverBetween(testedTile, rules.allowedTileTypes))
+        if (destinationTile.hasCovers)
+            if (currentTile.IsCoverBetween(destinationTile, rules.allowedTileTypes))
                 return false; // Cover between start and end and not walkable
 
         if (_rules.useDiagonals)
-            if (currentTile.IsDiagonalWith(testedTile))
-                if (IsDiagonalTileABlocker(testedTile, currentTile, rules))
+            if (currentTile.IsDiagonalWith(destinationTile))
+                if (IsDiagonalTileABlocker(destinationTile, currentTile, rules))
                     return false; // False : A tile in diagonal blocks the movement
 
         return true;
