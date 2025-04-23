@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Linq;
 
 [ExecuteInEditMode]
 public class CharacterAutoSnap : BaseAutoSnap
@@ -101,20 +102,9 @@ public class CharacterAutoSnap : BaseAutoSnap
     {
         Collider[] colliders = Physics.OverlapSphere(tile.transform.position, .1f);
 
-        foreach (Collider collider in colliders)
-        {
-            C__Character testedCharacter = collider.GetComponentInParent<C__Character>();
-
-            if (!testedCharacter)
-                continue; // No character
-
-            if (testedCharacter == character)
-                continue; // Current character
-
-            return testedCharacter;
-        }
-
-        return null;
+        return colliders
+            .Select(collider => collider.GetComponentInParent<C__Character>())
+            .Where(testedCharacter => testedCharacter)
+            .FirstOrDefault(testedCharacter => testedCharacter != character);
     }
-
 }

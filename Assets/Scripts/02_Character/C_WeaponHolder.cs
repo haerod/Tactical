@@ -37,9 +37,9 @@ public class C_WeaponHolder : MonoBehaviour
 
         foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
         {
-            bool isCurrentWepon = testedWeaponGraphics.weapon == c.attack.currentWeapon;
+            bool isCurrentWeapon = testedWeaponGraphics.weapon == c.attack.currentWeapon;
 
-            if (isCurrentWepon)
+            if (isCurrentWeapon)
                 currentWeaponGraphics = testedWeaponGraphics;
         }
 
@@ -54,12 +54,12 @@ public class C_WeaponHolder : MonoBehaviour
     {
         foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
         {
-            bool isCurrentWepon = testedWeaponGraphics.weapon == weapon;
+            bool isCurrentWeapon = testedWeaponGraphics.weapon == weapon;
 
-            if (isCurrentWepon)
+            if (isCurrentWeapon)
                 currentWeaponGraphics = testedWeaponGraphics;
 
-            testedWeaponGraphics.gameObject.SetActive(isCurrentWepon);
+            testedWeaponGraphics.gameObject.SetActive(isCurrentWeapon);
         }
     }
 

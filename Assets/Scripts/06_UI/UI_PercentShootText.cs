@@ -36,30 +36,30 @@ public class UI_PercentShootText : MonoBehaviour
         percentShootText.gameObject.SetActive(true);
         percentShootText.text = percent + "%";
 
-        if (percent <= 0) // 0
+        switch (percent)
         {
-            percentShootText.color = zeroColor;
-            percentShootText.fontStyle = FontStyle.Normal;
-        }
-        else if (percent > 0 && percent < 100) // Regular
-        {
-            percentShootText.color = basicColor;
-            percentShootText.fontStyle = FontStyle.Normal;
-        }
-        else // Critical
-        {
-            percentShootText.color = criticalColor;
-            percentShootText.fontStyle = FontStyle.Bold;
+            // 0
+            case <= 0:
+                percentShootText.color = zeroColor;
+                percentShootText.fontStyle = FontStyle.Normal;
+                break;
+            // Regular
+            case < 100:
+                percentShootText.color = basicColor;
+                percentShootText.fontStyle = FontStyle.Normal;
+                break;
+            // Critical
+            default:
+                percentShootText.color = criticalColor;
+                percentShootText.fontStyle = FontStyle.Bold;
+                break;
         }
     }
 
     /// <summary>
     /// Disable the percent shoot text.
     /// </summary>
-    public void DisablePercentShootText()
-    {
-        percentShootText.gameObject.SetActive(false);
-    }
+    public void DisablePercentShootText() => percentShootText.gameObject.SetActive(false);
 
     // ======================================================================
     // PRIVATE METHODS

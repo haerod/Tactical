@@ -60,9 +60,9 @@ public class M_Turns : MonoBehaviour
     public void SwitchToAnotherTeamPlayableCharacter()
     {
         C__Character current = _characters.current;
-        C__Character next = _characters.GetCharacterList()
-            .Where(c => c.team == current.team && c != current && c.behavior.playable == true)
-            .FirstOrDefault();
+        C__Character next = _characters
+            .GetCharacterList()
+            .FirstOrDefault(c => c.team == current.team && c != current && c.behavior.playable);
 
         if(next)
             _characters.NewCurrentCharacter(next);
@@ -73,8 +73,6 @@ public class M_Turns : MonoBehaviour
     /// </summary>
     public void EndAllPlayableCharactersTurn()
     {
-        C__Character current = _characters.current;
-
         _characters.GetCharacterList()
             .ForEach(c => c.SetCanPlayValue(false));
 
@@ -92,7 +90,7 @@ public class M_Turns : MonoBehaviour
     {
         C__Character current = _characters.current;
         C__Character newCharacter;
-        List<C__Character> newTeam = new List<C__Character>();
+        List<C__Character> newTeam;
 
         if (_rules.botsPlay == M_Rules.BotsPlayOrder.BeforePlayableCharacters) // NPC play first
         {
@@ -133,7 +131,7 @@ public class M_Turns : MonoBehaviour
     private C__Character NextCharacterInTheTeam()
     {
         C__Character current = _characters.current;
-        List<C__Character> group = new List<C__Character>();
+        List<C__Character> group;
         bool currentIsPlayable = current.behavior.playable;
 
         if (currentIsPlayable) // PC
@@ -157,15 +155,13 @@ public class M_Turns : MonoBehaviour
             {
                 return _characters
                     .GetTeamNPC(current)
-                    .Where(c => c.CanPlay())
-                    .FirstOrDefault(); // EXIT: Return the first NPC or null
+                    .FirstOrDefault(c => c.CanPlay()); // EXIT: Return the first NPC or null
             }
             else if (!currentIsPlayable && _rules.botsPlay == M_Rules.BotsPlayOrder.BeforePlayableCharacters) // NPC
             {
                 return _characters
-                       .GetTeamPC(current)
-                       .Where(c => c.CanPlay())
-                       .FirstOrDefault(); // EXIT: Return the first NPC or null
+                    .GetTeamPC(current)
+                    .FirstOrDefault(c => c.CanPlay()); // EXIT: Return the first NPC or null
             }
 
             return null; // EXIT: Nobody can play next.

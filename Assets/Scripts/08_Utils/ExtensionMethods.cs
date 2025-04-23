@@ -20,8 +20,7 @@ public static class ExtensionMethods
     public static T Next<T>(this List<T> list, int index)
     {
         if (list.Count == 0) return default;
-        if (index + 1 < list.Count) return list[index + 1];
-        else return list[0];
+        return index + 1 < list.Count ? list[index + 1] : list[0];
     }
 
     /// <summary>
@@ -31,14 +30,13 @@ public static class ExtensionMethods
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
-    /// <param name="index"></param>
+    /// <param name="element"></param>
     /// <returns></returns>
     public static T Next<T>(this List<T> list, T element)
     {
         int index = list.IndexOf(element);
         if (list.Count == 0) return default;
-        if (index + 1 < list.Count) return list[index + 1];
-        else return list[0];
+        return index + 1 < list.Count ? list[index + 1] : list[0];
     }
 
     /// <summary>
@@ -53,8 +51,7 @@ public static class ExtensionMethods
     public static T Previous<T>(this List<T> list, int index)
     {
         if (list.Count == 0) return default;
-        if (index - 1 >= 0) return list[index - 1];
-        else return list[list.Count - 1];
+        return index - 1 >= 0 ? list[index - 1] : list[list.Count - 1];
     }
 
     /// <summary>
@@ -64,14 +61,13 @@ public static class ExtensionMethods
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
-    /// <param name="index"></param>
+    /// <param name="element"></param>
     /// <returns></returns>
     public static T Previous<T>(this List<T> list, T element)
     {
         int index = list.IndexOf(element);
         if (list.Count == 0) return default;
-        if (index - 1 >= 0) return list[index - 1];
-        else return list[list.Count - 1];
+        return index - 1 >= 0 ? list[index - 1] : list[list.Count - 1];
     }
 
     /// <summary>
@@ -83,13 +79,11 @@ public static class ExtensionMethods
     /// <returns></returns>
     public static T GetRandom<T>(this List<T> list)
     {
-        if (list.Count == 0)
-        {
-            Debug.LogWarning("List is empty !");
-            return default;
-        }
+        if (list.Count != 0) 
+            return list[UnityEngine.Random.Range(0, list.Count)];
 
-        return list[UnityEngine.Random.Range(0, list.Count)];
+        Debug.LogWarning("List is empty !");
+        return default;
     }
 
     /// <summary>
@@ -106,7 +100,7 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Add only if it doensn't exist in the list.
+    /// Add only if it doesn't exist in the list.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -167,10 +161,11 @@ public static class ExtensionMethods
     // ======================================================================
 
     /// <summary>
-    /// Print all the elements of a two dimensional array in the console.
+    /// Print all the elements of a two-dimensional array in the console.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
+    /// <param name="withIndex"></param>
     public static void Print<T>(this T[] array, bool withIndex = false)
     {
         for (int i = 0; i < array.GetLength(0); i++)
@@ -192,8 +187,7 @@ public static class ExtensionMethods
     public static bool IsInBounds<T>(this T[] array, int index)
     {
         if (index < 0) return false;
-        if (index >= array.Length) return false;
-        return true;
+        return index < array.Length;
     }
 
     // ======================================================================
@@ -201,10 +195,11 @@ public static class ExtensionMethods
     // ======================================================================
 
     /// <summary>
-    /// Print all the elements of a two dimensional array in the console.
+    /// Print all the elements of a two-dimensional array in the console.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
+    /// <param name="withIndex"></param>
     public static void Print<T>(this T[,] array, bool withIndex = false)
     {
         for (int i = 0; i < array.GetLength(0); i++)
@@ -220,14 +215,11 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Print the first and second lenghtes of a two dimensional array in the console.
+    /// Print the first and second length of a two-dimensional array in the console.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
-    public static void PrintLengthes<T>(this T[,] array)
-    {
-        Debug.Log($"{array}: {array.GetLength(0)},{array.GetLength(1)}");
-    }
+    public static void PrintLength<T>(this T[,] array) => Debug.Log($"{array}: {array.GetLength(0)},{array.GetLength(1)}");
 
     /// <summary>
     /// Return true if the item [index0, index1] is out of the array bounds.

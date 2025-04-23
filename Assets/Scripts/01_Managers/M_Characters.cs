@@ -44,7 +44,7 @@ public class M_Characters : MonoBehaviour
             case M_Rules.FirstCharacter.ChosenCharacter:
                 if(_rules.chosenCharacter == null)
                 {
-                    Debug.LogError("Choosen character is null in M_Rules, set it.", _rules.gameObject);
+                    Debug.LogError("Chosen character is null in M_Rules, set it.", _rules.gameObject);
                 }
                 break;
             case M_Rules.FirstCharacter.FirstCharacterOfTheFirstTeam:
@@ -64,7 +64,7 @@ public class M_Characters : MonoBehaviour
     /// <summary>
     /// Remove the character of the character's list.
     /// </summary>
-    /// <param name="dead"></param>
+    /// <param name="deadCharacter"></param>
     public void RemoveDeadCharacter(C__Character deadCharacter)
     {
         RemoveCharacter(deadCharacter);
@@ -217,7 +217,7 @@ public class M_Characters : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Order the character list by team, then by PC/NPC (depending the Rules).
+    /// Order the character list by team, then by PC/NPC (depending on the Rules).
     /// </summary>
     private void OrderCharacterList()
     {

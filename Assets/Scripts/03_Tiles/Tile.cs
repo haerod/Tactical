@@ -59,9 +59,7 @@ public class Tile : MonoBehaviour
     /// <summary>
     /// Give the values to the tile.
     /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <param name="tileName"></param>
+    /// <param name="newCoordinates"></param>
     public void Setup(Vector2Int newCoordinates)
     {
         x = newCoordinates.x;
@@ -90,7 +88,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     /// <param name="endTile"></param>
     /// <param name="parentTile"></param>
-    public void CalulateValues(Tile endTile, Tile parentTile)
+    public void CalculateValues(Tile endTile, Tile parentTile)
     {
         parent = parentTile;
         cost = parent.cost + GetCost(parentTile);
@@ -125,12 +123,6 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary>
-    /// Get covers list.
-    /// </summary>
-    /// <returns></returns>
-    public List<Cover> GetCovers() => covers;
-
-    /// <summary>
     /// Return true if it's a cover between this tile and another tile.
     /// </summary>
     /// <param name="otherTile"></param>
@@ -147,14 +139,12 @@ public class Tile : MonoBehaviour
 
         return testedCovers
             .Where(c => !allowedWalkableTypes.Contains(c.type))
-            .Where(c => c.IsBetweenTiles(this, otherTile))
-            .FirstOrDefault() != null;
+            .FirstOrDefault(c => c.IsBetweenTiles(this, otherTile));
     }
 
     /// <summary>
     /// Return the cost of movement from tile to another.
     /// </summary>
-    /// <param name="tile"></param>
     /// <param name="currentTile"></param>
     /// <returns></returns>
     public int GetCost(Tile currentTile) => IsDiagonalWith(currentTile) ? 14 : 10;
@@ -199,12 +189,10 @@ public class Tile : MonoBehaviour
             default:
                 break;
         }
-
-
     }
 
     /// <summary>
-    /// Disbale all the view lines.
+    /// Disable all the view lines.
     /// </summary>
     public void DisableViewLine()
     {
@@ -231,23 +219,32 @@ public class Tile : MonoBehaviour
     {
         areaObject.SetActive(true);
 
-        if (tileMaterial == TileMaterial.Yellow)
-            areaRend.material = yellow;
-        else if (tileMaterial == TileMaterial.Grey)
-            areaRend.material = grey;
-        else if (tileMaterial == TileMaterial.Blue)
-            areaRend.material = blue;
-        else if (tileMaterial == TileMaterial.Green)
-            areaRend.material = green;
-        else if (tileMaterial == TileMaterial.Red)
-            areaRend.material = red;
-        else
-            Debug.LogError("Add a material here");
+        switch (tileMaterial)
+        {
+            case TileMaterial.Yellow:
+                areaRend.material = yellow;
+                break;
+            case TileMaterial.Grey:
+                areaRend.material = grey;
+                break;
+            case TileMaterial.Blue:
+                areaRend.material = blue;
+                break;
+            case TileMaterial.Green:
+                areaRend.material = green;
+                break;
+            case TileMaterial.Red:
+                areaRend.material = red;
+                break;
+            default:
+                Debug.LogError("Add a material here");
+                break;
+        }
     }
 
     /// <summary>
     /// Set the tile skin to "basic".
-    /// Short cut of SetMaterial(TileMaterial.Basic).
+    /// Shortcut of SetMaterial(TileMaterial.Basic).
     /// </summary>
     public void ResetTileSkin() => areaObject.SetActive(false);
 
@@ -284,4 +281,10 @@ public class Tile : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Get covers list.
+    /// </summary>
+    /// <returns></returns>
+    private List<Cover> GetCovers() => covers;
 }

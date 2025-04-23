@@ -31,11 +31,11 @@ public class CharacterAutoChangeWeapon : MonoBehaviour
 
     private void Update()
     {
-        if (AreModifications())
-        {
-            AutoChangeWeapon();
-            UpdateModificationValues();
-        }
+        if (!AreModifications()) 
+            return; // No modifications
+        
+        AutoChangeWeapon();
+        UpdateModificationValues();
     }
 
     // ======================================================================

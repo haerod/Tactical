@@ -113,7 +113,7 @@ public class M_Input : MonoBehaviour
             Tile tile = hit.transform.GetComponent<Tile>();
 
             // On a character's collider, get the character's tile
-            if (hit.transform.tag == "Clickable") 
+            if (hit.transform.CompareTag("Clickable")) 
             {
                 tile = hit.transform.GetComponentInParent<C__Character>().tile;
             }
@@ -159,7 +159,7 @@ public class M_Input : MonoBehaviour
     private void CheckClick()
     {
         if (!Input.GetMouseButtonDown(0)) return; // EXIT : No click
-        if (pointedTile == null) return; // EXIT : Not on a tile
+        if (!pointedTile) return; // EXIT : Not on a tile
 
         if (pointedTile.IsOccupiedByCharacter())
         {
@@ -302,7 +302,7 @@ public class M_Input : MonoBehaviour
         if (currentPathfinding.Count == 0)
         {
             OnForbiddenTile(); 
-            return; // No path 
+            return; // EXIT : No path 
         }
 
         bool tileInMoveRange = currentCharacter.move.CanMoveTo(pointedTile);
@@ -315,10 +315,7 @@ public class M_Input : MonoBehaviour
             pointedTile);
 
         // Set cursor
-        if (tileInMoveRange)
-            _feedback.SetCursor(M_Feedback.CursorType.Regular);
-        else
-            _feedback.SetCursor(M_Feedback.CursorType.OutMovement);
+        _feedback.SetCursor(tileInMoveRange ? M_Feedback.CursorType.Regular : M_Feedback.CursorType.OutMovement);
     }
 
     /// <summary>
@@ -330,8 +327,8 @@ public class M_Input : MonoBehaviour
         ClearFeedbacksAndValues();
     }
 
-    // CLICS
-    // =====
+    // CLICKS
+    // ======
 
     /// <summary>
     /// Actions happening if the player clicks on a tile occupied by another enemy character.
@@ -341,8 +338,10 @@ public class M_Input : MonoBehaviour
     {
         _ui.HidePercentText();
 
-        if (currentTarget == null) return; // EXIT : There is no target
-        if(currentTarget.team == currentCharacter.team) return; // EXIT : Same team
+        if (!currentTarget) 
+            return; // There is no target
+        if(currentTarget.team == currentCharacter.team) 
+            return; // Same team
 
         // Attack
         currentCharacter.attack.Attack(currentTarget);
@@ -370,9 +369,13 @@ public class M_Input : MonoBehaviour
     /// <returns></returns>
     private bool CanGo(Tile tile)
     {
-        if (!tile) return false;
-        if (!currentCharacter.move.walkableTiles.Contains(tile.type)) return false;
-        if (tile.x == currentCharacter.move.x && tile.y == currentCharacter.move.y) return false;
+        if (!tile) 
+            return false; // No tile
+        if (!currentCharacter.move.walkableTiles.Contains(tile.type)) 
+            return false; // Unwalkable tile
+        if (tile.x == currentCharacter.move.x && tile.y == currentCharacter.move.y) 
+            return false; // Same tile
+        
         return true;
     }   
 }

@@ -39,12 +39,12 @@ public class CharacterAutoRename : MonoBehaviour
 
     private void Update()
     {
-        if(AreModifications())
-        {
-            AutoAssignMaterials();
-            AutoRename();
-            UpdateModificationValues();
-        }
+        if (!AreModifications()) 
+            return; // No modifications
+        
+        AutoAssignMaterials();
+        AutoRename();
+        UpdateModificationValues();
     }
 
     // ======================================================================
@@ -83,8 +83,6 @@ public class CharacterAutoRename : MonoBehaviour
     /// <summary>
     /// Rename the element and assign the colors.
     /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
     private void AutoRename()
     {
         if (current.team)

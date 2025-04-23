@@ -64,7 +64,7 @@ public class F_ViewLines : MonoBehaviour
 
         foreach (Tile t in viewArea)
         {
-        t.SetFogMaskActive(false);
+            t.SetFogMaskActive(false);
             t.DisableViewLine();
         }
 

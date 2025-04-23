@@ -17,7 +17,7 @@ public class UI_OrientToCamera : MonoBehaviour
 
     private void Update()
     {
-        Orient();
+        OrientToCamera();
     }
 
     // ======================================================================
@@ -27,10 +27,7 @@ public class UI_OrientToCamera : MonoBehaviour
     /// <summary>
     /// Orient the object to the camera.
     /// </summary>
-    public void Orient()
-    {
-        transform.forward = cam.transform.forward;
-    }
+    public void OrientToCamera() => transform.forward = cam.transform.forward;
 
     // ======================================================================
     // PRIVATE METHODS

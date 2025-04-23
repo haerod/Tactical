@@ -47,7 +47,6 @@ public class TileGrid
         }
     }
 
-
     // IMPLICIT CAST
     public Tile this[int x, int y]
     {

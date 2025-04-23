@@ -10,12 +10,7 @@ public static class Utils
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
     /// <returns></returns>
-    public static bool IsVoidList<T>(List<T> list)
-    {
-        if (list == null || list.Count == 0) return true;
-
-        return false;
-    }
+    public static bool IsVoidList<T>(List<T> list) => list == null || list.Count == 0;
 
     /// <summary>
     /// Round to the closest value + 0.5 (ex : 0.5, 1.5, 2.5, ...).

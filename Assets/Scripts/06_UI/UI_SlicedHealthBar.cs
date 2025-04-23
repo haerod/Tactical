@@ -34,15 +34,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
         for (int i = 0; i < health.health; i++)
         {
             currentLifeBar = lifeLayoutGroup.GetChild(i).gameObject;
-
-            if (i < health.currentHealth)
-            {
-                currentLifeBar.SetActive(true);   
-            }
-            else
-            {
-                currentLifeBar.SetActive(false);
-            }
+            currentLifeBar.SetActive(i < health.currentHealth);
         }
     }
 
@@ -50,10 +42,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
     /// Enable or disable the life bar.
     /// </summary>
     /// <param name="value"></param>
-    public void SetLifeBarActive (bool value)
-    {
-        transform.parent.gameObject.SetActive(value);
-    }
+    public void SetLifeBarActive (bool value) => transform.parent.gameObject.SetActive(value);
 
     // ======================================================================
     // PRIVATE METHODS

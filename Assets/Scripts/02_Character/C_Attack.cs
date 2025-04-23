@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class C_Attack : MonoBehaviour
+public class CAttack : MonoBehaviour
 {
     public Weapon currentWeapon;
 
@@ -13,7 +13,7 @@ public class C_Attack : MonoBehaviour
     
     [SerializeField] private C__Character c = null;
 
-    private Action OnAttackDone;
+    private Action onAttackDone;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -38,7 +38,6 @@ public class C_Attack : MonoBehaviour
     /// Attack the target and start an action in the end.
     /// </summary>
     /// <param name="currentTarget"></param>
-    /// <param name="OnEnd"></param>
     public void Attack(C__Character currentTarget)
     {
         c.SetCanPlayValue(false);
@@ -79,7 +78,7 @@ public class C_Attack : MonoBehaviour
     {
         _camera.Shake();
         _ui.SetActivePlayerUI_Action(true);
-        OnAttackDone();
+        onAttackDone();
 
         // Muzzle flare
 
@@ -119,24 +118,21 @@ public class C_Attack : MonoBehaviour
     /// Start a wait for "time" seconds and execute an action.
     /// </summary>
     /// <param name="time"></param>
-    /// <param name="OnEnd"></param>
-    private void Wait(float time, Action OnEnd)
-    {
-        StartCoroutine(Wait_Co(time, OnEnd));
-    }
+    /// <param name="onEnd"></param>
+    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
 
     /// <summary>
     /// Wait for "time" seconds and execute an action.
     /// Called by Wait() method.
     /// </summary>
     /// <param name="time"></param>
-    /// <param name="OnEnd"></param>
+    /// <param name="onEnd"></param>
     /// <returns></returns>
-    IEnumerator Wait_Co(float time, Action OnEnd)
+    private IEnumerator Wait_Co(float time, Action onEnd)
     {
         yield return new WaitForSeconds(time);
 
-        OnEnd();
+        onEnd();
     }
 
     /// <summary>
@@ -144,10 +140,10 @@ public class C_Attack : MonoBehaviour
     /// </summary>
     /// <param name="success"></param>
     /// <param name="damages"></param>
-    /// <param name="OnEnd"></param>
+    /// <param name="target"></param>
     private void SetOnAttackDone(bool success, int damages, C__Character target)
     {
-        OnAttackDone = () =>
+        onAttackDone = () =>
         {
             if (success)
             {

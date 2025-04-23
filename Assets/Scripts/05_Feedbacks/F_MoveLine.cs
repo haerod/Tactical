@@ -25,7 +25,7 @@ public class F_MoveLine : MonoBehaviour
     /// Set the lines on the path, with the good colors.
     /// </summary>
     /// <param name="path"></param>
-    /// <param name="character"></param>
+    /// <param name="movementRange"></param>
     /// <param name="endTile"></param>
     public void SetLines(List<Tile> path, int movementRange, Tile endTile)
     {
@@ -45,21 +45,20 @@ public class F_MoveLine : MonoBehaviour
 
         // Position line's points
         int i = 0;
-        path
-            .ForEach(tile => {
-                if (i <= movementRange)
-                    line.SetPosition(i, tile.transform.position + Vector3.up * lineOffset);
-                else
+        path.ForEach(tile => {
+            if (i <= movementRange)
+                line.SetPosition(i, tile.transform.position + Vector3.up * lineOffset);
+            else
+            {
+                if (i == movementRange + 1)
                 {
-                    if (i == movementRange + 1)
-                    {
-                        lineOut.SetPosition(i - (movementRange + 1), path[i - 1].transform.position + Vector3.up * lineOffset);
-                    }
-                    lineOut.SetPosition(i - (movementRange), tile.transform.position + Vector3.up * lineOffset);
+                    lineOut.SetPosition(i - (movementRange + 1), path[i - 1].transform.position + Vector3.up * lineOffset);
                 }
+                lineOut.SetPosition(i - (movementRange), tile.transform.position + Vector3.up * lineOffset);
+            }
 
-                i++;
-            });
+            i++;
+        });
     }
 
     /// <summary>

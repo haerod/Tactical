@@ -75,21 +75,6 @@ public class C_Move : MonoBehaviour
             .ToList();
     }
 
-    public List<Tile> Blockers()
-    {
-        List<Tile> toReturn = new List<Tile>();
-
-        // Add not walkableTiles
-        toReturn.AddRange(_board.GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
-            .Where(t => !CanWalkOn(t.type))
-            .ToList());
-
-        // Add characters
-        toReturn.AddRange(GetTraversableCharacterTiles());
-
-        return toReturn;
-    }
-
     /// <summary>
     /// Return the characters which block the movement (depending the rules).
     /// </summary>
@@ -153,7 +138,7 @@ public class C_Move : MonoBehaviour
         endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
         c.transform.rotation = endRotation;
 
-        c.healthBar.GetComponentInParent<UI_OrientToCamera>().Orient();
+        c.healthBar.GetComponentInParent<UI_OrientToCamera>().OrientToCamera();
     }
 
     /// <summary>
@@ -191,11 +176,29 @@ public class C_Move : MonoBehaviour
     // ======================================================================
 
     /// <summary>
+    /// Returns tiles where are blockers
+    /// </summary>
+    /// <returns></returns>
+    private List<Tile> Blockers()
+    {
+        List<Tile> toReturn = new List<Tile>();
+
+        // Add not walkableTiles
+        toReturn.AddRange(_board.GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
+            .Where(t => !CanWalkOn(t.type))
+            .ToList());
+
+        // Add characters
+        toReturn.AddRange(GetTraversableCharacterTiles());
+
+        return toReturn;
+    }
+    
+    /// <summary>
     /// Move the object to a desination and execute an action in the end.
     /// </summary>
-    /// <param name="OnEnd"></param>
     /// <returns></returns>
-    IEnumerator MoveToDestination()
+    private IEnumerator MoveToDestination()
     {
         while (true)
         {
@@ -228,7 +231,7 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Happend when a character move to the next tile.
+    /// Happened when a character move to the next tile.
     /// </summary>
     private void NextTile()
     {
@@ -241,16 +244,11 @@ public class C_Move : MonoBehaviour
     /// Return true if is the last tile of the movement.
     /// </summary>
     /// <returns></returns>
-    private bool IsTheLastTile()
-    {
-        if (index + 1 < currentPath.Count && c.movementRange > 0) return false;
-        return true;
-    }
+    private bool IsTheLastTile() => index + 1 >= currentPath.Count || c.movementRange <= 0;
 
     /// <summary>
     /// Happend in the end of the movement.
     /// </summary>
-    /// <param name="OnEnd"></param>
     private void EndMove()
     {
         anim.SetFloat("speed", 0f);

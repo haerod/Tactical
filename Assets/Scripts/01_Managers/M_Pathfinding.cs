@@ -38,7 +38,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="startTile"></param>
     /// <param name="endTile"></param>
     /// <param name="inclusion"></param>
-    /// <param name="allowedTiles"></param>
+    /// <param name="rules"></param>
     /// <returns></returns>
     public List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion, MovementRules rules)
     {
@@ -48,7 +48,7 @@ public class M_Pathfinding : MonoBehaviour
         List<Tile> toReturn = new List<Tile>();
         Tile currentTile;
 
-        if (startTile == null) 
+        if (!startTile) 
         {
             Debug.LogError("tile is null !"); 
             return null; // ERROR: Start tile is null
@@ -85,7 +85,7 @@ public class M_Pathfinding : MonoBehaviour
             foreach (Tile tile in aroundList)
             {
                 // Caluclate values
-                tile.CalulateValues(endTile, currentTile);
+                tile.CalculateValues(endTile, currentTile);
 
                 if (tile.cost > 0 && currentTile.cost + tile.GetCost(currentTile) < currentTile.cost)
                     openList.AddIfNew(tile);
@@ -107,9 +107,9 @@ public class M_Pathfinding : MonoBehaviour
 
                 toReturn.Reverse();
 
-                if (inclusion == TileInclusion.WithStart || inclusion == TileInclusion.WithStartAndEnd)
+                if (inclusion is TileInclusion.WithStart or TileInclusion.WithStartAndEnd)
                     toReturn.Insert(0,startTile);
-                if (inclusion == TileInclusion.WithEnd || inclusion == TileInclusion.WithStartAndEnd)
+                if (inclusion is TileInclusion.WithEnd or TileInclusion.WithStartAndEnd)
                     toReturn.Add(endTile);
 
                 openList.ForEach(tile => tile.ResetTileValues());
@@ -143,21 +143,21 @@ public class M_Pathfinding : MonoBehaviour
 
         List<Tile> toReturn = new List<Tile>();
 
-        if(parameters == TileInclusion.WithStart || parameters == TileInclusion.WithStartAndEnd)
+        if(parameters is TileInclusion.WithStart or TileInclusion.WithStartAndEnd)
         {
             toReturn.Add(startTile);
         }
 
         for (int i = 1; i < length+1; i++)
         {
-            // Theoric coordinates of the segment
+            // Theoretic coordinates of the segment
             Vector2 tile = new Vector2(startTile.x, startTile.y) + i / length * v2;
             Tile t = _board.GetTileAtCoordinates(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
             // if t is null, its a hole
             toReturn.Add(t);
         }
 
-        if (parameters == TileInclusion.WithStart || parameters == TileInclusion.WithoutStartAndEnd)
+        if (parameters is TileInclusion.WithStart or TileInclusion.WithoutStartAndEnd)
         {
             toReturn.Remove(endTile);
         }
@@ -226,8 +226,8 @@ public class M_Pathfinding : MonoBehaviour
 
 public class MovementRules
 {
-    public List<TileType> allowedTileTypes;
-    public List<Tile> blockingCharacterTiles;
+    public readonly List<TileType> allowedTileTypes;
+    public readonly List<Tile> blockingCharacterTiles;
 
     public MovementRules(List<TileType> allowedTileTypes, List<Tile> blockingCharacterTiles)
     {

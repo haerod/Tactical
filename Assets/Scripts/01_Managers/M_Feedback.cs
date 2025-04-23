@@ -20,7 +20,7 @@ public class M_Feedback : MonoBehaviour
     [SerializeField] private GameObject actionEffectPrefab = null;
     public static M_Feedback instance;
     
-    public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement } // /!\ If add/remove a cursor, update the SetCusror method
+    public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement } // /!\ If add/remove a cursor, update the SetCursor method
 
     [HideInInspector] public List<Tile> walkableTiles;
     [HideInInspector] public List<Tile> attackableTiles;

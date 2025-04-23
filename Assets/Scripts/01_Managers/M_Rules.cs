@@ -18,8 +18,8 @@ public class M_Rules : MonoBehaviour
 
     public int percentReductionByDistance = 5;
 
-    public enum SeeAnShotThroug { Everybody, Nobody, AlliesOnly}
-    public SeeAnShotThroug canSeeAndShotThrough = SeeAnShotThroug.Everybody;
+    public enum SeeAnShotThrough { Everybody, Nobody, AlliesOnly}
+    public SeeAnShotThrough canSeeAndShotThrough = SeeAnShotThrough.Everybody;
     public enum VisibleInFogOfWar { InView, Allies, Everybody}
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
 

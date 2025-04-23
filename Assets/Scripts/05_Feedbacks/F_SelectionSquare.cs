@@ -20,17 +20,15 @@ public class F_SelectionSquare : MonoBehaviour
     /// <summary>
     /// Enable and position the selection square.
     /// </summary>
-    /// <param name="tile"></param>
+    /// <param name="position"></param>
+    /// <param name="inRange"></param>
     public void SetSquare(Vector3 position, bool inRange)
     {
         squareTransform.gameObject.SetActive(true);
         squareTransform.position = position + Vector3.up * squareOffset;
 
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-        if (inRange)
-            sr.color = inRangeColor;
-        else
-            sr.color = outRangeColor;
+        sr.color = inRange ? inRangeColor : outRangeColor;
     }
 
     /// <summary>

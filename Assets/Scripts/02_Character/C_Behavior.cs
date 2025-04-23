@@ -11,7 +11,6 @@ public class C_Behavior : MonoBehaviour
 
     // * None : pass turn
     // * Follower : follow target, if target
-    // * AttackerOnce : find the closest target, attack it and ends turn
     // * Offensive : find a target and attack it until it doent't have any action points
     public enum Behavior { None, Follower, Offensive}
     public Behavior behavior = Behavior.None;
@@ -58,7 +57,7 @@ public class C_Behavior : MonoBehaviour
     /// <summary>
     /// Follow the current target.
     /// </summary>
-    public void FollowTarget()
+    private void FollowTarget()
     {
         //if (c.behavior.target == null) // EXIT : no target
         //{
@@ -105,11 +104,11 @@ public class C_Behavior : MonoBehaviour
     {
         target = c.look.ClosestEnemyOnSight();
 
-        if(target == null || target.health.IsDead() || _characters.IsFinalTeam(c)) // EXIT : nobody in sight
+        if(!target || target.health.IsDead() || _characters.IsFinalTeam(c)) 
         {
             c.SetCanPlayValue(false);
             _turns.EndTurn();
-            return;
+            return; // Nobody in sight
         }
 
         c.attack.Attack(target);
@@ -119,23 +118,20 @@ public class C_Behavior : MonoBehaviour
     /// Start a wait for "time" seconds and execute an action.
     /// </summary>
     /// <param name="time"></param>
-    /// <param name="OnEnd"></param>
-    private void Wait(float time, Action OnEnd)
-    {
-        StartCoroutine(Wait_Co(time, OnEnd));
-    }
+    /// <param name="onEnd"></param>
+    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
 
     /// <summary>
     /// Wait for "time" seconds and execute an action.
     /// Called by Wait() method.
     /// </summary>
     /// <param name="time"></param>
-    /// <param name="OnEnd"></param>
+    /// <param name="onEnd"></param>
     /// <returns></returns>
-    IEnumerator Wait_Co(float time, Action OnEnd)
+    IEnumerator Wait_Co(float time, Action onEnd)
     {
         yield return new WaitForSeconds(time);
 
-        OnEnd();
+        onEnd();
     }
 }

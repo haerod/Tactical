@@ -132,11 +132,11 @@ public class C_Look : MonoBehaviour
             C__Character chara = t.Character();
             if (!chara) continue; // Next : there is no character.
 
-            if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThroug.Nobody)
+            if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThrough.Nobody)
             {
                 if (!chara.health.IsDead()) return true; // EXIT : Other character.
             }
-            else if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThroug.AlliesOnly)
+            else if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThrough.AlliesOnly)
             {
                 // Are obstacle if enemy && alive
                 if ((chara.infos.team != c.infos.team) && (!chara.health.IsDead())) return true; // EXIT : Enemy

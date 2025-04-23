@@ -22,8 +22,8 @@ public class F_ActionEffect : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, destructionDelay);
         cam = Camera.main;
+        Destroy(gameObject, destructionDelay);
     }
 
     private void Update()
@@ -39,19 +39,13 @@ public class F_ActionEffect : MonoBehaviour
     /// Position the target on a new target.
     /// </summary>
     /// <param name="reference"></param>
-    public void PositionAt(Transform reference)
-    {
-        target = reference;
-    }
+    public void PositionAt(Transform reference) => target = reference;
 
     /// <summary>
     /// Write the text on the action effect component.
     /// </summary>
     /// <param name="value"></param>
-    public void SetText(string value)
-    {
-        textValue.text = value;
-    }
+    public void SetText(string value) => textValue.text = value;
 
     // ======================================================================
     // PRIVATE METHODS

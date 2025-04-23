@@ -1,7 +1,7 @@
 ﻿public static class M__Managers
 {
     // For any new singleton, add a new
-    // public static SingletonClass nameOfTheVariable => SingetonClass.nameOfTheInstance
+    // public static SingletonClass nameOfTheVariable => SingletonClass.nameOfTheInstance
     // Now, you can simply use nameOfTheVariable to call the singleton
 
     public static M_Feedback _feedback => M_Feedback.instance;

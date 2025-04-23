@@ -54,7 +54,8 @@ public class M_Board : MonoBehaviour
     /// Return the tiles around the start tile, with a radius.
     /// </summary>
     /// <param name="startTile"></param>
-    /// <param name="radius"></param>
+    /// <param name="distance"></param>
+    /// <param name="useDiagonals"></param>
     /// <returns></returns>
     public List<Tile> GetTilesAround(Tile startTile, int distance, bool useDiagonals)
     {
@@ -158,9 +159,9 @@ public class M_Board : MonoBehaviour
     /// <summary>
     /// Returns the closest coordinates where there is no tile around, except the tile sending.
     /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <param name="except"></param>
+    /// <param name="coordinates"></param>
+    /// <param name="selectionPosition"></param>
+    /// <param name="senderTile"></param>
     /// <returns></returns>
     public Vector2Int GetClosestFreePositionAround(Vector2Int coordinates, Vector3 selectionPosition, Tile senderTile)
     {
@@ -184,21 +185,11 @@ public class M_Board : MonoBehaviour
                 founded = true;
                 toReturn.x = testedCoordinate.x;
                 toReturn.y = testedCoordinate.y;
-
-                if (founded)
+                
+                if (Vector3.Distance(new Vector3(testedCoordinate.x, 0, testedCoordinate.y), selectionPosition) < bestDistance)
                 {
-                    if (Vector3.Distance(new Vector3(testedCoordinate.x, 0, testedCoordinate.y), selectionPosition) < bestDistance)
-                    {
-                        toReturn.x = testedCoordinate.x;
-                        toReturn.y = testedCoordinate.y;
-                    }
-                }
-                else
-                {
-                    founded = true;
                     toReturn.x = testedCoordinate.x;
                     toReturn.y = testedCoordinate.y;
-                    bestDistance = Vector3.Distance(new Vector3(testedCoordinate.x, 0, testedCoordinate.y), selectionPosition);
                 }
             }
 
@@ -269,10 +260,6 @@ public class M_Board : MonoBehaviour
         if (tile1.x == tile2.x)
             return null;
 
-        if (tile1.x < tile2.x)
-            return tile1;
-
-        return tile2;
+        return tile1.x < tile2.x ? tile1 : tile2;
     }
-
 }

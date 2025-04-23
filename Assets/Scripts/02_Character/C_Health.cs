@@ -46,7 +46,7 @@ public class C_Health : MonoBehaviour
     /// Add damage amount to the health (triggering resistances and weaknesses) and check for death.
     /// </summary>
     /// <param name="damage"></param>
-    /// <param name="damageType"></param>
+    /// <param name="damageTypes"></param>
     public void AddDamages(int damage, List<DamageType> damageTypes)
     {
         bool resistanceTriggered = false;
@@ -77,7 +77,7 @@ public class C_Health : MonoBehaviour
                 case ResistanceWeaknessBehavior.Percent:
                     float damagePercented = damage * (percentValue / 100f);
 
-                    if (damagePercented % 1 == .5f) // Fix RoundToInt 0.5 native issue (check Unity API)
+                    if (Mathf.Approximately(damagePercented % 1, .5f)) // Fix RoundToInt 0.5 native issue (check Unity API)
                         damagePercented += .1f;
 
                     damage -= Mathf.RoundToInt(damagePercented);
@@ -86,14 +86,14 @@ public class C_Health : MonoBehaviour
                 case ResistanceWeaknessBehavior.MultiplyOrDivide:
                     float dividedDamage = (float) damage / multiplyOrDivideValue;
 
-                    if (dividedDamage % 1 == .5f) // Fix RoundToInt 0.5 native issue (check Unity API)
+                    if (Mathf.Approximately(dividedDamage % 1, .5f)) // Fix RoundToInt 0.5 native issue (check Unity API)
                         dividedDamage += .1f;
 
                     damage = Mathf.RoundToInt(dividedDamage);
                     break;
 
                 default:
-                    Debug.LogError("This kind of operation doen't exist. Please add it.");
+                    Debug.LogError("This kind of operation don't exist. Please add it.");
                     break;
             }
         }
@@ -109,7 +109,7 @@ public class C_Health : MonoBehaviour
                 case ResistanceWeaknessBehavior.Percent:
                     float damagePercented = damage * (percentValue / 100f);
 
-                    if (damagePercented % 1 == .5f) // Fix RoundToInt 0.5 native issue (check Unity API)
+                    if (Mathf.Approximately(damagePercented % 1, .5f)) // Fix RoundToInt 0.5 native issue (check Unity API)
                         damagePercented += .1f;
 
                     damage += Mathf.RoundToInt(damagePercented);
@@ -120,7 +120,7 @@ public class C_Health : MonoBehaviour
                     break;
 
                 default:
-                    Debug.LogError("This kind of operation doen't exist. Please add it.");
+                    Debug.LogError("This kind of operation don't exist. Please add it.");
                     break;
             }
         }
@@ -166,23 +166,20 @@ public class C_Health : MonoBehaviour
     /// Start a wait for "time" seconds and execute an action.
     /// </summary>
     /// <param name="time"></param>
-    /// <param name="OnEnd"></param>
-    private void Wait(float time, Action OnEnd)
-    {
-        StartCoroutine(Wait_Co(time, OnEnd));
-    }
+    /// <param name="onEnd"></param>
+    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
 
     /// <summary>
     /// Wait for "time" seconds and execute an action.
     /// Called by Wait() method.
     /// </summary>
     /// <param name="time"></param>
-    /// <param name="OnEnd"></param>
+    /// <param name="onEnd"></param>
     /// <returns></returns>
-    IEnumerator Wait_Co(float time, Action OnEnd)
+    IEnumerator Wait_Co(float time, Action onEnd)
     {
         yield return new WaitForSeconds(time);
 
-        OnEnd();
+        onEnd();
     }
 }

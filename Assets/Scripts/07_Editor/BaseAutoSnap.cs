@@ -112,7 +112,7 @@ public abstract class BaseAutoSnap : MonoBehaviour
     protected abstract bool IsOnValidPosition();
 
     /// <summary>
-    /// Set necessiting parameters dirty. UTIL: If you want a parameter to be dirty, let it be serializable.
+    /// Set necessitating parameters dirty. UTIL: If you want a parameter to be dirty, let it be serializable.
     /// </summary>
     protected abstract void SetParametersDirty();
 
@@ -124,7 +124,7 @@ public abstract class BaseAutoSnap : MonoBehaviour
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             return false; // Play mode
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+        if (PrefabStageUtility.GetCurrentPrefabStage())
             return false; // Prefab mode
 
         return true;

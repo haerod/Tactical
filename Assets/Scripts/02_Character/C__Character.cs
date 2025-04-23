@@ -7,7 +7,7 @@ public class C__Character : MonoBehaviour
 {
     public C_Move move;
     public C_Look look;
-    public C_Attack attack;
+    public CAttack attack;
     public C_Health health;
     public C_Infos infos;
     public C_Behavior behavior;
@@ -47,11 +47,8 @@ public class C__Character : MonoBehaviour
     /// Return the team of this character.
     /// </summary>
     /// <returns></returns>
-    public Team Team()
-    {
-        return infos.team;
-    }
-
+    public Team Team() => infos.team;
+    
     /// <summary>
     /// Return the playable teammates with action points.
     /// </summary>
@@ -107,12 +104,6 @@ public class C__Character : MonoBehaviour
     /// Return the tile of this character.
     /// </summary>
     /// <returns></returns>
-    private Tile Tile()
-    {
-        if(_board) // M__Managers isn't initialized in editor
-            return _board.GetTileAtCoordinates(move.x, move.y);
-        else
-            return FindAnyObjectByType<M_Board>().GetTileAtCoordinates(move.x, move.y);
-    }
+    private Tile Tile() => _board ? _board.GetTileAtCoordinates(move.x, move.y) : FindAnyObjectByType<M_Board>().GetTileAtCoordinates(move.x, move.y);
 
 }

@@ -21,35 +21,35 @@ public class TileAutoSnap : BaseAutoSnap
         if (!IsInEditor())
             return; // Not in editor
 
-        if (!IsOnValidPosition())
+        if (IsOnValidPosition()) 
+            return; // Not on a valid position
+        
+        isLocated = false;
+
+        Vector2Int baseCoordinates = tile.coordinates;
+        Vector2Int freeCoordinates = baseCoordinates;
+
+        foreach (Vector2Int coordinates in board.GetEmptySquareCoordinates(tile.x, tile.y, 1))
         {
-            isLocated = false;
+            if (GetOtherTileAtCoordinates(coordinates))
+                continue; // Not empty
 
-            Vector2Int baseCoordinates = tile.coordinates;
-            Vector2Int freeCoordinates = baseCoordinates;
-
-            foreach (Vector2Int coordinates in board.GetEmptySquareCoordinates(tile.x, tile.y, 1))
+            if (tile.x == coordinates.x ^ tile.y == coordinates.y)
             {
-                if (GetOtherTileAtCoordinates(coordinates))
-                    continue; // Not empty
-
-                if (tile.x == coordinates.x ^ tile.y == coordinates.y)
-                {
-                    freeCoordinates = coordinates;
-                    break; // Not in diagonal, get it first.
-                }
-                else
-                    freeCoordinates = coordinates;
+                freeCoordinates = coordinates;
+                break; // Not in diagonal, get it first.
             }
-
-            if (freeCoordinates == baseCoordinates)
-                return; // No free coordinates
-
-            MoveObject(freeCoordinates);
-            AddToManager();
-            SetParametersDirty();
-            isLocated = true;
+            
+            freeCoordinates = coordinates;
         }
+
+        if (freeCoordinates == baseCoordinates)
+            return; // No free coordinates
+
+        MoveObject(freeCoordinates);
+        AddToManager();
+        SetParametersDirty();
+        isLocated = true;
     }
 
     private void OnDestroy()
@@ -104,7 +104,7 @@ public class TileAutoSnap : BaseAutoSnap
     /// Check if it collides a tile.
     /// </summary>
     /// <returns></returns>
-    private bool IsCollidingAnotherTile() => GetOtherTileAtCoordinates(tile.coordinates) != null;
+    private bool IsCollidingAnotherTile() => GetOtherTileAtCoordinates(tile.coordinates);
 
     /// <summary>
     /// Return the first tile collided at given coordinates. 
