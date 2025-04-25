@@ -48,15 +48,9 @@ public class M_Pathfinding : MonoBehaviour
         List<Tile> toReturn = new List<Tile>();
 
         if (!startTile) 
-        {
-            Debug.LogError("tile is null !"); 
-            return null; // ERROR: Start tile is null
-        }
-        if (endTile == null) 
-        {
-            Debug.LogError("end tile is null !"); 
-            return null; // ERROR : End tile is null
-        }
+            return null; // Start tile is null
+        if (!endTile) 
+            return null; // End tile is null
 
         // Set first tile
         Tile currentTile = startTile;

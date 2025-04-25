@@ -38,7 +38,7 @@ public class C_Look : MonoBehaviour
         else if(visionType == VisionType.GroupVision)
         {
             _characters
-                .GetTeam(c, false, false, false)
+                .GetTeamMembers(c)
                 .ForEach(chara => toReturn.AddRange(chara.look.GetVisibleTiles()));
 
             toReturn = toReturn

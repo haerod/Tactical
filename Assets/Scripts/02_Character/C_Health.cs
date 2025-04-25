@@ -157,7 +157,8 @@ public class C_Health : MonoBehaviour
     private void Death()
     {
         c.anim.Death();
-        _characters.RemoveDeadCharacter(c);
+        _characters.RemoveCharacter(c);
+        _rules.RemoveCharacter(c);
         c.GetComponentInChildren<Collider>().gameObject.SetActive(false);
         Wait(1, () => { c.healthBar.SetLifeBarActive(false); });
     }

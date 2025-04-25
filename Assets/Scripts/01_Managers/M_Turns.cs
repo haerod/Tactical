@@ -17,13 +17,9 @@ public class M_Turns : MonoBehaviour
     {
         // Singleton
         if (!instance)
-        {
             instance = this;
-        }
         else
-        {
             Debug.LogError("There is more than one M_TurnManager in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-        }
     }
 
     // ======================================================================
@@ -88,95 +84,41 @@ public class M_Turns : MonoBehaviour
     /// </summary>
     private void NextTeam()
     {
-        C__Character current = _characters.current;
-        C__Character newCharacter;
-        List<C__Character> newTeam;
-
-        if (_rules.botsPlay == M_Rules.BotsPlayOrder.BeforePlayableCharacters) // NPC play first
-        {
-            newTeam = _characters.GetCharacterList()
-                .Where(c => c.team != current.team || c == current)
-                .OrderBy(c => c.team.name)
-                .ThenBy(c => c.behavior.playable)
-                .ToList();
-
-            newCharacter = newTeam.Next(current);
-        }
-        else // PC play first
-        {
-            newTeam = _characters.GetCharacterList()
-                            .Where(c => c.team != current.team || c == current)
-                            .OrderBy(c => c.team.name)
-                            .ThenByDescending(c => c.behavior.playable)
-                            .ToList();
-
-            newCharacter = newTeam.Next(current);
-        }
-
-        newTeam = _characters.GetCharacterList()
-            .Where(c => c.team == newCharacter.team)
-            .ToList();
-
-        newTeam
+        TeamPlayOrder currentTeamPlayOrder = GetTeamPlayOrder(_characters.current);
+        TeamPlayOrder newTeamPlayOrder = _rules.GetTeamPlayOrders().Next(currentTeamPlayOrder);
+        
+        newTeamPlayOrder
+            .GetCharactersPlayOrder()
             .ForEach(character => character.SetCanPlayValue(true));
-
-        _characters.NewCurrentCharacter(newCharacter);
+        
+        _characters.NewCurrentCharacter(newTeamPlayOrder.FirstCharacter());
     }
     
     /// <summary>
-    /// Return the next character who haves to play in the team, depending the rules.
+    /// Return the next character who haves to play in the team, depending on the rules' play order .
     /// Return null if nobody can play.
     /// </summary>
     /// <returns></returns>
     private C__Character NextCharacterInTheTeam()
     {
-        C__Character current = _characters.current;
-        List<C__Character> group;
-        bool currentIsPlayable = current.behavior.playable;
+        C__Character currentCharacter = _characters.current;
+        TeamPlayOrder currentTeamPlayOrder = GetTeamPlayOrder(currentCharacter);
+        C__Character nextCharacter = currentTeamPlayOrder.NextCharacter(currentCharacter);
 
-        if (currentIsPlayable) // PC
-        {
-            group = _characters
-                .GetTeamPC(current)
-                .Where(c => c.CanPlay())
-                .ToList();
-        }
-        else // NPC
-        {
-            group = _characters
-                .GetTeamNPC(current)
-                .Where(c => c.CanPlay())
-                .ToList();
-        }
-
-        if (group.Where(c => c != current).ToList().Count == 0) // No character playable after this one.
-        {
-            if (currentIsPlayable && _rules.botsPlay == M_Rules.BotsPlayOrder.AfterPlayableCharacters) // PC
-            {
-                return _characters
-                    .GetTeamNPC(current)
-                    .FirstOrDefault(c => c.CanPlay()); // EXIT: Return the first NPC or null
-            }
-            else if (!currentIsPlayable && _rules.botsPlay == M_Rules.BotsPlayOrder.BeforePlayableCharacters) // NPC
-            {
-                return _characters
-                    .GetTeamPC(current)
-                    .FirstOrDefault(c => c.CanPlay()); // EXIT: Return the first NPC or null
-            }
-
-            return null; // EXIT: Nobody can play next.
-        }
-
-        return group.Next(group.IndexOf(current));
+        return nextCharacter ? nextCharacter : null;
     }
-
+    
+    /// <summary>
+    /// Return the character's Team play order of the Rules
+    /// </summary>
+    /// <param name="character"></param>
+    /// <returns></returns>
+    private TeamPlayOrder GetTeamPlayOrder(C__Character character) => _rules.GetTeamPlayOrders().FirstOrDefault(tpo => tpo.GetTeam() == character.team);
+    
     /// <summary>
     /// Check if it's currently victory.
     /// </summary>
-    private bool IsVictory()
-    {
-        return _characters.IsFinalTeam(_characters.current);
-    }
+    private bool IsVictory() => _characters.IsFinalTeam(_characters.current);
 
     /// <summary>
     /// Enable victory screen and do the other things happening during victory

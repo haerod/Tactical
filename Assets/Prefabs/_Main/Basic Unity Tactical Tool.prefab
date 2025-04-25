@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 1958866177785976466}
   - component: {fileID: 1958866177785976467}
   m_Layer: 0
-  m_Name: M_Rules
+  m_Name: Level rules
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -278,15 +278,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f83021e387e5b549bf8c011db6e945d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teamsPlayOrder: []
   enableFogOfWar: 1
   useDiagonals: 1
   canPassThrough: 1
   percentReductionByDistance: 5
   canSeeAndShotThrough: 0
   visibleInFogOfWar: 0
-  chosenCharacter: {fileID: 0}
-  firstCharacter: 0
-  botsPlay: 1
 --- !u!1 &1958866177809515059
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +456,7 @@ GameObject:
   - component: {fileID: 1958866177891228965}
   - component: {fileID: 1958866177891228966}
   m_Layer: 0
-  m_Name: M_Board
+  m_Name: Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -677,7 +675,7 @@ GameObject:
   - component: {fileID: 1958866178038387887}
   - component: {fileID: 1958866178038387880}
   m_Layer: 0
-  m_Name: M_Camera
+  m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -711,11 +709,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75477f4e3bd55b14391313dc652ae7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xOffset: -3
-  yOffset: 7.5
-  zOffset: -3
-  zoomMin: 1
-  zoomMax: 5
   movingSpeedMultiplier: 2
   smoothMovingTime: 0.3
   smoothMovingCurve:
@@ -742,8 +735,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  zoomSpeed: 3
-  camTransform: {fileID: 1958866178913540614}
+  xOffset: -3
+  yOffset: 7.5
+  zOffset: -3
+  zoomMin: 1
+  zoomMax: 5
   currentCamera: {fileID: 1958866178913540615}
 --- !u!1 &1958866178150919871
 GameObject:
@@ -787,7 +783,7 @@ GameObject:
   - component: {fileID: 1958866178224547778}
   - component: {fileID: 1958866178224547779}
   m_Layer: 0
-  m_Name: M_Characters
+  m_Name: Characters
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -865,7 +861,7 @@ GameObject:
   - component: {fileID: 1958866178310425238}
   - component: {fileID: 1958866178310425237}
   m_Layer: 0
-  m_Name: M_Feedback
+  m_Name: Feedbacks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1584,7 +1580,7 @@ GameObject:
   - component: {fileID: 1958866179045599105}
   - component: {fileID: 1958866179045599106}
   m_Layer: 0
-  m_Name: M_Input
+  m_Name: Inputs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2124,7 +2120,7 @@ GameObject:
   - component: {fileID: 3680064632814221087}
   - component: {fileID: 2410178878386646921}
   m_Layer: 0
-  m_Name: M_Others
+  m_Name: Others
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

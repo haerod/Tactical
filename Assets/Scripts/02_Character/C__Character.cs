@@ -48,15 +48,6 @@ public class C__Character : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public Team Team() => infos.team;
-    
-    /// <summary>
-    /// Return the playable teammates with action points.
-    /// </summary>
-    /// <returns></returns>
-    public List<C__Character> PlayableTeammatesWithActionPoints()
-    {
-        return _characters.GetTeam(this, true, true, true);
-    }
 
     /// <summary>
     /// Enable the feedbacks on the movable tiles and the attackable tiles.

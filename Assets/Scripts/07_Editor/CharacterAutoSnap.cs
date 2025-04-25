@@ -8,6 +8,7 @@ public class CharacterAutoSnap : BaseAutoSnap
 {
     [HideInInspector] public C__Character character; // Note : Let it serializable to be dirty.
     [HideInInspector] public M_Characters characters; // Note : Let it serializable to be dirty.
+    [HideInInspector] public M_Rules rules; // Note : Let it serializable to be dirty.
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -23,6 +24,7 @@ public class CharacterAutoSnap : BaseAutoSnap
             return; // Exit prefab mode
 
         characters.RemoveCharacter(character);
+        rules.RemoveCharacter(character);
         EditorUtility.SetDirty(characters);
     }
 
@@ -36,14 +38,25 @@ public class CharacterAutoSnap : BaseAutoSnap
     {
         character = GetComponent<C__Character>();
         characters = FindAnyObjectByType<M_Characters>();
+        rules = FindAnyObjectByType<M_Rules>();
         transform.parent = characters.transform;
     }
     protected override void MoveObject(Vector2Int coordinates)
     {
         character.MoveAt(coordinates.x, coordinates.y);
     }
-    protected override void AddToManager() => characters.AddCharacter(character);
-    protected override void RemoveFromManager() => characters.RemoveCharacter(character);
+
+    protected override void AddToManager()
+    {
+        rules.AddCharacter(character);
+        characters.AddCharacter(character);
+    }
+    
+    protected override void RemoveFromManager()
+    {
+        rules.RemoveCharacter(character);
+        characters.RemoveCharacter(character);
+    }
     protected override bool IsOnValidPosition()
     {
         Tile validTile = GetWalkableTileUnder();

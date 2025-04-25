@@ -1,10 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class M_Rules : MonoBehaviour
 {
+    [Header("PLAY ORDER")] 
+    
+    [SerializeField] private List<TeamPlayOrder> teamsPlayOrder; 
+    
     [Header("FOG OF WAR")]
+    
     public bool enableFogOfWar = true;
 
     [Header("MOVEMENT")]
@@ -22,16 +28,7 @@ public class M_Rules : MonoBehaviour
     public SeeAnShotThrough canSeeAndShotThrough = SeeAnShotThrough.Everybody;
     public enum VisibleInFogOfWar { InView, Allies, Everybody}
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
-
-    [Header("TURNS")]
-
-    public C__Character chosenCharacter;
-    public enum FirstCharacter {Random, ChosenCharacter, FirstCharacterOfTheFirstTeam}
-    public FirstCharacter firstCharacter = FirstCharacter.ChosenCharacter;
-
-    public enum BotsPlayOrder { BeforePlayableCharacters, AfterPlayableCharacters}
-    public BotsPlayOrder botsPlay = BotsPlayOrder.AfterPlayableCharacters;
-
+    
     public static M_Rules instance;
 
     // ======================================================================
@@ -54,8 +51,72 @@ public class M_Rules : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+    
+    public List<TeamPlayOrder> GetTeamPlayOrders() => teamsPlayOrder;
+
+    /// <summary>
+    /// Remove a character from the Team play order
+    /// </summary>
+    /// <param name="characterToRemove"></param>
+    public void RemoveCharacter(C__Character characterToRemove) => 
+        teamsPlayOrder
+            .FirstOrDefault(tpo => tpo.GetTeam() == characterToRemove.team)
+            ?.RemoveCharacter(characterToRemove);
+
+    public void AddCharacter(C__Character characterToAdd)
+    {
+        TeamPlayOrder teamToAdd = teamsPlayOrder.FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.team);
+        
+        if(teamToAdd != null)
+            teamsPlayOrder
+                .FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.team)
+                ?.AddCharacter(characterToAdd);
+        else
+            teamsPlayOrder.Add(new TeamPlayOrder(characterToAdd.team, characterToAdd));
+    }
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+}
+
+[Serializable]
+public class TeamPlayOrder
+{
+    [SerializeField] private Team team;
+    [SerializeField] private List<C__Character> charactersPlayOrder;
+
+    public TeamPlayOrder(Team team, C__Character newCharacter)
+    {
+        this.team = team;
+        charactersPlayOrder = new List<C__Character>();
+        charactersPlayOrder.Add(newCharacter);
+    }
+    public Team GetTeam() => team;
+    public List<C__Character> GetCharactersPlayOrder() => charactersPlayOrder;
+
+    /// <summary>
+    /// Return the first character of the team's characters play order.
+    /// </summary>
+    /// <returns></returns>
+    public C__Character FirstCharacter() => charactersPlayOrder.First();
+    
+    /// <summary>
+    /// Return the next character of this team, or null if it's the last.
+    /// </summary>
+    /// <param name="currentCharacter"></param>
+    /// <returns></returns>
+    public C__Character NextCharacter(C__Character currentCharacter) => currentCharacter == charactersPlayOrder.Last() ? null : charactersPlayOrder.Next(currentCharacter);
+
+    /// <summary>
+    /// Remove a character from charactersPlayOrder.
+    /// </summary>
+    /// <param name="characterToRemove"></param>
+    public void RemoveCharacter(C__Character characterToRemove) => charactersPlayOrder.Remove(characterToRemove);
+    
+    /// <summary>
+    /// Add a character to charactersPlayOrder.
+    /// </summary>
+    /// <param name="characterToAdd"></param>
+    public void AddCharacter(C__Character characterToAdd) => charactersPlayOrder.Add(characterToAdd);
 }
