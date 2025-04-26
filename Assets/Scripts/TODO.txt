@@ -1,9 +1,5 @@
 ## DEBUG
 
-# Cover auto snap
-
-- Border covers reinitialize often (repro needed)
-
 # Character movement
 
 - If character pass through another, the last one losing its tile : because tiles have only one element on it
@@ -13,14 +9,15 @@
 - Rules / VISION section to push in C_View
 - Auto-snap doesn't need to fit a manager, it can register itself at Start
 - Coordinates of the covers / logic of tiles hold covers
+- Separate fog of war in a single manager
 
 ## FEATURES
 
+- Cover system
 - Add events for everything
 - Multiple victory conditions
 - Obstacle transparency
 - Destructible obstacles
-- Cover system
 - Better enemy behaviors
 - Actions systems : possibility between multiple designs
 - Large elements (multiple tiles)
@@ -31,3 +28,4 @@
 - Border cover can block the line of sight
 - Overwatch action
 - In Tactical Course project, export all the comments //BUTT to this project
+- Camera rotation
