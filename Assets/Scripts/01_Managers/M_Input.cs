@@ -297,7 +297,7 @@ public class M_Input : MonoBehaviour
                         currentCharacter.tile,
                         tile,
                         Pathfinding.TileInclusion.WithStartAndEnd,
-                        new MovementRules(currentCharacter.move.walkableTiles, currentCharacter.move.GetTraversableCharacterTiles()));
+                        new MovementRules(currentCharacter.move.walkableTiles, currentCharacter.move.GetTraversableCharacterTiles(), currentCharacter.move.useDiagonalMovement));
 
         if (currentPathfinding.Count == 0)
         {

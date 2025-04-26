@@ -10,8 +10,11 @@ using UnityEditor;
 public class C_Move : MonoBehaviour
 {
     public int movementRange = 6;
+    public bool useDiagonalMovement = true;
+    public enum PassThrough {Everybody, Nobody, AlliesOnly}
+    public PassThrough canPassThrough = PassThrough.Nobody;
     public List<TileType> walkableTiles;
-
+    
     [Header("FOG OF WAR")]
     public bool movementInFogOfWarAllowed = false;
 
@@ -43,7 +46,7 @@ public class C_Move : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Returns the move area depending the rules.
+    /// Returns the move area depending on the rules.
     /// </summary>
     public List<Tile> MovementArea()
     {
@@ -53,7 +56,7 @@ public class C_Move : MonoBehaviour
         // Fog of war disabled
         if (!_rules.enableFogOfWar)
             return _board
-                .GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
+                .GetTilesAround(c.tile, movementRange,useDiagonalMovement)
                 .Except(Blockers())
                 .Where(t => !t.IsOccupiedByCharacter())
                 .ToList();
@@ -61,14 +64,14 @@ public class C_Move : MonoBehaviour
         // Fog of war && can walk in fog of war
         if (movementInFogOfWarAllowed)
             return _board
-                .GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
+                .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
                 .Except(Blockers())
                 .Where(t => !t.IsOccupiedByCharacter() || (t.IsOccupiedByCharacter() && !c.look.HasSightOn(t)))
                 .ToList();
 
         // Fog of war && can not walk in fog of war
         return _board
-            .GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
+            .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
             .Except(Blockers())
             .Intersect(c.look.VisibleTiles())
             .Where(t => !t.IsOccupiedByCharacter())
@@ -102,7 +105,6 @@ public class C_Move : MonoBehaviour
     /// Start the movement on a path, with and action on end of this path.
     /// </summary>
     /// <param name="path"></param>
-    /// <param name="OnEnd"></param>
     public void MoveOnPath(List<Tile> path)
     {
         c.SetCanPlayValue(false);
@@ -164,7 +166,7 @@ public class C_Move : MonoBehaviour
             c.tile,
             tile,
             Pathfinding.TileInclusion.WithEnd,
-            new MovementRules(walkableTiles, GetTraversableCharacterTiles()));
+            new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement));
         if (path.Count == 0) return false; // No path
         if (path.Count > movementRange) return false; // Out range
 
@@ -184,7 +186,7 @@ public class C_Move : MonoBehaviour
         List<Tile> toReturn = new List<Tile>();
 
         // Add not walkableTiles
-        toReturn.AddRange(_board.GetTilesAround(c.tile, movementRange, _rules.useDiagonals)
+        toReturn.AddRange(_board.GetTilesAround(c.tile, movementRange, useDiagonalMovement)
             .Where(t => !CanWalkOn(t.type))
             .ToList());
 
@@ -195,7 +197,7 @@ public class C_Move : MonoBehaviour
     }
     
     /// <summary>
-    /// Move the object to a desination and execute an action in the end.
+    /// Move the object to a destination and execute an action in the end.
     /// </summary>
     /// <returns></returns>
     private IEnumerator MoveToDestination()
@@ -247,7 +249,7 @@ public class C_Move : MonoBehaviour
     private bool IsTheLastTile() => index + 1 >= currentPath.Count || c.movementRange <= 0;
 
     /// <summary>
-    /// Happend in the end of the movement.
+    /// Happened in the end of the movement.
     /// </summary>
     private void EndMove()
     {
@@ -272,18 +274,17 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Return true if the character blocks the path, depending the capacity to pass through other characters.
+    /// Return true if the character blocks the path, depending on the capacity to pass through other characters.
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
     private bool IsBlockingPath(C__Character character)
     {
-        if (_rules.canPassThrough == M_Rules.PassThrough.Nobody)
+        if (canPassThrough == PassThrough.Nobody)
             return true;
-        else if (_rules.canPassThrough == M_Rules.PassThrough.AlliesOnly && c.infos.IsAlliedTo(character))
+        else if (canPassThrough == PassThrough.AlliesOnly && c.infos.IsAlliedTo(character))
             return false;
 
         return false;
-
     }
 }

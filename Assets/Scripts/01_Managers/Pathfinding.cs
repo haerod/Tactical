@@ -51,7 +51,7 @@ public static class Pathfinding
             // Put adjacent tiles in around list
             adjacentTiles.Clear();
             adjacentTiles.AddRange(_board
-                .GetTilesAround(currentTile, 1, _rules.useDiagonals)
+                .GetTilesAround(currentTile, 1, rules.useDiagonals)
                 .Except(alreadyTestedTiles)
                 .Where(t => IsDirectionWalkable(t, currentTile, rules))
                 .ToList());
@@ -162,7 +162,7 @@ public static class Pathfinding
             if (currentTile.IsCoverBetween(destinationTile, rules.allowedTileTypes))
                 return false; // Cover between start and end and not walkable
 
-        if (_rules.useDiagonals)
+        if (rules.useDiagonals)
             if (currentTile.IsDiagonalWith(destinationTile))
                 if (IsDiagonalTileABlocker(destinationTile, currentTile, rules))
                     return false; // False : A tile in diagonal blocks the movement
@@ -202,10 +202,12 @@ public class MovementRules
 {
     public readonly List<TileType> allowedTileTypes;
     public readonly List<Tile> blockingCharacterTiles;
+    public readonly bool useDiagonals;
 
-    public MovementRules(List<TileType> allowedTileTypes, List<Tile> blockingCharacterTiles)
+    public MovementRules(List<TileType> allowedTileTypes, List<Tile> blockingCharacterTiles, bool  useDiagonals)
     {
         this.allowedTileTypes = allowedTileTypes;
         this.blockingCharacterTiles = blockingCharacterTiles;
+        this.useDiagonals = useDiagonals;
     }
 }

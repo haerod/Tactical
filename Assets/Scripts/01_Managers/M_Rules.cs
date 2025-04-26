@@ -13,13 +13,6 @@ public class M_Rules : MonoBehaviour
     
     public bool enableFogOfWar = true;
 
-    [Header("MOVEMENT")]
-    
-    public bool useDiagonals = false;
-
-    public enum PassThrough {Everybody, Nobody, AlliesOnly}
-    public PassThrough canPassThrough = PassThrough.Nobody;
-
     [Header("VISION")]
 
     public int percentReductionByDistance = 5;
@@ -63,6 +56,10 @@ public class M_Rules : MonoBehaviour
             .FirstOrDefault(tpo => tpo.GetTeam() == characterToRemove.team)
             ?.RemoveCharacter(characterToRemove);
 
+    /// <summary>
+    /// Add a character to the Team play order.
+    /// </summary>
+    /// <param name="characterToAdd"></param>
     public void AddCharacter(C__Character characterToAdd)
     {
         TeamPlayOrder teamToAdd = teamsPlayOrder.FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.team);
