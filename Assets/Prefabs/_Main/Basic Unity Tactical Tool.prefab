@@ -243,7 +243,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1958866177785976466}
-  - component: {fileID: 1958866177785976467}
+  - component: {fileID: 6578349929238571455}
   m_Layer: 0
   m_Name: Level rules
   m_TagString: Untagged
@@ -266,7 +266,7 @@ Transform:
   m_Father: {fileID: 1958866178010909291}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1958866177785976467
+--- !u!114 &6578349929238571455
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -280,8 +280,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamsPlayOrder: []
   enableFogOfWar: 1
-  useDiagonals: 1
-  canPassThrough: 1
   percentReductionByDistance: 5
   canSeeAndShotThrough: 0
   visibleInFogOfWar: 0
