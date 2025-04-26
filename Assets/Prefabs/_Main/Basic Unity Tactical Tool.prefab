@@ -660,7 +660,6 @@ Transform:
   - {fileID: 1958866179045599105}
   - {fileID: 1958866178310425238}
   - {fileID: 1958866178038387887}
-  - {fileID: 1958866179607230313}
   m_Father: {fileID: 1958866178818122973}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -860,8 +859,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1958866178310425238}
   - component: {fileID: 1958866178310425237}
+  - component: {fileID: 4033851203806385707}
   m_Layer: 0
-  m_Name: Feedbacks
+  m_Name: Feedbacks / UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -903,6 +903,22 @@ MonoBehaviour:
   actionEffectPrefab: {fileID: 6033107118601816470, guid: ae91c46367b9c1c479def716cae07ad6, type: 3}
   walkableTiles: []
   attackableTiles: []
+--- !u!114 &4033851203806385707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958866178310425239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a27db26abda4f43a4909cfe4f9ec04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endScreenText: {fileID: 1958866178709690974}
+  nextTurnButton: {fileID: 1958866177973267478}
+  endScreen: {fileID: 1958866178557737115}
+  percentText: {fileID: 4426161523262609550}
 --- !u!1 &1958866178504323603
 GameObject:
   m_ObjectHideFlags: 0
@@ -1744,7 +1760,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1958866179607230314}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: M_UI, Assembly-CSharp
         m_MethodName: ClickOnReplay
         m_Mode: 1
@@ -2107,67 +2123,6 @@ Transform:
   m_Father: {fileID: 1958866178818122973}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1958866179607230315
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1958866179607230313}
-  - component: {fileID: 1958866179607230314}
-  - component: {fileID: 2410178878386646921}
-  m_Layer: 0
-  m_Name: Others
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1958866179607230313
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958866179607230315}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1958866178010909291}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1958866179607230314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958866179607230315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0a27db26abda4f43a4909cfe4f9ec04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  endScreenText: {fileID: 1958866178709690974}
-  nextTurnButton: {fileID: 1958866177973267478}
-  endScreen: {fileID: 1958866178557737115}
-  percentText: {fileID: 4426161523262609550}
---- !u!114 &2410178878386646921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958866179607230315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c13a6c4c92d525f4da4591d66b948b2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1958866179622389920
 GameObject:
   m_ObjectHideFlags: 0
