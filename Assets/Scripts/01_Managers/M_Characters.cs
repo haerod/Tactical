@@ -29,7 +29,7 @@ public class M_Characters : MonoBehaviour
 
     private void Start()
     {
-        NewCurrentCharacter(_rules.GetTeamPlayOrders()[0].FirstCharacter());
+        NewCurrentCharacter(_rules.GetFirstCharacter());
     }
 
     // ======================================================================

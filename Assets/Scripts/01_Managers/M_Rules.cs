@@ -46,16 +46,13 @@ public class M_Rules : MonoBehaviour
     // ======================================================================
     
     public List<TeamPlayOrder> GetTeamPlayOrders() => teamsPlayOrder;
-
+    
     /// <summary>
-    /// Remove a character from the Team play order
+    /// Return the first character of the play order.
     /// </summary>
-    /// <param name="characterToRemove"></param>
-    public void RemoveCharacter(C__Character characterToRemove) => 
-        teamsPlayOrder
-            .FirstOrDefault(tpo => tpo.GetTeam() == characterToRemove.team)
-            ?.RemoveCharacter(characterToRemove);
-
+    /// <returns></returns>
+    public C__Character GetFirstCharacter() => teamsPlayOrder[0].FirstCharacter();
+    
     /// <summary>
     /// Add a character to the Team play order.
     /// </summary>
@@ -71,6 +68,16 @@ public class M_Rules : MonoBehaviour
         else
             teamsPlayOrder.Add(new TeamPlayOrder(characterToAdd.team, characterToAdd));
     }
+    
+    /// <summary>
+    /// Remove a character from the Team play order
+    /// </summary>
+    /// <param name="characterToRemove"></param>
+    public void RemoveCharacter(C__Character characterToRemove) => 
+        teamsPlayOrder
+            .FirstOrDefault(tpo => tpo.GetTeam() == characterToRemove.team)
+            ?.RemoveCharacter(characterToRemove);
+
 
     // ======================================================================
     // PRIVATE METHODS
