@@ -181,7 +181,7 @@ public class M_Input : MonoBehaviour
 
         if (Input.GetKeyDown(changeCharacterKey))
         {
-            _turns.SwitchToAnotherTeamPlayableCharacter();
+            Turns.SwitchToAnotherTeamPlayableCharacter();
         }
     }
 
@@ -192,7 +192,7 @@ public class M_Input : MonoBehaviour
     {
         if (Input.GetKeyDown(endTurnKey))
         {
-            _turns.EndAllPlayableCharactersTurn();
+            Turns.EndAllPlayableCharactersTurn();
         }
     }
 

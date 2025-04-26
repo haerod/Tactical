@@ -39,7 +39,7 @@ public class C_Behavior : MonoBehaviour
             case Behavior.None:
                 c.SetCanPlayValue(false);
                 Wait(1,
-                    () => _turns.EndTurn());
+                    () => Turns.EndTurn());
                 break;
             case Behavior.Follower:
                 Wait(1, 
@@ -107,7 +107,7 @@ public class C_Behavior : MonoBehaviour
         if(!target || target.health.IsDead() || _characters.IsFinalTeam(c)) 
         {
             c.SetCanPlayValue(false);
-            _turns.EndTurn();
+            Turns.EndTurn();
             return; // Nobody in sight
         }
 

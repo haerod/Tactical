@@ -260,7 +260,7 @@ public class C_Move : MonoBehaviour
             c.EnableTilesFeedbacks();
         }
 
-        _turns.EndTurn();
+        Turns.EndTurn();
     }
 
     /// <summary>

@@ -5,23 +5,9 @@ using System.Linq;
 using static M__Managers;
 using System;
 
-public class M_Turns : MonoBehaviour
+public static class Turns
 {
-    public static M_Turns instance;
-
-    // ======================================================================
-    // MONOBEHAVIOUR
-    // ======================================================================
-
-    private void Awake()
-    {
-        // Singleton
-        if (!instance)
-            instance = this;
-        else
-            Debug.LogError("There is more than one M_TurnManager in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-    }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -29,7 +15,7 @@ public class M_Turns : MonoBehaviour
     /// <summary>
     /// End the character's turn and pass to the next one (depending the rules).
     /// </summary>
-    public void EndTurn()
+    public static void EndTurn()
     {
         if (IsVictory()) // Victory
         {
@@ -53,7 +39,7 @@ public class M_Turns : MonoBehaviour
     /// <summary>
     /// Switch to another playable character of the team.
     /// </summary>
-    public void SwitchToAnotherTeamPlayableCharacter()
+    public static void SwitchToAnotherTeamPlayableCharacter()
     {
         C__Character current = _characters.current;
         C__Character next = _characters
@@ -67,7 +53,7 @@ public class M_Turns : MonoBehaviour
     /// <summary>
     /// End the turn of all the playable characters of the team and pass to the next one to play.
     /// </summary>
-    public void EndAllPlayableCharactersTurn()
+    public static void EndAllPlayableCharactersTurn()
     {
         _characters.GetCharacterList()
             .ForEach(c => c.SetCanPlayValue(false));
@@ -82,7 +68,7 @@ public class M_Turns : MonoBehaviour
     /// <summary>
     /// Start the next team turn, allowing them to play.
     /// </summary>
-    private void NextTeam()
+    private static void NextTeam()
     {
         TeamPlayOrder currentTeamPlayOrder = GetTeamPlayOrder(_characters.current);
         TeamPlayOrder newTeamPlayOrder = _rules.GetTeamPlayOrders().Next(currentTeamPlayOrder);
@@ -99,7 +85,7 @@ public class M_Turns : MonoBehaviour
     /// Return null if nobody can play.
     /// </summary>
     /// <returns></returns>
-    private C__Character NextCharacterInTheTeam()
+    private static C__Character NextCharacterInTheTeam()
     {
         C__Character currentCharacter = _characters.current;
         TeamPlayOrder currentTeamPlayOrder = GetTeamPlayOrder(currentCharacter);
@@ -113,17 +99,17 @@ public class M_Turns : MonoBehaviour
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
-    private TeamPlayOrder GetTeamPlayOrder(C__Character character) => _rules.GetTeamPlayOrders().FirstOrDefault(tpo => tpo.GetTeam() == character.team);
+    private static TeamPlayOrder GetTeamPlayOrder(C__Character character) => _rules.GetTeamPlayOrders().FirstOrDefault(tpo => tpo.GetTeam() == character.team);
     
     /// <summary>
     /// Check if it's currently victory.
     /// </summary>
-    private bool IsVictory() => _characters.IsFinalTeam(_characters.current);
+    private static bool IsVictory() => _characters.IsFinalTeam(_characters.current);
 
     /// <summary>
     /// Enable victory screen and do the other things happening during victory
     /// </summary>
-    private void Victory()
+    private static void Victory()
     {
         C__Character current = _characters.current;
 
