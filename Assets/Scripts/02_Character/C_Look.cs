@@ -94,7 +94,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
-    public List<Tile> LineOfSight(Tile targetTile) => M_Pathfinding.LineOfSight(c.tile, targetTile).ToList();
+    public List<Tile> LineOfSight(Tile targetTile) => Pathfinding.LineOfSight(c.tile, targetTile).ToList();
 
     /// <summary>
     /// Return the closest enemy on sight.

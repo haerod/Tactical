@@ -293,10 +293,10 @@ public class M_Input : MonoBehaviour
         currentTarget = null;
 
         // Get pathfinding
-        currentPathfinding = _pathfinding.Pathfind(
+        currentPathfinding = Pathfinding.Pathfind(
                         currentCharacter.tile,
                         tile,
-                        M_Pathfinding.TileInclusion.WithStartAndEnd,
+                        Pathfinding.TileInclusion.WithStartAndEnd,
                         new MovementRules(currentCharacter.move.walkableTiles, currentCharacter.move.GetTraversableCharacterTiles()));
 
         if (currentPathfinding.Count == 0)

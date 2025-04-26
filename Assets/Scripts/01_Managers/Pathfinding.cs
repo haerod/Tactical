@@ -4,28 +4,9 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class M_Pathfinding : MonoBehaviour
+public static class Pathfinding
 {
-    public static M_Pathfinding instance;
-
     public enum TileInclusion { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd} // Options of the line of sight
-
-    // ======================================================================
-    // MONOBEHAVIOUR
-    // ======================================================================
-
-    private void Awake()
-    {
-        // Singleton
-        if (!instance)
-        {
-            instance = this;
-        }
-        else
-        {
-            Debug.LogError("There is more than one M_Pathfinding in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-        }
-    }
 
     // ======================================================================
     // PUBLIC METHODS
@@ -40,7 +21,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="inclusion"></param>
     /// <param name="rules"></param>
     /// <returns></returns>
-    public List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion, MovementRules rules)
+    public static List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion, MovementRules rules)
     {
         List<Tile> tilesToTest = new List<Tile>();
         List<Tile> alreadyTestedTiles = new List<Tile>();
@@ -169,7 +150,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="currentTile"></param>
     /// <param name="rules"></param>
     /// <returns></returns>
-    private bool IsDirectionWalkable(Tile destinationTile, Tile currentTile, MovementRules rules)
+    private static bool IsDirectionWalkable(Tile destinationTile, Tile currentTile, MovementRules rules)
     {
         if (rules.blockingCharacterTiles.Contains(destinationTile))
             return false; // Blocking character
@@ -196,7 +177,7 @@ public class M_Pathfinding : MonoBehaviour
     /// <param name="currentTile"></param>
     /// <param name="rules"></param>
     /// <returns></returns>
-    private bool IsDiagonalTileABlocker(Tile testedTile, Tile currentTile, MovementRules rules)
+    private static bool IsDiagonalTileABlocker(Tile testedTile, Tile currentTile, MovementRules rules)
     {
         foreach (Tile t in _board.GetTilesOfASquareWithDiagonals(currentTile, testedTile))
         {

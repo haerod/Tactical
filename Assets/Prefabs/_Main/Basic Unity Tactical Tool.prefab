@@ -2117,7 +2117,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1958866179607230313}
   - component: {fileID: 1958866179607230314}
-  - component: {fileID: 3680064632814221087}
   - component: {fileID: 2410178878386646921}
   m_Layer: 0
   m_Name: Others
@@ -2157,18 +2156,6 @@ MonoBehaviour:
   nextTurnButton: {fileID: 1958866177973267478}
   endScreen: {fileID: 1958866178557737115}
   percentText: {fileID: 4426161523262609550}
---- !u!114 &3680064632814221087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958866179607230315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85698458d63be2a4ab57687c8747012a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2410178878386646921
 MonoBehaviour:
   m_ObjectHideFlags: 0

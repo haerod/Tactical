@@ -6,7 +6,6 @@
 
     public static M_Feedback _feedback => M_Feedback.instance;
     public static M_Input _input => M_Input.instance;
-    public static M_Pathfinding _pathfinding => M_Pathfinding.instance;
     public static M_Rules _rules => M_Rules.instance;
     public static M_Board _board => M_Board.instance;
     public static M_Characters _characters => M_Characters.instance;

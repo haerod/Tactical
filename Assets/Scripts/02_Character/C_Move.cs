@@ -160,10 +160,10 @@ public class C_Move : MonoBehaviour
         bool tileInFog =_rules.enableFogOfWar && !c.look.VisibleTiles().Contains(tile);
         if (tileInFog && !c.move.movementInFogOfWarAllowed) return false; // Tile in fog
 
-        List<Tile> path = _pathfinding.Pathfind(
+        List<Tile> path = Pathfinding.Pathfind(
             c.tile,
             tile,
-            M_Pathfinding.TileInclusion.WithEnd,
+            Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableCharacterTiles()));
         if (path.Count == 0) return false; // No path
         if (path.Count > movementRange) return false; // Out range
