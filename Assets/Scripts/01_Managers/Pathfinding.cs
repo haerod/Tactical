@@ -21,7 +21,7 @@ public static class Pathfinding
     /// <param name="inclusion"></param>
     /// <param name="rules"></param>
     /// <returns></returns>
-    public static List<Tile> Pathfind(Tile startTile, Tile endTile, TileInclusion inclusion, MovementRules rules)
+    public static List<Tile> GetPath(Tile startTile, Tile endTile, TileInclusion inclusion, MovementRules rules)
     {
         List<Tile> tilesToTest = new List<Tile>();
         List<Tile> alreadyTestedTiles = new List<Tile>();

@@ -162,7 +162,7 @@ public class C_Move : MonoBehaviour
         bool tileInFog =_rules.enableFogOfWar && !c.look.VisibleTiles().Contains(tile);
         if (tileInFog && !c.move.movementInFogOfWarAllowed) return false; // Tile in fog
 
-        List<Tile> path = Pathfinding.Pathfind(
+        List<Tile> path = Pathfinding.GetPath(
             c.tile,
             tile,
             Pathfinding.TileInclusion.WithEnd,
