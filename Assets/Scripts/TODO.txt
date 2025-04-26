@@ -1,0 +1,20 @@
+## DEBUG
+
+# Rules
+
+- Rules / enable fog of war doesn't work
+- Modifying anything in Rules create an error
+
+# Cover auto snap
+
+- Border covers reinitialize often (repro needed)
+
+# Character movement
+
+- If character pass through another, the last one losing its tile : because tiles have only one element on it
+
+## REFACTOR
+
+- Rules / VISION section to push in C_View
+- Auto-snap doesn't need to fit a manager, it can register itself at Start
+- Coordinates of the covers / logic of tiles hold covers
