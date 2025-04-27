@@ -127,6 +127,8 @@ public class M_Input : MonoBehaviour
                 return; // Can't go on this tile or can't play
             }
 
+            CursorEnterPointedTile(new Vector2Int(tile.x, tile.y));
+
             // NEXT STEP : Free tile or occupied tile
 
             pointedTile = tile;
@@ -149,8 +151,23 @@ public class M_Input : MonoBehaviour
         else
         {
             OnForbiddenTile();
+            CursorOutPointedTile();
             return; // Out of tile board
         }
+    }
+
+    /// <summary>
+    /// When a cursor enters a new tile.
+    /// </summary>
+    /// <param name="tileCoordinates"></param>
+    private void CursorEnterPointedTile(Vector2Int tileCoordinates)
+    {
+        _feedback.DisplayCoverFeedbacks(tileCoordinates);
+    }
+    
+    private void CursorOutPointedTile()
+    {
+        _feedback.HideCoverFeedbacks();
     }
 
     /// <summary>

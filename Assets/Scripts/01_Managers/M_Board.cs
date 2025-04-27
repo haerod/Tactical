@@ -97,7 +97,7 @@ public class M_Board : MonoBehaviour
     /// <param name="yCenter"></param>
     /// <param name="radius"></param>
     /// <returns></returns>
-    public List<Vector2Int> GetEmptySquareCoordinates(int xCenter, int yCenter, int radius)
+    public List<Vector2Int> GetEmptySquareCoordinatesWithRadius(int xCenter, int yCenter, int radius)
     {
         List<Vector2Int> toReturn = new List<Vector2Int>();
 
@@ -134,14 +134,14 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Return all the coordinates of square's points of centrer x,y with a radius.
+    /// Return all the coordinates of square's points of centre x,y with a radius.
     /// A radius of 0 returns the coordinates x,y.
     /// </summary>
     /// <param name="xCenter"></param>
     /// <param name="yCenter"></param>
     /// <param name="radius"></param>
     /// <returns></returns>
-    public List<Vector2Int> GetFullSquareCoordinates(int xCenter, int yCenter, int radius)
+    public List<Vector2Int> GetFullSquareCoordinatesWithRadius(int xCenter, int yCenter, int radius)
     {
         List<Vector2Int> toReturn = new List<Vector2Int>();
 
@@ -153,6 +153,29 @@ public class M_Board : MonoBehaviour
             }
         }
 
+        return toReturn;
+    }
+
+    /// <summary>
+    /// Return all the coordinates of a center x,y with and edge of edgeLength.
+    /// </summary>
+    /// <param name="xCenter"></param>
+    /// <param name="yCenter"></param>
+    /// <param name="edgeLength"></param>
+    /// <returns></returns>
+    public List<Vector2Int>  GetFullSquareCoordinatesWithEdge(int xCenter, int yCenter, int edgeLength)
+    {
+        List<Vector2Int> toReturn = new List<Vector2Int>();
+        Vector2Int botLeftCoordinates = new Vector2Int(xCenter-(edgeLength-2), yCenter-(edgeLength-2));
+
+        for (int i = 0 ; i < edgeLength; i++)
+        {
+            for (int j = 0; j < edgeLength; j++)
+            {
+                toReturn.Add(new Vector2Int(botLeftCoordinates.x + i, botLeftCoordinates.y + j));
+            }
+        }
+        
         return toReturn;
     }
 
@@ -173,7 +196,7 @@ public class M_Board : MonoBehaviour
 
         while (!founded)
         {
-            List<Vector2Int> aroundCoordinates = GetEmptySquareCoordinates(coordinates.x, coordinates.y, distance);
+            List<Vector2Int> aroundCoordinates = GetEmptySquareCoordinatesWithRadius(coordinates.x, coordinates.y, distance);
 
             foreach (Vector2Int testedCoordinate in aroundCoordinates)
             {

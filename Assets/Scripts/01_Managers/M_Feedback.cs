@@ -17,6 +17,7 @@ public class M_Feedback : MonoBehaviour
     public F_MoveLine line;
     public F_SelectionSquare square;
     public F_ViewLines viewLines;
+    public F_CoversHolder coverHolder;
     [SerializeField] private GameObject actionEffectPrefab = null;
     public static M_Feedback instance;
     
@@ -159,8 +160,18 @@ public class M_Feedback : MonoBehaviour
         {
             viewLines.DisableViewLines();
         }
-
     }
+
+    /// <summary>
+    /// Show cover feedbacks.
+    /// </summary>
+    /// <param name="tileCoordinates"></param>
+    public void DisplayCoverFeedbacks(Vector2Int tileCoordinates) => coverHolder.DisplayCoverFeedbacks(tileCoordinates);
+
+    /// <summary>
+    /// Hide cover feedbacks.
+    /// </summary>
+    public void HideCoverFeedbacks() => coverHolder.HideCoverFeedbacks(); 
 
     // ======================================================================
     // PRIVATE METHODS

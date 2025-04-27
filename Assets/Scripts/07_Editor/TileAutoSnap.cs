@@ -29,7 +29,7 @@ public class TileAutoSnap : BaseAutoSnap
         Vector2Int baseCoordinates = tile.coordinates;
         Vector2Int freeCoordinates = baseCoordinates;
 
-        foreach (Vector2Int coordinates in board.GetEmptySquareCoordinates(tile.x, tile.y, 1))
+        foreach (Vector2Int coordinates in board.GetEmptySquareCoordinatesWithRadius(tile.x, tile.y, 1))
         {
             if (GetOtherTileAtCoordinates(coordinates))
                 continue; // Not empty
