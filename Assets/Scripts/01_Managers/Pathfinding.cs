@@ -107,7 +107,7 @@ public static class Pathfinding
     /// <param name="endTile"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    public static List<Tile> LineOfSight(Tile startTile, Tile endTile, TileInclusion parameters = TileInclusion.WithoutStartAndEnd)
+    public static List<Vector2Int> LineOfSight(Tile startTile, Tile endTile, TileInclusion parameters = TileInclusion.WithoutStartAndEnd)
     {
         // Get Vector between start and end coordinates (Start tile - end tile)
         Vector2 v2 = new Vector2(endTile.x - startTile.x, endTile.y - startTile.y);
@@ -115,28 +115,28 @@ public static class Pathfinding
         // Get the length of distance
         float length = Mathf.Max(Mathf.Abs(v2.x), Mathf.Abs(v2.y));
 
-        List<Tile> toReturn = new List<Tile>();
+        List<Vector2Int> toReturn = new List<Vector2Int>();
 
         if(parameters is TileInclusion.WithStart or TileInclusion.WithStartAndEnd)
         {
-            toReturn.Add(startTile);
+            toReturn.Add(startTile.coordinates);
         }
 
         for (int i = 1; i < length+1; i++)
         {
             // Theoretic coordinates of the segment
             Vector2 tile = new Vector2(startTile.x, startTile.y) + i / length * v2;
-            Tile t = _board.GetTileAtCoordinates(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
+            Vector2Int tileCoordinates =  new Vector2Int(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
             // if t is null, its a hole
-            toReturn.Add(t);
+            toReturn.Add(tileCoordinates);
         }
 
         if (parameters is TileInclusion.WithStart or TileInclusion.WithoutStartAndEnd)
         {
-            toReturn.Remove(endTile);
+            toReturn.Remove(endTile.coordinates);
         }
 
-        return toReturn; 
+        return toReturn;
     }
 
     // ======================================================================

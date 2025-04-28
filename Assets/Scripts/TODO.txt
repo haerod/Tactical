@@ -1,16 +1,25 @@
 ## DEBUG
 
 # Character movement
-
 - If character pass through another, the last one losing its tile : because tiles have only one element on it
 
+# Border tiles
+- Border tiles change position sometimes (repro needed)
+
+# Fog of war
+- Tiles in fog of war where character can move and its an enemy are displayed in red
+
 ## REFACTOR
+
+- Separate folders between Toy box and Technical box
 
 - Rules / VISION section to push in C_View
 - Coordinates of the covers / logic of tiles hold covers
 - Fog of war in a single manager
 - Separate the logic between Turns and M_Characters
 - Separate Inputs and Logic
+- Ergonomic of characters
+- Create a coordinates struct for the tiles (easiest to transfer)
 
 ## FEATURES
 
@@ -32,3 +41,6 @@
 - Overwatch action
 - In Tactical Course project, export all the comments //BUTT to this project
 - Camera rotation
+- Enemy spawners
+- Movements with special costs or obligation to stop
+- 3D grid

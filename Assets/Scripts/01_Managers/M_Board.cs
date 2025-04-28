@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static M__Managers;
 
@@ -145,11 +146,11 @@ public class M_Board : MonoBehaviour
     {
         List<Vector2Int> toReturn = new List<Vector2Int>();
 
-        for (int x = -radius; x <= radius; x++)
+        for (int i = -radius; i <= radius; i++)
         {
-            for (int y = -radius; y <= radius; y++)
+            for (int j = -radius; j <= radius; j++)
             {
-                toReturn.Add(new Vector2Int(x, y));
+                toReturn.Add(new Vector2Int(xCenter+i, yCenter+j));
             }
         }
 
@@ -251,6 +252,37 @@ public class M_Board : MonoBehaviour
         return new List<Tile> { tile3, tile4 };
     }
 
+    /// <summary>
+    /// Return the cover between two coordinates, return null if it's nothing.
+    /// </summary>
+    /// <param name="coordinates1"></param>
+    /// <param name="coordinates2"></param>
+    /// <returns></returns>
+    public Cover GetCoverBetweenAdjacentCoordinates(Vector2Int coordinates1, Vector2Int coordinates2)
+    {
+        Tile tile1 = GetTileAtCoordinates(coordinates1);
+        Tile tile2 = GetTileAtCoordinates(coordinates2);
+
+        List<Cover> testedCovers = new List<Cover>();
+        
+        if (!tile1 && !tile2)
+            return null; // No tiles, so no covers
+        
+        if(tile1)
+            if(tile1.hasCovers)
+                testedCovers.AddRange(tile1.GetCovers());
+        
+        if(tile2)
+            if(tile2.hasCovers)
+                testedCovers.AddRange(tile2.GetCovers());
+        
+        if(testedCovers.Count == 0)
+            return null; // No covers
+
+        return testedCovers
+            .FirstOrDefault(cover => cover.IsBetweenCoordinates(coordinates1, coordinates2));
+    }
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static M__Managers;
 
@@ -26,20 +27,28 @@ public class F_CoversHolder : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    public void DisplayCoverFeedbacks(Vector2Int centralTileCoordinates)
+    public void DisplayCoverFeedbacks(Vector2Int centralTileCoordinates, List<Vector2Int> coversCoordinates, C__Character characterCovered)
     {
-        List<Vector2Int> coordinatesWhereDisplay =
-            _board.GetFullSquareCoordinatesWithEdge(centralTileCoordinates.x, centralTileCoordinates.y, coverFeedbackRadius);
-
-        for (int i = 0; i < coordinatesWhereDisplay.Count; i++)
+        List<Vector2Int> coordinatesInSquare = _board
+            .GetFullSquareCoordinatesWithRadius(centralTileCoordinates.x, centralTileCoordinates.y, coverFeedbackRadius);
+        
+        //coversCoordinates.Print();
+        
+        List<Vector2Int> tilesWhereDisplay = coordinatesInSquare
+            .Intersect(coversCoordinates)
+            .ToList();
+        
+        for (int i = 0; i < coordinatesInSquare.Count; i++)
         {
+            Vector2Int currentCoordinates = coordinatesInSquare[i];
+            
             Vector3 worldCoordinates = new Vector3(
-                coordinatesWhereDisplay[i].x,
+                currentCoordinates.x,
                 0,
-                coordinatesWhereDisplay[i].y);
+                currentCoordinates.y);
             
             covers[i].transform.position = worldCoordinates;
-            covers[i].gameObject.SetActive(true);
+            covers[i].gameObject.SetActive(tilesWhereDisplay.Contains(currentCoordinates));
         }
     }
     
@@ -51,7 +60,7 @@ public class F_CoversHolder : MonoBehaviour
     
     private void GenerateCoverFeedbacks()
     {
-        for (int i = 0; i < Mathf.Pow(coverFeedbackRadius, 2); i++)
+        for (int i = 0; i < Mathf.Pow(coverFeedbackRadius*2+1, 2); i++)
         {
             GameObject instaCoverFeedback = Instantiate(coverFeedbackPrefab, transform);
             instaCoverFeedback.SetActive(false);

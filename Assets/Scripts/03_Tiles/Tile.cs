@@ -73,6 +73,12 @@ public class Tile : MonoBehaviour
         EditorUtility.SetDirty(this);
         EditorUtility.SetDirty(gameObject);
     }
+    
+    /// <summary>
+    /// Get covers list.
+    /// </summary>
+    /// <returns></returns>
+    public List<Cover> GetCovers() => covers;
 
     /// <summary>
     /// Move tile position at the asked coordinates.
@@ -139,6 +145,46 @@ public class Tile : MonoBehaviour
 
         return testedCovers
             .Where(c => !allowedWalkableTypes.Contains(c.type))
+            .FirstOrDefault(c => c.IsBetweenTiles(this, otherTile));
+    }
+    public bool IsCoverBetween(Tile otherTile)
+    {            
+        List<Cover> testedCovers = new List<Cover>();
+
+        if(!Utils.IsVoidList(GetCovers()))
+            testedCovers.AddRange(GetCovers());
+        if(!Utils.IsVoidList(otherTile.GetCovers()))
+            testedCovers.AddRange(otherTile.GetCovers());
+
+        return testedCovers
+            .FirstOrDefault(c => c.IsBetweenTiles(this, otherTile));
+    }
+    public bool IsCoverBetween(Vector2Int otherCoordinates)
+    {
+        List<Cover> testedCovers = GetCovers();
+
+        if (testedCovers.Count == 0)
+            return false;
+
+        return testedCovers
+            .FirstOrDefault(cover => cover.IsBetweenCoordinates(coordinates, otherCoordinates));
+    }
+
+    /// <summary>
+    /// Return the cover between two tiles.
+    /// </summary>
+    /// <param name="otherTile"></param>
+    /// <returns></returns>
+    public Cover CoverBetween(Tile otherTile)
+    {
+        List<Cover> testedCovers = new List<Cover>();
+
+        if(!Utils.IsVoidList(GetCovers()))
+            testedCovers.AddRange(GetCovers());
+        if(!Utils.IsVoidList(otherTile.GetCovers()))
+            testedCovers.AddRange(otherTile.GetCovers());
+
+        return testedCovers
             .FirstOrDefault(c => c.IsBetweenTiles(this, otherTile));
     }
 
@@ -281,10 +327,4 @@ public class Tile : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Get covers list.
-    /// </summary>
-    /// <returns></returns>
-    private List<Cover> GetCovers() => covers;
 }

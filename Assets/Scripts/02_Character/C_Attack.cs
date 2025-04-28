@@ -60,7 +60,7 @@ public class C_Attack : MonoBehaviour
 
         c.anim.StartShoot();        
 
-        if (UnityEngine.Random.Range(0, 101) < GetPercentToTouch(c.look.LineOfSight(currentTarget.tile).Count)) // SUCCESS
+        if (UnityEngine.Random.Range(0, 101) < GetPercentToTouch(c.look.GetTilesOfLineOfSightOn(currentTarget.tile).Count)) // SUCCESS
         {
             SetOnAttackDone(true, damages, target);
         }

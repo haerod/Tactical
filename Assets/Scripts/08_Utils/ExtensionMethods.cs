@@ -123,6 +123,14 @@ public static class ExtensionMethods
         if (condition)
             list.Add(item);
     }
+    
+    /// <summary>
+    /// Add if the condition is true.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <param name="item"></param>
+    public static void AddIfNotNull<T>(this List<T> list, T item) => list.AddIf(item, item != null);
 
     // ======================================================================
     // INT

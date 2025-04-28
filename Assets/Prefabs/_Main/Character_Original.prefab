@@ -246,7 +246,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1422904897860799220}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5571022486952568945
 MonoBehaviour:
@@ -294,7 +294,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1422904897860799220}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1181271343903788171
 CapsuleCollider:
@@ -340,7 +340,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1422904897860799220}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4919814116171440189
 MonoBehaviour:
@@ -638,7 +638,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1422904897860799220}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5340496248363606861
 MonoBehaviour:
@@ -773,6 +773,7 @@ Transform:
   - {fileID: 688627365113704437}
   - {fileID: 4451928812987203478}
   - {fileID: 922653575245694789}
+  - {fileID: 7617048118071124549}
   - {fileID: 4215337534001492098}
   - {fileID: 6927993884538352540}
   - {fileID: 8881385590338021494}
@@ -798,6 +799,7 @@ MonoBehaviour:
   move: {fileID: 8502731826044868807}
   look: {fileID: 7012095028157842997}
   attack: {fileID: 2979315790688333722}
+  cover: {fileID: 8257172221898884732}
   health: {fileID: 3336314116041387865}
   infos: {fileID: 5571022486952568945}
   behavior: {fileID: 4919814116171440189}
@@ -822,6 +824,7 @@ MonoBehaviour:
   isLocated: 0
   character: {fileID: 0}
   characters: {fileID: 0}
+  rules: {fileID: 0}
 --- !u!114 &5963638360950440093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -879,6 +882,54 @@ Transform:
   m_Father: {fileID: 4517906156874607190}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6857258684661620471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7617048118071124549}
+  - component: {fileID: 8257172221898884732}
+  m_Layer: 0
+  m_Name: Cover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7617048118071124549
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6857258684661620471}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1422904897860799220}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8257172221898884732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6857258684661620471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85a7b36a047d407f9a1c99d27b8d0de1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coveringTileTypes:
+  - {fileID: 11400000, guid: b8148e897a136154ca877f10c4025a85, type: 2}
+  - {fileID: 11400000, guid: 6039eeca6c9a6244cb3199ce13c0e656, type: 2}
+  c: {fileID: 3541061014796538876}
 --- !u!1 &7113676436210586803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,6 +1059,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementRange: 6
+  useDiagonalMovement: 1
+  canPassThrough: 1
   walkableTiles:
   - {fileID: 11400000, guid: 859aa0936407b9943a71c17934cc4d62, type: 2}
   movementInFogOfWarAllowed: 1
@@ -1142,7 +1195,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1422904897860799220}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3336314116041387865
 MonoBehaviour:
@@ -1157,6 +1210,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 5
+  increaseOrDecreaseBy: 0
+  amountValue: 0
+  percentValue: 0
+  multiplyOrDivideValue: 0
+  resistances: []
+  weaknesses: []
   c: {fileID: 3541061014796538876}
   currentHealth: 5
 --- !u!1 &8796172909343139340
@@ -1251,7 +1310,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1476,7 +1535,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7380984320251784830, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7380984320251784830, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
       propertyPath: m_AnchorMax.x

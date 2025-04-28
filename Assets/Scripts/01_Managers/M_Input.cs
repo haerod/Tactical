@@ -151,7 +151,7 @@ public class M_Input : MonoBehaviour
         else
         {
             OnForbiddenTile();
-            CursorOutPointedTile();
+            CursorNotOnPointedTile();
             return; // Out of tile board
         }
     }
@@ -162,10 +162,13 @@ public class M_Input : MonoBehaviour
     /// <param name="tileCoordinates"></param>
     private void CursorEnterPointedTile(Vector2Int tileCoordinates)
     {
-        _feedback.DisplayCoverFeedbacks(tileCoordinates);
+        _feedback.ShowCoverFeedbacks(tileCoordinates);
     }
     
-    private void CursorOutPointedTile()
+    /// <summary>
+    /// 
+    /// </summary>
+    private void CursorNotOnPointedTile()
     {
         _feedback.HideCoverFeedbacks();
     }
@@ -290,7 +293,7 @@ public class M_Input : MonoBehaviour
             else // Enemy
             {
                 _feedback.SetCursor(M_Feedback.CursorType.AimAndInSight);
-                _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(currentCharacter.look.LineOfSight(tile).Count));                
+                _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(currentCharacter.look.GetTilesOfLineOfSightOn(tile).Count));                
             }
         }
         else

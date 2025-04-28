@@ -165,8 +165,32 @@ public class M_Feedback : MonoBehaviour
     /// <summary>
     /// Show cover feedbacks.
     /// </summary>
-    /// <param name="tileCoordinates"></param>
-    public void DisplayCoverFeedbacks(Vector2Int tileCoordinates) => coverHolder.DisplayCoverFeedbacks(tileCoordinates);
+    /// <param name="centralTileCoordinates"></param>
+    public void ShowCoverFeedbacks(Vector2Int centralTileCoordinates)
+    {
+        C__Character currentCharacter = _characters.current;
+        List<C__Character> charactersInView = currentCharacter.look.CharactersInView();
+        List<Vector2Int> coversToDisplay = new List<Vector2Int>();
+
+        foreach (C__Character otherCharacter in charactersInView)
+        {
+            if(otherCharacter.team == currentCharacter.team)
+                continue; // Same team
+
+            //print(currentCharacter.cover.GetClosestCoverCoordinatesFrom(otherCharacter));
+
+            Vector2Int closestCoverCoordinates = currentCharacter.cover.GetClosestCoverCoordinatesFrom(otherCharacter);
+            
+            if(coversToDisplay.Contains(closestCoverCoordinates))
+                continue; // Cover already known
+            
+            coversToDisplay.AddIfNotNull(closestCoverCoordinates);
+        }
+        
+        //coversToDisplay.Print();
+
+        coverHolder.DisplayCoverFeedbacks(centralTileCoordinates, coversToDisplay, currentCharacter);
+    }
 
     /// <summary>
     /// Hide cover feedbacks.

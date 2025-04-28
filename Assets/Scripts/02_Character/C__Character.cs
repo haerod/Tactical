@@ -8,6 +8,7 @@ public class C__Character : MonoBehaviour
     public C_Move move;
     public C_Look look;
     public C_Attack attack;
+    public C_Cover cover;
     public C_Health health;
     public C_Infos infos;
     public C_Behavior behavior;

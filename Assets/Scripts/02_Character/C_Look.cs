@@ -79,7 +79,7 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     public bool HasSightOn(Tile tile)
     {
-        List<Tile> los = LineOfSight(tile);
+        List<Tile> los = GetTilesOfLineOfSightOn(tile);
 
         if (AreObstaclesOn(los))
             return false; // Obstacles
@@ -90,11 +90,21 @@ public class C_Look : MonoBehaviour
     }
 
     /// <summary>
-    /// Return the line of sight of the character.
+    /// Return the tiles in the line of sight of the character on a tile.
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
-    public List<Tile> LineOfSight(Tile targetTile) => Pathfinding.LineOfSight(c.tile, targetTile).ToList();
+    public List<Tile> GetTilesOfLineOfSightOn(Tile targetTile) => GetCoordinatesOfLineOfSightOn(targetTile)
+            .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
+            .ToList();
+
+    /// <summary>
+    /// Return the coordinates in the line of sight of the character on a tile.
+    /// </summary>
+    /// <param name="targetTile"></param>
+    /// <returns></returns>
+    public List<Vector2Int> GetCoordinatesOfLineOfSightOn(Tile targetTile)=> Pathfinding.LineOfSight(c.tile, targetTile)
+        .ToList();
 
     /// <summary>
     /// Return the closest enemy on sight.
@@ -106,7 +116,7 @@ public class C_Look : MonoBehaviour
             .Where(o => o != c) // remove emitter
             .Where(o => o.Team() != c.Team()) // remove allies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight
-            .OrderBy(o => LineOfSight(o.tile).Count()) // order enemies by distance
+            .OrderBy(o => GetTilesOfLineOfSightOn(o.tile).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
     }
 
