@@ -166,20 +166,18 @@ public class M_Feedback : MonoBehaviour
     /// Show cover feedbacks.
     /// </summary>
     /// <param name="centralTileCoordinates"></param>
-    public void ShowCoverFeedbacks(Vector2Int centralTileCoordinates)
+    public void ShowCoverFeedbacks(Coordinates centralTileCoordinates)
     {
         C__Character currentCharacter = _characters.current;
         List<C__Character> charactersInView = currentCharacter.look.CharactersInView();
-        List<Vector2Int> coversToDisplay = new List<Vector2Int>();
+        List<Coordinates> coversToDisplay = new List<Coordinates>();
 
         foreach (C__Character otherCharacter in charactersInView)
         {
             if(otherCharacter.team == currentCharacter.team)
                 continue; // Same team
-
-            //print(currentCharacter.cover.GetClosestCoverCoordinatesFrom(otherCharacter));
-
-            Vector2Int closestCoverCoordinates = currentCharacter.cover.GetClosestCoverCoordinatesFrom(otherCharacter);
+            
+            Coordinates closestCoverCoordinates = currentCharacter.cover.GetClosestCoverCoordinatesFrom(otherCharacter);
             
             if(coversToDisplay.Contains(closestCoverCoordinates))
                 continue; // Cover already known
@@ -187,8 +185,6 @@ public class M_Feedback : MonoBehaviour
             coversToDisplay.AddIfNotNull(closestCoverCoordinates);
         }
         
-        //coversToDisplay.Print();
-
         coverHolder.DisplayCoverFeedbacks(centralTileCoordinates, coversToDisplay, currentCharacter);
     }
 

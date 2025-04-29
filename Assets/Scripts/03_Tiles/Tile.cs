@@ -4,18 +4,14 @@ using UnityEditor;
 using System.Linq;
 using static M__Managers;
 
-public class Tile : MonoBehaviour
+public class Tile : Entity
 {
     [Header("PROPERTIES")]
 
     public TileType type;
 
     [Header("COORDINATES")]
-
-    public int x; // Let it serialized to let Tile be dirty.
-    public int y; // Let it serialized to let Tile be dirty.
-    public Vector2Int coordinates => new Vector2Int(x, y);
-
+    
     [HideInInspector] public int cost;
     [HideInInspector] public int heuristic;
     [HideInInspector] public int f;
@@ -60,12 +56,14 @@ public class Tile : MonoBehaviour
     /// Give the values to the tile.
     /// </summary>
     /// <param name="newCoordinates"></param>
-    public void Setup(Vector2Int newCoordinates)
+    public void Setup(Coordinates newCoordinates)
     {
-        x = newCoordinates.x;
-        y = newCoordinates.y;
-
-        string newName = $"{type} ({x},{y}) ";
+        if(coordinates == null)
+            coordinates = new Coordinates(newCoordinates.x, newCoordinates.y);
+        else
+            coordinates.SetCoordinates(newCoordinates);
+        
+        string newName = $"{type} ({coordinates.x},{coordinates.y}) ";
         newName = newName.Replace("(TileType)", "");
 
         gameObject.name = newName;
@@ -98,7 +96,7 @@ public class Tile : MonoBehaviour
     {
         parent = parentTile;
         cost = parent.cost + GetCost(parentTile);
-        heuristic = (Mathf.Abs(endTile.x - x) + Mathf.Abs(endTile.y - y)) * 10;
+        heuristic = (Mathf.Abs(endTile.coordinates.x - coordinates.x) + Mathf.Abs(endTile.coordinates.y - coordinates.y)) * 10;
         f = cost + heuristic;
     }
 
@@ -159,7 +157,7 @@ public class Tile : MonoBehaviour
         return testedCovers
             .FirstOrDefault(c => c.IsBetweenTiles(this, otherTile));
     }
-    public bool IsCoverBetween(Vector2Int otherCoordinates)
+    public bool IsCoverBetween(Coordinates otherCoordinates)
     {
         List<Cover> testedCovers = GetCovers();
 
@@ -200,7 +198,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
-    public bool IsDiagonalWith(Tile tile) => x != tile.x && y != tile.y;
+    public bool IsDiagonalWith(Tile tile) => coordinates.x != tile.coordinates.x && coordinates.y != tile.coordinates.y;
 
     /// <summary>
     /// Reset the pathfinding tiles value.
@@ -302,7 +300,7 @@ public class Tile : MonoBehaviour
     {
         foreach (C__Character c in _characters.GetCharacterList())
         {
-            if (c.move.x == x && c.move.y == y)
+            if (c.move.x == coordinates.x && c.move.y == coordinates.y)
                 return true;
         }
         return false;

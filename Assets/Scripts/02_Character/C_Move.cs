@@ -215,8 +215,8 @@ public class C_Move : MonoBehaviour
             {
                 OnTileEnter();
 
-                x = currentPath[index].x;
-                y = currentPath[index].y;
+                x = currentPath[index].coordinates.x;
+                y = currentPath[index].coordinates.y;
 
                 if (IsTheLastTile()) 
                 {

@@ -39,7 +39,7 @@ public class M_Board : MonoBehaviour
     /// <param name="y"></param>
     /// <returns></returns>
     public Tile GetTileAtCoordinates(int x, int y) => tileGrid[x, y];
-    public Tile GetTileAtCoordinates(Vector2Int coordinates) => tileGrid[coordinates.x, coordinates.y];
+    public Tile GetTileAtCoordinates(Coordinates coordinates) => tileGrid[coordinates.x, coordinates.y];
 
     /// <summary>
     /// Return a tile with an offset.
@@ -49,7 +49,7 @@ public class M_Board : MonoBehaviour
     /// <param name="yOffset"></param>
     /// <param name="tile"></param>
     /// <returns></returns>
-    public Tile GetTileWithOffset(int xOffset, int yOffset, Tile tile) => GetTileAtCoordinates(tile.x + xOffset, tile.y + yOffset);
+    public Tile GetTileWithOffset(int xOffset, int yOffset, Tile tile) => GetTileAtCoordinates(tile.coordinates.x + xOffset, tile.coordinates.y + yOffset);
 
     /// <summary>
     /// Return the tiles around the start tile, with a radius.
@@ -66,7 +66,7 @@ public class M_Board : MonoBehaviour
         {
             for (int y = -distance; y <= distance; y++)
             {
-                Tile tile = _board.GetTileAtCoordinates(x + startTile.x, y + startTile.y);
+                Tile tile = _board.GetTileAtCoordinates(x + startTile.coordinates.x, y + startTile.coordinates.y);
 
                 if (!tile)
                     continue; // No tile
@@ -98,37 +98,37 @@ public class M_Board : MonoBehaviour
     /// <param name="yCenter"></param>
     /// <param name="radius"></param>
     /// <returns></returns>
-    public List<Vector2Int> GetEmptySquareCoordinatesWithRadius(int xCenter, int yCenter, int radius)
+    public List<Coordinates> GetEmptySquareCoordinatesWithRadius(int xCenter, int yCenter, int radius)
     {
-        List<Vector2Int> toReturn = new List<Vector2Int>();
+        List<Coordinates> toReturn = new List<Coordinates>();
 
         radius = Mathf.Abs(radius);
         int edgeLenght = 2 * radius + 1;
 
         if (radius == 0) // Distance = 0
         {
-            toReturn.Add(new Vector2Int(xCenter, yCenter));
+            toReturn.Add(new Coordinates(xCenter, yCenter));
             return toReturn;
         }
 
         for (int i = 0; i < edgeLenght; i++) // Top line
         {
-            toReturn.Add(new Vector2Int(xCenter - radius, yCenter - radius + i));
+            toReturn.Add(new Coordinates(xCenter - radius, yCenter - radius + i));
         }
 
         for (int i = 0; i < edgeLenght; i++) // Bot line
         {
-            toReturn.Add(new Vector2Int(xCenter + radius, yCenter - radius + i));
+            toReturn.Add(new Coordinates(xCenter + radius, yCenter - radius + i));
         }
 
         for (int i = 0; i < edgeLenght - 2; i++) // Left line
         {
-            toReturn.Add(new Vector2Int(xCenter - (radius - 1) + i, yCenter - radius));
+            toReturn.Add(new Coordinates(xCenter - (radius - 1) + i, yCenter - radius));
         }
 
         for (int i = 0; i < edgeLenght - 2; i++) // Right line
         {
-            toReturn.Add(new Vector2Int(xCenter - (radius - 1) + i, yCenter + radius));
+            toReturn.Add(new Coordinates(xCenter - (radius - 1) + i, yCenter + radius));
         }
 
         return toReturn;
@@ -142,15 +142,15 @@ public class M_Board : MonoBehaviour
     /// <param name="yCenter"></param>
     /// <param name="radius"></param>
     /// <returns></returns>
-    public List<Vector2Int> GetFullSquareCoordinatesWithRadius(int xCenter, int yCenter, int radius)
+    public List<Coordinates> GetFullSquareCoordinatesWithRadius(int xCenter, int yCenter, int radius)
     {
-        List<Vector2Int> toReturn = new List<Vector2Int>();
+        List<Coordinates> toReturn = new List<Coordinates>();
 
         for (int i = -radius; i <= radius; i++)
         {
             for (int j = -radius; j <= radius; j++)
             {
-                toReturn.Add(new Vector2Int(xCenter+i, yCenter+j));
+                toReturn.Add(new Coordinates(xCenter+i, yCenter+j));
             }
         }
 
@@ -164,16 +164,16 @@ public class M_Board : MonoBehaviour
     /// <param name="yCenter"></param>
     /// <param name="edgeLength"></param>
     /// <returns></returns>
-    public List<Vector2Int>  GetFullSquareCoordinatesWithEdge(int xCenter, int yCenter, int edgeLength)
+    public List<Coordinates>  GetFullSquareCoordinatesWithEdge(int xCenter, int yCenter, int edgeLength)
     {
-        List<Vector2Int> toReturn = new List<Vector2Int>();
-        Vector2Int botLeftCoordinates = new Vector2Int(xCenter-(edgeLength-2), yCenter-(edgeLength-2));
+        List<Coordinates> toReturn = new List<Coordinates>();
+        Coordinates botLeftCoordinates = new Coordinates(xCenter-(edgeLength-2), yCenter-(edgeLength-2));
 
         for (int i = 0 ; i < edgeLength; i++)
         {
             for (int j = 0; j < edgeLength; j++)
             {
-                toReturn.Add(new Vector2Int(botLeftCoordinates.x + i, botLeftCoordinates.y + j));
+                toReturn.Add(new Coordinates(botLeftCoordinates.x + i, botLeftCoordinates.y + j));
             }
         }
         
@@ -187,9 +187,9 @@ public class M_Board : MonoBehaviour
     /// <param name="selectionPosition"></param>
     /// <param name="senderTile"></param>
     /// <returns></returns>
-    public Vector2Int GetClosestFreePositionAround(Vector2Int coordinates, Vector3 selectionPosition, Tile senderTile)
+    public Coordinates GetClosestFreePositionAround(Coordinates coordinates, Vector3 selectionPosition, Tile senderTile)
     {
-        Vector2Int toReturn = coordinates;
+        Coordinates toReturn = coordinates;
 
         int distance = 1;
         bool founded = false;
@@ -197,9 +197,9 @@ public class M_Board : MonoBehaviour
 
         while (!founded)
         {
-            List<Vector2Int> aroundCoordinates = GetEmptySquareCoordinatesWithRadius(coordinates.x, coordinates.y, distance);
+            List<Coordinates> aroundCoordinates = GetEmptySquareCoordinatesWithRadius(coordinates.x, coordinates.y, distance);
 
-            foreach (Vector2Int testedCoordinate in aroundCoordinates)
+            foreach (Coordinates testedCoordinate in aroundCoordinates)
             {
                 Tile testedTile = GetTileAtCoordinates(testedCoordinate.x, testedCoordinate.y);
 
@@ -238,15 +238,15 @@ public class M_Board : MonoBehaviour
         Tile tile2 = GetTileWithLowestX(tileFrom, tileTo);
         Tile tile3, tile4;
 
-        if(tile1.y > tile2.y)
+        if(tile1.coordinates.y > tile2.coordinates.y)
         {
-            tile3 = GetTileAtCoordinates(tile1.x, tile2.y);
-            tile4 = GetTileAtCoordinates(tile2.x, tile1.y);
+            tile3 = GetTileAtCoordinates(tile1.coordinates.x, tile2.coordinates.y);
+            tile4 = GetTileAtCoordinates(tile2.coordinates.x, tile1.coordinates.y);
         }
         else
         {
-            tile3 = GetTileAtCoordinates(tile2.x, tile1.y);
-            tile4 = GetTileAtCoordinates(tile1.x, tile2.y);
+            tile3 = GetTileAtCoordinates(tile2.coordinates.x, tile1.coordinates.y);
+            tile4 = GetTileAtCoordinates(tile1.coordinates.x, tile2.coordinates.y);
         }
 
         return new List<Tile> { tile3, tile4 };
@@ -258,7 +258,7 @@ public class M_Board : MonoBehaviour
     /// <param name="coordinates1"></param>
     /// <param name="coordinates2"></param>
     /// <returns></returns>
-    public Cover GetCoverBetweenAdjacentCoordinates(Vector2Int coordinates1, Vector2Int coordinates2)
+    public Cover GetCoverBetweenAdjacentCoordinates(Coordinates coordinates1, Coordinates coordinates2)
     {
         Tile tile1 = GetTileAtCoordinates(coordinates1);
         Tile tile2 = GetTileAtCoordinates(coordinates2);
@@ -295,10 +295,10 @@ public class M_Board : MonoBehaviour
     /// <returns></returns>
     private Tile GetTileWithBiggestX(Tile tile1, Tile tile2)
     {
-        if(tile1.x == tile2.x)
+        if(tile1.coordinates.x == tile2.coordinates.x)
             return null;
 
-        if(tile1.x > tile2.x)
+        if(tile1.coordinates.x > tile2.coordinates.x)
             return tile1;
 
         return tile2;
@@ -312,9 +312,9 @@ public class M_Board : MonoBehaviour
     /// <returns></returns>
     private Tile GetTileWithLowestX(Tile tile1, Tile tile2)
     {
-        if (tile1.x == tile2.x)
+        if (tile1.coordinates.x == tile2.coordinates.x)
             return null;
 
-        return tile1.x < tile2.x ? tile1 : tile2;
+        return tile1.coordinates.x < tile2.coordinates.x ? tile1 : tile2;
     }
 }

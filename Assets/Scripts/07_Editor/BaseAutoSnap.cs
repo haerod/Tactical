@@ -65,10 +65,10 @@ public abstract class BaseAutoSnap : MonoBehaviour
     /// </summary>
     protected virtual void CheckGridPosition()
     {
-        Vector2Int coordinates = new Vector2Int(
+        Coordinates coordinates = new Coordinates(
                 Mathf.RoundToInt(transform.position.x),
                 Mathf.RoundToInt(transform.position.z));
-
+        
         RemoveFromManager();
         MoveObject(coordinates);
 
@@ -88,7 +88,7 @@ public abstract class BaseAutoSnap : MonoBehaviour
     /// <summary>
     /// Move the object and setup parameters if necessary.
     /// </summary>
-    protected abstract void MoveObject(Vector2Int coordinates);
+    protected abstract void MoveObject(Coordinates coordinates);
 
     /// <summary>
     /// Set the base parameters of the script.

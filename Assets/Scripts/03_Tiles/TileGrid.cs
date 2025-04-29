@@ -26,14 +26,14 @@ public class TileGrid
         // Note : don't do this during editor time
         foreach (Tile tile in tilesToAdd)
         {
-            if (tile.x < lowestX)
-                lowestX = tile.x;
-            if (tile.y < lowestY)
-                lowestY = tile.y;
-            if (tile.x > higherX)
-                higherX = tile.x;
-            if (tile.y > higherY)
-                higherY = tile.y;
+            if (tile.coordinates.x < lowestX)
+                lowestX = tile.coordinates.x;
+            if (tile.coordinates.y < lowestY)
+                lowestY = tile.coordinates.y;
+            if (tile.coordinates.x > higherX)
+                higherX = tile.coordinates.x;
+            if (tile.coordinates.y > higherY)
+                higherY = tile.coordinates.y;
         }
 
         int width = Mathf.Abs(lowestX - higherX) + 1;
@@ -43,7 +43,7 @@ public class TileGrid
 
         foreach (Tile tile in tilesToAdd)
         {
-            grid[tile.x - lowestX, tile.y - lowestY] = tile;
+            grid[tile.coordinates.x - lowestX, tile.coordinates.y - lowestY] = tile;
         }
     }
 

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using static M__Managers;
 
 public class C_Cover : MonoBehaviour
@@ -19,18 +20,22 @@ public class C_Cover : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
+
     /// <summary>
     /// Return all coordinates of covers (over or between tiles) from a character.
     /// </summary>
-    /// <param name="characterViewer"></param>
+    /// <param name="fromCharacter"></param>
+    /// <param name="toTile"></param>
     /// <returns></returns>
-    public List<Vector2Int> GetAllCoversCoordinatesFrom(C__Character characterViewer)
+    public List<Coordinates> GetAllCoversCoordinatesFrom(C__Character fromCharacter, Tile toTile)
     {
-        List<Vector2Int> lineOfSight = characterViewer.look.GetCoordinatesOfLineOfSightOn(c.tile);
-        List<Vector2Int> coordinatesToReturn = new List<Vector2Int>();
+        List<Coordinates> lineOfSight = fromCharacter.look.GetCoordinatesOfLineOfSightOn(toTile);
+        List<Coordinates> coordinatesToReturn = new List<Coordinates>();
+
+        if (lineOfSight.Count == 0)
+            return coordinatesToReturn; // No line of sight
         
-        foreach (Vector2Int coordinates in lineOfSight)
+        foreach (Coordinates coordinates in lineOfSight)
         {
             if(coordinates == lineOfSight.Last())
                 continue; // Last coordinate
@@ -50,7 +55,13 @@ public class C_Cover : MonoBehaviour
         return coordinatesToReturn;
     }
     
-    public Vector2Int GetClosestCoverCoordinatesFrom(C__Character characterAttacker) => GetAllCoversCoordinatesFrom(characterAttacker).Last();
+    /// <summary>
+    /// Return the closest coordinate or null if isn't.
+    /// </summary>
+    /// <param name="characterAttacker"></param>
+    /// <returns></returns>
+    public Coordinates GetClosestCoverCoordinatesFrom(C__Character characterAttacker) => GetAllCoversCoordinatesFrom(characterAttacker, c.tile)
+            .LastOrDefault();
 
     // ======================================================================
     // PRIVATE METHODS

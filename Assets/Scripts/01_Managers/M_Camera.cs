@@ -152,7 +152,7 @@ public class M_Camera : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Input_OnMovingCameraInput(object sender, Vector2Int inputMoveDirection)
+    private void Input_OnMovingCameraInput(object sender, Coordinates inputMoveDirection)
     {
         positionToReach = transform.position
             + transform.forward * inputMoveDirection.y 

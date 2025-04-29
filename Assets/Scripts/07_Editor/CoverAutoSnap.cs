@@ -75,7 +75,7 @@ public class CoverAutoSnap : BaseAutoSnap
         return true;
     }
 
-    protected override void MoveObject(Vector2Int coordinates)
+    protected override void MoveObject(Coordinates coordinates)
     {
         transform.position = new Vector3(coordinates.x, 0, coordinates.y);
         MoveCoverOnBorder();

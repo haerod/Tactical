@@ -41,7 +41,7 @@ public class CharacterAutoSnap : BaseAutoSnap
         rules = FindAnyObjectByType<M_Rules>();
         transform.parent = characters.transform;
     }
-    protected override void MoveObject(Vector2Int coordinates)
+    protected override void MoveObject(Coordinates coordinates)
     {
         character.MoveAt(coordinates.x, coordinates.y);
     }

@@ -27,20 +27,18 @@ public class F_CoversHolder : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
-    public void DisplayCoverFeedbacks(Vector2Int centralTileCoordinates, List<Vector2Int> coversCoordinates, C__Character characterCovered)
+    public void DisplayCoverFeedbacks(Coordinates centralTileCoordinates, List<Coordinates> coversCoordinates, C__Character characterCovered)
     {
-        List<Vector2Int> coordinatesInSquare = _board
+        List<Coordinates> coordinatesInSquare = _board
             .GetFullSquareCoordinatesWithRadius(centralTileCoordinates.x, centralTileCoordinates.y, coverFeedbackRadius);
         
-        //coversCoordinates.Print();
-        
-        List<Vector2Int> tilesWhereDisplay = coordinatesInSquare
+        List<Coordinates> tilesWhereDisplay = coordinatesInSquare
             .Intersect(coversCoordinates)
             .ToList();
         
         for (int i = 0; i < coordinatesInSquare.Count; i++)
         {
-            Vector2Int currentCoordinates = coordinatesInSquare[i];
+            Coordinates currentCoordinates = coordinatesInSquare[i];
             
             Vector3 worldCoordinates = new Vector3(
                 currentCoordinates.x,
@@ -62,9 +60,9 @@ public class F_CoversHolder : MonoBehaviour
     {
         for (int i = 0; i < Mathf.Pow(coverFeedbackRadius*2+1, 2); i++)
         {
-            GameObject instaCoverFeedback = Instantiate(coverFeedbackPrefab, transform);
-            instaCoverFeedback.SetActive(false);
-            covers.Add(instaCoverFeedback.GetComponent<F_Covers>());
+            GameObject newCoverFeedback = Instantiate(coverFeedbackPrefab, transform);
+            newCoverFeedback.SetActive(false);
+            covers.Add(newCoverFeedback.GetComponent<F_Covers>());
         }
     }
 }

@@ -26,15 +26,15 @@ public class TileAutoSnap : BaseAutoSnap
         
         isLocated = false;
 
-        Vector2Int baseCoordinates = tile.coordinates;
-        Vector2Int freeCoordinates = baseCoordinates;
+        Coordinates baseCoordinates = tile.coordinates;
+        Coordinates freeCoordinates = baseCoordinates;
 
-        foreach (Vector2Int coordinates in board.GetEmptySquareCoordinatesWithRadius(tile.x, tile.y, 1))
+        foreach (Coordinates coordinates in board.GetEmptySquareCoordinatesWithRadius(tile.coordinates.x, tile.coordinates.y, 1))
         {
             if (GetOtherTileAtCoordinates(coordinates))
                 continue; // Not empty
 
-            if (tile.x == coordinates.x ^ tile.y == coordinates.y)
+            if (tile.coordinates.x == coordinates.x ^ tile.coordinates.y == coordinates.y)
             {
                 freeCoordinates = coordinates;
                 break; // Not in diagonal, get it first.
@@ -70,7 +70,7 @@ public class TileAutoSnap : BaseAutoSnap
     // ======================================================================
 
     protected override bool IsOnValidPosition() => !IsCollidingAnotherTile();
-    protected override void MoveObject(Vector2Int coordinates)
+    protected override void MoveObject(Coordinates coordinates)
     {
         tile.Setup(coordinates);
         tile.MoveAtGridPosition(coordinates.x, coordinates.y);
@@ -111,7 +111,7 @@ public class TileAutoSnap : BaseAutoSnap
     /// </summary>
     /// <param name="coordinates"></param>
     /// <returns></returns>
-    private Tile GetOtherTileAtCoordinates(Vector2Int coordinates)
+    private Tile GetOtherTileAtCoordinates(Coordinates coordinates)
     {
         Collider[] colliders = Physics.OverlapBox(new Vector3(coordinates.x, 0, coordinates.y), Vector3.one * .4f);
 

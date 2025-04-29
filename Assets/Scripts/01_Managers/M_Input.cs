@@ -23,7 +23,7 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode zoomInKey = KeyCode.T;
     [SerializeField] private KeyCode zoomOutKey = KeyCode.G;
 
-    public event EventHandler<Vector2Int> OnMovingCameraInput;
+    public event EventHandler<Coordinates> OnMovingCameraInput;
     public event EventHandler<int> OnZoomingCameraInput;
 
     private bool canClick = true;
@@ -127,7 +127,7 @@ public class M_Input : MonoBehaviour
                 return; // Can't go on this tile or can't play
             }
 
-            CursorEnterPointedTile(new Vector2Int(tile.x, tile.y));
+            CursorEnterPointedTile(new Coordinates(tile.coordinates.x, tile.coordinates.y));
 
             // NEXT STEP : Free tile or occupied tile
 
@@ -160,7 +160,7 @@ public class M_Input : MonoBehaviour
     /// When a cursor enters a new tile.
     /// </summary>
     /// <param name="tileCoordinates"></param>
-    private void CursorEnterPointedTile(Vector2Int tileCoordinates)
+    private void CursorEnterPointedTile(Coordinates tileCoordinates)
     {
         _feedback.ShowCoverFeedbacks(tileCoordinates);
     }
@@ -237,16 +237,16 @@ public class M_Input : MonoBehaviour
         bool downInput = mousePosition.y <= 0 || Input.GetKey(downKey);
         bool leftInput = mousePosition.x <= 0 || Input.GetKey(leftKey);
         bool rightInput = mousePosition.x >= Screen.width || Input.GetKey(rightKey);
-        Vector2Int direction = Vector2Int.zero;
+        Coordinates direction = new Coordinates(0,0);
 
         if (upInput)
-            direction += Vector2Int.up;
+            direction += new Coordinates(0,1);
         if (downInput)
-            direction += Vector2Int.down;
+            direction += new Coordinates(0,-1);
         if (leftInput)
-            direction += Vector2Int.left;
+            direction += new Coordinates(-1,0);
         if (rightInput)
-            direction += Vector2Int.right;
+            direction += new Coordinates(1,0);
 
         OnMovingCameraInput?.Invoke(this, direction);
     }
@@ -393,7 +393,7 @@ public class M_Input : MonoBehaviour
             return false; // No tile
         if (!currentCharacter.move.walkableTiles.Contains(tile.type)) 
             return false; // Unwalkable tile
-        if (tile.x == currentCharacter.move.x && tile.y == currentCharacter.move.y) 
+        if (tile.coordinates.x == currentCharacter.move.x && tile.coordinates.y == currentCharacter.move.y) 
             return false; // Same tile
         
         return true;

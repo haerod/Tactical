@@ -103,7 +103,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
-    public List<Vector2Int> GetCoordinatesOfLineOfSightOn(Tile targetTile)=> Pathfinding.LineOfSight(c.tile, targetTile)
+    public List<Coordinates> GetCoordinatesOfLineOfSightOn(Tile targetTile)=> Pathfinding.LineOfSight(c.tile, targetTile)
         .ToList();
 
     /// <summary>
