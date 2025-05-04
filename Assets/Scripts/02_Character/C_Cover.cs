@@ -125,7 +125,7 @@ public class C_Cover : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     private List<TileType> GetCoveringTypes() => coveringTypes
-        .SelectMany(currentTypeOfCover => currentTypeOfCover.GetTileTypes())
+        .SelectMany(currentTypeOfCover => currentTypeOfCover.GetCoveringTileTypes())
         .ToList();
     
     /// <summary>
@@ -199,13 +199,13 @@ public class CoverInfo
 public class CoveringElement
 {
     [SerializeField] private CoverType coverType;
-    [SerializeField] private List<TileType> tileTypes;
+    [SerializeField] private List<TileType> coveringTileTypes;
     
     /// <summary>
-    /// Returns the tile types list of this element.
+    /// Returns the tile types which cover.
     /// </summary>
     /// <returns></returns>
-    public List<TileType> GetTileTypes() => tileTypes;
+    public List<TileType> GetCoveringTileTypes() => coveringTileTypes;
     
     /// <summary>
     /// Returns the cover type of this element.
@@ -218,6 +218,6 @@ public class CoveringElement
     /// </summary>
     /// <param name="tileType"></param>
     /// <returns></returns>
-    public bool Contains(TileType tileType) => tileTypes.Contains(tileType);
+    public bool Contains(TileType tileType) => coveringTileTypes.Contains(tileType);
 }
 
