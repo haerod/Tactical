@@ -21,7 +21,7 @@ public class Cover : MonoBehaviour
     public void SetCoverPosition(Vector2 position) => coverPosition = position;
 
     /// <summary>
-    /// Return true if it's beteween two asked tiles.
+    /// Returns true if it's between two asked tiles.
     /// </summary>
     /// <param name="tile1"></param>
     /// <param name="tile2"></param>
@@ -40,7 +40,7 @@ public class Cover : MonoBehaviour
     }
 
     /// <summary>
-    /// Return true if it's between two coordinates.
+    /// Returns true if it's between two coordinates, else return false.
     /// </summary>
     /// <param name="coordinates1"></param>
     /// <param name="coordinates2"></param>
@@ -54,11 +54,27 @@ public class Cover : MonoBehaviour
         if (coordinates1.y == coordinates2.y)
             if (Mathf.Approximately((coordinates1.x + coordinates2.x) / 2f, coverPosition.x))
                 return true;
-
+        
         return false;
     }
 
+    /// <summary>
+    /// Returns the coordinates on the other side of the cover.
+    /// </summary>
+    /// <param name="firstSideCoordinates"></param>
+    /// <returns></returns>
+    public Coordinates GetOtherSideCoordinates(Coordinates firstSideCoordinates) => new(
+        (int)(coverPosition.x - (firstSideCoordinates.x - coverPosition.x)),
+        (int)(coverPosition.y - (firstSideCoordinates.y - coverPosition.y)));
+
+    /// <summary>
+    /// Returns the tile type of the cover.
+    /// </summary>
+    /// <returns></returns>
+    public TileType GetTileType() => type;
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
 }

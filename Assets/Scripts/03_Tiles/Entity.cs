@@ -42,7 +42,7 @@ public class Coordinates
             return false;
         
         if(ReferenceEquals(this, c))
-            return true;
+             return true;
         
         if(GetType() != c.GetType())
             return false;
@@ -55,4 +55,8 @@ public class Coordinates
         this.x = newCoordinates.x;
         this.y = newCoordinates.y;
     }
+    
+    public Vector3 ToVector3() => new Vector3(x,0,y);
+    
+    public Vector2 ToVector2() => new Vector2(x,y);
 }

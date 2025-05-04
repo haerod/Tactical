@@ -33,7 +33,7 @@ public class M_Board : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Return tile at (x,y) coordinates.
+    /// Returns the tile at (x,y) coordinates.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -42,8 +42,7 @@ public class M_Board : MonoBehaviour
     public Tile GetTileAtCoordinates(Coordinates coordinates) => tileGrid[coordinates.x, coordinates.y];
 
     /// <summary>
-    /// Return a tile with an offset.
-    /// Return null for a hole.
+    /// Returns a tile with an offset if it exists, otherwise returns null.
     /// </summary>
     /// <param name="xOffset"></param>
     /// <param name="yOffset"></param>
@@ -52,7 +51,7 @@ public class M_Board : MonoBehaviour
     public Tile GetTileWithOffset(int xOffset, int yOffset, Tile tile) => GetTileAtCoordinates(tile.coordinates.x + xOffset, tile.coordinates.y + yOffset);
 
     /// <summary>
-    /// Return the tiles around the start tile, with a radius.
+    /// Returns the tiles around a tile, with a radius.
     /// </summary>
     /// <param name="startTile"></param>
     /// <param name="distance"></param>
@@ -91,7 +90,45 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Return all coordinates of the edges of a square of center x, y with a radius.
+    /// Returns the coordinates around coordinates, with a radius
+    /// </summary>
+    /// <param name="startCoordinates"></param>
+    /// <param name="distance"></param>
+    /// <param name="useDiagonals"></param>
+    /// <returns></returns>
+    public List<Coordinates> GetCoordinatesAround(Coordinates startCoordinates, int distance, bool useDiagonals)
+    {
+        List<Coordinates> coordinatesToReturn = new List<Coordinates>();
+
+        for (int x = -distance; x <= distance; x++)
+        {
+            for (int y = -distance; y <= distance; y++)
+            {
+                Coordinates currentCoordinates = new Coordinates(x + startCoordinates.x, y + startCoordinates.y);
+
+                if (currentCoordinates == startCoordinates)
+                    continue; // Start coordinates
+
+                if (useDiagonals)
+                {
+                    coordinatesToReturn.Add(currentCoordinates);
+                    continue; // Not using diagonals
+                }
+
+                int testDistance = Mathf.Abs(x) + Mathf.Abs(y);
+
+                if (testDistance > distance)
+                    continue; // Not in diagonal
+
+                coordinatesToReturn.Add(currentCoordinates);
+            }
+        }
+        
+        return coordinatesToReturn;
+    }
+
+    /// <summary>
+    /// Returns all coordinates of the edges of a square of center x, y with a radius.
     /// A radius of 0 returns the coordinates x,y.
     /// </summary>
     /// <param name="xCenter"></param>
@@ -135,14 +172,13 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Return all the coordinates of square's points of centre x,y with a radius.
+    /// Returns all the coordinates of square's points of centre x,y with a radius.
     /// A radius of 0 returns the coordinates x,y.
     /// </summary>
-    /// <param name="xCenter"></param>
-    /// <param name="yCenter"></param>
+    /// <param name="centerCoordinates"></param>
     /// <param name="radius"></param>
     /// <returns></returns>
-    public List<Coordinates> GetFullSquareCoordinatesWithRadius(int xCenter, int yCenter, int radius)
+    public List<Coordinates> GetFullSquareCoordinatesWithRadius(Coordinates centerCoordinates, int radius)
     {
         List<Coordinates> toReturn = new List<Coordinates>();
 
@@ -150,7 +186,7 @@ public class M_Board : MonoBehaviour
         {
             for (int j = -radius; j <= radius; j++)
             {
-                toReturn.Add(new Coordinates(xCenter+i, yCenter+j));
+                toReturn.Add(new Coordinates(centerCoordinates.x+i, centerCoordinates.y+j));
             }
         }
 
@@ -158,7 +194,7 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Return all the coordinates of a center x,y with and edge of edgeLength.
+    /// Returns all the coordinates of a center x,y with and edge of edgeLength.
     /// </summary>
     /// <param name="xCenter"></param>
     /// <param name="yCenter"></param>
@@ -224,7 +260,7 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// With two tiles in diagonal, return the two other tiles to make a square.
+    /// With two tiles in diagonal, returns the two other tiles to make a square.
     /// </summary>
     /// <param name="tileFrom"></param>
     /// <param name="tileTo"></param>
@@ -253,7 +289,7 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Return the cover between two coordinates, return null if it's nothing.
+    /// Returns the cover between two coordinates, returns null if it's nothing.
     /// </summary>
     /// <param name="coordinates1"></param>
     /// <param name="coordinates2"></param>
@@ -282,13 +318,43 @@ public class M_Board : MonoBehaviour
         return testedCovers
             .FirstOrDefault(cover => cover.IsBetweenCoordinates(coordinates1, coordinates2));
     }
+
+    /// <summary>
+    /// Returns the covers adjacent (without diagonals) at coordinates.
+    /// </summary>
+    /// <param name="coordinates"></param>
+    /// <param name="coveringTypes"></param>
+    /// <returns></returns>
+    public List<GameObject> GetAdjacentCoversAt(Coordinates coordinates, List<TileType> coveringTypes)
+    {
+        List<GameObject> coversToReturn = new List<GameObject>();
+        List<Coordinates> aroundCoordinatesList = _board.GetCoordinatesAround(coordinates, 1, false);
+
+        foreach (Coordinates aroundCoordinates in aroundCoordinatesList)
+        {
+            Cover coverBetween = GetCoverBetweenAdjacentCoordinates(coordinates, aroundCoordinates);
+
+            if(coverBetween && coveringTypes.Contains(coverBetween.type)) // Cover on edge
+            {
+                coversToReturn.Add(coverBetween.gameObject);
+                continue;
+            }
+            
+            Tile tileWithCover = GetTileAtCoordinates(aroundCoordinates);
+            
+            if(tileWithCover && coveringTypes.Contains(tileWithCover.type)) // Cover on tile 
+                coversToReturn.Add(tileWithCover.gameObject);
+        }
+        
+        return coversToReturn;
+    }
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
     /// <summary>
-    /// Return the tile with the biggest x coordinate, or null if two x are equal.
+    /// Returns the tile with the biggest x coordinate, or null if two x are equal.
     /// </summary>
     /// <param name="tile1"></param>
     /// <param name="tile2"></param>

@@ -65,13 +65,13 @@ public class M_Camera : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Set the camera's target.
+    /// Sets the camera's target.
     /// </summary>
     /// <param name="target"></param>
     public void SetTarget(Transform target) => this.target = target;
 
     /// <summary>
-    /// Reset the camera's position to reach on its target (with the offset).
+    /// Resets the camera's position to reach on its target (with the offset).
     /// </summary>
     public void ResetPosition()
     {
@@ -90,17 +90,14 @@ public class M_Camera : MonoBehaviour
     /// <param name="duration"></param>
     /// <param name="intensity"></param>
     /// <param name="timeBetweenShakes"></param>
-    public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f)
-    {
-        StartCoroutine(Shake_Co(duration, intensity, timeBetweenShakes));
-    }
+    public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f) => StartCoroutine(Shake_Co(duration, intensity, timeBetweenShakes));
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
     /// <summary>
-    /// Update the camera position (clamped). Called by Update().
+    /// Updates the camera position (clamped). Called by Update().
     /// </summary>
     private void UpdateCameraPosition()
     {

@@ -24,7 +24,7 @@ public class C_Look : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Return all tiles in view depending the rules.
+    /// Returns all tiles in view depending on the rules.
     /// </summary>
     /// <returns></returns>
     public List<Tile> VisibleTiles()
@@ -50,7 +50,7 @@ public class C_Look : MonoBehaviour
     }
 
     /// <summary>
-    /// Return the other characters visible by this character, depending the rules.
+    /// Returns the other characters visible by this character, depending on the rules.
     /// </summary>
     /// <returns></returns>
     public List<C__Character> CharactersInView()
@@ -71,9 +71,17 @@ public class C_Look : MonoBehaviour
             })
             .ToList();
     }
+    
+    /// <summary>
+    /// Returns all the enemies in view.
+    /// </summary>
+    /// <returns></returns>
+    public List<C__Character> EnemiesInView() => CharactersInView()
+        .Where(civ => civ.team != c.team)
+        .ToList();
 
     /// <summary>
-    /// Return true if the character has the tile on sight.
+    /// Returns true if the character has the tile on sight.
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
@@ -84,13 +92,13 @@ public class C_Look : MonoBehaviour
         if (AreObstaclesOn(los))
             return false; // Obstacles
         if (los.Count + 1 > range)
-            return false; // Out of range
+            return false; // Out of view range
 
         return true; // Has sight on target
     }
-
+    
     /// <summary>
-    /// Return the tiles in the line of sight of the character on a tile.
+    /// Returns the tiles in the line of sight of the character on a tile.
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
@@ -99,33 +107,38 @@ public class C_Look : MonoBehaviour
             .ToList();
 
     /// <summary>
-    /// Return the coordinates in the line of sight of the character on a tile.
+    /// Returns the coordinates in the line of sight of the character on a tile.
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
     public List<Coordinates> GetCoordinatesOfLineOfSightOn(Tile targetTile)=> Pathfinding.LineOfSight(c.tile, targetTile)
         .ToList();
-
+    
     /// <summary>
-    /// Return the closest enemy on sight.
+    /// Returns the coordinates in the line of sight of the character on a tile.
+    /// </summary>
+    /// <param name="targetTile"></param>
+    /// <returns></returns>
+    public List<Coordinates> GetCoordinatesOfFullLineOfSightOn(Tile targetTile)=> Pathfinding.LineOfSight(c.tile, targetTile, Pathfinding.TileInclusion.WithStartAndEnd)
+        .ToList();
+    
+    /// <summary>
+    /// Returns the closest enemy on sight.
     /// </summary>
     /// <returns></returns>
-    public C__Character ClosestEnemyOnSight()
-    {
-        return _characters.GetCharacterList()
+    public C__Character ClosestEnemyOnSight() => _characters.GetCharacterList()
             .Where(o => o != c) // remove emitter
             .Where(o => o.Team() != c.Team()) // remove allies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight
             .OrderBy(o => GetTilesOfLineOfSightOn(o.tile).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
-    }
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
     /// <summary>
-    /// Return true if the character has obstacles on its line of sight.
+    /// Returns true if the character has obstacles on its line of sight.
     /// </summary>
     /// <param name="lineOfSight"></param>
     /// <returns></returns>
@@ -135,29 +148,29 @@ public class C_Look : MonoBehaviour
 
         foreach (Tile t in lineOfSight)
         {
-            if (t == null) continue; // Next : it's a hole.
-            if (visualObstacles.Contains(t.type)) return true; // EXIT : Big obstacle.
+            if (!t) continue; // Nothing
+            if (visualObstacles.Contains(t.type)) return true; // Line of sight blocker
 
             // Character
             C__Character chara = t.Character();
-            if (!chara) continue; // Next : there is no character.
+            if (!chara) continue; // There is no character
 
             if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThrough.Nobody)
             {
-                if (!chara.health.IsDead()) return true; // EXIT : Other character.
+                if (!chara.health.IsDead()) return true; // Other character
             }
             else if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThrough.AlliesOnly)
             {
                 // Are obstacle if enemy && alive
-                if ((chara.infos.team != c.infos.team) && (!chara.health.IsDead())) return true; // EXIT : Enemy
+                if ((chara.infos.team != c.infos.team) && (!chara.health.IsDead())) return true; // Enemy
             }
         }
 
-        return false; // EXIT : No obstacle.
+        return false; // No obstacle
     }
 
     /// <summary>
-    /// Return all tiles in view of THIS character.
+    /// Returns all tiles in view of THIS character.
     /// </summary>
     /// <returns></returns>
     private List<Tile> GetVisibleTiles()

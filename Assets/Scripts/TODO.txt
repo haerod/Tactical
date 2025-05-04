@@ -1,6 +1,8 @@
 ## DEBUG
 
 # Character movement
+- Pathfinding is strange
+- Feedback line doesn't fit with the pathfinding
 - If character pass through another, the last one losing its tile : because tiles have only one element on it
 
 # Border tiles
@@ -19,7 +21,11 @@
 - Separate the logic between Turns and M_Characters
 - Separate Inputs and Logic
 - Ergonomic of characters
-- Coordinates for characters (not in Move)
+- Coordinates for characters (not in Move), and for covers and obstacles
+- Tile class does a lot of things, fraction it (in Coordinates and a new class like Tile renderer)
+- Optimization : create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
+- C__Look -> fusion GetCoordinatesOfLineOfSightOn() and GetCoordinatesOfFullLineOfSightOn() together with Pathfinding.TileInclusion
+- Separate Pathfinding and LineOfSight
 
 ## FEATURES
 
@@ -44,3 +50,4 @@
 - Enemy spawners
 - Movements with special costs or obligation to stop
 - 3D grid
+- Line of sight on ennemies visibles

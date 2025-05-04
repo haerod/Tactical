@@ -98,7 +98,7 @@ public class TeamPlayOrder
     }
     public Team GetTeam() => team;
     public List<C__Character> GetCharactersPlayOrder() => charactersPlayOrder;
-
+    
     /// <summary>
     /// Return the first character of the team's characters play order.
     /// </summary>

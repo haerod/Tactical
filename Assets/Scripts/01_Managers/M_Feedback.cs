@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 using static M__Managers;
 
 public class M_Feedback : MonoBehaviour
@@ -11,16 +12,23 @@ public class M_Feedback : MonoBehaviour
     [SerializeField] private Texture2D aimCursor = null;
     [SerializeField] private Texture2D noLineOfSightCursor = null;
     [SerializeField] private Texture2D cantGoCursor = null;
+    
+    [Header("COVERS")]
+    
+    [SerializeField] private int coverFeedbackRange = 2;
+    [SerializeField] private Color coveredColour = Color.blue;
+    [SerializeField] private Color uncoveredColour = Color.red;
+    [SerializeField] private List<CoverFeedback> coverFeedbacks;
 
     [Header("REFERENCES")]
 
     public F_MoveLine line;
     public F_SelectionSquare square;
     public F_ViewLines viewLines;
-    public F_CoversHolder coverHolder;
+    [SerializeField] private F_CoversHolder coverHolder;
     [SerializeField] private GameObject actionEffectPrefab = null;
-    public static M_Feedback instance;
     
+    public static M_Feedback instance;
     public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement } // /!\ If add/remove a cursor, update the SetCursor method
 
     [HideInInspector] public List<Tile> walkableTiles;
@@ -48,7 +56,7 @@ public class M_Feedback : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Show the tiles of the movement area.
+    /// Shows the tiles of the movement area.
     /// </summary>
     public void ShowMovementArea(List<Tile> tilesToShow) =>
         tilesToShow
@@ -59,7 +67,7 @@ public class M_Feedback : MonoBehaviour
             });
 
     /// <summary>
-    /// Reset the tiles skin and clear the movement area tiles list.
+    /// Resets the tiles skin and clears the movement area tiles list.
     /// </summary>
     public void HideMovementArea()
     {
@@ -72,7 +80,7 @@ public class M_Feedback : MonoBehaviour
     }
 
     /// <summary>
-    /// Show the tiles a character can attack.
+    /// Shows the tiles a character can attack.
     /// </summary>
     public void ShowAttackableTiles(List<Tile> tilesToShow) =>
         tilesToShow.
@@ -82,7 +90,7 @@ public class M_Feedback : MonoBehaviour
             });
 
     /// <summary>
-    /// Reset the tiles skin and clear the attackable tiles list.
+    /// Resets the tiles skin and clears the attackable tiles list.
     /// </summary>
     public void HideAttackableTiles()
     {
@@ -93,7 +101,7 @@ public class M_Feedback : MonoBehaviour
     }
 
     /// <summary>
-    /// Disable visual feedbacks (selection square, direction lines, action cost text)
+    /// Disables visual feedbacks (selection square, direction lines, action cost text)
     /// </summary>
     public void DisableFreeTileFeedbacks()
     {
@@ -107,7 +115,7 @@ public class M_Feedback : MonoBehaviour
     public void ShowVisibleElements(List<Tile> visibleTiles) => SetFogVisualsActive(true, visibleTiles);
 
     /// <summary>
-    /// Set cursor to its new appearance.
+    /// Sets cursor to its new appearance.
     /// </summary>
     /// <param name="type"></param>
     public void SetCursor(CursorType type)
@@ -132,7 +140,7 @@ public class M_Feedback : MonoBehaviour
     }
 
     /// <summary>
-    /// Instantiate an action effect feedback prefab over the target object.
+    /// Instantiates an action effect feedback prefab over the target object.
     /// </summary>
     /// <param name="text"></param>
     /// <param name="referenceTarget"></param>
@@ -144,7 +152,7 @@ public class M_Feedback : MonoBehaviour
     }
     
     /// <summary>
-    /// Enable/disable the view lines on border tiles and enable/disable fog mask.
+    /// Enables/disables the view lines on border tiles and enables/disables fog mask.
     /// </summary>
     public void SetFogVisualsActive(bool value, List<Tile> tilesInView = null)
     {
@@ -162,43 +170,53 @@ public class M_Feedback : MonoBehaviour
         }
     }
 
+    // Cover feedbacks
+    // ===============
+    
     /// <summary>
-    /// Show cover feedbacks.
+    /// Shows cover feedbacks.
     /// </summary>
-    /// <param name="centralTileCoordinates"></param>
-    public void ShowCoverFeedbacks(Coordinates centralTileCoordinates)
-    {
-        C__Character currentCharacter = _characters.current;
-        List<C__Character> charactersInView = currentCharacter.look.CharactersInView();
-        List<Coordinates> coversToDisplay = new List<Coordinates>();
-
-        foreach (C__Character otherCharacter in charactersInView)
-        {
-            if(otherCharacter.team == currentCharacter.team)
-                continue; // Same team
-            
-            Coordinates closestCoverCoordinates = currentCharacter.cover.GetClosestCoverCoordinatesFrom(otherCharacter);
-            
-            if(coversToDisplay.Contains(closestCoverCoordinates))
-                continue; // Cover already known
-            
-            coversToDisplay.AddIfNotNull(closestCoverCoordinates);
-        }
-        
-        coverHolder.DisplayCoverFeedbacks(centralTileCoordinates, coversToDisplay, currentCharacter);
-    }
+    /// <param name="centerCoordinates"></param>
+    public void ShowCoverFeedbacks(Coordinates centerCoordinates) => coverHolder.DisplayCoverFeedbacksAround(centerCoordinates, _characters.current.cover.GetAllCoverInfosInRangeAt(centerCoordinates, GetCoverFeedbackRange()));
+    
+    /// <summary>
+    /// Hides cover feedbacks.
+    /// </summary>
+    public void HideCoverFeedbacks() => coverHolder.HideCoverFeedbacks();
 
     /// <summary>
-    /// Hide cover feedbacks.
+    /// Returns the sprite corresponding to the given cover type.
     /// </summary>
-    public void HideCoverFeedbacks() => coverHolder.HideCoverFeedbacks(); 
-
+    /// <param name="coverType"></param>
+    /// <returns></returns>
+    public Sprite GetCoverFeedbackSprite(CoverType coverType) => coverFeedbacks
+        .FirstOrDefault(testedCoverFeedback => testedCoverFeedback.GetCoverType() == coverType)
+        ?.GetCoverSprite();
+    
+    /// <summary>
+    /// Returns the feedback's covered colour.
+    /// </summary>
+    /// <returns></returns>
+    public Color GetCoveredColour() => coveredColour;
+    
+    /// <summary>
+    /// Returns the feedback's uncovered colour.
+    /// </summary>
+    /// <returns></returns>
+    public Color GetUncoveredColour() => uncoveredColour;
+    
+    /// <summary>
+    /// Returns the cover feedback range.
+    /// </summary>
+    /// <returns></returns>
+    public int GetCoverFeedbackRange() => coverFeedbackRange;
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
     /// <summary>
-    /// Show and hide characters in fog of war.
+    /// Shows and hides characters in fog of war.
     /// </summary>
     /// <param name="visibleTiles"></param>
     private void DisplayCharactersInFogOfWar(List<Tile> visibleTiles)
@@ -219,14 +237,24 @@ public class M_Feedback : MonoBehaviour
                })
             .ToList();
 
-        // Show visible characters
+        // Shows visible characters
         visibleCharacters
             .ForEach(c => c.anim.SetVisualActives(true));
 
-        // Hide invisible characters
+        // Hides invisible characters
         _characters.GetCharacterList()
             .Except(visibleCharacters)
             .ToList()
             .ForEach(c => c.anim.SetVisualActives(false));
     }
+}
+
+[Serializable]
+public class CoverFeedback
+{
+    [SerializeField] private CoverType coverType;
+    [SerializeField] private Sprite coverFeedback;
+
+    public CoverType GetCoverType() => coverType;
+    public Sprite GetCoverSprite() => coverFeedback;
 }

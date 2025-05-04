@@ -6,13 +6,11 @@ using static M__Managers;
 
 public class F_CoversHolder : MonoBehaviour
 {
-    [SerializeField] private int coverFeedbackRadius = 3;
-    
     [Header("REFERENCES")]
     
     [SerializeField] private GameObject coverFeedbackPrefab;
 
-    private List<F_Covers> covers = new List<F_Covers>();
+    private List<F_Covers> coverFeedbacks;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -26,43 +24,46 @@ public class F_CoversHolder : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    public void DisplayCoverFeedbacks(Coordinates centralTileCoordinates, List<Coordinates> coversCoordinates, C__Character characterCovered)
+    
+    /// <summary>
+    /// Displays all cover feedbacks around a central coordinates.
+    /// </summary>
+    /// <param name="centerCoordinates"></param>
+    /// <param name="coverInfos"></param>
+    public void DisplayCoverFeedbacksAround(Coordinates centerCoordinates, List<CoverInfo> coverInfos)
     {
-        List<Coordinates> coordinatesInSquare = _board
-            .GetFullSquareCoordinatesWithRadius(centralTileCoordinates.x, centralTileCoordinates.y, coverFeedbackRadius);
-        
-        List<Coordinates> tilesWhereDisplay = coordinatesInSquare
-            .Intersect(coversCoordinates)
-            .ToList();
-        
-        for (int i = 0; i < coordinatesInSquare.Count; i++)
+        for (int i = 0; i < coverFeedbacks.Count; i++)
         {
-            Coordinates currentCoordinates = coordinatesInSquare[i];
-            
-            Vector3 worldCoordinates = new Vector3(
-                currentCoordinates.x,
-                0,
-                currentCoordinates.y);
-            
-            covers[i].transform.position = worldCoordinates;
-            covers[i].gameObject.SetActive(tilesWhereDisplay.Contains(currentCoordinates));
+            if (i < coverInfos.Count)
+                coverFeedbacks[i].DisplayAt(centerCoordinates, coverInfos[i]);
+            else
+                coverFeedbacks[i].Hide();
         }
     }
     
-    public void HideCoverFeedbacks() => covers.ForEach(c => c.gameObject.SetActive(false));
+    /// <summary>
+    /// Hide all the cover feedbacks.
+    /// </summary>
+    public void HideCoverFeedbacks() => coverFeedbacks
+        .ForEach(c => c.gameObject.SetActive(false));
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Instantiate the cover feedbacks before use it (pooling).
+    /// </summary>
     private void GenerateCoverFeedbacks()
     {
-        for (int i = 0; i < Mathf.Pow(coverFeedbackRadius*2+1, 2); i++)
+        coverFeedbacks = new List<F_Covers>();
+        int coverFeedbackRange = _feedback.GetCoverFeedbackRange();
+        
+        for (int i = 0; i < Mathf.Pow(coverFeedbackRange*2+1, 2); i++)
         {
             GameObject newCoverFeedback = Instantiate(coverFeedbackPrefab, transform);
             newCoverFeedback.SetActive(false);
-            covers.Add(newCoverFeedback.GetComponent<F_Covers>());
+            coverFeedbacks.Add(newCoverFeedback.GetComponent<F_Covers>());
         }
     }
 }

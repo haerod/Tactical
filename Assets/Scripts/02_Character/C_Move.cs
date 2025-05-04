@@ -79,7 +79,7 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Return the characters which block the movement (depending the rules).
+    /// Returns the characters which block the movement (depending on the rules).
     /// </summary>
     /// <returns></returns>
     public List<Tile> GetTraversableCharacterTiles()
@@ -102,7 +102,7 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Start the movement on a path, with and action on end of this path.
+    /// Starts the movement on a path, with and action on end of this path.
     /// </summary>
     /// <param name="path"></param>
     public void MoveOnPath(List<Tile> path)
@@ -126,7 +126,7 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Orient this object to another position, except on Y axis. Possibility to add an offset (euler angles).
+    /// Orients this object to another position, except on Y axis. Possibility to add an offset (euler angles).
     /// </summary>
     /// <param name="targetPosition"></param>
     /// <param name="offset"></param>
@@ -144,14 +144,29 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Return true if the character can walk on this type of tile.
+    /// Returns true if the character can walk on this type of tile.
     /// </summary>
     /// <param name="tileType"></param>
     /// <returns></returns>
     public bool CanWalkOn(TileType tileType) => walkableTiles.Contains(tileType);
 
     /// <summary>
-    /// Return true if the character can move to the tile.
+    /// Returns true if the character can walk at the given coordinates.
+    /// </summary>
+    /// <param name="coordinates"></param>
+    /// <returns></returns>
+    public bool CanWalkAt(Coordinates coordinates)
+    {
+        Tile tileAtCoordinates = _board.GetTileAtCoordinates(coordinates);
+        
+        if(!tileAtCoordinates)
+            return false; // No tile
+        
+        return CanWalkOn(tileAtCoordinates.type);
+    }
+    
+    /// <summary>
+    /// Returns true if the character can move to the tile.
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
@@ -197,7 +212,7 @@ public class C_Move : MonoBehaviour
     }
     
     /// <summary>
-    /// Move the object to a destination and execute an action in the end.
+    /// Moves the object to a destination and executes an action in the end.
     /// </summary>
     /// <returns></returns>
     private IEnumerator MoveToDestination()
@@ -233,7 +248,7 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Happened when a character move to the next tile.
+    /// Happens when a character move to the next tile.
     /// </summary>
     private void NextTile()
     {
@@ -243,13 +258,13 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Return true if is the last tile of the movement.
+    /// Returns true if is the last tile of the movement.
     /// </summary>
     /// <returns></returns>
     private bool IsTheLastTile() => index + 1 >= currentPath.Count || c.movementRange <= 0;
 
     /// <summary>
-    /// Happened in the end of the movement.
+    /// Happens in the end of the movement.
     /// </summary>
     private void EndMove()
     {
@@ -264,17 +279,14 @@ public class C_Move : MonoBehaviour
 
         Turns.EndTurn();
     }
-
+    
     /// <summary>
-    /// Played when the character enters a tile.
+    /// Happens when the character enters a tile.
     /// </summary>
-    private void OnTileEnter()
-    {
-
-    }
-
+    private void OnTileEnter() {}
+    
     /// <summary>
-    /// Return true if the character blocks the path, depending on the capacity to pass through other characters.
+    /// Returns true if the character blocks the path, depending on the capacity to pass through other characters.
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>

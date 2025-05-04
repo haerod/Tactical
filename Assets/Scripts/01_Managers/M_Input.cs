@@ -80,7 +80,7 @@ public class M_Input : MonoBehaviour
     }
 
     /// <summary>
-    /// Set if players can click or not on board objects
+    /// Sets if players can click or not on board objects
     /// </summary>
     /// <param name="value"></param>
     public void SetActiveClick(bool value = true)
@@ -157,16 +157,16 @@ public class M_Input : MonoBehaviour
     }
 
     /// <summary>
-    /// When a cursor enters a new tile.
+    /// When the cursor enters a new tile.
     /// </summary>
     /// <param name="tileCoordinates"></param>
     private void CursorEnterPointedTile(Coordinates tileCoordinates)
     {
-        _feedback.ShowCoverFeedbacks(tileCoordinates);
+         _feedback.ShowCoverFeedbacks(tileCoordinates);
     }
     
     /// <summary>
-    /// 
+    /// When the cursor in not on a tile.
     /// </summary>
     private void CursorNotOnPointedTile()
     {
