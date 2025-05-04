@@ -20,6 +20,7 @@
 - Fog of war in a single manager
 - Separate the logic between Turns and M_Characters
 - Separate Inputs and Logic
+    - use events for inputs
 - Ergonomic of characters
 - Coordinates for characters (not in Move), and for covers and obstacles
 - Tile class does a lot of things, fraction it (in Coordinates and a new class like Tile renderer)

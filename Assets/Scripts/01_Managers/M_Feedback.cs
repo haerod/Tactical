@@ -18,7 +18,6 @@ public class M_Feedback : MonoBehaviour
     [SerializeField] private int coverFeedbackRange = 2;
     [SerializeField] private Color coveredColour = Color.blue;
     [SerializeField] private Color uncoveredColour = Color.red;
-    [SerializeField] private List<CoverFeedback> coverFeedbacks;
 
     [Header("REFERENCES")]
 
@@ -185,15 +184,6 @@ public class M_Feedback : MonoBehaviour
     public void HideCoverFeedbacks() => coverHolder.HideCoverFeedbacks();
 
     /// <summary>
-    /// Returns the sprite corresponding to the given cover type.
-    /// </summary>
-    /// <param name="coverType"></param>
-    /// <returns></returns>
-    public Sprite GetCoverFeedbackSprite(CoverType coverType) => coverFeedbacks
-        .FirstOrDefault(testedCoverFeedback => testedCoverFeedback.GetCoverType() == coverType)
-        ?.GetCoverSprite();
-    
-    /// <summary>
     /// Returns the feedback's covered colour.
     /// </summary>
     /// <returns></returns>
@@ -247,14 +237,4 @@ public class M_Feedback : MonoBehaviour
             .ToList()
             .ForEach(c => c.anim.SetVisualActives(false));
     }
-}
-
-[Serializable]
-public class CoverFeedback
-{
-    [SerializeField] private CoverType coverType;
-    [SerializeField] private Sprite coverFeedback;
-
-    public CoverType GetCoverType() => coverType;
-    public Sprite GetCoverSprite() => coverFeedback;
 }

@@ -157,23 +157,6 @@ public class M_Input : MonoBehaviour
     }
 
     /// <summary>
-    /// When the cursor enters a new tile.
-    /// </summary>
-    /// <param name="tileCoordinates"></param>
-    private void CursorEnterPointedTile(Coordinates tileCoordinates)
-    {
-         _feedback.ShowCoverFeedbacks(tileCoordinates);
-    }
-    
-    /// <summary>
-    /// When the cursor in not on a tile.
-    /// </summary>
-    private void CursorNotOnPointedTile()
-    {
-        _feedback.HideCoverFeedbacks();
-    }
-
-    /// <summary>
     /// Check if player click on a tile (or element on a tile), previously checked by CheckRaycast().
     /// </summary>
     private void CheckClick()
@@ -271,6 +254,23 @@ public class M_Input : MonoBehaviour
 
     // ON TILE
     // =======
+    
+    /// <summary>
+    /// When the cursor enters a new tile.
+    /// </summary>
+    /// <param name="tileCoordinates"></param>
+    private void CursorEnterPointedTile(Coordinates tileCoordinates)
+    {
+        _feedback.ShowCoverFeedbacks(tileCoordinates);
+    }
+    
+    /// <summary>
+    /// When the cursor in not on a tile.
+    /// </summary>
+    private void CursorNotOnPointedTile()
+    {
+        _feedback.HideCoverFeedbacks();
+    }
 
     /// <summary>
     /// Actions happening if the pointer overlaps an occupied tile.

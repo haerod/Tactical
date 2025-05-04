@@ -9,7 +9,7 @@ using static M__Managers;
 
 public class C_Cover : MonoBehaviour
 {
-    [SerializeField] private List<TypeOfCover> coveringTypes;
+    [SerializeField] private List<CoveringElement> coveringTypes;
     [SerializeField] private float coveringAngle = 180;
     
     [Header("REFERENCES")]
@@ -22,7 +22,13 @@ public class C_Cover : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
+    /// <summary>
+    /// Returns the cover infos of all walkable tiles in a given range around coordinates (0 = given coordinates). 
+    /// </summary>
+    /// <param name="coordinates"></param>
+    /// <param name="range"></param>
+    /// <returns></returns>
     public List<CoverInfo> GetAllCoverInfosInRangeAt(Coordinates coordinates, int range)
     {
         List<CoverInfo> infosToReturn = new List<CoverInfo>();
@@ -81,14 +87,17 @@ public class C_Cover : MonoBehaviour
             .ToList();
     }
     
-    public List<TileType> GetCoveringTypes() => coveringTypes
-        .SelectMany(currentTypeOfCover => currentTypeOfCover.GetTileTypes())
-        .ToList();
-    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Returns the cover info at a coordinate.
+    /// </summary>
+    /// <param name="coveredCoordinates"></param>
+    /// <param name="cover"></param>
+    /// <param name="viewer"></param>
+    /// <returns></returns>
     private CoverInfo GetCoverInfoFrom(Coordinates coveredCoordinates, GameObject cover, C_Look viewer)
     {
         Cover coverComponent = cover.GetComponent<Cover>();
@@ -111,9 +120,22 @@ public class C_Cover : MonoBehaviour
             coverType);
     }
 
+    /// <summary>
+    /// Returns the covering types of the character.
+    /// </summary>
+    /// <returns></returns>
+    private List<TileType> GetCoveringTypes() => coveringTypes
+        .SelectMany(currentTypeOfCover => currentTypeOfCover.GetTileTypes())
+        .ToList();
+    
+    /// <summary>
+    /// Returns the covering type corresponding at a type of tile.
+    /// </summary>
+    /// <param name="tileType"></param>
+    /// <returns></returns>
     private CoverType GetCoveringTypeOf(TileType tileType)
     {
-        foreach (TypeOfCover testedTypeOfCover in coveringTypes)
+        foreach (CoveringElement testedTypeOfCover in coveringTypes)
         {
             if(testedTypeOfCover.Contains(tileType))
                 return testedTypeOfCover.GetCoverType();
@@ -141,30 +163,61 @@ public class CoverInfo
         this.isCovered = isCovered;
         this.coverType = coverType;
     }
-
-    public bool IsSameInfoThan(CoverInfo other) => other.cover == cover && other.coveredCoordinates == coveredCoordinates;
     
+    /// <summary>
+    /// Returns if cover protects.
+    /// </summary>
+    /// <returns></returns>
     public bool GetIsCovered() => isCovered;
     
+    /// <summary>
+    /// Returns the covered position's coordinates.
+    /// </summary>
+    /// <returns></returns>
     public Coordinates GetCoveredCoordinates() => coveredCoordinates;
     
+    /// <summary>
+    /// Returns the coordinates where to place the cover feedback.
+    /// </summary>
+    /// <returns></returns>
     public Coordinates GetCoverFeedbackCoordinates() => coverFeedbackCoordinates;
     
+    /// <summary>
+    /// Returns the cover game object.
+    /// </summary>
+    /// <returns></returns>
     public GameObject GetCover() => cover;
     
+    /// <summary>
+    /// Returns the type of cover.
+    /// </summary>
+    /// <returns></returns>
     public CoverType GetCoverType() => coverType;
 }
 
 [Serializable]
-public class TypeOfCover
+public class CoveringElement
 {
     [SerializeField] private CoverType coverType;
     [SerializeField] private List<TileType> tileTypes;
     
-    public bool Contains(TileType tileType) => tileTypes.Contains(tileType);
-    
+    /// <summary>
+    /// Returns the tile types list of this element.
+    /// </summary>
+    /// <returns></returns>
     public List<TileType> GetTileTypes() => tileTypes;
     
+    /// <summary>
+    /// Returns the cover type of this element.
+    /// </summary>
+    /// <returns></returns>
     public CoverType GetCoverType() => coverType;
+    
+    /// <summary>
+    /// Returns true if this tile type is a cover.
+    /// </summary>
+    /// <param name="tileType"></param>
+    /// <returns></returns>
+    public bool Contains(TileType tileType) => tileTypes.Contains(tileType);
 }
 
