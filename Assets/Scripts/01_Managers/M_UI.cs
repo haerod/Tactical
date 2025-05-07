@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -34,21 +35,24 @@ public class M_UI : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        _characters.GetCharacterList()
+            .ForEach(character => DisplayCharacterCoverState(character, character.cover.GetCoverState()));
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
     /// <summary>
-    /// Enable / disable player's UI out of its turn.
+    /// Enables / disables player's UI out of its turn.
     /// </summary>
     /// <param name="value"></param>
-    public void SetActivePlayerUI_Turn(bool value)
-    {
-        nextTurnButton.gameObject.SetActive(value);
-    }
-    
+    public void SetActivePlayerUI_Turn(bool value) => nextTurnButton.gameObject.SetActive(value);
+
     /// <summary>
-    /// Enable / disable player's UI during its actions.
+    /// Enables / disables player's UI during its actions.
     /// </summary>
     /// <param name="value"></param>
     public void SetActivePlayerUI_Action(bool value)
@@ -59,7 +63,7 @@ public class M_UI : MonoBehaviour
     }
 
     /// <summary>
-    /// Enable the end screen (explaining which team is the winner).
+    /// Enables the end screen (explaining which team wins).
     /// </summary>
     /// <param name="winner"></param>
     public void EnableEndScreen(C__Character winner)
@@ -69,16 +73,13 @@ public class M_UI : MonoBehaviour
     }
 
     /// <summary>
-    /// Enable percent shoot text and set the value.
+    /// Enables percent shoot text and sets the value.
     /// </summary>
     /// <param name="percent"></param>
-    public void ShowPercentText(int percent)
-    {
-        percentText.SetPercentShootText(percent);
-    }
+    public void ShowPercentText(int percent) => percentText.SetPercentShootText(percent);
 
     /// <summary>
-    /// Disable percent shoot text.
+    /// Disables percent shoot text.
     /// </summary>
     public void HidePercentText()
     {
@@ -86,21 +87,27 @@ public class M_UI : MonoBehaviour
     }
 
     /// <summary>
-    /// Restart the scene.
+    /// Restarts the scene.
     /// Relied to the event on the button Replay.
     /// </summary>
-    public void ClickOnReplay()
-    {
-        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(sceneIndex);
-    }
+    public void ClickOnReplay() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
     /// <summary>
-    /// Return true if pointer is over UI. Else, return false.
+    /// Returns true if pointer is over UI. Else, returns false.
     /// </summary>
     /// <returns></returns>
     public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
 
+    public void DisplayCharacterCoverState(C__Character character, CoverInfo coverInfo)
+    {
+        if(coverInfo == null)
+            character.coverState.HideCoverState();
+        else
+            character.coverState.DisplayCoverState(
+                coverInfo.GetCoverType(), 
+                coverInfo.GetIsCovered() ? _feedback.GetCoveredColour() : _feedback.GetUncoveredColour());
+    }
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

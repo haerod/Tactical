@@ -6,9 +6,9 @@ public class UI_SlicedHealthBar : MonoBehaviour
 {
     [SerializeField] private float topDownOffset = 1;
     [SerializeField] private float spacing = 2;
-    [SerializeField] private RectTransform lifeLayoutGroup = null;
-    [SerializeField] private GameObject lifeImage = null;
-    [SerializeField] private C_Health health = null;
+    [SerializeField] private RectTransform lifeLayoutGroup;
+    [SerializeField] private GameObject lifeImage;
+    [SerializeField] private C_Health health;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -25,21 +25,19 @@ public class UI_SlicedHealthBar : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Display the current life on life bar.
+    /// Displays the current life on life bar.
     /// </summary>
     public void DisplayCurrentHealth()
     {
-        GameObject currentLifeBar;
-
         for (int i = 0; i < health.health; i++)
         {
-            currentLifeBar = lifeLayoutGroup.GetChild(i).gameObject;
+            GameObject currentLifeBar = lifeLayoutGroup.GetChild(i).gameObject;
             currentLifeBar.SetActive(i < health.currentHealth);
         }
     }
 
     /// <summary>
-    /// Enable or disable the life bar.
+    /// Enables or disables the life bar.
     /// </summary>
     /// <param name="value"></param>
     public void SetLifeBarActive (bool value) => transform.parent.gameObject.SetActive(value);
@@ -49,7 +47,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Display max life on health bar.
+    /// Displays max life on health bar.
     /// </summary>
     private void DisplayMaxHealth()
     {
@@ -83,7 +81,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
     }
 
     /// <summary>
-    /// Display the current life and max life on life bar.
+    /// Displays the current life and max life on life bar.
     /// </summary>
     private void InitialiseBar()
     {

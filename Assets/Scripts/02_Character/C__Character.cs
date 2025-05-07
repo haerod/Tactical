@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using static M__Managers;
 
 public class C__Character : MonoBehaviour
@@ -13,8 +14,10 @@ public class C__Character : MonoBehaviour
     public C_Infos infos;
     public C_Behavior behavior;
     public C_AnimatorScripts anim; // With animator / skinned mesh renderer
+    [Space]
     public C_WeaponHolder weaponHolder;
     public UI_SlicedHealthBar healthBar;
+    public UI_CoverState coverState;
 
     public Team team => Team();
     public int movementRange => move.movementRange;

@@ -14,7 +14,7 @@ public class C_Cover : MonoBehaviour
     
     [Header("REFERENCES")]
     [SerializeField] private C__Character c = null;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -22,6 +22,39 @@ public class C_Cover : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Returns true if the character is covered from another, else returns false.
+    /// </summary>
+    /// <param name="viewer"></param>
+    /// <returns></returns>
+    public bool IsCoveredFrom(C_Look viewer)
+    {
+        if(!viewer.HasSightOn(c.tile))
+            return true; // Character not in sight
+        
+        List<GameObject> coversAroundList = _board.GetAdjacentCoversAt(c.tile.coordinates, GetCoveringTypes());
+            
+        if (coversAroundList.Count == 0)
+            return false; // No cover around
+
+        return coversAroundList
+            .All(testedCover => GetCoverInfoFrom(c.tile.coordinates, testedCover, viewer).GetIsCovered());
+    }
+    
+    /// <summary>
+    /// Returns true if it's a cover around
+    /// </summary>
+    /// <returns></returns>
+    public bool IsClosedACover() => _board.GetAdjacentCoversAt(c.tile.coordinates, GetCoveringTypes()).Count > 0;
+    
+    /// <summary>
+    /// Returns true if the character is covered from all enemies.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsCoveredFromEnemies() => c.look.EnemiesInView()
+        .Select(testedEnemy => testedEnemy.look)
+        .All(testedViewer => IsCoveredFrom(testedViewer));
     
     /// <summary>
     /// Returns the cover infos of all walkable tiles in a given range around coordinates (0 = given coordinates). 
@@ -86,13 +119,47 @@ public class C_Cover : MonoBehaviour
         return infosToReturn
             .ToList();
     }
+
+    public CoverInfo GetCoverState()
+    {
+        CoverInfo toReturn = null;
+        List<C_Look> enemiesInView = c.look.EnemiesInView()
+            .Select(testedEnemy => testedEnemy.look)
+            .ToList();
+
+        foreach (C_Look testedEnemy in enemiesInView)
+        {
+            CoverInfo testedCoverInfo = GetCoverInfoAbout(c.tile.coordinates, testedEnemy);
+            
+            if(testedCoverInfo == null)
+                continue; // Not in enemy's sight or no covers around
+
+            if (toReturn == null)
+            {
+                toReturn = testedCoverInfo;
+                continue; // First cover info
+            }
+            
+            if(toReturn.GetIsCovered())
+                if (!testedCoverInfo.GetIsCovered())
+                {
+                    toReturn = testedCoverInfo;
+                    continue;
+                }
+                    
+            if(testedCoverInfo.GetCoverType().GetCoverProtectionPercent() > toReturn.GetCoverType().GetCoverProtectionPercent())
+                toReturn = testedCoverInfo;
+        }
+        
+        return toReturn;
+    }
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
     /// <summary>
-    /// Returns the cover info at a coordinate.
+    /// Returns the cover info at a coordinate, with a cover and a viewer.
     /// </summary>
     /// <param name="coveredCoordinates"></param>
     /// <param name="cover"></param>
@@ -102,24 +169,66 @@ public class C_Cover : MonoBehaviour
     {
         Cover coverComponent = cover.GetComponent<Cover>();
         Tile coverComponentTile = _board.GetTileAtCoordinates(new Coordinates((int) cover.transform.position.x, (int) cover.transform.position.z));
-        Vector2 coverPosition = coverComponent ? 
-            new Vector2(coverComponent.coverPosition.x, coverComponent.coverPosition.y) : // Cover on edges
-            new Vector2(coverComponentTile.coordinates.x,coverComponentTile.coordinates.y); // Cover on tile
-        Vector2 characterPosition = coveredCoordinates.ToVector2();
-        Vector2 viewerPosition = new Vector2(viewer.transform.position.x, viewer.transform.position.z);
         CoverType coverType = GetCoveringTypeOf(coverComponent ? coverComponent.type : coverComponentTile.type);
-                
-        Vector2 coverForward = -(coverPosition-characterPosition);
-        float angle = Vector2.Angle(coverForward, coverPosition - viewerPosition);
         
         return new CoverInfo(
             cover,
             coveredCoordinates,
             coverComponent ? coverComponent.GetOtherSideCoordinates(coveredCoordinates) : new Coordinates((int) cover.transform.position.x, (int) cover.transform.position.z),
-            angle <= coveringAngle / 2,
+            IsCoverProtectingFrom(coveredCoordinates, cover, viewer),
             coverType);
     }
 
+    private CoverInfo GetCoverInfoAbout(Coordinates coordinates, C_Look viewer)
+    {
+        if(!viewer.HasSightOn(_board.GetTileAtCoordinates(coordinates)))
+            return null; // Coordinates in sight
+
+        List<GameObject> coverAround = _board.GetAdjacentCoversAt(coordinates, GetCoveringTypes());
+        
+        if(coverAround.Count == 0)
+            return null; // No cover around
+        
+        List<GameObject> protectingCovers = coverAround
+            .Where(testedCover => IsCoverProtectingFrom(coordinates, testedCover, viewer))
+            .ToList();
+        
+        if (protectingCovers.Count == 0)
+        {
+            CoverType betterTypeAround = GetBetterCoverTypeAround(coordinates);
+            return new CoverInfo // Uncovered
+                (null, coordinates, null, false, betterTypeAround);
+        }
+
+        return protectingCovers
+            .Select(testedCover => GetCoverInfoFrom(coordinates, testedCover, viewer))
+            .OrderBy(testedCoverInfo => testedCoverInfo.GetCoverType().GetCoverProtectionPercent())
+            .FirstOrDefault();
+    }
+
+    private bool IsCoverProtectingFrom(Coordinates coveredCoordinates, GameObject cover, C_Look viewer)
+    {
+        Cover coverComponent = cover.GetComponent<Cover>();
+        Tile coverComponentTile = _board.GetTileAtCoordinates(new Coordinates((int) cover.transform.position.x, (int) cover.transform.position.z));
+        Vector2 coverPosition = coverComponent ? 
+            new Vector2(coverComponent.coverPosition.x, coverComponent.coverPosition.y) : // Cover on edges
+            new Vector2(coverComponentTile.coordinates.x,coverComponentTile.coordinates.y); // Cover on tile
+        Vector2 characterPosition = coveredCoordinates.ToVector2();
+        Vector2 viewerPosition = new Vector2(viewer.transform.position.x, viewer.transform.position.z);
+                
+        Vector2 coverForward = -(coverPosition-characterPosition);
+        float angle = Vector2.Angle(coverForward, coverPosition - viewerPosition);
+        return angle <= coveringAngle / 2;
+    }
+
+    private CoverType GetBetterCoverTypeAround(Coordinates coordinates)
+    {
+        return _board.GetAdjacentCoversAt(coordinates, GetCoveringTypes())
+            .Select(testedCover => testedCover.GetComponent<Cover>() ? GetCoveringTypeOf(testedCover.GetComponent<Cover>().type) : GetCoveringTypeOf(testedCover.GetComponent<Tile>().type))
+            .OrderBy(testedCoverType => testedCoverType.GetCoverProtectionPercent())
+            .FirstOrDefault();
+    }
+    
     /// <summary>
     /// Returns the covering types of the character.
     /// </summary>
@@ -143,7 +252,6 @@ public class C_Cover : MonoBehaviour
         
         return null;
     }
-    
 }
 
 [Serializable]

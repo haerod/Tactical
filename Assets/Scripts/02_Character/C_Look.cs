@@ -22,6 +22,12 @@ public class C_Look : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Returns the view range of the character.
+    /// </summary>
+    /// <returns></returns>
+    public int GetRange() => range;
 
     /// <summary>
     /// Returns all tiles in view depending on the rules.

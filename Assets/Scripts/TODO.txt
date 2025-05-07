@@ -3,7 +3,7 @@
 # Character movement
 - Pathfinding is strange
 - Feedback line doesn't fit with the pathfinding
-- If character pass through another, the last one losing its tile : because tiles have only one element on it
+- If character pass through another, the last one losing its tile: because tiles have only one element on it
 
 # Border tiles
 - Border tiles change position sometimes (repro needed)
@@ -14,7 +14,6 @@
 ## REFACTOR
 
 - Separate folders between Toy box and Technical box
-
 - Rules / VISION section to push in C_View
 - Coordinates of the covers / logic of tiles hold covers
 - Fog of war in a single manager
@@ -24,15 +23,16 @@
 - Ergonomic of characters
 - Coordinates for characters (not in Move), and for covers and obstacles
 - Tile class does a lot of things, fraction it (in Coordinates and a new class like Tile renderer)
-- Optimization : create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
+- Optimization: create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
 - C__Look -> fusion GetCoordinatesOfLineOfSightOn() and GetCoordinatesOfFullLineOfSightOn() together with Pathfinding.TileInclusion
 - Separate Pathfinding and LineOfSight
+- UI with recommendations
 
 ## FEATURES
 
 - Namespaces
 - Cover system
-- Actions systems : possibility between multiple designs
+- Actions systems: possibility between multiple designs
 - Online API like Unity (ask Simon)
 
 - Add events for everything
@@ -51,4 +51,4 @@
 - Enemy spawners
 - Movements with special costs or obligation to stop
 - 3D grid
-- Line of sight on ennemies visibles
+- Line of sight on enemies visibles
