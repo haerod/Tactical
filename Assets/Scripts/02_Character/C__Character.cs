@@ -23,8 +23,9 @@ public class C__Character : MonoBehaviour
     public int movementRange => move.movementRange;
     public int x => move.x;
     public int y => move.y;
-
-    [HideInInspector] public Tile tile => Tile();
+    public Coordinates coordinates => tile.coordinates;
+    public Tile tile => Tile();
+    
     private bool hasPlayed = false;
     
     // ======================================================================
