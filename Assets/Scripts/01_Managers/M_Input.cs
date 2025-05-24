@@ -205,9 +205,7 @@ public class M_Input : MonoBehaviour
     private void CheckRecenterCameraInput()
     {
         if (Input.GetKeyDown(recenterCameraKey))
-        {
             _camera.ResetPosition();
-        }
     }
 
     /// <summary>
@@ -293,7 +291,9 @@ public class M_Input : MonoBehaviour
             else // Enemy
             {
                 _feedback.SetCursor(M_Feedback.CursorType.AimAndInSight);
-                _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(currentCharacter.look.GetTilesOfLineOfSightOn(tile).Count));                
+                _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(
+                    currentCharacter.look.GetTilesOfLineOfSightOn(tile).Count,
+                    currentTarget.cover.GetCoverProtectionValueFrom(currentTarget.look)));        
             }
         }
         else

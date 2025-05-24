@@ -7,7 +7,8 @@ using static M__Managers;
 
 public class C_Attack : MonoBehaviour
 {
-    public Weapon currentWeapon;
+    [SerializeField] private int precision = 100;
+    [SerializeField] private Weapon currentWeapon;
 
     [Header("REFERENCES")]
     
@@ -24,7 +25,13 @@ public class C_Attack : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Return the attackable tiles, depending the rules.
+    /// Returns the current weapon.
+    /// </summary>
+    /// <returns></returns>
+    public Weapon GetCurrentWeapon() => currentWeapon;
+    
+    /// <summary>
+    /// Returns the attackable tiles, depending on the rules.
     /// </summary>
     /// <returns></returns>
     public List<Tile> AttackableTiles() => 
@@ -35,7 +42,7 @@ public class C_Attack : MonoBehaviour
             .ToList();
 
     /// <summary>
-    /// Attack the target and start an action in the end.
+    /// Attacks the target and starts an action in the end.
     /// </summary>
     /// <param name="currentTarget"></param>
     public void Attack(C__Character currentTarget)
@@ -58,20 +65,20 @@ public class C_Attack : MonoBehaviour
 
         _ui.SetActivePlayerUI_Action(false);
 
-        c.anim.StartShoot();        
+        c.anim.StartShoot();
 
-        if (UnityEngine.Random.Range(0, 101) < GetPercentToTouch(c.look.GetTilesOfLineOfSightOn(currentTarget.tile).Count)) // SUCCESS
-        {
+        int percentOfTouch = GetPercentToTouch(
+            c.look.GetTilesOfLineOfSightOn(currentTarget.tile).Count,
+            currentTarget.cover.GetCoverProtectionValueFrom(c.look));
+        
+        if (UnityEngine.Random.Range(0, 101) < percentOfTouch) // SUCCESS
             SetOnAttackDone(true, damages, target);
-        }
         else // MISS
-        {
             SetOnAttackDone(false, 0, target);
-        }
     }
 
     /// <summary>
-    /// End the attack.
+    /// Ends the attack.
     /// Called by C_AnimatorScripts, after the shoot animation.
     /// </summary>
     public void EndAttack()
@@ -84,30 +91,27 @@ public class C_Attack : MonoBehaviour
 
         GameObject muzzleFlash = c.weaponHolder.GetCurrentWeaponGraphics().muzzleFlash;
 
-        if(muzzleFlash)
-        {
-            muzzleFlash.SetActive(true);
-            Wait(0.2f, () => muzzleFlash.SetActive(false));
-        }
+        if (!muzzleFlash) 
+            return; // No muzzle flash
+        
+        muzzleFlash.SetActive(true);
+        Wait(0.2f, () => muzzleFlash.SetActive(false));
     }
 
     /// <summary>
     /// Returns the percent of chance to touch the target, including the reduction by distance.
     /// </summary>
     /// <param name="range"></param>
+    /// <param name="protectionValue"></param>
     /// <returns></returns>
-    public int GetPercentToTouch(int range)
+    public int GetPercentToTouch(int range, int protectionValue)
     {
-        int toReturn = 100;
+        int precisionToReturn = precision - protectionValue;
 
         for (int i = 0; i < range; i++)
-        {
-            toReturn -= _rules.percentReductionByDistance;
-        }
-
-        toReturn = Mathf.Clamp(toReturn, 0, 100);
-
-        return toReturn;
+            precisionToReturn -= _rules.percentReductionByDistance;
+        
+        return precisionToReturn < 0 ? 0 : precisionToReturn;
     }
 
     // ======================================================================
@@ -115,14 +119,14 @@ public class C_Attack : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Start a wait for "time" seconds and execute an action.
+    /// Starts a wait for "time" seconds and executes an action.
     /// </summary>
     /// <param name="time"></param>
     /// <param name="onEnd"></param>
     private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
 
     /// <summary>
-    /// Wait for "time" seconds and execute an action.
+    /// Waits coroutine.
     /// Called by Wait() method.
     /// </summary>
     /// <param name="time"></param>
@@ -136,7 +140,7 @@ public class C_Attack : MonoBehaviour
     }
 
     /// <summary>
-    /// Set OnAttackDone lambda.
+    /// Sets OnAttackDone lambda.
     /// </summary>
     /// <param name="success"></param>
     /// <param name="damages"></param>

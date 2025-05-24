@@ -9,11 +9,11 @@ using static M__Managers;
 
 public class C_Cover : MonoBehaviour
 {
-    [SerializeField] private List<CoveringElement> coveringTypes;
+    [SerializeField] private List<CoverType> coverTypes;
     [SerializeField] private float coveringAngle = 180;
     
     [Header("REFERENCES")]
-    [SerializeField] private C__Character c = null;
+    [SerializeField] private C__Character c;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -50,7 +50,7 @@ public class C_Cover : MonoBehaviour
         
         foreach (Coordinates coordinatesToCheck in walkableCoordinatesInSquare)
         {
-            List<GameObject> adjacentCoversList = _board.GetAdjacentCoversAt(coordinatesToCheck, GetCoveringTypes());
+            List<Cover> adjacentCoversList = _board.GetAdjacentCoversAt(coordinatesToCheck, GetCoveringTileTypes());
             
             if (adjacentCoversList.Count == 0)
             {
@@ -58,7 +58,7 @@ public class C_Cover : MonoBehaviour
                 continue; // No covers around
             }
 
-            foreach (GameObject adjacentCover in adjacentCoversList)
+            foreach (Cover adjacentCover in adjacentCoversList)
             {
                 CoverInfo betterInfo = null;
                 
@@ -96,7 +96,7 @@ public class C_Cover : MonoBehaviour
     /// <returns></returns>
     public CoverInfo GetCoverState()
     {
-        List<GameObject> coversAround = _board.GetAdjacentCoversAt(c.coordinates, GetCoveringTypes());
+        List<Cover> coversAround = _board.GetAdjacentCoversAt(c.coordinates, GetCoveringTileTypes());
 
         if (coversAround.Count == 0)
             return null; // No cover around
@@ -124,10 +124,44 @@ public class C_Cover : MonoBehaviour
             .ThenBy(testedInfo => testedInfo.GetCoverType().GetCoverProtectionPercent())
             .FirstOrDefault();
     }
+
+    /// <summary>
+    /// Returns the value of protection of the cover.
+    /// </summary>
+    /// <param name="viewer"></param>
+    /// <returns></returns>
+    public int GetCoverProtectionValueFrom(C_Look viewer)
+    {
+        List<Cover> adjacentCoversList = _board.GetAdjacentCoversAt(c.coordinates, GetCoveringTileTypes());
+
+        if (adjacentCoversList.Count == 0)
+            return 0; // No cover around
+
+        //Test.instance.coverInfo = GetCoverStateFrom(c.coordinates, adjacentCoversList, viewer);
+
+        List<CoverInfo> coverInfos = adjacentCoversList
+            .Select(testedCover => GetCoverInfoFrom(c.coordinates, testedCover, viewer))
+            //.Where(coverInfo => coverInfo.GetIsCovered())
+            .ToList();
+
+        Test.instance.coverInfos = coverInfos;
+        
+        return GetCoverStateFrom(c.coordinates, adjacentCoversList, viewer)
+            .GetCoverType()
+            .GetCoverProtectionPercent();
+    }
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Returns the covering types of the character.
+    /// </summary>
+    /// <returns></returns>
+    private List<TileType> GetCoveringTileTypes() => coverTypes
+        .SelectMany(currentTypeOfCover => currentTypeOfCover.GetCoveringTileTypes())
+        .ToList();
     
     /// <summary>
     /// Returns the cover info at a coordinate, with a cover and a viewer.
@@ -136,27 +170,13 @@ public class C_Cover : MonoBehaviour
     /// <param name="cover"></param>
     /// <param name="viewer"></param>
     /// <returns></returns>
-    private CoverInfo GetCoverInfoFrom(Coordinates coveredCoordinates, GameObject cover, C_Look viewer)
-    {
-        Cover coverComponent = cover.GetComponent<Cover>();
-        Tile coverComponentTile = _board.GetTileAtCoordinates(new Coordinates((int) cover.transform.position.x, (int) cover.transform.position.z));
-        CoverType coverType = GetCoveringTypeOf(coverComponent ? coverComponent.type : coverComponentTile.type);
-        
-        CoverInfo coverInfo = new CoverInfo(
+    private CoverInfo GetCoverInfoFrom(Coordinates coveredCoordinates, Cover cover, C_Look viewer) => new(
             cover,
             coveredCoordinates,
-            coverComponent ? coverComponent.GetOtherSideCoordinates(coveredCoordinates) : new Coordinates((int) cover.transform.position.x, (int) cover.transform.position.z),
+            cover.GetEdgeElement() ? cover.GetEdgeElement().GetOtherSideCoordinates(coveredCoordinates) : cover.GetTile().coordinates,
             IsCoverProtectingFrom(coveredCoordinates, cover, viewer),
-            coverType);
-        
-        return new CoverInfo(
-            cover,
-            coveredCoordinates,
-            coverComponent ? coverComponent.GetOtherSideCoordinates(coveredCoordinates) : new Coordinates((int) cover.transform.position.x, (int) cover.transform.position.z),
-            IsCoverProtectingFrom(coveredCoordinates, cover, viewer),
-            coverType);
-    }
-    
+            GetCoveringTypeOf(cover.GetCoveringTileType()));
+
     /// <summary>
     /// Returns the most protecting cover in a list.
     /// </summary>
@@ -164,7 +184,7 @@ public class C_Cover : MonoBehaviour
     /// <param name="coverList"></param>
     /// <param name="viewer"></param>
     /// <returns></returns>
-    private CoverInfo GetCoverStateFrom(Coordinates coveredCoordinates, List<GameObject> coverList, C_Look viewer) => coverList
+    private CoverInfo GetCoverStateFrom(Coordinates coveredCoordinates, List<Cover> coverList, C_Look viewer) => coverList
         .Select(testedCover => GetCoverInfoFrom(coveredCoordinates, testedCover, viewer))
         .OrderByDescending(testedInfo => testedInfo.GetIsCovered())
         .ThenBy(testedInfo => testedInfo.GetCoverType().GetCoverProtectionPercent())
@@ -177,17 +197,13 @@ public class C_Cover : MonoBehaviour
     /// <param name="cover"></param>
     /// <param name="viewer"></param>
     /// <returns></returns>
-    private bool IsCoverProtectingFrom(Coordinates coveredCoordinates, GameObject cover, C_Look viewer)
+    private bool IsCoverProtectingFrom(Coordinates coveredCoordinates, Cover cover, C_Look viewer)
     {
-        Cover coverComponent = cover.GetComponent<Cover>();
-        Tile coverComponentTile = _board.GetTileAtCoordinates(new Coordinates((int) cover.transform.position.x, (int) cover.transform.position.z));
-        Vector2 coverPosition = coverComponent ? 
-            new Vector2(coverComponent.coverPosition.x, coverComponent.coverPosition.y) : // Cover on edges
-            new Vector2(coverComponentTile.coordinates.x,coverComponentTile.coordinates.y); // Cover on tile
-        Vector2 characterPosition = coveredCoordinates.ToVector2();
+        Vector2 coverPosition = cover.GetWorldCoordinatesAsVector2();
+        Vector2 coveredPosition = coveredCoordinates.ToVector2();
         Vector2 viewerPosition = new Vector2(viewer.transform.position.x, viewer.transform.position.z);
                 
-        Vector2 coverForward = -(coverPosition-characterPosition);
+        Vector2 coverForward = -(coverPosition-coveredPosition);
         float angle = Vector2.Angle(coverForward, coverPosition - viewerPosition);
         return angle <= coveringAngle / 2;
     }
@@ -197,46 +213,30 @@ public class C_Cover : MonoBehaviour
     /// </summary>
     /// <param name="covers"></param>
     /// <returns></returns>
-    private CoverType GetMostProtectiveCoverTypeIn(List<GameObject> covers) => covers
-        .Select(testedCover => testedCover.GetComponent<Cover>() ? GetCoveringTypeOf(testedCover.GetComponent<Cover>().type) : GetCoveringTypeOf(testedCover.GetComponent<Tile>().type))
+    private CoverType GetMostProtectiveCoverTypeIn(List<Cover> covers) => covers
+        .Select(testedCover => GetCoveringTypeOf(testedCover.GetCoveringTileType()))
         .OrderBy(testedCoverType => testedCoverType.GetCoverProtectionPercent())
         .FirstOrDefault();
-    
-    /// <summary>
-    /// Returns the covering types of the character.
-    /// </summary>
-    /// <returns></returns>
-    private List<TileType> GetCoveringTypes() => coveringTypes
-        .SelectMany(currentTypeOfCover => currentTypeOfCover.GetCoveringTileTypes())
-        .ToList();
-    
+
     /// <summary>
     /// Returns the covering type corresponding at a type of tile.
     /// </summary>
     /// <param name="tileType"></param>
     /// <returns></returns>
-    private CoverType GetCoveringTypeOf(TileType tileType)
-    {
-        foreach (CoveringElement testedTypeOfCover in coveringTypes)
-        {
-            if(testedTypeOfCover.Contains(tileType))
-                return testedTypeOfCover.GetCoverType();
-        }
-        
-        return null;
-    }
+    private CoverType GetCoveringTypeOf(TileType tileType) => coverTypes
+        .FirstOrDefault(testedCoverType => testedCoverType.Contains(tileType));
 }
 
 [Serializable]
 public class CoverInfo
 {
-    [SerializeField] private GameObject cover;
+    [SerializeField] private Cover cover;
     [SerializeField] private Coordinates coveredCoordinates;
     [SerializeField] private Coordinates coverFeedbackCoordinates;
     [SerializeField] private bool isCovered;
     [SerializeField] private CoverType coverType;
     
-    public CoverInfo(GameObject cover, Coordinates coveredPosition, Coordinates coverFeedbackPosition, bool isCovered, CoverType coverType)
+    public CoverInfo(Cover cover, Coordinates coveredPosition, Coordinates coverFeedbackPosition, bool isCovered, CoverType coverType)
     {
         this.cover = cover;
         this.coveredCoordinates = coveredPosition;
@@ -267,38 +267,12 @@ public class CoverInfo
     /// Returns the cover game object.
     /// </summary>
     /// <returns></returns>
-    public GameObject GetCover() => cover;
+    public Cover GetCover() => cover;
     
     /// <summary>
     /// Returns the type of cover.
     /// </summary>
     /// <returns></returns>
     public CoverType GetCoverType() => coverType;
-}
-
-[Serializable]
-public class CoveringElement
-{
-    [SerializeField] private CoverType coverType;
-    [SerializeField] private List<TileType> coveringTileTypes;
-    
-    /// <summary>
-    /// Returns the tile types which cover.
-    /// </summary>
-    /// <returns></returns>
-    public List<TileType> GetCoveringTileTypes() => coveringTileTypes;
-    
-    /// <summary>
-    /// Returns the cover type of this element.
-    /// </summary>
-    /// <returns></returns>
-    public CoverType GetCoverType() => coverType;
-    
-    /// <summary>
-    /// Returns true if this tile type is a cover.
-    /// </summary>
-    /// <param name="tileType"></param>
-    /// <returns></returns>
-    public bool Contains(TileType tileType) => coveringTileTypes.Contains(tileType);
 }
 

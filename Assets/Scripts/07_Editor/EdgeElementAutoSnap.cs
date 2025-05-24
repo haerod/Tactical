@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [ExecuteInEditMode]
-public class CoverAutoSnap : BaseAutoSnap
+public class EdgeElementAutoSnap : BaseAutoSnap
 {
     [SerializeField] private bool flipVisuals;
 
@@ -13,7 +13,7 @@ public class CoverAutoSnap : BaseAutoSnap
     [SerializeField] private Transform coverTransform;
 
     [HideInInspector] public M_Board board; // Note : Let it serializable to be dirty.
-    [HideInInspector] public Cover cover; // Note : Let it serializable to be dirty.
+    [HideInInspector] public EdgeElement cover; // Note : Let it serializable to be dirty.
     [HideInInspector] public Tile parentTile; // Note : Let it serializable to be dirty.
 
     private Vector3 positionBeforeMovement;
@@ -53,7 +53,7 @@ public class CoverAutoSnap : BaseAutoSnap
         validTile.AddCover(cover);
         parentTile = validTile;
 
-        cover.SetCoverPosition(new Vector2(
+        cover.SetEdgeElementPosition(new Vector2(
             coverTransform.position.x, 
             coverTransform.position.z));
 
@@ -64,7 +64,7 @@ public class CoverAutoSnap : BaseAutoSnap
     protected override bool IsOnValidPosition()
     {
         Tile validTile = GetTileUnder();
-        Cover otherCover = GetOtherCoverAtPosition();
+        EdgeElement otherCover = GetOtherEdgeElementAtPosition();
 
         if (!validTile || otherCover)
         {
@@ -85,7 +85,7 @@ public class CoverAutoSnap : BaseAutoSnap
     {
         base.SetParameters();
         board = FindAnyObjectByType<M_Board>();
-        cover = GetComponent<Cover>();
+        cover = GetComponent<EdgeElement>();
         transform.parent = board.transform;
     }
 
@@ -133,20 +133,20 @@ public class CoverAutoSnap : BaseAutoSnap
         return null;
     }
 
-    private Cover GetOtherCoverAtPosition()
+    private EdgeElement GetOtherEdgeElementAtPosition()
     {
         Collider[] colliderCoverArray = Physics.OverlapSphere(coverTransform.position, .1f);
 
         foreach (Collider colliderCover in colliderCoverArray)
         {
-            Cover testedCover = colliderCover.GetComponentInParent<Cover>();
+            EdgeElement testedEdgeElement = colliderCover.GetComponentInParent<EdgeElement>();
 
-            if (!testedCover)
-                continue; // No cover
-            if (testedCover == cover)
-                continue; // Same cover
+            if (!testedEdgeElement)
+                continue; // No edge element
+            if (testedEdgeElement == cover)
+                continue; // Same edge element
 
-            return testedCover;
+            return testedEdgeElement;
         }
 
         return null;

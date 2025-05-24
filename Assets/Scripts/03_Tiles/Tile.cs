@@ -40,7 +40,7 @@ public class Tile : Entity
     [SerializeField] private GameObject leftLine = null;
     [SerializeField] private GameObject rightLine = null;
 
-    public List<Cover> covers;
+    public List<EdgeElement> covers;
 
     [HideInInspector] public bool hasCovers => covers.Count > 0;
 
@@ -76,7 +76,7 @@ public class Tile : Entity
     /// Get covers list.
     /// </summary>
     /// <returns></returns>
-    public List<Cover> GetCovers() => covers;
+    public List<EdgeElement> GetCovers() => covers;
 
     /// <summary>
     /// Move tile position at the asked coordinates.
@@ -104,7 +104,7 @@ public class Tile : Entity
     /// Add a cover in covers list.
     /// </summary>
     /// <param name="cover"></param>
-    public void AddCover(Cover cover)
+    public void AddCover(EdgeElement cover)
     {
         if (covers.Contains(cover))
             return; // Already this cover in the list
@@ -117,7 +117,7 @@ public class Tile : Entity
     /// Remove a cover form covers list.
     /// </summary>
     /// <param name="cover"></param>
-    public void RemoveCover(Cover cover)
+    public void RemoveCover(EdgeElement cover)
     {
         if (!covers.Contains(cover))
             return; // This cover doesn't in the list
@@ -134,7 +134,7 @@ public class Tile : Entity
     /// <returns></returns>
     public bool IsCoverBetween(Tile otherTile, List<TileType> allowedWalkableTypes)
     {            
-        List<Cover> testedCovers = new List<Cover>();
+        List<EdgeElement> testedCovers = new List<EdgeElement>();
 
         if(!Utils.IsVoidList(GetCovers()))
             testedCovers.AddRange(GetCovers());
@@ -147,7 +147,7 @@ public class Tile : Entity
     }
     public bool IsCoverBetween(Tile otherTile)
     {            
-        List<Cover> testedCovers = new List<Cover>();
+        List<EdgeElement> testedCovers = new List<EdgeElement>();
 
         if(!Utils.IsVoidList(GetCovers()))
             testedCovers.AddRange(GetCovers());
@@ -159,7 +159,7 @@ public class Tile : Entity
     }
     public bool IsCoverBetween(Coordinates otherCoordinates)
     {
-        List<Cover> testedCovers = GetCovers();
+        List<EdgeElement> testedCovers = GetCovers();
 
         if (testedCovers.Count == 0)
             return false;
@@ -173,9 +173,9 @@ public class Tile : Entity
     /// </summary>
     /// <param name="otherTile"></param>
     /// <returns></returns>
-    public Cover CoverBetween(Tile otherTile)
+    public EdgeElement CoverBetween(Tile otherTile)
     {
-        List<Cover> testedCovers = new List<Cover>();
+        List<EdgeElement> testedCovers = new List<EdgeElement>();
 
         if(!Utils.IsVoidList(GetCovers()))
             testedCovers.AddRange(GetCovers());

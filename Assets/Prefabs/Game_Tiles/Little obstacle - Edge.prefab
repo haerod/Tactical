@@ -137,10 +137,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8494549904505113954}
+  - component: {fileID: -7472612834085622216}
   - component: {fileID: 461920283813862496}
   - component: {fileID: 2313183811182661076}
   m_Layer: 0
-  m_Name: Border little obstacle
+  m_Name: Little obstacle - Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,6 +163,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7472612834085622216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511001791859697996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82cbfe8212b3e0d4abbe76d85c58aa55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileType: {fileID: 11400000, guid: 6039eeca6c9a6244cb3199ce13c0e656, type: 2}
 --- !u!114 &461920283813862496
 MonoBehaviour:
   m_ObjectHideFlags: 0

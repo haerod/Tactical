@@ -8,7 +8,7 @@ public class C_WeaponHolder : MonoBehaviour
 
     [Header("REFERENCES")]
 
-    [SerializeField] private C__Character c = null;
+    [SerializeField] private C__Character c;
 
     private WeaponGraphics currentWeaponGraphics;
 
@@ -37,7 +37,7 @@ public class C_WeaponHolder : MonoBehaviour
 
         foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
         {
-            bool isCurrentWeapon = testedWeaponGraphics.weapon == c.attack.currentWeapon;
+            bool isCurrentWeapon = testedWeaponGraphics.weapon == c.attack.GetCurrentWeapon();
 
             if (isCurrentWeapon)
                 currentWeaponGraphics = testedWeaponGraphics;

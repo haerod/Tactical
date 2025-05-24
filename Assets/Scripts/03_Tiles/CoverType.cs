@@ -6,6 +6,20 @@ public class CoverType : ScriptableObject
 {
     [SerializeField] private Sprite coverFeedback;
     [SerializeField] private int coverProtectionPercent;
+    [SerializeField] private List<TileType> coveringTileTypes;
+
+    /// <summary>
+    /// Returns covering tile types.
+    /// </summary>
+    /// <returns></returns>
+    public List<TileType> GetCoveringTileTypes() => coveringTileTypes;
+    
+    /// <summary>
+    /// Returns true if this cover type contains the tile type.
+    /// </summary>
+    /// <param name="tileType"></param>
+    /// <returns></returns>
+    public bool Contains(TileType tileType) => coveringTileTypes.Contains(tileType);
     
     /// <summary>
     /// Returns the feedback's cover sprite.

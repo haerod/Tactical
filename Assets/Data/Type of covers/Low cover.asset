@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: Low cover
   m_EditorClassIdentifier: 
   coverFeedback: {fileID: 21300000, guid: 7fb4cd61fe183a54482586f501c4584e, type: 3}
-  coverPercent: 50
+  coverProtectionPercent: 50
+  coveringTileTypes:
+  - {fileID: 11400000, guid: 6039eeca6c9a6244cb3199ce13c0e656, type: 2}
+  - {fileID: 11400000, guid: b8148e897a136154ca877f10c4025a85, type: 2}

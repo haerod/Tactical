@@ -289,17 +289,17 @@ public class M_Board : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the cover between two coordinates, returns null if it's nothing.
+    /// Returns the edge element between two coordinates, returns null if it's nothing.
     /// </summary>
     /// <param name="coordinates1"></param>
     /// <param name="coordinates2"></param>
     /// <returns></returns>
-    public Cover GetCoverBetweenAdjacentCoordinates(Coordinates coordinates1, Coordinates coordinates2)
+    public EdgeElement GetEdgeElementBetweenAdjacentCoordinates(Coordinates coordinates1, Coordinates coordinates2)
     {
         Tile tile1 = GetTileAtCoordinates(coordinates1);
         Tile tile2 = GetTileAtCoordinates(coordinates2);
 
-        List<Cover> testedCovers = new List<Cover>();
+        List<EdgeElement> testedCovers = new List<EdgeElement>();
         
         if (!tile1 && !tile2)
             return null; // No tiles, so no covers
@@ -325,25 +325,37 @@ public class M_Board : MonoBehaviour
     /// <param name="coordinates"></param>
     /// <param name="coveringTypes"></param>
     /// <returns></returns>
-    public List<GameObject> GetAdjacentCoversAt(Coordinates coordinates, List<TileType> coveringTypes)
+    public List<Cover> GetAdjacentCoversAt(Coordinates coordinates, List<TileType> coveringTypes)
     {
-        List<GameObject> coversToReturn = new List<GameObject>();
+        List<Cover> coversToReturn = new List<Cover>();
         List<Coordinates> aroundCoordinatesList = _board.GetCoordinatesAround(coordinates, 1, false);
 
         foreach (Coordinates aroundCoordinates in aroundCoordinatesList)
         {
-            Cover coverBetween = GetCoverBetweenAdjacentCoordinates(coordinates, aroundCoordinates);
-
-            if(coverBetween && coveringTypes.Contains(coverBetween.type)) // Cover on edge
-            {
-                coversToReturn.Add(coverBetween.gameObject);
-                continue;
-            }
-            
             Tile tileWithCover = GetTileAtCoordinates(aroundCoordinates);
             
-            if(tileWithCover && coveringTypes.Contains(tileWithCover.type)) // Cover on tile 
-                coversToReturn.Add(tileWithCover.gameObject);
+            if(tileWithCover)
+            {
+                Cover tileCover = tileWithCover.GetComponent<Cover>();
+
+                if (tileCover && coveringTypes.Contains(tileCover.GetCoveringTileType()))
+                    coversToReturn.Add(tileCover);
+            }
+
+            EdgeElement edgeElementBetween = GetEdgeElementBetweenAdjacentCoordinates(coordinates, aroundCoordinates);
+            
+            if(!edgeElementBetween) 
+                continue; // No edge element between coordinates
+
+            Cover edgeCover = edgeElementBetween.GetComponent<Cover>();
+            
+            if(!edgeCover)
+                continue; // No cover on edge element
+            
+            if (!coveringTypes.Contains(edgeCover.GetCoveringTileType()))
+                continue; // Element no covering
+            
+            coversToReturn.Add(edgeCover);
         }
         
         return coversToReturn;

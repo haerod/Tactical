@@ -1,16 +1,16 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace _01_Managers
+public class Test : MonoBehaviour
 {
-    public class Test : MonoBehaviour
-    {
-        public C_Look viewer;
-        public C__Character target;
+    public static Test instance;
+    
+    public CoverInfo coverInfo;
+    public List<CoverInfo> coverInfos;
 
-        private void Start()
-        {
-            print(viewer.HasSightOn(target.tile));
-        }
+    private void Awake()
+    {
+        instance = this;
     }
 }
