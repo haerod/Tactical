@@ -23,15 +23,19 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode zoomInKey = KeyCode.T;
     [SerializeField] private KeyCode zoomOutKey = KeyCode.G;
 
+    public event EventHandler<Tile> OnEnterTile;
+    public event EventHandler<Tile> OnExitTile;
+    public event EventHandler<C__Character> OnEnterCharacter;
+    public event EventHandler<C__Character> OnExitCharacter;
     public event EventHandler<Coordinates> OnMovingCameraInput;
     public event EventHandler<int> OnZoomingCameraInput;
-
+    
     private bool canClick = true;
     private Tile pointedTile;
     private List<Tile> currentPathfinding;
     private C__Character currentTarget;
     public static M_Input instance;
-
+    
     private C__Character currentCharacter => _characters.current;
 
     // ======================================================================
@@ -114,20 +118,20 @@ public class M_Input : MonoBehaviour
 
             // On a character's collider, get the character's tile
             if (hit.transform.CompareTag("Clickable")) 
-            {
                 tile = hit.transform.GetComponentInParent<C__Character>().tile;
-            }
 
             if (tile == pointedTile) 
                 return; // Already on pointed tile
 
+            OnEnterTile?.Invoke(this, tile);
+            
             if (!CanGo(tile) || !currentCharacter.CanPlay()) 
             {
                 OnForbiddenTile();
                 return; // Can't go on this tile or can't play
             }
 
-            CursorEnterPointedTile(new Coordinates(tile.coordinates.x, tile.coordinates.y));
+            CursorEnterPointedTile(tile.coordinates);
 
             // NEXT STEP : Free tile or occupied tile
 
@@ -152,7 +156,6 @@ public class M_Input : MonoBehaviour
         {
             OnForbiddenTile();
             CursorNotOnPointedTile();
-            return; // Out of tile board
         }
     }
 
