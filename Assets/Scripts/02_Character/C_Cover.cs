@@ -22,6 +22,12 @@ public class C_Cover : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Returns true if there is at less a cover around the character's coordinates.
+    /// </summary>
+    /// <returns></returns>
+    public bool AreCoversAround() => _board.GetAdjacentCoversAt(c.coordinates, GetCoveringTileTypes()).Count > 0;
     
     /// <summary>
     /// Returns the cover infos of all walkable tiles in a given range around coordinates (0 = given coordinates). 

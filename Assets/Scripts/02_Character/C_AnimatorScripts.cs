@@ -9,6 +9,7 @@ public class C_AnimatorScripts : MonoBehaviour
     private static readonly int Hit = Animator.StringToHash("hit");
     private static readonly int Dodge = Animator.StringToHash("dodge");
     private static readonly int Death1 = Animator.StringToHash("death");
+    private static readonly int Crouch = Animator.StringToHash("crouch");
 
     [Header("REFERENCES")]
 
@@ -26,7 +27,7 @@ public class C_AnimatorScripts : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Start shoot animation.
+    /// Starts shoot animation.
     /// </summary>
     public void StartShoot()
     {
@@ -34,7 +35,7 @@ public class C_AnimatorScripts : MonoBehaviour
     }
 
     /// <summary>
-    /// End shoot animation.
+    /// Ends shoot animation.
     /// Called by animation.
     /// </summary>
     public void EndShoot()
@@ -44,28 +45,38 @@ public class C_AnimatorScripts : MonoBehaviour
     }
 
     /// <summary>
-    /// Start the hit reaction animation.
+    /// Starts the hit reaction animation.
     /// </summary>
     public void StartHitReaction() => anim.SetBool(Hit, true);
 
     /// <summary>
-    /// End the hit reaction animation.
+    /// Ends the hit reaction animation.
     /// Called by animation.
     /// </summary>
     public void EndHitReaction() => anim.SetBool(Hit, false);
 
     /// <summary>
-    /// Start the dodge reaction.
+    /// Starts the dodge reaction.
     /// </summary>
     public void StartDodge() => anim.SetTrigger(Dodge);
 
     /// <summary>
-    /// Start the death animation.
+    /// Starts the crouch animation.
+    /// </summary>
+    public void EnterCrouch() => anim.SetBool(Crouch, true);
+    
+    /// <summary>
+    /// Ends the crouch animation.
+    /// </summary>
+    public void ExitCrouch() => anim.SetBool(Crouch, false);
+    
+    /// <summary>
+    /// Starts the death animation.
     /// </summary>
     public void Death() => anim.SetBool(Death1, true);
 
     /// <summary>
-    /// Enable or disable visuals of the characters.
+    /// Enables or disables visuals of the characters.
     /// </summary>
     public void SetVisualActives(bool value) => visuals.ForEach(o => o.SetActive(value));
 

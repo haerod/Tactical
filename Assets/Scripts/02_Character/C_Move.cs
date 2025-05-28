@@ -42,6 +42,12 @@ public class C_Move : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
+    private void Start()
+    {
+        if(c.cover.AreCoversAround())
+            c.anim.EnterCrouch();
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -205,6 +211,7 @@ public class C_Move : MonoBehaviour
         OrientTo(path[index].transform.position);
 
         anim.SetFloat(Speed, animSpeed); // Blend tree anim speed
+        c.anim.ExitCrouch();
 
         _input.SetActiveClick(false);
         _ui.SetActivePlayerUI_Action(false);
@@ -291,6 +298,10 @@ public class C_Move : MonoBehaviour
     private void EndMove()
     {
         anim.SetFloat(Speed, 0f);
+        
+        if(c.cover.AreCoversAround())
+            c.anim.EnterCrouch();
+        
         _input.SetActiveClick();
         _ui.SetActivePlayerUI_Action(true);
 
