@@ -2,7 +2,7 @@
 
 # Character movement
 - Pathfinding is strange
-- Feedback line doesn't fit with the pathfinding
+- Feedback line doesn't fit with the pathfinding (fit with the distance the character can walk)
 - If character pass through another, the last one losing its tile: because tiles have only one element on it
 
 # Border tiles
@@ -11,6 +11,12 @@
 # Fog of war
 - Tiles in fog of war where character can move and its an enemy are displayed in red
 
+# Camera
+- recenter camera doesn't work (function is called but does nothing)
+
+# Turns
+- if you play the last character of the team order and finishes its action, it passes to the next team, even if another character can play
+
 ## REFACTOR
 
 - Separate folders between Toy box and Technical box
@@ -18,8 +24,6 @@
 - Coordinates of the covers / logic of tiles hold covers
 - Fog of war in a single manager
 - Separate the logic between Turns and M_Characters
-- Separate Inputs and Logic
-    - use events for inputs
 - Ergonomic of characters
 - Coordinates for characters (not in Move), and for covers and obstacles
 - Tile class does a lot of things, fraction it (in Coordinates and a new class like Tile renderer)
@@ -27,11 +31,13 @@
 - C__Look -> fusion GetCoordinatesOfLineOfSightOn() and GetCoordinatesOfFullLineOfSightOn() together with Pathfinding.TileInclusion
 - Separate Pathfinding and LineOfSight
 - UI with recommendations
+- Tiles material work with an enum, use a Scriptable object instead
+- Turns -> Victory to events
 
 ## FEATURES
 
 - Namespaces
-- Cover system
+- Cover system (animations + lean on the side)
 - Actions systems: possibility between multiple designs
 - Online API like Unity (ask Simon)
 

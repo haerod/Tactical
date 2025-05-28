@@ -49,7 +49,7 @@ public class Coordinates
         
         return x == c.x && y == c.y;
     }
-
+    
     public void SetCoordinates(Coordinates newCoordinates)
     {
         this.x = newCoordinates.x;

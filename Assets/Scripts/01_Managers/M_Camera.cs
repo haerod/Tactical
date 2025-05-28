@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
+using Random = UnityEngine.Random;
 
 public class M_Camera : MonoBehaviour
 {
@@ -52,8 +54,9 @@ public class M_Camera : MonoBehaviour
     {
         _input.OnMovingCameraInput += Input_OnMovingCameraInput;
         _input.OnZoomingCameraInput += Input_OnZoomingCameraInput;
+        _input.OnRecenterCameraInput += Input_OnRecenterCameraInput;
     }
-
+    
     private void Update()
     {
         if (currentTime < smoothMovingTime)
@@ -64,6 +67,11 @@ public class M_Camera : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Returns the current camera.
+    /// </summary>
+    public Camera GetCurrentCamera() => currentCamera;
+    
     /// <summary>
     /// Sets the camera's target.
     /// </summary>
@@ -85,7 +93,7 @@ public class M_Camera : MonoBehaviour
     }
 
     /// <summary>
-    /// Camera shake for more fun.
+    /// Camera shaking for more fun.
     /// </summary>
     /// <param name="duration"></param>
     /// <param name="intensity"></param>
@@ -163,4 +171,6 @@ public class M_Camera : MonoBehaviour
         currentCamera.orthographicSize += zoomAmount;
         currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize, zoomMin, zoomMax);
     }
+    
+    private void Input_OnRecenterCameraInput(object sender, EventArgs e) => _camera.ResetPosition();
 }

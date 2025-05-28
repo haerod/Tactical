@@ -3,16 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using static M__Managers;
 using System;
+using UnityEngine;
 
 public static class Turns
 {
-    
+    // ======================================================================
+    // INITIALIZE
+    // ======================================================================
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void Start()
+    {
+        _input.OnChangeCharacterInput += Input_OnChangeCharacterInput;
+        _input.OnEndTurnInput += Input_OnEndTurnInput;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
     /// <summary>
-    /// End the character's turn and pass to the next one (depending the rules).
+    /// Ends the character's turn and passes to the next one (depending on the rules).
     /// </summary>
     public static void EndTurn()
     {
@@ -35,10 +46,14 @@ public static class Turns
         }
     }
 
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+
     /// <summary>
-    /// Switch to another playable character of the team.
+    /// Switches to another playable character of the team.
     /// </summary>
-    public static void SwitchToAnotherTeamPlayableCharacter()
+    private static void SwitchToAnotherTeamPlayableCharacter()
     {
         C__Character current = _characters.current;
         C__Character next = _characters
@@ -50,22 +65,18 @@ public static class Turns
     }
 
     /// <summary>
-    /// End the turn of all the playable characters of the team and pass to the next one to play.
+    /// Ends the turn of all the playable characters of the team and passes to the next one to play.
     /// </summary>
-    public static void EndAllPlayableCharactersTurn()
+    private static void EndAllPlayableCharactersTurn()
     {
         _characters.GetCharacterList()
             .ForEach(c => c.SetCanPlayValue(false));
 
         EndTurn();
     }
-
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-
+    
     /// <summary>
-    /// Start the next team turn, allowing them to play.
+    /// Starts the next team turn, allowing them to play.
     /// </summary>
     private static void NextTeam()
     {
@@ -80,7 +91,7 @@ public static class Turns
     }
     
     /// <summary>
-    /// Return the next character who haves to play in the team, depending on the rules' play order .
+    /// Returns the next character which haves to play in the team, depending on the rules' play order.
     /// Return null if nobody can play.
     /// </summary>
     /// <returns></returns>
@@ -94,19 +105,19 @@ public static class Turns
     }
     
     /// <summary>
-    /// Return the character's Team play order of the Rules
+    /// Returns the character's Team play order of the Rules
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
     private static TeamPlayOrder GetTeamPlayOrder(C__Character character) => _rules.GetTeamPlayOrders().FirstOrDefault(tpo => tpo.GetTeam() == character.team);
     
     /// <summary>
-    /// Check if it's currently victory.
+    /// Checks if it's currently victory.
     /// </summary>
     private static bool IsVictory() => _characters.IsFinalTeam(_characters.current);
 
     /// <summary>
-    /// Enable victory screen and do the other things happening during victory
+    /// Enables victory screen and do the other things happening during victory
     /// </summary>
     private static void Victory()
     {
@@ -118,6 +129,24 @@ public static class Turns
         current.HideTilesFeedbacks();
 
         _input.SetActiveClick(false);
-        _input.ClearFeedbacksAndValues();
+        _feedback.HideMovementFeedbacks();
+        _ui.HidePercentText();
+    }
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private static void Input_OnEndTurnInput(object sender, EventArgs e)
+    {
+        EndAllPlayableCharactersTurn();
+    }
+
+    private static void Input_OnChangeCharacterInput(object sender, EventArgs e)
+    {
+        if (!_characters.current.behavior.playable) 
+            return; // NPC turn
+
+        SwitchToAnotherTeamPlayableCharacter();
     }
 }

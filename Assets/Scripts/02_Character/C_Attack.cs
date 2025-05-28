@@ -25,6 +25,22 @@ public class C_Attack : MonoBehaviour
     // ======================================================================
 
     /// <summary>
+    /// Character subscribes to click event.
+    /// </summary>
+    public void SubscribeToInputClick()
+    {
+        _input.OnClickOnCharacter += Input_OnClickOnCharacter;
+    }
+
+    /// <summary>
+    /// Character unsubscribes to click event.
+    /// </summary>
+    public void UnsubscribeToInputClick()
+    {
+        _input.OnClickOnCharacter -= Input_OnClickOnCharacter;
+    }
+    
+    /// <summary>
     /// Returns the current weapon.
     /// </summary>
     /// <returns></returns>
@@ -48,9 +64,9 @@ public class C_Attack : MonoBehaviour
     public void Attack(C__Character currentTarget)
     {
         c.SetCanPlayValue(false);
-
-        // EXIT : Enemy isn't in sight
-        if (!c.look.HasSightOn(currentTarget.tile)) return;
+        
+        if (!c.look.HasSightOn(currentTarget.tile)) 
+            return; // Enemy not in sight
 
         C__Character target = currentTarget;
 
@@ -60,7 +76,8 @@ public class C_Attack : MonoBehaviour
 
         int damages = UnityEngine.Random.Range(currentWeapon.damagesRange.x, currentWeapon.damagesRange.y + 1);
 
-        _input.ClearFeedbacksAndValues();
+        _feedback.HideMovementFeedbacks();
+        _ui.HidePercentText();
         _input.SetActiveClick(false);
 
         _ui.SetActivePlayerUI_Action(false);
@@ -160,5 +177,18 @@ public class C_Attack : MonoBehaviour
             }
             Wait(0.5f, () => {Turns.EndTurn();});
         };
+    }
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private void Input_OnClickOnCharacter(object sender, C__Character clickedCharacter)
+    {
+        if(clickedCharacter.team == c.team) 
+            return; // Same team
+
+        // Attack
+        Attack(clickedCharacter);
     }
 }

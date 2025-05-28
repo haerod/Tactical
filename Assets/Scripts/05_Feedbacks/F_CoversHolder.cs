@@ -40,12 +40,22 @@ public class F_CoversHolder : MonoBehaviour
                 coverFeedbacks[i].Hide();
         }
     }
+
+    /// <summary>
+    /// Displays the cover infos of a character pointed by the current character.
+    /// </summary>
+    /// <param name="coverInfo"></param>
+    public void DisplayTargetCoverFeedback(CoverInfo coverInfo)
+    {
+        HideCoverFeedbacks();
+        coverFeedbacks[0].Display(coverInfo);
+    }
     
     /// <summary>
     /// Hide all the cover feedbacks.
     /// </summary>
     public void HideCoverFeedbacks() => coverFeedbacks
-        .ForEach(c => c.gameObject.SetActive(false));
+        .ForEach(c => c.Hide());
     
     // ======================================================================
     // PRIVATE METHODS
@@ -61,9 +71,9 @@ public class F_CoversHolder : MonoBehaviour
         
         for (int i = 0; i < Mathf.Pow(coverFeedbackRange*2+1, 2); i++)
         {
-            GameObject newCoverFeedback = Instantiate(coverFeedbackPrefab, transform);
-            newCoverFeedback.SetActive(false);
-            coverFeedbacks.Add(newCoverFeedback.GetComponent<F_Covers>());
+            F_Covers newCoverFeedback = Instantiate(coverFeedbackPrefab, transform).GetComponent<F_Covers>();
+            coverFeedbacks.Add(newCoverFeedback);
+            newCoverFeedback.Hide();
         }
     }
 }

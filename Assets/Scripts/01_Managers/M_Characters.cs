@@ -60,11 +60,16 @@ public class M_Characters : MonoBehaviour
     public void NewCurrentCharacter(C__Character newCurrentCharacter)
     {
         // Old character
-        if(current)
+        if (current)
+        {
             current.HideTilesFeedbacks();
+            current.move.UnsubscribeToInputClick();
+            current.attack.UnsubscribeToInputClick();
+        }
 
-        // Inputs
-        _input.ClearFeedbacksAndValues();
+        // Clear feedbacks and UI
+        _feedback.HideMovementFeedbacks();
+        _ui.HidePercentText();
 
         // Change current character
         current = newCurrentCharacter;
@@ -79,6 +84,8 @@ public class M_Characters : MonoBehaviour
         // Playable character (PC)
         if (current.behavior.playable) 
         {
+            current.move.SubscribeToInputClick();
+            current.attack.SubscribeToInputClick();
             _input.SetActiveClick();
             _ui.SetActivePlayerUI_Turn(true);
         }

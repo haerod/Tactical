@@ -37,7 +37,7 @@ public class F_Covers : MonoBehaviour
     public void DisplayAt(Coordinates centerCoordinates, CoverInfo info)
     {
         HideAllRenderers();
-        
+
         if (!CanDisplay(centerCoordinates, info))
         {
             Hide();
@@ -45,14 +45,29 @@ public class F_Covers : MonoBehaviour
         }
         
         MoveTo(info.GetCoverFeedbackCoordinates().ToVector3());
-        ShowFeedbackRenderer(GetClosestFeedbackRenderer(info), info, centerCoordinates == info.GetCoveredCoordinates());;
+        ShowFeedbackRenderer(GetClosestFeedbackRenderer(info), info, centerCoordinates == info.GetCoveredCoordinates());
+    }
+
+    /// <summary>
+    /// Displays the feedback, depending on the given info.
+    /// </summary>
+    /// <param name="info"></param>
+    public void Display(CoverInfo info)
+    {
+        HideAllRenderers();
+        
+        if(info == null)
+            return; // No info
+        
+        MoveTo(info.GetCoverFeedbackCoordinates().ToVector3());
+        ShowFeedbackRenderer(GetClosestFeedbackRenderer(info), info, true);;
         gameObject.SetActive(true);
     }
 
     /// <summary>
     /// Disables the game object.
     /// </summary>
-    public void Hide() => gameObject.SetActive(false);
+    public void Hide() => HideAllRenderers();
 
     // ======================================================================
     // PRIVATE METHODS

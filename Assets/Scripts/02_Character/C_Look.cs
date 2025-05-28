@@ -158,7 +158,7 @@ public class C_Look : MonoBehaviour
             if (visualObstacles.Contains(t.type)) return true; // Line of sight blocker
 
             // Character
-            C__Character chara = t.Character();
+            C__Character chara = t.character;
             if (!chara) continue; // There is no character
 
             if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThrough.Nobody)

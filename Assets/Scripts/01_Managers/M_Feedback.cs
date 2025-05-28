@@ -50,6 +50,13 @@ public class M_Feedback : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        _input.OnExitTile += Input_OnExitTile;
+        _input.OnEnterTile += Input_OnEnterTile;
+        _input.OnChangeClickActivation += Input_ChangeClickActivation;
+    }
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -61,7 +68,7 @@ public class M_Feedback : MonoBehaviour
         tilesToShow
             .ForEach(t =>
             {
-                t.SetMaterial(Tile.TileMaterial.Grey);
+                t.SetMaterial(Tile.TileMaterial.Blue);
                 walkableTiles.Add(t);
             });
 
@@ -100,9 +107,9 @@ public class M_Feedback : MonoBehaviour
     }
 
     /// <summary>
-    /// Disables visual feedbacks (selection square, direction lines, action cost text)
+    /// Disables feedbacks for moving (selection square, direction lines)
     /// </summary>
-    public void DisableFreeTileFeedbacks()
+    public void HideMovementFeedbacks()
     {
         square.DisableSquare();
         line.DisableLines();
@@ -171,17 +178,6 @@ public class M_Feedback : MonoBehaviour
     
     // Cover feedbacks
     // ===============
-    
-    /// <summary>
-    /// Shows cover feedbacks.
-    /// </summary>
-    /// <param name="centerCoordinates"></param>
-    public void ShowCoverFeedbacks(Coordinates centerCoordinates) => coverHolder.DisplayCoverFeedbacksAround(centerCoordinates, _characters.current.cover.GetAllCoverInfosInRangeAt(centerCoordinates, GetCoverFeedbackRange()));
-    
-    /// <summary>
-    /// Hides cover feedbacks.
-    /// </summary>
-    public void HideCoverFeedbacks() => coverHolder.HideCoverFeedbacks();
 
     /// <summary>
     /// Returns the feedback's covered colour.
@@ -205,6 +201,96 @@ public class M_Feedback : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Shows cover feedbacks of a character.
+    /// </summary>
+    /// <param name="centerCoordinates"></param>
+    private void ShowCharacterCoverFeedbacks(Coordinates centerCoordinates) => 
+        coverHolder.DisplayCoverFeedbacksAround(centerCoordinates, _characters.current.cover.GetAllCoverInfosInRangeAt(centerCoordinates, GetCoverFeedbackRange()));
+
+    /// <summary>
+    /// Shows the cover feedback of a targeted character.
+    /// </summary>
+    /// <param name="targetCharacter"></param>
+    private void ShowTargetCoverFeedbacks(C__Character targetCharacter) => 
+        coverHolder.DisplayTargetCoverFeedback(targetCharacter.cover.GetCoverStateFrom(_characters.current));
+    
+    /// <summary>
+    /// Hides cover feedbacks.
+    /// </summary>
+    private void HideCoverFeedbacks() => coverHolder.HideCoverFeedbacks();
+    
+    /// <summary>
+    /// Actions happening if the pointer overlaps an occupied tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    private void OnOccupiedTile(Tile tile)
+    {
+        HideMovementFeedbacks();
+
+        C__Character currentCharacter = _characters.current;
+        C__Character currentTarget = tile.character;
+
+        ShowTargetCoverFeedbacks(currentTarget);
+        
+        if (!currentCharacter.look.HasSightOn(tile))
+        {
+            SetCursor(CursorType.OutAimOrSight);
+            return; // Character not in sight
+        }
+        
+        if (currentTarget.team == currentCharacter.team) // Character or allie
+        {
+            SetCursor(CursorType.Regular);
+            _ui.HidePercentText();
+        }
+        else // Enemy
+        {
+            SetCursor(CursorType.AimAndInSight);
+            _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(
+                currentCharacter.look.GetTilesOfLineOfSightOn(tile).Count,
+                currentTarget.cover.GetCoverProtectionValueFrom(currentTarget.look)));        
+        }
+    }
+
+    /// <summary>
+    /// Actions happening if the pointer overlaps a free tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    private void OnFreeTile(Tile tile)
+    {
+        C__Character currentCharacter = _characters.current;
+        
+        // Disable fight
+        ShowCharacterCoverFeedbacks(tile.coordinates);
+        _ui.HidePercentText();
+        
+        // Get pathfinding
+        List<Tile> currentPathfinding = Pathfinding.GetPath(
+                        currentCharacter.tile,
+                        tile,
+                        Pathfinding.TileInclusion.WithStartAndEnd,
+                        new MovementRules(currentCharacter.move.walkableTiles, currentCharacter.move.GetTraversableCharacterTiles(), currentCharacter.move.useDiagonalMovement));
+
+        if (currentPathfinding.Count == 0)
+        {
+            SetCursor(CursorType.OutMovement);
+            return; // No path
+        }
+
+        bool tileInMoveRange = currentCharacter.move.CanMoveTo(tile);
+
+        // Show movement feedbacks (square and line)
+        square.SetSquare(tile.transform.position, tileInMoveRange);
+        line.SetLines(
+            currentPathfinding,
+            currentCharacter.move.movementRange, 
+            tile);
+
+        // Set cursor
+        SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
+    }
+    
     /// <summary>
     /// Shows and hides characters in fog of war.
     /// </summary>
@@ -236,5 +322,39 @@ public class M_Feedback : MonoBehaviour
             .Except(visibleCharacters)
             .ToList()
             .ForEach(c => c.anim.SetVisualActives(false));
+    }
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private void Input_OnExitTile(object sender, Tile tile)
+    {
+        SetCursor(CursorType.OutMovement);
+        HideCoverFeedbacks();
+    }
+
+    private void Input_OnEnterTile(object sender, Tile tile)
+    {
+        C__Character currentCharacter = _characters.current;
+        
+        if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
+        {
+            SetCursor(CursorType.OutMovement);
+            return; // Can't go on this tile or can't play
+        }
+        
+        bool pointedCharacterIsVisible = !_rules.enableFogOfWar || currentCharacter.look.VisibleTiles().Contains(tile);
+
+        if (tile.IsOccupiedByCharacter() && pointedCharacterIsVisible)
+            OnOccupiedTile(tile);
+        else
+            OnFreeTile(tile);
+    }
+    
+    private void Input_ChangeClickActivation(object sender, bool canClickValue)
+    {
+        if(!canClickValue)
+            SetCursor(CursorType.Regular);
     }
 }

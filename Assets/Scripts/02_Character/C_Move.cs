@@ -36,6 +36,7 @@ public class C_Move : MonoBehaviour
     private List<Tile> currentPath = null;
     private int index = 0;
     private Vector3 destination;
+    private readonly int Speed = Animator.StringToHash("speed");
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -44,7 +45,23 @@ public class C_Move : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Character subscribes to click event.
+    /// </summary>
+    public void SubscribeToInputClick()
+    {
+        _input.OnClickOnTile += Input_OnClickOnTile;
+    }
 
+    /// <summary>
+    /// Character unsubscribes to click event.
+    /// </summary>
+    public void UnsubscribeToInputClick()
+    {
+        _input.OnClickOnTile -= Input_OnClickOnTile;
+    }
+    
     /// <summary>
     /// Returns the move area depending on the rules.
     /// </summary>
@@ -102,30 +119,6 @@ public class C_Move : MonoBehaviour
     }
 
     /// <summary>
-    /// Starts the movement on a path, with and action on end of this path.
-    /// </summary>
-    /// <param name="path"></param>
-    public void MoveOnPath(List<Tile> path)
-    {
-        c.SetCanPlayValue(false);
-
-        currentPath = path.ToList();
-
-        index = 0;
-        destination = path[index].transform.position;
-        OrientTo(path[index].transform.position);
-
-        anim.SetFloat("speed", animSpeed); // Blend tree anim speed
-
-        _input.SetActiveClick(false);
-        _ui.SetActivePlayerUI_Action(false);
-
-        c.HideTilesFeedbacks();
-
-        StartCoroutine(MoveToDestination());
-    }
-
-    /// <summary>
     /// Orients this object to another position, except on Y axis. Possibility to add an offset (euler angles).
     /// </summary>
     /// <param name="targetPosition"></param>
@@ -172,18 +165,23 @@ public class C_Move : MonoBehaviour
     /// <returns></returns>
     public bool CanMoveTo(Tile tile)
     {
-        if (!c.CanPlay()) return false; // Can't play
+        if (!c.CanPlay()) 
+            return false; // Can't play
 
         bool tileInFog =_rules.enableFogOfWar && !c.look.VisibleTiles().Contains(tile);
-        if (tileInFog && !c.move.movementInFogOfWarAllowed) return false; // Tile in fog
+        if (tileInFog && !c.move.movementInFogOfWarAllowed) 
+            return false; // Tile in fog
 
         List<Tile> path = Pathfinding.GetPath(
             c.tile,
             tile,
             Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement));
-        if (path.Count == 0) return false; // No path
-        if (path.Count > movementRange) return false; // Out range
+        
+        if (path.Count == 0) 
+            return false; // No path
+        if (path.Count > movementRange) 
+            return false; // Out range
 
         return true; // In range
     }
@@ -192,6 +190,30 @@ public class C_Move : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Starts the movement on a path, with and action on end of this path.
+    /// </summary>
+    /// <param name="path"></param>
+    private void MoveOnPath(List<Tile> path)
+    {
+        c.SetCanPlayValue(false);
+
+        currentPath = path.ToList();
+
+        index = 0;
+        destination = path[index].transform.position;
+        OrientTo(path[index].transform.position);
+
+        anim.SetFloat(Speed, animSpeed); // Blend tree anim speed
+
+        _input.SetActiveClick(false);
+        _ui.SetActivePlayerUI_Action(false);
+
+        c.HideTilesFeedbacks();
+
+        StartCoroutine(MoveToDestination());
+    }
+    
     /// <summary>
     /// Returns tiles where are blockers
     /// </summary>
@@ -268,7 +290,7 @@ public class C_Move : MonoBehaviour
     /// </summary>
     private void EndMove()
     {
-        anim.SetFloat("speed", 0f);
+        anim.SetFloat(Speed, 0f);
         _input.SetActiveClick();
         _ui.SetActivePlayerUI_Action(true);
 
@@ -294,9 +316,25 @@ public class C_Move : MonoBehaviour
     {
         if (canPassThrough == PassThrough.Nobody)
             return true;
-        else if (canPassThrough == PassThrough.AlliesOnly && c.infos.IsAlliedTo(character))
+        if (canPassThrough == PassThrough.AlliesOnly && c.infos.IsAlliedTo(character))
             return false;
 
         return false;
+    }
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private void Input_OnClickOnTile(object sender, Tile clickedTile)
+    {
+        if (!CanMoveTo(clickedTile)) 
+            return; // Tile out of movement range
+
+        MoveOnPath(Pathfinding.GetPath(
+            c.tile,
+            clickedTile,
+            Pathfinding.TileInclusion.WithEnd,
+            new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)));
     }
 }

@@ -11,5 +11,4 @@
     public static M_Characters _characters => M_Characters.instance;
     public static M_UI _ui => M_UI.instance;
     public static M_Camera _camera => M_Camera.instance;
-    public static M_PlayerActions _playerActions => M_PlayerActions.instance;
 }

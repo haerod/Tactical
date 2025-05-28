@@ -24,21 +24,21 @@ public class Tile : Entity
 
     [Header("REFERENCES")]
 
-    [SerializeField] private MeshRenderer areaRend = null;
+    [SerializeField] private MeshRenderer areaRend;
     [Space]
-    [SerializeField] private Material green = null;
-    [SerializeField] private Material blue = null;
-    [SerializeField] private Material red = null;
-    [SerializeField] private Material yellow = null;
-    [SerializeField] private Material grey = null;
+    [SerializeField] private Material green;
+    [SerializeField] private Material blue;
+    [SerializeField] private Material red;
+    [SerializeField] private Material yellow;
+    [SerializeField] private Material grey;
     [Space]
-    [SerializeField] private GameObject areaObject = null;
-    [SerializeField] private GameObject fogMask = null;
+    [SerializeField] private GameObject areaObject;
+    [SerializeField] private GameObject fogMask;
     [Space]
-    [SerializeField] private GameObject topLine = null;
-    [SerializeField] private GameObject downLine = null;
-    [SerializeField] private GameObject leftLine = null;
-    [SerializeField] private GameObject rightLine = null;
+    [SerializeField] private GameObject topLine;
+    [SerializeField] private GameObject downLine;
+    [SerializeField] private GameObject leftLine;
+    [SerializeField] private GameObject rightLine;
 
     public List<EdgeElement> covers;
 
@@ -53,7 +53,7 @@ public class Tile : Entity
     // ======================================================================
 
     /// <summary>
-    /// Give the values to the tile.
+    /// Gives the values to the tile.
     /// </summary>
     /// <param name="newCoordinates"></param>
     public void Setup(Coordinates newCoordinates)
@@ -73,22 +73,20 @@ public class Tile : Entity
     }
     
     /// <summary>
-    /// Get covers list.
+    /// Returns covers attached to this tile.
     /// </summary>
     /// <returns></returns>
     public List<EdgeElement> GetCovers() => covers;
 
     /// <summary>
-    /// Move tile position at the asked coordinates.
-    /// Rename the element.
-    /// Set the new elements dirty.
+    /// Moves tile position at the asked coordinates.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
     public void MoveAtGridPosition(int x, int y) => transform.position = new Vector3(x, 0, y);
 
     /// <summary>
-    /// Calculate f, cost and heuristic and set the parent
+    /// Calculates f, cost and heuristic and sets the parent
     /// </summary>
     /// <param name="endTile"></param>
     /// <param name="parentTile"></param>
@@ -101,7 +99,7 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Add a cover in covers list.
+    /// Adds a cover in covers list.
     /// </summary>
     /// <param name="cover"></param>
     public void AddCover(EdgeElement cover)
@@ -114,7 +112,7 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Remove a cover form covers list.
+    /// Removes a cover form covers list.
     /// </summary>
     /// <param name="cover"></param>
     public void RemoveCover(EdgeElement cover)
@@ -127,7 +125,7 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Return true if it's a cover between this tile and another tile.
+    /// Returns true if it's a cover between this tile and another tile.
     /// </summary>
     /// <param name="otherTile"></param>
     /// <param name="allowedWalkableTypes"></param>
@@ -169,7 +167,7 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Return the cover between two tiles.
+    /// Returns the cover between two tiles.
     /// </summary>
     /// <param name="otherTile"></param>
     /// <returns></returns>
@@ -187,21 +185,21 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Return the cost of movement from tile to another.
+    /// Returns the cost of movement from tile to another.
     /// </summary>
     /// <param name="currentTile"></param>
     /// <returns></returns>
     public int GetCost(Tile currentTile) => IsDiagonalWith(currentTile) ? 14 : 10;
 
     /// <summary>
-    /// Return true if a tile is in diagonal with another tile.
+    /// Returns true if a tile is in diagonal with another tile.
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
     public bool IsDiagonalWith(Tile tile) => coordinates.x != tile.coordinates.x && coordinates.y != tile.coordinates.y;
 
     /// <summary>
-    /// Reset the pathfinding tiles value.
+    /// Resets the pathfinding tiles value.
     /// </summary>
     public void ResetTileValues()
     {
@@ -212,7 +210,7 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Enable the view lines.
+    /// Enables the view lines.
     /// </summary>
     public void EnableViewLine(Directions direction)
     {
@@ -236,7 +234,7 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Disable all the view lines.
+    /// Disables all the view lines.
     /// </summary>
     public void DisableViewLine()
     {
@@ -247,7 +245,7 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Enable or disable the fog mask
+    /// Enables or disables the fog mask
     /// </summary>
     /// <param name="value"></param>
     public void SetFogMaskActive(bool value)
@@ -256,7 +254,7 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Set the appearance of a tile with the new material.
+    /// Sets the appearance of a tile with the new material.
     /// </summary>
     /// <param name="tileMaterial"></param>
     public void SetMaterial(TileMaterial tileMaterial)
@@ -287,13 +285,13 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Set the tile skin to "basic".
+    /// Sets the tile skin to "basic".
     /// Shortcut of SetMaterial(TileMaterial.Basic).
     /// </summary>
     public void ResetTileSkin() => areaObject.SetActive(false);
 
     /// <summary>
-    /// Return true if the tile is occupied by a character.
+    /// Returns true if the tile is occupied by a character.
     /// </summary>
     /// <returns></returns>
     public bool IsOccupiedByCharacter()
@@ -307,11 +305,11 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Return the character on this tile.
-    /// Return null if is nobody on this tile.
+    /// Returns the character on this tile.
+    /// Returns null if is nobody on this tile.
     /// </summary>
     /// <returns></returns>
-    public C__Character Character()
+    private C__Character Character()
     {
         foreach (C__Character c in _characters.GetCharacterList())
         {

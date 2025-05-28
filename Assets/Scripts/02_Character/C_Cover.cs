@@ -83,8 +83,7 @@ public class C_Cover : MonoBehaviour
             }
         }
         
-        return infosToReturn
-            .ToList();
+        return infosToReturn;
     }
 
     /// <summary>
@@ -126,6 +125,17 @@ public class C_Cover : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns the Cover info of the character when another targets it.
+    /// </summary>
+    /// <param name="viewer"></param>
+    /// <returns></returns>
+    public CoverInfo GetCoverStateFrom(C__Character viewer)
+    {
+        List<Cover> coversAround = _board.GetAdjacentCoversAt(c.coordinates, GetCoveringTileTypes());
+        return GetCoverStateFrom(c.coordinates, coversAround, viewer.look);
+    }
+    
+    /// <summary>
     /// Returns the value of protection of the cover.
     /// </summary>
     /// <param name="viewer"></param>
@@ -136,15 +146,10 @@ public class C_Cover : MonoBehaviour
 
         if (adjacentCoversList.Count == 0)
             return 0; // No cover around
-
-        //Test.instance.coverInfo = GetCoverStateFrom(c.coordinates, adjacentCoversList, viewer);
-
+        
         List<CoverInfo> coverInfos = adjacentCoversList
             .Select(testedCover => GetCoverInfoFrom(c.coordinates, testedCover, viewer))
-            //.Where(coverInfo => coverInfo.GetIsCovered())
             .ToList();
-
-        Test.instance.coverInfos = coverInfos;
         
         return GetCoverStateFrom(c.coordinates, adjacentCoversList, viewer)
             .GetCoverType()
