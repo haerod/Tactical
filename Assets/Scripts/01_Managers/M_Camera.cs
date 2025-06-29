@@ -36,7 +36,7 @@ public class M_Camera : MonoBehaviour
     private Vector3 positionToReach;
     private Vector3 startPosition;
     private Transform target;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -77,7 +77,7 @@ public class M_Camera : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     public void SetTarget(Transform target) => this.target = target;
-
+    
     /// <summary>
     /// Resets the camera's position to reach on its target (with the offset).
     /// </summary>
@@ -132,6 +132,20 @@ public class M_Camera : MonoBehaviour
             );
     }
 
+    private Vector3 GetTargetsCenter(List<Vector3> targetsPositions)
+    {
+        if(targetsPositions.Count < 2)
+            Debug.LogError("it needs to be at least 2 targets positions");
+        
+        Bounds targetsBounds = new Bounds(targetsPositions[0], Vector3.zero);
+        
+        foreach (Vector3 position in targetsPositions)
+        {
+            targetsBounds.Encapsulate(position);
+        }
+        return targetsBounds.center;
+    }
+    
     /// <summary>
     /// Coroutine of Shake() method. Only called by Shake().
     /// </summary>
@@ -152,7 +166,7 @@ public class M_Camera : MonoBehaviour
 
         currentCamera.transform.localPosition = Vector3.zero;
     }
-
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
