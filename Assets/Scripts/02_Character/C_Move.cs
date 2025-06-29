@@ -139,7 +139,7 @@ public class C_Move : MonoBehaviour
         endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
         c.transform.rotation = endRotation;
 
-        c.healthBar.GetComponentInParent<UI_OrientToCamera>().OrientToCamera();
+        c.unitUI.OrientToCamera();
     }
 
     /// <summary>

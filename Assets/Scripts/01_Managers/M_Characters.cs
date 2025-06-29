@@ -11,6 +11,9 @@ public class M_Characters : MonoBehaviour
     [Header("DEBUG")]
     public C__Character current;    
     [SerializeField] private List<C__Character> characters;
+
+    public event EventHandler<C__Character> OnCharacterHover;
+    public event EventHandler<C__Character> OnCharacterExit;
     
     public static M_Characters instance;
 
@@ -29,6 +32,8 @@ public class M_Characters : MonoBehaviour
 
     private void Start()
     {
+        _input.OnEnterTile += Input_OnEnterTile;
+        _input.OnExitTile += Input_OnExitTile;
         NewCurrentCharacter(_rules.GetFirstCharacter());
     }
 
@@ -65,6 +70,7 @@ public class M_Characters : MonoBehaviour
             current.HideTilesFeedbacks();
             current.move.UnsubscribeToInputClick();
             current.attack.UnsubscribeToInputClick();
+            current.unitUI.Hide();
         }
 
         // Clear feedbacks and UI
@@ -80,6 +86,7 @@ public class M_Characters : MonoBehaviour
 
         // Character
         current.HideTilesFeedbacks();
+        current.unitUI.Display();
 
         // Playable character (PC)
         if (current.behavior.playable) 
@@ -123,4 +130,20 @@ public class M_Characters : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private void Input_OnEnterTile(object sender, Tile tile)
+    {
+        if(tile.character)
+            OnCharacterHover?.Invoke(this, tile.character);
+    }
+
+    private void Input_OnExitTile(object sender, Tile tile)
+    {
+        if(tile.character)
+            OnCharacterExit?.Invoke(this, tile.character);
+    }
 }

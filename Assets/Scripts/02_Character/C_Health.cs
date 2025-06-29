@@ -138,7 +138,7 @@ public class C_Health : MonoBehaviour
         }
 
         _feedback.ActionEffectFeedback(damage.ToString(), transform.parent);
-        c.healthBar.DisplayCurrentHealth();
+        c.unitUI.UpdateHealthBar();
     }
 
     /// <summary>
@@ -160,7 +160,7 @@ public class C_Health : MonoBehaviour
         _characters.RemoveCharacter(c);
         _rules.RemoveCharacter(c);
         c.GetComponentInChildren<Collider>().gameObject.SetActive(false);
-        Wait(1, () => { c.healthBar.SetLifeBarActive(false); });
+        Wait(1, () => { c.unitUI.Hide(); });
     }
 
     /// <summary>

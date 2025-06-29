@@ -40,7 +40,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
     /// Enables or disables the life bar.
     /// </summary>
     /// <param name="value"></param>
-    public void SetLifeBarActive (bool value) => transform.parent.gameObject.SetActive(value);
+    public void SetLifeBarActive (bool value) => gameObject.SetActive(value);
 
     // ======================================================================
     // PRIVATE METHODS

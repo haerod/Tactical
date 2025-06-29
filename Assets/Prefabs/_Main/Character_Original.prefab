@@ -803,10 +803,9 @@ MonoBehaviour:
   health: {fileID: 3336314116041387865}
   infos: {fileID: 5571022486952568945}
   behavior: {fileID: 4919814116171440189}
+  unitUI: {fileID: 4598890746202993601}
   anim: {fileID: 368585628365455985}
   weaponHolder: {fileID: 5340496248363606861}
-  healthBar: {fileID: 5364162271039580364}
-  coverState: {fileID: 4627241086625148676}
 --- !u!114 &2371686734661026428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1460,6 +1459,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1422904897860799220}
     m_Modifications:
+    - target: {fileID: 3526471905678377913, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7227079351083708174, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -1503,6 +1506,10 @@ PrefabInstance:
     - target: {fileID: 7227079351546904240, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
       propertyPath: topDownOffset
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7227079351546904254, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7227079351546904255, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1663,6 +1670,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a70d915e0d8df43a2240116f7c9754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4598890746202993601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5211910966631692294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4255579e909fca54a8c5210387538fcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  c: {fileID: 3541061014796538876}
+  healthBar: {fileID: 5364162271039580364}
+  coverState: {fileID: 4627241086625148676}
+  orientToCamera: {fileID: 1242646055588800613}
 --- !u!1 &5364162270567414129 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7227079351083708173, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}

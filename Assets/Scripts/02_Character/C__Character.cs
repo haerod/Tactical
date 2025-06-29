@@ -13,11 +13,10 @@ public class C__Character : MonoBehaviour
     public C_Health health;
     public C_Infos infos;
     public C_Behavior behavior;
+    public C_UnitUI unitUI;
     public C_AnimatorScripts anim; // With animator / skinned mesh renderer
     [Space]
     public C_WeaponHolder weaponHolder;
-    public UI_SlicedHealthBar healthBar;
-    public UI_CoverState coverState;
 
     public Team team => Team();
     public int movementRange => move.movementRange;

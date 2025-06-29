@@ -99,9 +99,9 @@ public class M_UI : MonoBehaviour
     public void DisplayCharacterCoverState(C__Character character, CoverInfo coverInfo)
     {
         if(coverInfo == null)
-            character.coverState.HideCoverState();
+            character.unitUI.HideCoverState();
         else
-            character.coverState.DisplayCoverState(
+            character.unitUI.DisplayCoverState(
                 coverInfo.GetCoverType(), 
                 coverInfo.GetIsCovered() ? _feedback.GetCoveredColour() : _feedback.GetUncoveredColour());
     }

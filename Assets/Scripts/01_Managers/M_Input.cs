@@ -26,11 +26,13 @@ public class M_Input : MonoBehaviour
     public event EventHandler<bool> OnChangeClickActivation;
     public event EventHandler<Tile> OnEnterTile;
     public event EventHandler<Tile> OnExitTile;
+    
     public event EventHandler<Coordinates> OnMovingCameraInput;
     public event EventHandler<int> OnZoomingCameraInput;
     public event EventHandler OnRecenterCameraInput;
     public event EventHandler OnEndTurnInput;
     public event EventHandler OnChangeCharacterInput;
+    
     public event EventHandler <C__Character> OnClickOnCharacter;
     public event EventHandler<Tile> OnClickOnTile;
     
