@@ -28,8 +28,7 @@
 - Coordinates for characters (not in Move), and for covers and obstacles
 - Tile class does a lot of things, fraction it (in Coordinates and a new class like Tile renderer)
 - Optimization: create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
-- C__Look -> fusion GetCoordinatesOfLineOfSightOn() and GetCoordinatesOfFullLineOfSightOn() together with Pathfinding.TileInclusion
-- Separate Pathfinding and LineOfSight
+- C__Look -> fusion GetCoordinatesOfLineOfSightOn() and GetCoordinatesOfFullLineOfSightOn() together with LoS.TileInclusion
 - UI with recommendations
 - Tiles material work with an enum, use a Scriptable object instead
 - Turns -> Victory to events
@@ -41,6 +40,8 @@
 - Actions systems: possibility between multiple designs
 - Online API like Unity (ask Simon)
 
+                                                                        - Aim directly enemies and tiles of movement 
+
 - Add events for everything
 - Multiple victory conditions
 - Obstacle transparency
@@ -48,6 +49,7 @@
 - Better enemy behaviors
 - Large elements (multiple tiles)
 - When hover an enemy, attacker aim immediately
+- Range of weapons (melee weapons)
 - Missing shots can touch another tile
 - Border cover can block the line of sight
 - Overwatch action

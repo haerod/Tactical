@@ -13,6 +13,7 @@ public class C_Look : MonoBehaviour
     public VisionType visionType = VisionType.GroupVision;
 
     [Header("REFERENCES")]
+    
     [SerializeField] private C__Character c = null;
 
     // ======================================================================
@@ -117,7 +118,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
-    public List<Coordinates> GetCoordinatesOfLineOfSightOn(Tile targetTile)=> Pathfinding.LineOfSight(c.tile, targetTile)
+    public List<Coordinates> GetCoordinatesOfLineOfSightOn(Tile targetTile)=> LineOfSight.GetLineOfSight(c.tile, targetTile)
         .ToList();
     
     /// <summary>
@@ -125,7 +126,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
-    public List<Coordinates> GetCoordinatesOfFullLineOfSightOn(Tile targetTile)=> Pathfinding.LineOfSight(c.tile, targetTile, Pathfinding.TileInclusion.WithStartAndEnd)
+    public List<Coordinates> GetCoordinatesOfFullLineOfSightOn(Tile targetTile)=> LineOfSight.GetLineOfSight(c.tile, targetTile, LineOfSight.TileInclusion.WithStartAndEnd)
         .ToList();
     
     /// <summary>
