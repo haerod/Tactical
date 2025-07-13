@@ -36,10 +36,7 @@ public class C_AnimatorScripts : MonoBehaviour
     /// <summary>
     /// Starts shoot animation.
     /// </summary>
-    public void StartShoot()
-    {
-        anim.SetBool(Shoot, true);
-    }
+    public void StartShoot() => anim.SetBool(Shoot, true);
 
     /// <summary>
     /// Ends shoot animation.

@@ -104,7 +104,7 @@ public class C_Attack : MonoBehaviour
         _ui.SetActivePlayerUI_Action(true);
         onAttackDone();
 
-        // Muzzle flare
+        // Muzzle flash
 
         GameObject muzzleFlash = c.weaponHolder.GetCurrentWeaponGraphics().GetMuzzleFlash();
 
