@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 using System.Collections;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
-using UnityEditor;
 
 public class C_Move : MonoBehaviour
 {

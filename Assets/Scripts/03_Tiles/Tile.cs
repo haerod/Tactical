@@ -294,33 +294,16 @@ public class Tile : Entity
     /// Returns true if the tile is occupied by a character.
     /// </summary>
     /// <returns></returns>
-    public bool IsOccupiedByCharacter()
-    {
-        foreach (C__Character c in _characters.GetCharacterList())
-        {
-            if (c.move.x == coordinates.x && c.move.y == coordinates.y)
-                return true;
-        }
-        return false;
-    }
+    public bool IsOccupiedByCharacter() => Character();
 
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
     /// <summary>
     /// Returns the character on this tile.
     /// Returns null if is nobody on this tile.
     /// </summary>
     /// <returns></returns>
-    private C__Character Character()
-    {
-        foreach (C__Character c in _characters.GetCharacterList())
-        {
-            if(c.tile == this) 
-                return c;
-        }
-
-        return null;
-    }
-
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
+    private C__Character Character() => _characters.GetCharacterList().FirstOrDefault(c => c.tile == this);
 }

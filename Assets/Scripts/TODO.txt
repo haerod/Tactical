@@ -9,7 +9,7 @@
 - Border tiles change position sometimes (repro needed)
 
 # Fog of war
-- Tiles in fog of war where character can move and its an enemy are displayed in red
+- Tiles in fog of war where character can move and where an enemy is are displayed in red
 
 # Camera
 - recenter camera doesn't work (function is called but does nothing)
@@ -25,7 +25,7 @@
 - Fog of war in a single manager
 - Separate the logic between Turns and M_Characters
 - Ergonomic of characters
-- Coordinates for characters (not in Move), and for covers and obstacles
+                                    - Coordinates for characters (not in Move)
 - Tile class does a lot of things, fraction it (in Coordinates and a new class like Tile renderer)
 - Optimization: create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
 - C__Look -> fusion GetCoordinatesOfLineOfSightOn() and GetCoordinatesOfFullLineOfSightOn() together with LoS.TileInclusion
@@ -33,6 +33,7 @@
 - Tiles material work with an enum, use a Scriptable object instead
 - Turns -> Victory to events
 - Animator of the characters
+- Rename Character in Unit
 
 ## FEATURES
 
