@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine.UI;
 using static M__Managers;
 
-public class C__Character : MonoBehaviour
+public class C__Character : Entity
 {
     public C_Move move;
     public C_Look look;
@@ -18,13 +19,31 @@ public class C__Character : MonoBehaviour
     [Space]
     public C_WeaponHolder weaponHolder;
 
-    public Team team => Team();
-    public int movementRange => move.movementRange;
-    public int x => move.x;
-    public int y => move.y;
-    public Coordinates coordinates => tile.coordinates;
-    public Tile tile => Tile();
-    
+    public Team team
+    {
+        get { return Team(); }
+    }
+
+    public int movementRange
+    {
+        get { return move.movementRange; }
+    }
+
+    public int x
+    {
+        get { return coordinates.x; }
+    }
+
+    public int y
+    {
+        get { return coordinates.y; }
+    }
+
+    public Tile tile
+    {
+        get { return Tile(); }
+    }
+
     private bool hasPlayed = false;
     
     // ======================================================================
@@ -42,16 +61,20 @@ public class C__Character : MonoBehaviour
     /// <param name="y"></param>
     public void MoveAt(int x, int y)
     {
-        move.x = x;
-        move.y = y;
+        coordinates.x = x;
+        coordinates.y = y;
         transform.position = new Vector3(x, 0, y);
+        EditorUtility.SetDirty(this);
     }
 
     /// <summary>
     /// Return the team of this character.
     /// </summary>
     /// <returns></returns>
-    public Team Team() => infos.team;
+    public Team Team()
+    {
+        return infos.team;
+    }
 
     /// <summary>
     /// Enable the feedbacks on the movable tiles and the attackable tiles.
@@ -80,16 +103,22 @@ public class C__Character : MonoBehaviour
     }
 
     /// <summary>
-    /// Return if the character has already play.
+    /// Return if the character has already played.
     /// </summary>
     /// <returns></returns>
-    public bool CanPlay() => !hasPlayed;
+    public bool CanPlay()
+    {
+        return !hasPlayed;
+    }
 
     /// <summary>
     /// Set hasPlay to true or false;
     /// </summary>
     /// <param name="value"></param>
-    public void SetCanPlayValue(bool value) => hasPlayed = !value;
+    public void SetCanPlayValue(bool value)
+    {
+        hasPlayed = !value;
+    }
 
     // ======================================================================
     // PRIVATE METHODS
@@ -99,6 +128,7 @@ public class C__Character : MonoBehaviour
     /// Return the tile of this character.
     /// </summary>
     /// <returns></returns>
-    private Tile Tile() => _board ? _board.GetTileAtCoordinates(move.x, move.y) : FindAnyObjectByType<M_Board>().GetTileAtCoordinates(move.x, move.y);
-
+    private Tile Tile() => _board
+            ? _board.GetTileAtCoordinates(coordinates.x, coordinates.y)
+            : FindAnyObjectByType<M_Board>().GetTileAtCoordinates(coordinates.x, coordinates.y);
 }

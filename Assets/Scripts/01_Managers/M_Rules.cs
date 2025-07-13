@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class M_Rules : MonoBehaviour
@@ -67,17 +68,22 @@ public class M_Rules : MonoBehaviour
                 ?.AddCharacter(characterToAdd);
         else
             teamsPlayOrder.Add(new TeamPlayOrder(characterToAdd.team, characterToAdd));
+        
+        EditorUtility.SetDirty(this);
     }
     
     /// <summary>
     /// Remove a character from the Team play order
     /// </summary>
     /// <param name="characterToRemove"></param>
-    public void RemoveCharacter(C__Character characterToRemove) => 
+    public void RemoveCharacter(C__Character characterToRemove)
+    {
         teamsPlayOrder
             .FirstOrDefault(tpo => tpo.GetTeam() == characterToRemove.team)
             ?.RemoveCharacter(characterToRemove);
-
+        
+        EditorUtility.SetDirty(this);
+    }
 
     // ======================================================================
     // PRIVATE METHODS

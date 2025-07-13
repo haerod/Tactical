@@ -22,10 +22,6 @@ public class C_Move : MonoBehaviour
     [Range(0,1f)]
     [SerializeField] private float animSpeed = .5f;
 
-    [Header("COORDINATES (debug)")]
-    public int x = 1; // Let it serialized to set it dirty.
-    public int y = 1; // Let it serialized to set it dirty.
-
     [Header("REFERENCES")]
 
     [SerializeField] private Animator anim = null;
@@ -260,9 +256,9 @@ public class C_Move : MonoBehaviour
             else // On tile enter
             {
                 OnTileEnter();
-
-                x = currentPath[index].coordinates.x;
-                y = currentPath[index].coordinates.y;
+                
+                c.coordinates.x = currentPath[index].coordinates.x;
+                c.coordinates.y = currentPath[index].coordinates.y;
 
                 if (IsTheLastTile()) 
                 {

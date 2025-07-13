@@ -25,6 +25,7 @@ public class CharacterAutoSnap : BaseAutoSnap
 
         characters.RemoveCharacter(character);
         rules.RemoveCharacter(character);
+        EditorUtility.SetDirty(rules);
         EditorUtility.SetDirty(characters);
     }
 

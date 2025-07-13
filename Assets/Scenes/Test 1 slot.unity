@@ -713,7 +713,7 @@ PrefabInstance:
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[0]
       value: 
-      objectReference: {fileID: 1542378533}
+      objectReference: {fileID: 1206070561}
     - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: characters.Array.data[1]
       value: 
@@ -774,6 +774,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Basic Unity Tactical Tool
       objectReference: {fileID: 0}
+    - target: {fileID: 6578349929238571455, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamsPlayOrder.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6578349929238571455, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamsPlayOrder.Array.data[0].team
+      value: 
+      objectReference: {fileID: 11400000, guid: ca99a341737608f4898402b1657e9567, type: 2}
+    - target: {fileID: 6578349929238571455, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamsPlayOrder.Array.data[0].charactersPlayOrder.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6578349929238571455, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamsPlayOrder.Array.data[0].charactersPlayOrder.Array.data[0]
+      value: 
+      objectReference: {fileID: 1206070561}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
 --- !u!4 &508419246 stripped
@@ -808,7 +824,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ada860813b39a4ba2b13ff7f5a3491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &1542378532
+--- !u!114 &508419250 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6578349929238571455, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+  m_PrefabInstance: {fileID: 508419245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f83021e387e5b549bf8c011db6e945d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &871888612
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -819,17 +846,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hero (PC) - Team Light
       objectReference: {fileID: 0}
-    - target: {fileID: 2624727970125762872, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
-      propertyPath: x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2624727970125762872, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
-      propertyPath: y
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4768188108386124555, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4768188108386124555, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -871,10 +890,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6969124290023021059, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: coordinates.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969124290023021059, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: coordinates.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8177060423427345283, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: rules
+      value: 
+      objectReference: {fileID: 508419250}
     - target: {fileID: 8177060423427345283, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: character
       value: 
-      objectReference: {fileID: 1542378533}
+      objectReference: {fileID: 1206070561}
     - target: {fileID: 8177060423427345283, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: isLocated
       value: 1
@@ -885,10 +916,10 @@ PrefabInstance:
       objectReference: {fileID: 508419248}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
---- !u!114 &1542378533 stripped
+--- !u!114 &1206070561 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6969124290023021059, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
-  m_PrefabInstance: {fileID: 1542378532}
+  m_PrefabInstance: {fileID: 871888612}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -909,6 +940,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 396426724450178250, guid: 0918e49263d50824cbef9c34e442e790, type: 3}
       propertyPath: y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 396426724450178250, guid: 0918e49263d50824cbef9c34e442e790, type: 3}
+      propertyPath: coordinates.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 396426724450178250, guid: 0918e49263d50824cbef9c34e442e790, type: 3}
+      propertyPath: coordinates.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3710815326160749533, guid: 0918e49263d50824cbef9c34e442e790, type: 3}
