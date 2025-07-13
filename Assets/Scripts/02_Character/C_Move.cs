@@ -55,19 +55,23 @@ public class C_Move : MonoBehaviour
     /// <summary>
     /// Character subscribes to click event.
     /// </summary>
-    public void SubscribeToInputClick()
-    {
-        _input.OnClickOnTile += Input_OnClickOnTile;
-    }
+    public void SubscribeToInputClick() => _input.OnClickOnTile += Input_OnClickOnTile;
 
     /// <summary>
     /// Character unsubscribes to click event.
     /// </summary>
-    public void UnsubscribeToInputClick()
-    {
-        _input.OnClickOnTile -= Input_OnClickOnTile;
-    }
+    public void UnsubscribeToInputClick() => _input.OnClickOnTile -= Input_OnClickOnTile;
+
+    /// <summary>
+    /// Character subscribes to Input's OnEnterTile event.
+    /// </summary>
+    public void SubscribeToEnterTile() => _input.OnEnterTile += Input_OnEnterTile;
     
+    /// <summary>
+    /// Character unsubscribes to Input's OnEnterTile event.
+    /// </summary>
+    public void UnsubscribeToEnterTile() => _input.OnEnterTile -= Input_OnEnterTile;
+
     /// <summary>
     /// Returns the move area depending on the rules.
     /// </summary>
@@ -347,5 +351,10 @@ public class C_Move : MonoBehaviour
             clickedTile,
             Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)));
+    }
+    
+    private void Input_OnEnterTile(object sender, Tile enteredTile)
+    {
+        OrientTo(enteredTile.transform.position);
     }
 }

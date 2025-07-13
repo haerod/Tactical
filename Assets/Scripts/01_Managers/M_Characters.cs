@@ -69,7 +69,9 @@ public class M_Characters : MonoBehaviour
         {
             current.HideTilesFeedbacks();
             current.move.UnsubscribeToInputClick();
+            current.move.UnsubscribeToEnterTile();
             current.attack.UnsubscribeToInputClick();
+            current.attack.UnsubscribeToEnterTile();
             current.unitUI.Hide();
         }
 
@@ -92,7 +94,9 @@ public class M_Characters : MonoBehaviour
         if (current.behavior.playable) 
         {
             current.move.SubscribeToInputClick();
+            current.move.SubscribeToEnterTile();
             current.attack.SubscribeToInputClick();
+            current.attack.SubscribeToEnterTile();
             _input.SetActiveClick();
             _ui.SetActivePlayerUI_Turn(true);
         }

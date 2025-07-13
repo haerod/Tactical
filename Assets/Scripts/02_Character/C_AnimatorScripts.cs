@@ -5,12 +5,13 @@ using System.Collections.Generic;
 
 public class C_AnimatorScripts : MonoBehaviour
 {
-    private static readonly int Shoot = Animator.StringToHash("shoot");
+    private static readonly int Attack = Animator.StringToHash("attack");
     private static readonly int Hit = Animator.StringToHash("hit");
     private static readonly int Dodge = Animator.StringToHash("dodge");
     private static readonly int Death1 = Animator.StringToHash("death");
     private static readonly int Crouch = Animator.StringToHash("crouch");
     private static readonly int IsMelee = Animator.StringToHash("isMelee");
+    private static readonly int Aim = Animator.StringToHash("aim");
 
     [Header("REFERENCES")]
 
@@ -34,17 +35,28 @@ public class C_AnimatorScripts : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Starts shoot animation.
+    /// Starts attack animation.
     /// </summary>
-    public void StartShoot() => anim.SetBool(Shoot, true);
+    public void StartAttack() => anim.SetBool(Attack, true);
 
+    /// <summary>
+    /// Starts aim animation.
+    /// </summary>
+    public void StartAim() => anim.SetBool(Aim, true);
+    
+    /// <summary>
+    /// Stops aim animation.
+    /// </summary>
+    public void StopAim() => anim.SetBool(Aim, false);
+    
     /// <summary>
     /// Ends shoot animation.
     /// Called by animation.
     /// </summary>
-    public void EndShoot()
+    public void EndAttack()
     {
-        anim.SetBool(Shoot, false);
+        anim.SetBool(Attack, false);
+        anim.SetBool(Aim, false);
         c.attack.EndAttack();
     }
 

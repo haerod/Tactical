@@ -40,6 +40,17 @@ public class C_Attack : MonoBehaviour
         _input.OnClickOnCharacter -= Input_OnClickOnCharacter;
     }
     
+    
+    /// <summary>
+    /// Character subscribes to Input's OnEnterTile event.
+    /// </summary>
+    public void SubscribeToEnterTile() => _input.OnEnterTile += Input_OnEnterTile;
+    
+    /// <summary>
+    /// Character unsubscribes to Input's OnEnterTile event.
+    /// </summary>
+    public void UnsubscribeToEnterTile() => _input.OnEnterTile -= Input_OnEnterTile;
+
     /// <summary>
     /// Returns the current weapon.
     /// </summary>
@@ -82,7 +93,7 @@ public class C_Attack : MonoBehaviour
 
         _ui.SetActivePlayerUI_Action(false);
 
-        c.anim.StartShoot();
+        c.anim.StartAttack();
 
         int percentOfTouch = GetPercentToTouch(
             c.look.GetTilesOfLineOfSightOn(currentTarget.tile).Count,
@@ -190,5 +201,20 @@ public class C_Attack : MonoBehaviour
 
         // Attack
         Attack(clickedCharacter);
+    }
+    
+    private void Input_OnEnterTile(object sender, Tile enterTile)
+    {
+        c.move.OrientTo(enterTile.transform.position);
+        c.anim.StopAim();
+        
+        if(!enterTile.character)
+            return; // No character on the tile
+        if(c.infos.IsAlliedTo(enterTile.character))
+            return; // Character is an ally
+        if(!c.look.HasSightOn(enterTile))
+            return; // Enemy is not visible
+        
+        c.anim.StartAim();
     }
 }
