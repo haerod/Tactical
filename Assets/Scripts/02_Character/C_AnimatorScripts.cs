@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 public class C_AnimatorScripts : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class C_AnimatorScripts : MonoBehaviour
     private static readonly int Dodge = Animator.StringToHash("dodge");
     private static readonly int Death1 = Animator.StringToHash("death");
     private static readonly int Crouch = Animator.StringToHash("crouch");
+    private static readonly int IsMelee = Animator.StringToHash("isMelee");
 
     [Header("REFERENCES")]
 
@@ -21,6 +22,12 @@ public class C_AnimatorScripts : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Start()
+    {
+        anim.runtimeAnimatorController = c.weaponHolder.GetCurrentWeaponGraphics().GetWeaponAnimatorController();
+        anim.SetBool(IsMelee, c.attack.GetCurrentWeapon().IsMeleeWeapon());
+    }
 
     // ======================================================================
     // PUBLIC METHODS

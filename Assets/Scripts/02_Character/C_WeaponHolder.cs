@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +38,7 @@ public class C_WeaponHolder : MonoBehaviour
 
         foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
         {
-            bool isCurrentWeapon = testedWeaponGraphics.weapon == c.attack.GetCurrentWeapon();
+            bool isCurrentWeapon = testedWeaponGraphics.GetWeapon() == c.attack.GetCurrentWeapon();
 
             if (isCurrentWeapon)
                 currentWeaponGraphics = testedWeaponGraphics;
@@ -54,7 +55,7 @@ public class C_WeaponHolder : MonoBehaviour
     {
         foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
         {
-            bool isCurrentWeapon = testedWeaponGraphics.weapon == weapon;
+            bool isCurrentWeapon = testedWeaponGraphics.GetWeapon() == weapon;
 
             if (isCurrentWeapon)
                 currentWeaponGraphics = testedWeaponGraphics;

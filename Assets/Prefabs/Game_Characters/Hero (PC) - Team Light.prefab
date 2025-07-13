@@ -31,6 +31,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 585990fbd9f48fb4191fbc295bf6edef, type: 2}
+    - target: {fileID: 1291266390933175598, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1422904897860799220, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -71,6 +75,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1790941775955150882, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: m_WarningMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979315790688333722, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: currentWeapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 339ea4f7a238dcd47b50b79757c397c9, type: 2}
     - target: {fileID: 4214572613480681776, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -96,6 +108,10 @@ PrefabInstance:
       value: Hero (PC) - Team Light
       objectReference: {fileID: 0}
     - target: {fileID: 5711617042610792679, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6194870939422199761, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}

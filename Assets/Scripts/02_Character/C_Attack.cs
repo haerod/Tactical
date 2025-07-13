@@ -74,7 +74,7 @@ public class C_Attack : MonoBehaviour
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
 
-        int damages = UnityEngine.Random.Range(currentWeapon.damagesRange.x, currentWeapon.damagesRange.y + 1);
+        int damages = currentWeapon.GetDamages();
 
         _feedback.HideMovementFeedbacks();
         _ui.HidePercentText();
@@ -106,7 +106,7 @@ public class C_Attack : MonoBehaviour
 
         // Muzzle flare
 
-        GameObject muzzleFlash = c.weaponHolder.GetCurrentWeaponGraphics().muzzleFlash;
+        GameObject muzzleFlash = c.weaponHolder.GetCurrentWeaponGraphics().GetMuzzleFlash();
 
         if (!muzzleFlash) 
             return; // No muzzle flash
@@ -168,7 +168,7 @@ public class C_Attack : MonoBehaviour
         {
             if (success)
             {
-                target.health.AddDamages(damages, currentWeapon.damageType);
+                target.health.AddDamages(damages, currentWeapon.GetDamageTypes());
             }
             else
             {
