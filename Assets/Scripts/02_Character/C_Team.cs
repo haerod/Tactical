@@ -2,7 +2,7 @@
 using UnityEditor;
 using static M__Managers;
 
-public class C_Infos : MonoBehaviour
+public class C_Team : MonoBehaviour
 {
     public Team team;
 
@@ -47,14 +47,14 @@ public class C_Infos : MonoBehaviour
     /// </summary>
     /// <param name="testedCharacter"></param>
     /// <returns></returns>
-    public bool IsAllyOf(C__Character testedCharacter) => team == testedCharacter.team;
+    public bool IsAllyOf(C__Character testedCharacter) => team == testedCharacter.unitTeam;
 
     /// <summary>
     /// Returns true if the character is an enemy of the given character. Else returns false.
     /// </summary>
     /// <param name="testedCharacter"></param>
     /// <returns></returns>
-    public bool IsEnemyOf(C__Character testedCharacter) => team != testedCharacter.team;
+    public bool IsEnemyOf(C__Character testedCharacter) => team != testedCharacter.unitTeam;
     
     // ======================================================================
     // PRIVATE METHODS

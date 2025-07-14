@@ -68,7 +68,7 @@ public class C_Look : MonoBehaviour
                 if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
                     return true;
                 else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
-                    return VisibleTiles().Contains(chara.tile) || c.infos.IsAllyOf(_characters.current);
+                    return VisibleTiles().Contains(chara.tile) || c.team.IsAllyOf(_characters.current);
                 else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
                     return VisibleTiles().Contains(c.tile);
                 else
@@ -84,7 +84,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public List<C__Character> EnemiesVisibleInFog() => CharactersVisibleInFog()
-        .Where(testedCharacter => c.infos.IsEnemyOf(testedCharacter))
+        .Where(testedCharacter => c.team.IsEnemyOf(testedCharacter))
         .ToList();
 
     /// <summary>
@@ -119,7 +119,7 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     public C__Character ClosestEnemyOnSight() => _characters.GetCharacterList()
             .Where(o => o != c) // remove emitter
-            .Where(o => o.infos.IsEnemyOf(c)) // get only enemies
+            .Where(o => o.team.IsEnemyOf(c)) // get only enemies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight
             .OrderBy(o => GetTilesOfLineOfSightOn(o.tile).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
@@ -153,7 +153,7 @@ public class C_Look : MonoBehaviour
             else if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThrough.AlliesOnly)
             {
                 // Are obstacle if enemy && alive
-                if ((chara.infos.team != c.infos.team) && (!chara.health.IsDead())) return true; // Enemy
+                if ((chara.team.team != c.team.team) && (!chara.health.IsDead())) return true; // Enemy
             }
         }
 

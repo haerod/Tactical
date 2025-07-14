@@ -63,7 +63,7 @@ public class C_Attack : MonoBehaviour
     /// <returns></returns>
     public List<Tile> AttackableTiles() => 
         c.look.CharactersVisibleInFog()
-            .Where(chara => chara.team != c.team)
+            .Where(chara => chara.unitTeam != c.unitTeam)
             .Where(chara => c.look.HasSightOn(chara.tile))
             .Select(chara => chara.tile)
             .ToList();
@@ -196,7 +196,7 @@ public class C_Attack : MonoBehaviour
     
     private void Input_OnClickOnCharacter(object sender, C__Character clickedCharacter)
     {
-        if(clickedCharacter.team == c.team) 
+        if(clickedCharacter.unitTeam == c.unitTeam) 
             return; // Same team
 
         // Attack
@@ -210,7 +210,7 @@ public class C_Attack : MonoBehaviour
         
         if(!enterTile.character)
             return; // No character on the tile
-        if(c.infos.IsAllyOf(enterTile.character))
+        if(c.team.IsAllyOf(enterTile.character))
             return; // Character is an ally
         if(!c.look.HasSightOn(enterTile))
             return; // Enemy is not visible

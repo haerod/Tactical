@@ -325,7 +325,7 @@ public class C_Move : MonoBehaviour
     {
         if (canPassThrough == PassThrough.Nobody)
             return true;
-        if (canPassThrough == PassThrough.AlliesOnly && c.infos.IsAllyOf(character))
+        if (canPassThrough == PassThrough.AlliesOnly && c.team.IsAllyOf(character))
             return false;
 
         return false;

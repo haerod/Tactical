@@ -239,7 +239,7 @@ public class M_Feedback : MonoBehaviour
             return; // Character not in sight
         }
         
-        if (currentTarget.team == currentCharacter.team) // Character or allie
+        if (currentTarget.unitTeam == currentCharacter.unitTeam) // Character or allie
         {
             SetCursor(CursorType.Regular);
             _ui.HidePercentText();
@@ -303,7 +303,7 @@ public class M_Feedback : MonoBehaviour
                    if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
                        return true;
                    else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
-                       return visibleTiles.Contains(c.tile) || c.team == _characters.current.team;
+                       return visibleTiles.Contains(c.tile) || c.unitTeam == _characters.current.unitTeam;
                    else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
                        return visibleTiles.Contains(c.tile);
                    else

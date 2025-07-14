@@ -60,14 +60,14 @@ public class M_Rules : MonoBehaviour
     /// <param name="characterToAdd"></param>
     public void AddCharacter(C__Character characterToAdd)
     {
-        TeamPlayOrder teamToAdd = teamsPlayOrder.FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.team);
+        TeamPlayOrder teamToAdd = teamsPlayOrder.FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.unitTeam);
         
         if(teamToAdd != null)
             teamsPlayOrder
-                .FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.team)
+                .FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.unitTeam)
                 ?.AddCharacter(characterToAdd);
         else
-            teamsPlayOrder.Add(new TeamPlayOrder(characterToAdd.team, characterToAdd));
+            teamsPlayOrder.Add(new TeamPlayOrder(characterToAdd.unitTeam, characterToAdd));
         
         EditorUtility.SetDirty(this);
     }
@@ -79,7 +79,7 @@ public class M_Rules : MonoBehaviour
     public void RemoveCharacter(C__Character characterToRemove)
     {
         teamsPlayOrder
-            .FirstOrDefault(tpo => tpo.GetTeam() == characterToRemove.team)
+            .FirstOrDefault(tpo => tpo.GetTeam() == characterToRemove.unitTeam)
             ?.RemoveCharacter(characterToRemove);
         
         EditorUtility.SetDirty(this);

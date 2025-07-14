@@ -58,7 +58,7 @@ public static class Turns
         C__Character current = _characters.current;
         C__Character next = _characters
             .GetCharacterList()
-            .FirstOrDefault(c => c.team == current.team && c != current && c.behavior.playable);
+            .FirstOrDefault(c => c.unitTeam == current.unitTeam && c != current && c.behavior.playable);
 
         if(next)
             _characters.NewCurrentCharacter(next);
@@ -109,7 +109,7 @@ public static class Turns
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
-    private static TeamPlayOrder GetTeamPlayOrder(C__Character character) => _rules.GetTeamPlayOrders().FirstOrDefault(tpo => tpo.GetTeam() == character.team);
+    private static TeamPlayOrder GetTeamPlayOrder(C__Character character) => _rules.GetTeamPlayOrders().FirstOrDefault(tpo => tpo.GetTeam() == character.unitTeam);
     
     /// <summary>
     /// Checks if it's currently victory.

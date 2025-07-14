@@ -19,14 +19,14 @@ public class C__Character : Entity
     public C_Attack attack;
     public C_Cover cover;
     public C_Health health;
-    public C_Infos infos;
+    public C_Team team;
     public C_Behavior behavior;
     public C_UnitUI unitUI;
     public C_AnimatorScripts anim; // With animator / skinned mesh renderer
     [Space]
     public C_WeaponHolder weaponHolder;
 
-    public Team team => Team();
+    public Team unitTeam => Team();
     public int movementRange => move.movementRange;
     public Tile tile => Tile();
     
@@ -57,7 +57,7 @@ public class C__Character : Entity
     /// Returns the team of this character.
     /// </summary>
     /// <returns></returns>
-    public Team Team() => infos.team;
+    public Team Team() => team.team;
 
     /// <summary>
     /// Enables the feedbacks on the movable tiles and the attackable tiles.

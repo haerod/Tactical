@@ -8,13 +8,16 @@ using System;
 [ExecuteInEditMode]
 public class CharacterAutoRename : MonoBehaviour
 {
+    [SerializeField] private string playableCharacterDesignation = "PC";
+    [SerializeField] private string notPlayableCharacterDesignation = "NPC";
+    
     private C__Character current;
 
     private bool previousBehavior;
     private Team previousTeam;
     private string previousName;
     private string previousTeamName;
-    private Material previousMainTeamMatrial;
+    private Material previousMainTeamMaterial;
     private Material previousSecondaryTeamMaterial;
 
     // ======================================================================
@@ -32,7 +35,7 @@ public class CharacterAutoRename : MonoBehaviour
         current = GetComponent<C__Character>();
 
         previousBehavior = current.behavior.playable;
-        previousTeam = current.team;
+        previousTeam = current.unitTeam;
         previousName = current.unitName;
         EditorUtility.SetDirty(this);
     }
@@ -60,11 +63,11 @@ public class CharacterAutoRename : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     private bool AreModifications() => previousBehavior != current.behavior.playable 
-        || previousTeam != current.infos.team 
+        || previousTeam != current.team.team 
         || previousName != current.unitName
-        || previousMainTeamMatrial != current.team.mainMaterial
-        || previousSecondaryTeamMaterial != current.team.secondaryMaterial
-        || previousTeamName != current.team.name;
+        || previousMainTeamMaterial != current.unitTeam.mainMaterial
+        || previousSecondaryTeamMaterial != current.unitTeam.secondaryMaterial
+        || previousTeamName != current.unitTeam.name;
 
     /// <summary>
     /// Update the modification checkers values.
@@ -72,11 +75,11 @@ public class CharacterAutoRename : MonoBehaviour
     private void UpdateModificationValues()
     {
         previousBehavior = current.behavior.playable;
-        previousTeam = current.infos.team;
+        previousTeam = current.team.team;
         previousName = current.unitName;
-        previousMainTeamMatrial = current.team.mainMaterial;
-        previousSecondaryTeamMaterial = current.team.secondaryMaterial;
-        previousTeamName = current.team.name;
+        previousMainTeamMaterial = current.unitTeam.mainMaterial;
+        previousSecondaryTeamMaterial = current.unitTeam.secondaryMaterial;
+        previousTeamName = current.unitTeam.name;
         EditorUtility.SetDirty(this);
     }
 
@@ -85,12 +88,12 @@ public class CharacterAutoRename : MonoBehaviour
     /// </summary>
     private void AutoRename()
     {
-        if (current.team)
+        if (current.unitTeam)
         {
             current.name = string.Format("{0} ({2}) - Team {1}",
                 current.unitName,
-                current.team.name,
-                current.behavior.playable ? "PC" : "NPC");
+                current.unitTeam.name,
+                current.behavior.playable ? playableCharacterDesignation : notPlayableCharacterDesignation);
         }
 
         EditorUtility.SetDirty(current.gameObject); // Save the character modifications
@@ -102,6 +105,6 @@ public class CharacterAutoRename : MonoBehaviour
     /// </summary>
     private void AutoAssignMaterials()
     {
-        current.infos.SetTeamMaterials();
+        current.team.SetTeamMaterials();
     }
 }
