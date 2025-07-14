@@ -377,7 +377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e5d6fc09cba5b349818529571443bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  designation: Name
   team: {fileID: 11400000, guid: ca99a341737608f4898402b1657e9567, type: 2}
   rend1: {fileID: 5193888126871477251}
   rend2: {fileID: 813525511553365662}
@@ -1299,6 +1298,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eac94c737f171dc49bf201bbef3a812e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coordinates:
+    x: 0
+    y: 0
+  unitName: Name
   move: {fileID: 8502731826044868807}
   look: {fileID: 7012095028157842997}
   attack: {fileID: 2979315790688333722}
@@ -1340,6 +1343,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 943423aaa5fa14a4caac8674c2c89f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playableCharacterDesignation: PC
+  notPlayableCharacterDesignation: NPC
 --- !u!114 &4756383859722049125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1620,8 +1625,6 @@ MonoBehaviour:
   movementInFogOfWarAllowed: 1
   speed: 6.5
   animSpeed: 1
-  x: 1
-  y: 1
   anim: {fileID: 1790941775955150882}
   c: {fileID: 3541061014796538876}
 --- !u!1 &7219477851310167239

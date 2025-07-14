@@ -110,7 +110,7 @@ public class C_Move : MonoBehaviour
         if (_rules.enableFogOfWar)
             toReturn.AddRange(_characters.GetCharacterList()
                 .Where(chara => IsBlockingPath(chara))
-                .Intersect(c.look.CharactersInView())
+                .Intersect(c.look.CharactersVisibleInFog())
                 .Select(chara => chara.tile)
                 .ToList());
 
@@ -325,7 +325,7 @@ public class C_Move : MonoBehaviour
     {
         if (canPassThrough == PassThrough.Nobody)
             return true;
-        if (canPassThrough == PassThrough.AlliesOnly && c.infos.IsAlliedTo(character))
+        if (canPassThrough == PassThrough.AlliesOnly && c.infos.IsAllyOf(character))
             return false;
 
         return false;

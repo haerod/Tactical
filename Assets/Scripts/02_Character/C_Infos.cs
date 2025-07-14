@@ -4,13 +4,11 @@ using static M__Managers;
 
 public class C_Infos : MonoBehaviour
 {
-    public string designation = "Name";
     public Team team;
 
     [Header("REFERENCES")]
-    //[SerializeField] private C__Character c = null;
-    [SerializeField] private Renderer rend1 = null;
-    [SerializeField] private Renderer rend2 = null;
+    [SerializeField] private Renderer rend1;
+    [SerializeField] private Renderer rend2;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -21,15 +19,15 @@ public class C_Infos : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Set the team materials to the character.
+    /// Sets the team materials to the character.
     /// Called by CharacterAutoRename.
     /// </summary>
     public void SetTeamMaterials()
     {
         if(!team)
         {
-            Debug.LogError(designation + " doesn't have a team. Please assign a team.");
-            return;
+            Debug.LogError(transform.parent.name + " doesn't have a team. Please assign a team.", transform.parent.gameObject);
+            return; // No team assigned
         }
 
         if (rend1 && team.mainMaterial)
@@ -45,12 +43,19 @@ public class C_Infos : MonoBehaviour
     }
 
     /// <summary>
-    /// Return if the character in parameter is in the same team than this character.
+    /// Returns true if the character is an ally of the given character. Else returns false.
     /// </summary>
-    /// <param name="other"></param>
+    /// <param name="testedCharacter"></param>
     /// <returns></returns>
-    public bool IsAlliedTo(C__Character other) => team == other.team;
+    public bool IsAllyOf(C__Character testedCharacter) => team == testedCharacter.team;
 
+    /// <summary>
+    /// Returns true if the character is an enemy of the given character. Else returns false.
+    /// </summary>
+    /// <param name="testedCharacter"></param>
+    /// <returns></returns>
+    public bool IsEnemyOf(C__Character testedCharacter) => team != testedCharacter.team;
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

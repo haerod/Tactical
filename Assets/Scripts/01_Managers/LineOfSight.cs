@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class LineOfSight
 {
-    public enum TileInclusion { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd}
+    public enum Including {Nothing, StartOnly, EndOnly, StartAndEnd}
     
     // ======================================================================
     // PUBLIC METHODS
@@ -11,39 +11,38 @@ public static class LineOfSight
     
     /// <summary>
     /// Returns a line of sight from a tile to another one.
+    /// Uses a Bresenham's line algorithm.
     /// </summary>
-    /// <param name="startTile"></param>
-    /// <param name="endTile"></param>
-    /// <param name="parameters"></param>
+    /// <param name="startCoordinate"></param>
+    /// <param name="endCoordinate"></param>
+    /// <param name="inclusion"></param>
     /// <returns></returns>
-    public static List<Coordinates> GetLineOfSight(Tile startTile, Tile endTile, TileInclusion parameters = TileInclusion.WithoutStartAndEnd)
+    public static List<Coordinates> GetLineOfSight(Coordinates startCoordinate, Coordinates endCoordinate, Including inclusion = Including.Nothing)
     {
-        // Get Vector between start and end coordinates (Start tile - end tile)
-        Vector2 v2 = new Vector2(endTile.coordinates.x - startTile.coordinates.x, endTile.coordinates.y - startTile.coordinates.y);
-
-        // Get the length of distance
-        float length = Mathf.Max(Mathf.Abs(v2.x), Mathf.Abs(v2.y));
-
         List<Coordinates> toReturn = new List<Coordinates>();
+        
+        // Get Vector between start and end coordinates (Start tile - end tile)
+        Vector2 segmentDirection = new Vector2(endCoordinate.x - startCoordinate.x, endCoordinate.y - startCoordinate.y);
+        // Get the length of distance
+        float length = Mathf.Max(Mathf.Abs(segmentDirection.x), Mathf.Abs(segmentDirection.y));
 
-        if(parameters is TileInclusion.WithStart or TileInclusion.WithStartAndEnd)
-        {
-            toReturn.Add(startTile.coordinates);
-        }
+        if(inclusion is Including.StartOnly or Including.StartAndEnd)
+            toReturn.Add(startCoordinate);
 
         for (int i = 1; i < length+1; i++)
         {
             // Theoretic coordinates of the segment
-            Vector2 tile = new Vector2(startTile.coordinates.x, startTile.coordinates.y) + i / length * v2;
-            Coordinates tileCoordinates =  new Coordinates(Mathf.RoundToInt(tile.x), Mathf.RoundToInt(tile.y));
+            Vector2 theoreticalCoordinates = new Vector2(startCoordinate.x, startCoordinate.y) + i / length * segmentDirection;
+            Coordinates realCoordinates =  new Coordinates(Mathf.RoundToInt(theoreticalCoordinates.x), Mathf.RoundToInt(theoreticalCoordinates.y));
             // if t is null, it's a hole
-            toReturn.Add(tileCoordinates);
+            toReturn.Add(realCoordinates);
         }
-
-        if (parameters is TileInclusion.WithStart or TileInclusion.WithoutStartAndEnd)
-        {
-            toReturn.Remove(endTile.coordinates);
-        }
+        
+        if(inclusion is Including.EndOnly)
+            return toReturn; // End only
+        
+        if (inclusion is Including.StartOnly or Including.Nothing)
+            toReturn.Remove(endCoordinate);
 
         return toReturn;
     }

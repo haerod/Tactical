@@ -39,7 +39,7 @@ public class C_Cover : MonoBehaviour
     {
         List<CoverInfo> infosToReturn = new List<CoverInfo>();
         List<C_Look> viewersInView = c.look
-            .EnemiesInView()
+            .EnemiesVisibleInFog()
             .Select(character => character.look)
             .ToList();
 
@@ -106,7 +106,7 @@ public class C_Cover : MonoBehaviour
         if (coversAround.Count == 0)
             return null; // No cover around
         
-        List<C_Look> enemiesInView = c.look.EnemiesInView()
+        List<C_Look> enemiesInView = c.look.EnemiesVisibleInFog()
             .Select(testedEnemy => testedEnemy.look)
             .Where(testedViewer => testedViewer.HasSightOn(c.tile))
             .ToList();

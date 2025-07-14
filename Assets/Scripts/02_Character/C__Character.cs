@@ -2,11 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static M__Managers;
 
 public class C__Character : Entity
 {
+    [Header("NAME")]
+    
+    public string unitName = "Name";
+
+    [Header("REFERENCES")]
+    
     public C_Move move;
     public C_Look look;
     public C_Attack attack;
@@ -19,31 +26,10 @@ public class C__Character : Entity
     [Space]
     public C_WeaponHolder weaponHolder;
 
-    public Team team
-    {
-        get { return Team(); }
-    }
-
-    public int movementRange
-    {
-        get { return move.movementRange; }
-    }
-
-    public int x
-    {
-        get { return coordinates.x; }
-    }
-
-    public int y
-    {
-        get { return coordinates.y; }
-    }
-
-    public Tile tile
-    {
-        get { return Tile(); }
-    }
-
+    public Team team => Team();
+    public int movementRange => move.movementRange;
+    public Tile tile => Tile();
+    
     private bool hasPlayed = false;
     
     // ======================================================================
@@ -55,7 +41,7 @@ public class C__Character : Entity
     // ======================================================================
 
     /// <summary>
-    /// Move the character at coordinates in world space and set Move to values.
+    /// Moves the character at coordinates in world space.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -68,16 +54,13 @@ public class C__Character : Entity
     }
 
     /// <summary>
-    /// Return the team of this character.
+    /// Returns the team of this character.
     /// </summary>
     /// <returns></returns>
-    public Team Team()
-    {
-        return infos.team;
-    }
+    public Team Team() => infos.team;
 
     /// <summary>
-    /// Enable the feedbacks on the movable tiles and the attackable tiles.
+    /// Enables the feedbacks on the movable tiles and the attackable tiles.
     /// </summary>
     public void EnableTilesFeedbacks()
     {
@@ -94,7 +77,7 @@ public class C__Character : Entity
     }
 
     /// <summary>
-    /// Clear the feedbacks on the movable tiles and the attackable tiles and clear the linked lists.
+    /// Clears the feedbacks on the movable tiles and the attackable tiles and clears the linked lists.
     /// </summary>
     public void HideTilesFeedbacks()
     {
@@ -103,16 +86,13 @@ public class C__Character : Entity
     }
 
     /// <summary>
-    /// Return if the character has already played.
+    /// Returns if the character has already played.
     /// </summary>
     /// <returns></returns>
-    public bool CanPlay()
-    {
-        return !hasPlayed;
-    }
+    public bool CanPlay() => !hasPlayed;
 
     /// <summary>
-    /// Set hasPlay to true or false;
+    /// Sets hasPlay to true or false.
     /// </summary>
     /// <param name="value"></param>
     public void SetCanPlayValue(bool value)
@@ -125,7 +105,7 @@ public class C__Character : Entity
     // ======================================================================
 
     /// <summary>
-    /// Return the tile of this character.
+    /// Returns the tile of this character.
     /// </summary>
     /// <returns></returns>
     private Tile Tile() => _board

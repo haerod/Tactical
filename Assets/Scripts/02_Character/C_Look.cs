@@ -8,13 +8,13 @@ using System;
 public class C_Look : MonoBehaviour
 {
     [SerializeField] private int range = 5;
-    [SerializeField] private List<TileType> visualObstacles = null;
+    [SerializeField] private List<TileType> visualObstacles;
     public enum VisionType { SingleVision, GroupVision}
     public VisionType visionType = VisionType.GroupVision;
 
     [Header("REFERENCES")]
     
-    [SerializeField] private C__Character c = null;
+    [SerializeField] private C__Character c;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -57,10 +57,10 @@ public class C_Look : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the other characters visible by this character, depending on the rules.
+    /// Returns the characters visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<C__Character> CharactersInView()
+    public List<C__Character> CharactersVisibleInFog()
     {
         return _characters.GetCharacterList()
             .Where(chara =>
@@ -68,7 +68,7 @@ public class C_Look : MonoBehaviour
                 if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
                     return true;
                 else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
-                    return VisibleTiles().Contains(chara.tile) || c.team == _characters.current.team;
+                    return VisibleTiles().Contains(chara.tile) || c.infos.IsAllyOf(_characters.current);
                 else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
                     return VisibleTiles().Contains(c.tile);
                 else
@@ -80,11 +80,11 @@ public class C_Look : MonoBehaviour
     }
     
     /// <summary>
-    /// Returns all the enemies in view.
+    /// Returns the enemies visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<C__Character> EnemiesInView() => CharactersInView()
-        .Where(civ => civ.team != c.team)
+    public List<C__Character> EnemiesVisibleInFog() => CharactersVisibleInFog()
+        .Where(testedCharacter => c.infos.IsEnemyOf(testedCharacter))
         .ToList();
 
     /// <summary>
@@ -109,25 +109,9 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
-    public List<Tile> GetTilesOfLineOfSightOn(Tile targetTile) => GetCoordinatesOfLineOfSightOn(targetTile)
+    public List<Tile> GetTilesOfLineOfSightOn(Tile targetTile) =>  LineOfSight.GetLineOfSight(c.coordinates, targetTile.coordinates)
             .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
             .ToList();
-
-    /// <summary>
-    /// Returns the coordinates in the line of sight of the character on a tile.
-    /// </summary>
-    /// <param name="targetTile"></param>
-    /// <returns></returns>
-    public List<Coordinates> GetCoordinatesOfLineOfSightOn(Tile targetTile)=> LineOfSight.GetLineOfSight(c.tile, targetTile)
-        .ToList();
-    
-    /// <summary>
-    /// Returns the coordinates in the line of sight of the character on a tile.
-    /// </summary>
-    /// <param name="targetTile"></param>
-    /// <returns></returns>
-    public List<Coordinates> GetCoordinatesOfFullLineOfSightOn(Tile targetTile)=> LineOfSight.GetLineOfSight(c.tile, targetTile, LineOfSight.TileInclusion.WithStartAndEnd)
-        .ToList();
     
     /// <summary>
     /// Returns the closest enemy on sight.
@@ -135,7 +119,7 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     public C__Character ClosestEnemyOnSight() => _characters.GetCharacterList()
             .Where(o => o != c) // remove emitter
-            .Where(o => o.Team() != c.Team()) // remove allies
+            .Where(o => o.infos.IsEnemyOf(c)) // get only enemies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight
             .OrderBy(o => GetTilesOfLineOfSightOn(o.tile).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
