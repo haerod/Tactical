@@ -14,6 +14,7 @@ public class C__Character : Entity
 
     [Header("REFERENCES")]
     
+    public C_Actions actions;
     public C_Move move;
     public C_Look look;
     public C_Attack attack;
