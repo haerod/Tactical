@@ -36,7 +36,7 @@ public class M_UI : MonoBehaviour
         _characters.GetCharacterList()
             .ForEach(character => DisplayCharacterCoverState(character, character.cover.GetCoverState()));
 
-        _input.OnClickOnCharacter += Input_OnClickOnCharacter;
+        _input.OnCharacterClick += InputOnCharacterClick;
     }
 
     // ======================================================================
@@ -114,7 +114,7 @@ public class M_UI : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Input_OnClickOnCharacter(object sender, C__Character e)
+    private void InputOnCharacterClick(object sender, C__Character e)
     {
         HidePercentText();
     }

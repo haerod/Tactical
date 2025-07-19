@@ -32,8 +32,8 @@ public class M_Characters : MonoBehaviour
 
     private void Start()
     {
-        _input.OnEnterTile += Input_OnEnterTile;
-        _input.OnExitTile += Input_OnExitTile;
+        _input.OnTileEnter += InputOnTileEnter;
+        _input.OnTileExit += InputOnTileExit;
         NewCurrentCharacter(_rules.GetFirstCharacter());
     }
 
@@ -68,12 +68,7 @@ public class M_Characters : MonoBehaviour
         if (current)
         {
             current.HideTilesFeedbacks();
-            current.move.UnsubscribeToInputClick();
-            current.move.UnsubscribeToEnterTile();
-            current.attack.UnsubscribeToInputClick();
-            current.attack.UnsubscribeToEnterTile();            
-            current.actions.UnsubscribeToInputClick();
-            current.actions.UnsubscribeToEnterTile();
+            current.actions.UnsubscribeToEvents();
             current.unitUI.Hide();
         }
 
@@ -95,12 +90,7 @@ public class M_Characters : MonoBehaviour
         // Playable character (PC)
         if (current.behavior.playable) 
         {
-            current.move.SubscribeToInputClick();
-            current.move.SubscribeToEnterTile();
-            current.attack.SubscribeToInputClick();
-            current.attack.SubscribeToEnterTile();
-            current.actions.SubscribeToInputClick();
-            current.actions.SubscribeToEnterTile();
+            current.actions.SubscribeToEvents();
             _input.SetActiveClick();
             _ui.SetActivePlayerUI_Turn(true);
         }
@@ -143,13 +133,13 @@ public class M_Characters : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Input_OnEnterTile(object sender, Tile tile)
+    private void InputOnTileEnter(object sender, Tile tile)
     {
         if(tile.character)
             OnCharacterHover?.Invoke(this, tile.character);
     }
 
-    private void Input_OnExitTile(object sender, Tile tile)
+    private void InputOnTileExit(object sender, Tile tile)
     {
         if(tile.character)
             OnCharacterExit?.Invoke(this, tile.character);

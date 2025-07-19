@@ -5,8 +5,10 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class C_Move : MonoBehaviour
+public class A_Move : A__Action
 {
+    [Header("PARAMETERS")]
+
     public int movementRange = 6;
     public bool useDiagonalMovement = true;
     public enum PassThrough {Everybody, Nobody, AlliesOnly}
@@ -22,15 +24,9 @@ public class C_Move : MonoBehaviour
     [Range(0,1f)]
     [SerializeField] private float animSpeed = .5f;
 
-    [Header("REFERENCES")]
-
-    [SerializeField] private Animator anim = null;
-    [SerializeField] private C__Character c  = null;
-
-    private List<Tile> currentPath = null;
-    private int index = 0;
+    private List<Tile> currentPath;
+    private int index;
     private Vector3 destination;
-    private readonly int Speed = Animator.StringToHash("speed");
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -45,26 +41,6 @@ public class C_Move : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Character subscribes to click event.
-    /// </summary>
-    public void SubscribeToInputClick() => _input.OnClickOnTile += Input_OnClickOnTile;
-
-    /// <summary>
-    /// Character unsubscribes to click event.
-    /// </summary>
-    public void UnsubscribeToInputClick() => _input.OnClickOnTile -= Input_OnClickOnTile;
-
-    /// <summary>
-    /// Character subscribes to Input's OnEnterTile event.
-    /// </summary>
-    public void SubscribeToEnterTile() => _input.OnEnterTile += Input_OnEnterTile;
-    
-    /// <summary>
-    /// Character unsubscribes to Input's OnEnterTile event.
-    /// </summary>
-    public void UnsubscribeToEnterTile() => _input.OnEnterTile -= Input_OnEnterTile;
 
     /// <summary>
     /// Returns the move area depending on the rules.
@@ -208,7 +184,7 @@ public class C_Move : MonoBehaviour
         destination = path[index].transform.position;
         OrientTo(path[index].transform.position);
 
-        anim.SetFloat(Speed, animSpeed); // Blend tree anim speed
+        c.anim.SetSpeed(animSpeed); // Blend tree anim speed
         c.anim.ExitCrouch();
 
         _input.SetActiveClick(false);
@@ -255,8 +231,6 @@ public class C_Move : MonoBehaviour
             }
             else // On tile enter
             {
-                OnTileEnter();
-                
                 c.coordinates.x = currentPath[index].coordinates.x;
                 c.coordinates.y = currentPath[index].coordinates.y;
 
@@ -295,7 +269,7 @@ public class C_Move : MonoBehaviour
     /// </summary>
     private void EndMove()
     {
-        anim.SetFloat(Speed, 0f);
+        c.anim.SetSpeed(0f);
         
         if(c.cover.AreCoversAround())
             c.anim.EnterCrouch();
@@ -310,11 +284,6 @@ public class C_Move : MonoBehaviour
 
         Turns.EndTurn();
     }
-    
-    /// <summary>
-    /// Happens when the character enters a tile.
-    /// </summary>
-    private void OnTileEnter() {}
     
     /// <summary>
     /// Returns true if the character blocks the path, depending on the capacity to pass through other characters.
@@ -335,7 +304,7 @@ public class C_Move : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Input_OnClickOnTile(object sender, Tile clickedTile)
+    protected override void Input_OnTileClick(object sender, Tile clickedTile)
     {
         if (!CanMoveTo(clickedTile)) 
             return; // Tile out of movement range
@@ -346,8 +315,8 @@ public class C_Move : MonoBehaviour
             Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)));
     }
-    
-    private void Input_OnEnterTile(object sender, Tile enteredTile)
+
+    protected override void Input_OnTileEnter(object sender, Tile enteredTile)
     {
         OrientTo(enteredTile.transform.position);
     }

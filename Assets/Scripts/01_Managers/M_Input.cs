@@ -24,8 +24,10 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode zoomOutKey = KeyCode.G;
     
     public event EventHandler<bool> OnChangeClickActivation;
-    public event EventHandler<Tile> OnEnterTile;
-    public event EventHandler<Tile> OnExitTile;
+    
+    public event EventHandler<Tile> OnTileEnter;
+    public event EventHandler<Tile> OnTileExit;
+    public event EventHandler<Tile> OnTileClick;
     
     public event EventHandler<Coordinates> OnMovingCameraInput;
     public event EventHandler<int> OnZoomingCameraInput;
@@ -33,8 +35,7 @@ public class M_Input : MonoBehaviour
     public event EventHandler OnEndTurnInput;
     public event EventHandler OnChangeCharacterInput;
     
-    public event EventHandler <C__Character> OnClickOnCharacter;
-    public event EventHandler<Tile> OnClickOnTile;
+    public event EventHandler <C__Character> OnCharacterClick;
     
     private bool canClick = true;
     private Tile pointedTile;
@@ -110,18 +111,18 @@ public class M_Input : MonoBehaviour
                 return; // Already on pointed tile
 
             if(pointedTile)
-                OnExitTile?.Invoke(this, pointedTile);
+                OnTileExit?.Invoke(this, pointedTile);
             
             pointedTile = tile;
 
-            OnEnterTile?.Invoke(this, pointedTile);
+            OnTileEnter?.Invoke(this, pointedTile);
         }
         else
         {
             if (!pointedTile) 
                 return; // No pointed tile
             
-            OnExitTile?.Invoke(this, pointedTile);
+            OnTileExit?.Invoke(this, pointedTile);
             pointedTile = null;
         }
     }
@@ -137,9 +138,9 @@ public class M_Input : MonoBehaviour
             return; // Not on a tile
 
         if (pointedTile.character)
-            OnClickOnCharacter?.Invoke(this, pointedTile.character);
+            OnCharacterClick?.Invoke(this, pointedTile.character);
         else
-            OnClickOnTile?.Invoke(this, pointedTile);;
+            OnTileClick?.Invoke(this, pointedTile);;
     }
 
     /// <summary>

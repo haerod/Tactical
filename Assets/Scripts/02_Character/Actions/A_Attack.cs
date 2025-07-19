@@ -5,15 +5,13 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 
-public class C_Attack : MonoBehaviour
+public class A_Attack : A__Action
 {
+    [Header("PARAMETERS")]
+    
     [SerializeField] private int precision = 100;
     [SerializeField] private Weapon currentWeapon;
-
-    [Header("REFERENCES")]
     
-    [SerializeField] private C__Character c = null;
-
     private Action onAttackDone;
 
     // ======================================================================
@@ -23,33 +21,6 @@ public class C_Attack : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Character subscribes to click event.
-    /// </summary>
-    public void SubscribeToInputClick()
-    {
-        _input.OnClickOnCharacter += Input_OnClickOnCharacter;
-    }
-
-    /// <summary>
-    /// Character unsubscribes to click event.
-    /// </summary>
-    public void UnsubscribeToInputClick()
-    {
-        _input.OnClickOnCharacter -= Input_OnClickOnCharacter;
-    }
-    
-    
-    /// <summary>
-    /// Character subscribes to Input's OnEnterTile event.
-    /// </summary>
-    public void SubscribeToEnterTile() => _input.OnEnterTile += Input_OnEnterTile;
-    
-    /// <summary>
-    /// Character unsubscribes to Input's OnEnterTile event.
-    /// </summary>
-    public void UnsubscribeToEnterTile() => _input.OnEnterTile -= Input_OnEnterTile;
 
     /// <summary>
     /// Returns the current weapon.
@@ -193,26 +164,26 @@ public class C_Attack : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-    
-    private void Input_OnClickOnCharacter(object sender, C__Character clickedCharacter)
+
+    protected override void Input_OnCharacterClick(object sender, C__Character clickedCharacter)
     {
-        if(clickedCharacter.unitTeam == c.unitTeam) 
+        if(c.team.IsAllyOf(clickedCharacter)) 
             return; // Same team
 
         // Attack
         Attack(clickedCharacter);
     }
-    
-    private void Input_OnEnterTile(object sender, Tile enterTile)
+
+    protected override void Input_OnTileEnter(object sender, Tile enteredTile)
     {
-        c.move.OrientTo(enterTile.transform.position);
+        c.move.OrientTo(enteredTile.transform.position);
         c.anim.StopAim();
         
-        if(!enterTile.character)
+        if(!enteredTile.character)
             return; // No character on the tile
-        if(c.team.IsAllyOf(enterTile.character))
+        if(c.team.IsAllyOf(enteredTile.character))
             return; // Character is an ally
-        if(!c.look.HasSightOn(enterTile))
+        if(!c.look.HasSightOn(enteredTile))
             return; // Enemy is not visible
         
         c.anim.StartAim();

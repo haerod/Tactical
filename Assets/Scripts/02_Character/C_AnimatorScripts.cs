@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 public class C_AnimatorScripts : MonoBehaviour
 {
+    [Header("REFERENCES")]
+
+    public C__Character c;
+
+    [SerializeField] private Animator anim;
+    [SerializeField] private List<GameObject> visuals;
+
     private static readonly int Attack = Animator.StringToHash("attack");
     private static readonly int Hit = Animator.StringToHash("hit");
     private static readonly int Dodge = Animator.StringToHash("dodge");
@@ -12,14 +19,8 @@ public class C_AnimatorScripts : MonoBehaviour
     private static readonly int Crouch = Animator.StringToHash("crouch");
     private static readonly int IsMelee = Animator.StringToHash("isMelee");
     private static readonly int Aim = Animator.StringToHash("aim");
-
-    [Header("REFERENCES")]
-
-    public C__Character c;
-
-    [SerializeField] private Animator anim = null;
-    [SerializeField] private List<GameObject> visuals = null;
-
+    private readonly int Speed = Animator.StringToHash("speed");
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -34,6 +35,12 @@ public class C_AnimatorScripts : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Sets the Speed animator's parameter.
+    /// </summary>
+    /// <param name="speedValue"></param>
+    public void SetSpeed(float speedValue) => anim.SetFloat(Speed, speedValue);
+    
     /// <summary>
     /// Starts attack animation.
     /// </summary>

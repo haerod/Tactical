@@ -52,8 +52,8 @@ public class M_Feedback : MonoBehaviour
 
     private void Start()
     {
-        _input.OnExitTile += Input_OnExitTile;
-        _input.OnEnterTile += Input_OnEnterTile;
+        _input.OnTileExit += InputOnTileExit;
+        _input.OnTileEnter += InputOnTileEnter;
         _input.OnChangeClickActivation += Input_ChangeClickActivation;
     }
     
@@ -328,13 +328,13 @@ public class M_Feedback : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Input_OnExitTile(object sender, Tile tile)
+    private void InputOnTileExit(object sender, Tile tile)
     {
         SetCursor(CursorType.OutMovement);
         HideCoverFeedbacks();
     }
 
-    private void Input_OnEnterTile(object sender, Tile tile)
+    private void InputOnTileEnter(object sender, Tile tile)
     {
         C__Character currentCharacter = _characters.current;
         
