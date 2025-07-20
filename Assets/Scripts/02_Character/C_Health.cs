@@ -27,23 +27,23 @@ public class C_Health : MonoBehaviour
 
     [SerializeField] private C__Character c = null;
 
-    [HideInInspector] public int currentHealth = 5;
+     public int currentHealth = 5;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
-        currentHealth = health;
+        // currentHealth = health;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
     /// <summary>
-    /// Add damage amount to the health (triggering resistances and weaknesses) and check for death.
+    /// Adds damage amount to the health (triggering resistances and weaknesses) and checks for death.
     /// </summary>
     /// <param name="damage"></param>
     /// <param name="damageTypes"></param>
@@ -141,18 +141,38 @@ public class C_Health : MonoBehaviour
         c.unitUI.UpdateHealthBar();
     }
 
+    public void Heal(int healAmount, bool clampValue = true)
+    {
+        currentHealth += healAmount;
+        
+        if(!clampValue)
+            return; // Don't clamp health value
+
+        if (currentHealth > health)
+            currentHealth = health;
+        
+        _feedback.ActionEffectFeedback(healAmount.ToString(), transform.parent);
+        c.unitUI.UpdateHealthBar();
+    }
+    
     /// <summary>
-    /// Return true if the character has 0 health or less.
+    /// Returns true if the character has 0 health or less.
     /// </summary>
     /// <returns></returns>
     public bool IsDead() => currentHealth <= 0;
 
+    /// <summary>
+    /// Returns true if current health is at maximum value.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFullLife() => currentHealth == health;
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
     /// <summary>
-    /// Start the death anim, inform M_Characters of the death and disable the life bar after a second and the collider
+    /// Starts the death anim, informs M_Characters of the death and disables the life bar and the collider after a second.
     /// </summary>
     private void Death()
     {
@@ -164,14 +184,14 @@ public class C_Health : MonoBehaviour
     }
 
     /// <summary>
-    /// Start a wait for "time" seconds and execute an action.
+    /// Starts a waits for "time" seconds and executes an action.
     /// </summary>
     /// <param name="time"></param>
     /// <param name="onEnd"></param>
     private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
 
     /// <summary>
-    /// Wait for "time" seconds and execute an action.
+    /// Waits for "time" seconds and executes an action.
     /// Called by Wait() method.
     /// </summary>
     /// <param name="time"></param>

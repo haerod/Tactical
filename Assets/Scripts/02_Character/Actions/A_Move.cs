@@ -301,10 +301,15 @@ public class A_Move : A__Action
     }
     
     // ======================================================================
-    // EVENTS
+    // ACTION OVERRIDE METHODS
     // ======================================================================
-    
-    protected override void Input_OnTileClick(object sender, Tile clickedTile)
+
+    protected override void OnHoverTile(Tile hoveredTile)
+    {
+        OrientTo(hoveredTile.transform.position);
+    }
+
+    protected override void OnClickTile(Tile clickedTile)
     {
         if (!CanMoveTo(clickedTile)) 
             return; // Tile out of movement range
@@ -314,10 +319,5 @@ public class A_Move : A__Action
             clickedTile,
             Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)));
-    }
-
-    protected override void Input_OnTileEnter(object sender, Tile enteredTile)
-    {
-        OrientTo(enteredTile.transform.position);
     }
 }

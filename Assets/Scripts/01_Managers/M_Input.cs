@@ -29,16 +29,20 @@ public class M_Input : MonoBehaviour
     public event EventHandler<Tile> OnTileExit;
     public event EventHandler<Tile> OnTileClick;
     
+    public event EventHandler<C__Character> OnCharacterEnter;
+    public event EventHandler<C__Character> OnCharacterExit;
+    public event EventHandler <C__Character> OnCharacterClick;
+
     public event EventHandler<Coordinates> OnMovingCameraInput;
     public event EventHandler<int> OnZoomingCameraInput;
     public event EventHandler OnRecenterCameraInput;
     public event EventHandler OnEndTurnInput;
     public event EventHandler OnChangeCharacterInput;
     
-    public event EventHandler <C__Character> OnCharacterClick;
     
     private bool canClick = true;
-    private Tile pointedTile;
+    private Tile previousTile;
+    private C__Character previousCharacter;
     public static M_Input instance;
     
     private C__Character currentCharacter => _characters.current;
@@ -101,29 +105,50 @@ public class M_Input : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Tile tile = hit.transform.GetComponent<Tile>();
+            Tile tile;
+            C__Character character;
 
             // On a character's collider, get the character's tile
             if (hit.transform.CompareTag("Clickable"))
-                tile = hit.transform.GetComponentInParent<C__Character>().tile;
+            {
+                character = hit.transform.GetComponentInParent<C__Character>();
+                tile = character.tile;
+            }
+            else
+            {
+                tile = hit.transform.GetComponent<Tile>();
+                character = tile.character;
+            }
 
-            if (tile == pointedTile) 
-                return; // Already on pointed tile
+            if (tile == previousTile)
+                return; // Already on pointed tile / character
 
-            if(pointedTile)
-                OnTileExit?.Invoke(this, pointedTile);
+            if(previousTile)
+                OnTileExit?.Invoke(this, previousTile);
+            if(previousCharacter)
+                OnCharacterExit?.Invoke(this, previousCharacter);
             
-            pointedTile = tile;
+            previousTile = tile;
+            previousCharacter = character;
 
-            OnTileEnter?.Invoke(this, pointedTile);
+            if(tile)
+                OnTileEnter?.Invoke(this, previousTile);
+            if(character)
+                OnCharacterEnter?.Invoke(this, previousCharacter);
         }
         else
         {
-            if (!pointedTile) 
-                return; // No pointed tile
-            
-            OnTileExit?.Invoke(this, pointedTile);
-            pointedTile = null;
+            if (previousTile)
+            {
+                OnTileExit?.Invoke(this, previousTile);
+                previousTile = null;
+            }
+
+            if (previousCharacter)
+            {
+                OnCharacterExit?.Invoke(this, previousCharacter);
+                previousCharacter = null;
+            }
         }
     }
 
@@ -134,13 +159,13 @@ public class M_Input : MonoBehaviour
     {
         if (!Input.GetMouseButtonDown(0)) 
             return; // No click
-        if (!pointedTile) 
+        if (!previousTile) 
             return; // Not on a tile
 
-        if (pointedTile.character)
-            OnCharacterClick?.Invoke(this, pointedTile.character);
+        if (previousTile.character)
+            OnCharacterClick?.Invoke(this, previousTile.character);
         else
-            OnTileClick?.Invoke(this, pointedTile);;
+            OnTileClick?.Invoke(this, previousTile);;
     }
 
     /// <summary>

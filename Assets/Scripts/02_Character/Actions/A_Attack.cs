@@ -162,30 +162,30 @@ public class A_Attack : A__Action
     }
     
     // ======================================================================
-    // EVENTS
+    // ACTION OVERRIDE METHODS
     // ======================================================================
 
-    protected override void Input_OnCharacterClick(object sender, C__Character clickedCharacter)
+    protected override void OnHoverEnemy(C__Character hoveredCharacter)
+    {
+        c.move.OrientTo(hoveredCharacter.transform.position);
+        
+        if(!c.look.HasSightOn(hoveredCharacter.tile))
+            return; // Enemy is not visible
+        
+        c.anim.StartAim();
+    }
+
+    protected override void OnExitCharacter(C__Character leftCharacter)
+    {
+        c.anim.StopAim();
+    }
+    
+    protected override void OnClickAnyCharacter(C__Character clickedCharacter)
     {
         if(c.team.IsAllyOf(clickedCharacter)) 
             return; // Same team
 
         // Attack
         Attack(clickedCharacter);
-    }
-
-    protected override void Input_OnTileEnter(object sender, Tile enteredTile)
-    {
-        c.move.OrientTo(enteredTile.transform.position);
-        c.anim.StopAim();
-        
-        if(!enteredTile.character)
-            return; // No character on the tile
-        if(c.team.IsAllyOf(enteredTile.character))
-            return; // Character is an ally
-        if(!c.look.HasSightOn(enteredTile))
-            return; // Enemy is not visible
-        
-        c.anim.StartAim();
     }
 }

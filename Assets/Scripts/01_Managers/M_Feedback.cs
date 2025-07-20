@@ -9,9 +9,10 @@ public class M_Feedback : MonoBehaviour
 {
     [Header("CURSORS")]
 
-    [SerializeField] private Texture2D aimCursor = null;
-    [SerializeField] private Texture2D noLineOfSightCursor = null;
-    [SerializeField] private Texture2D cantGoCursor = null;
+    [SerializeField] private Texture2D aimCursor;
+    [SerializeField] private Texture2D noLineOfSightCursor;
+    [SerializeField] private Texture2D cantGoCursor;
+    [SerializeField] private Texture2D healCursor;
     
     [Header("COVERS")]
     
@@ -25,10 +26,10 @@ public class M_Feedback : MonoBehaviour
     public F_SelectionSquare square;
     public F_ViewLines viewLines;
     [SerializeField] private F_CoversHolder coverHolder;
-    [SerializeField] private GameObject actionEffectPrefab = null;
+    [SerializeField] private GameObject actionEffectPrefab;
     
     public static M_Feedback instance;
-    public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement } // /!\ If add/remove a cursor, update the SetCursor method
+    public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement, Heal } // /!\ If add/remove a cursor, update the SetCursor method
 
     [HideInInspector] public List<Tile> walkableTiles;
     [HideInInspector] public List<Tile> attackableTiles;
@@ -121,31 +122,6 @@ public class M_Feedback : MonoBehaviour
     public void ShowVisibleElements(List<Tile> visibleTiles) => SetFogVisualsActive(true, visibleTiles);
 
     /// <summary>
-    /// Sets cursor to its new appearance.
-    /// </summary>
-    /// <param name="type"></param>
-    public void SetCursor(CursorType type)
-    {
-        switch (type)
-        {
-            case CursorType.Regular:
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                break;
-            case CursorType.AimAndInSight:
-                Cursor.SetCursor(aimCursor, new Vector2(16, 16), CursorMode.Auto);
-                break;
-            case CursorType.OutAimOrSight:
-                Cursor.SetCursor(noLineOfSightCursor, new Vector2(16, 16), CursorMode.Auto);
-                break;
-            case CursorType.OutMovement:
-                Cursor.SetCursor(cantGoCursor, new Vector2(16, 16), CursorMode.Auto);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /// <summary>
     /// Instantiates an action effect feedback prefab over the target object.
     /// </summary>
     /// <param name="text"></param>
@@ -202,6 +178,34 @@ public class M_Feedback : MonoBehaviour
     // ======================================================================
 
     /// <summary>
+    /// Sets cursor to its new appearance.
+    /// </summary>
+    /// <param name="type"></param>
+    private void SetCursor(CursorType type)
+    {
+        switch (type)
+        {
+            case CursorType.Regular:
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                break;
+            case CursorType.AimAndInSight:
+                Cursor.SetCursor(aimCursor, new Vector2(16, 16), CursorMode.Auto);
+                break;
+            case CursorType.OutAimOrSight:
+                Cursor.SetCursor(noLineOfSightCursor, new Vector2(16, 16), CursorMode.Auto);
+                break;
+            case CursorType.OutMovement:
+                Cursor.SetCursor(cantGoCursor, new Vector2(16, 16), CursorMode.Auto);
+                break;
+            case CursorType.Heal:
+                Cursor.SetCursor(healCursor, new Vector2(16, 16), CursorMode.Auto);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /// <summary>
     /// Shows cover feedbacks of a character.
     /// </summary>
     /// <param name="centerCoordinates"></param>
@@ -239,10 +243,16 @@ public class M_Feedback : MonoBehaviour
             return; // Character not in sight
         }
         
-        if (currentTarget.unitTeam == currentCharacter.unitTeam) // Character or allie
+        if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
         {
-            SetCursor(CursorType.Regular);
             _ui.HidePercentText();
+            SetCursor(CursorType.Regular);
+
+            if (currentCharacter == currentTarget) 
+                return; // Same character
+            
+            if(!currentTarget.health.IsFullLife())
+                SetCursor(CursorType.Heal);
         }
         else // Enemy
         {

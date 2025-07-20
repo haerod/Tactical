@@ -813,6 +813,18 @@ PrefabInstance:
       propertyPath: characters
       value: 
       objectReference: {fileID: 1919535265}
+    - target: {fileID: 8583478809865441305, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: healReach
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583478809865441305, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: healAmount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9214318273669392038, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: currentHealth
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
 --- !u!114 &112499388 stripped
@@ -10871,6 +10883,18 @@ PrefabInstance:
       propertyPath: characters
       value: 
       objectReference: {fileID: 1919535265}
+    - target: {fileID: 8583478809865441305, guid: 7d4269c91ce39b74f83e79363ac10d3f, type: 3}
+      propertyPath: healReach
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583478809865441305, guid: 7d4269c91ce39b74f83e79363ac10d3f, type: 3}
+      propertyPath: healAmount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583478809865441305, guid: 7d4269c91ce39b74f83e79363ac10d3f, type: 3}
+      propertyPath: useDiagonals
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d4269c91ce39b74f83e79363ac10d3f, type: 3}
 --- !u!114 &2039534989 stripped
