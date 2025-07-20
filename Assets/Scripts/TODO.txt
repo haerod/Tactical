@@ -2,7 +2,7 @@
 
 # Character movement
 - Pathfinding is strange
-- Feedback line doesn't fit with the pathfinding (fit with the distance the character can walk)
+    - Feedback line doesn't fit with the pathfinding (fit with the distance the character can walk)
 - If character pass through another, the last one losing its tile: because tiles have only one element on it
 
 # Border tiles
@@ -20,35 +20,49 @@
 # Lifebar
 - restart the scene Example scene 3 teams -> when blue starts, it's an error on the life bar
 
+## CONTENT
+- Classes of characters
+- Free hands melee actions
+
 ## REFACTOR
 
-- Separate folders between Toy box and Technical box
+- C__Look -> fusion GetCoordinatesOfLineOfSightOn() and GetCoordinatesOfFullLineOfSightOn() together with LoS.TileInclusion
 - Rules / VISION section to push in C_View
-- Coordinates of the covers / logic of tiles hold covers
-- Fog of war in a single manager
+- Tiles material work with an enum, use a Scriptable object instead
+- Cursors in Actions (not in Feedbacks)
+
+- Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
+- Fog of war in a single manager, can be enabled and disabled
 - Separate the logic between Turns and M_Characters
 - Ergonomic of characters
-- Tile class does a lot of things, fraction it (in Coordinates and a new class like Tile renderer)
-- Optimization: create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
-- C__Look -> fusion GetCoordinatesOfLineOfSightOn() and GetCoordinatesOfFullLineOfSightOn() together with LoS.TileInclusion
+- Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
 - UI with recommendations
-- Tiles material work with an enum, use a Scriptable object instead
 - Turns -> Victory to events
 - Animator of the characters
 - Rename Character in Unit
+- Can add and remove Actions without bugs
+- Maybe use raycasts for Autosnap
+
+## OPTIMISATION
+- Create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
+- Algorithm of line of sight checking progressively the tiles around
 
 ## FEATURES
 
+- Range of weapons (melee weapons)
+- Character can throw spells (like fireball)
+- Display weapons / characters infos on UI
+
+- Separate folders between Toy box and Technical box
 - Namespaces
 - Actions systems: possibility between multiple designs
 - Online API like Unity (ask Simon)
-- Add events for everything
+- Add events (FX, sound, etc.) for everything
 - Multiple victory conditions
 - Obstacle transparency
 - Destructible obstacles
 - Better enemy behaviors
 - Large elements (multiple tiles)
-- Range of weapons (melee weapons)
 - Missing shots can touch another tile
 - Border cover can block the line of sight
 - Overwatch action
