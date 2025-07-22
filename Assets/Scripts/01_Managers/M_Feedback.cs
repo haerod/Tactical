@@ -250,9 +250,12 @@ public class M_Feedback : MonoBehaviour
 
             if (currentCharacter == currentTarget) 
                 return; // Same character
+            if(!currentCharacter.actions.HasHealAction())
+                return; // Character can't heal
+            if (currentTarget.health.IsFullLife())
+                return; // Target is full life
             
-            if(!currentTarget.health.IsFullLife())
-                SetCursor(CursorType.Heal);
+            SetCursor(CursorType.Heal);
         }
         else // Enemy
         {

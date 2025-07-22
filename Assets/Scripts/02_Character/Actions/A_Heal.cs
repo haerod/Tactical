@@ -21,6 +21,11 @@ public class A_Heal : A__Action
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Returns true if the character can be healed.
+    /// </summary>
+    /// <param name="characterToHeal"></param>
+    /// <returns></returns>
     private bool IsHealable(C__Character characterToHeal)
     {
         if(characterToHeal.health.IsFullLife())
@@ -32,7 +37,13 @@ public class A_Heal : A__Action
         
         return isOnHealReach;
     }
-    
+
+    /// <summary>
+    /// Heal the character of heal amount HP.
+    /// </summary>
+    /// <param name="characterToHeal"></param>
+    private void HealCharacter(C__Character characterToHeal) => characterToHeal.health.Heal(healAmount);
+
     // ======================================================================
     // ACTION OVERRIDE METHODS
     // ======================================================================
@@ -48,7 +59,7 @@ public class A_Heal : A__Action
     {
         if(!IsHealable(clickedCharacter))
             return; // Not healable
-        
-        clickedCharacter.health.Heal(healAmount);
+
+        HealCharacter(clickedCharacter);
     }
 }

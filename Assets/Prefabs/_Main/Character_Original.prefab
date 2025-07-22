@@ -1617,9 +1617,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99a035fea772a840b0ca1f475c81479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionTriggers:
-  - {fileID: 11400000, guid: be00b3d947b1f0646be6994f9c23cdb8, type: 2}
-  - {fileID: 11400000, guid: 3d48aa9dcc98f334ea3163bdc2c63208, type: 2}
   c: {fileID: 3541061014796538876}
   movementRange: 4
   useDiagonalMovement: 1
@@ -1722,9 +1719,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9850b7b8864d34adf42a514c4ffa68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionTriggers:
-  - {fileID: 11400000, guid: d24a0bae66ecc4a4db1bc6f3411b4631, type: 2}
   c: {fileID: 3541061014796538876}
+  healAmount: 1
+  healReach: 1
+  includeDiagonalsInReach: 1
 --- !u!1 &7446949285225605548
 GameObject:
   m_ObjectHideFlags: 0
@@ -1904,9 +1902,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e44e4e97e29e5943bb9f70529ceb844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionTriggers:
-  - {fileID: 11400000, guid: 51657387d4fecd14bbe2e775b6940db9, type: 2}
-  - {fileID: 11400000, guid: 5568a7e724f0cba408919536be045131, type: 2}
   c: {fileID: 3541061014796538876}
   precision: 100
   currentWeapon: {fileID: 11400000, guid: 415753486e8914643b27ae946ec004ac, type: 2}
