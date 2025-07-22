@@ -106,7 +106,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 2b417fb236c50294095725cb88ce7296, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -176,6 +176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileType: {fileID: 11400000, guid: 6039eeca6c9a6244cb3199ce13c0e656, type: 2}
+  tile: {fileID: 0}
+  edgeElement: {fileID: 0}
 --- !u!114 &461920283813862496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: {fileID: 11400000, guid: b8148e897a136154ca877f10c4025a85, type: 2}
-  coverPosition: {x: 0, y: 0}
+  elementPosition: {x: 0, y: 0}
 --- !u!1 &6839885580050274853
 GameObject:
   m_ObjectHideFlags: 0

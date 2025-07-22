@@ -67,7 +67,7 @@ public class A_Attack : A__Action
         c.anim.StartAttack();
 
         int percentOfTouch = GetPercentToTouch(
-            c.look.GetTilesOfLineOfSightOn(currentTarget.tile).Count,
+            c.look.GetTilesOfLineOfSightOn(currentTarget.coordinates).Count,
             currentTarget.cover.GetCoverProtectionValueFrom(c.look));
         
         if (UnityEngine.Random.Range(0, 101) < percentOfTouch) // SUCCESS

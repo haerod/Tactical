@@ -258,7 +258,7 @@ public class M_Feedback : MonoBehaviour
         {
             SetCursor(CursorType.AimAndInSight);
             _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(
-                currentCharacter.look.GetTilesOfLineOfSightOn(tile).Count,
+                currentCharacter.look.GetTilesOfLineOfSightOn(tile.coordinates).Count,
                 currentTarget.cover.GetCoverProtectionValueFrom(currentTarget.look)));        
         }
     }

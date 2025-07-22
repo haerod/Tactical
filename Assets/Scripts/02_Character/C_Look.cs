@@ -94,7 +94,7 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     public bool HasSightOn(Tile tile)
     {
-        List<Tile> los = GetTilesOfLineOfSightOn(tile);
+        List<Tile> los = GetTilesOfLineOfSightOn(tile.coordinates);
 
         if (AreObstaclesOn(los))
             return false; // Obstacles
@@ -107,9 +107,9 @@ public class C_Look : MonoBehaviour
     /// <summary>
     /// Returns the tiles in the line of sight of the character on a tile.
     /// </summary>
-    /// <param name="targetTile"></param>
+    /// <param name="targetCoordinates"></param>
     /// <returns></returns>
-    public List<Tile> GetTilesOfLineOfSightOn(Tile targetTile) =>  LineOfSight.GetLineOfSight(c.coordinates, targetTile.coordinates)
+    public List<Tile> GetTilesOfLineOfSightOn(Coordinates targetCoordinates) =>  LineOfSight.GetLineOfSight(c.coordinates, targetCoordinates)
             .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
             .ToList();
     
@@ -121,7 +121,7 @@ public class C_Look : MonoBehaviour
             .Where(o => o != c) // remove emitter
             .Where(o => o.team.IsEnemyOf(c)) // get only enemies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight
-            .OrderBy(o => GetTilesOfLineOfSightOn(o.tile).Count()) // order enemies by distance
+            .OrderBy(o => GetTilesOfLineOfSightOn(o.tile.coordinates).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
 
     // ======================================================================

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 420651716921915056}
   - component: {fileID: 7941093368329492706}
   m_Layer: 0
-  m_Name: Big obstacle
+  m_Name: Little obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 2b417fb236c50294095725cb88ce7296, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -166,6 +166,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileType: {fileID: 11400000, guid: 6039eeca6c9a6244cb3199ce13c0e656, type: 2}
+  tile: {fileID: 0}
+  edgeElement: {fileID: 0}
 --- !u!4 &7562715667709163734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 342081523400903856, guid: 31c5acd16725bd64c8be4cc521b899ac, type: 3}
