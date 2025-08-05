@@ -36,6 +36,8 @@ public class M_Camera : MonoBehaviour
     private Vector3 positionToReach;
     private Vector3 startPosition;
     private Transform target;
+
+    private float xMin, xMax, zMin, zMax;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -55,6 +57,15 @@ public class M_Camera : MonoBehaviour
         _input.OnMovingCameraInput += Input_OnMovingCameraInput;
         _input.OnZoomingCameraInput += Input_OnZoomingCameraInput;
         _input.OnRecenterCameraInput += Input_OnRecenterCameraInput;
+        _input.OnRotateRightInput += Input_OnRotateRightCameraInput;
+        _input.OnRotateLeftInput += Input_OnRotateLeftCameraInput;
+        
+        TileGrid boardTileGrid = _board.tileGrid;
+
+        xMin = boardTileGrid.lowestX;
+        xMax = boardTileGrid.higherX;
+        zMin = boardTileGrid.lowestY;
+        zMax = boardTileGrid.higherY;
     }
     
     private void Update()
@@ -118,13 +129,6 @@ public class M_Camera : MonoBehaviour
 
         transform.position = cameraPosition;
 
-        TileGrid boardTileGrid = _board.tileGrid;
-
-        float xMin = boardTileGrid.lowestX;
-        float xMax = boardTileGrid.higherX;
-        float zMin = boardTileGrid.lowestY;
-        float zMax = boardTileGrid.higherY;
-
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, xMin + xOffset, xMax + xOffset),
             target.transform.position.y + yOffset,
@@ -132,6 +136,11 @@ public class M_Camera : MonoBehaviour
             );
     }
 
+    /// <summary>
+    /// Gets the center between multiple targets.
+    /// </summary>
+    /// <param name="targetsPositions"></param>
+    /// <returns></returns>
     private Vector3 GetTargetsCenter(List<Vector3> targetsPositions)
     {
         if(targetsPositions.Count < 2)
@@ -166,7 +175,13 @@ public class M_Camera : MonoBehaviour
 
         currentCamera.transform.localPosition = Vector3.zero;
     }
-    
+
+    /// <summary>
+    /// Rotates the camera arount Y axis.
+    /// </summary>
+    /// <param name="rotationValue"></param>
+    private void RotateCamera(float rotationValue) => transform.Rotate(Vector3.up, rotationValue);
+
     // ======================================================================
     // EVENTS
     // ======================================================================
@@ -186,5 +201,9 @@ public class M_Camera : MonoBehaviour
         currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize, zoomMin, zoomMax);
     }
     
-    private void Input_OnRecenterCameraInput(object sender, EventArgs e) => _camera.ResetPosition();
+    private void Input_OnRecenterCameraInput(object sender, EventArgs e) => ResetPosition();
+    
+    private void Input_OnRotateLeftCameraInput(object sender, EventArgs e) => RotateCamera(90f);
+
+    private void Input_OnRotateRightCameraInput(object sender, EventArgs e) => RotateCamera(-90f);
 }

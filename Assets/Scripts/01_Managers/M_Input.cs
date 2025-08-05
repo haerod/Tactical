@@ -20,6 +20,9 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode leftKey = KeyCode.Q;
     [SerializeField] private KeyCode rightKey = KeyCode.D;
     [Space]
+    [SerializeField] private KeyCode rotateRightKey = KeyCode.A;
+    [SerializeField] private KeyCode rotateLeftKey = KeyCode.E;
+    [Space]
     [SerializeField] private KeyCode zoomInKey = KeyCode.T;
     [SerializeField] private KeyCode zoomOutKey = KeyCode.G;
     
@@ -38,11 +41,13 @@ public class M_Input : MonoBehaviour
     public event EventHandler OnRecenterCameraInput;
     public event EventHandler OnEndTurnInput;
     public event EventHandler OnChangeCharacterInput;
-    
+    public event EventHandler OnRotateLeftInput;
+    public event EventHandler OnRotateRightInput;
     
     private bool canClick = true;
     private Tile previousTile;
     private C__Character previousCharacter;
+    private Plane floorPlane = new Plane(Vector3.up, Vector3.zero);
     public static M_Input instance;
     
     private C__Character currentCharacter => _characters.current;
@@ -74,6 +79,7 @@ public class M_Input : MonoBehaviour
         CheckRecenterCameraInput();
         CheckCameraMovementInput();
         CheckCameraZoomInput();
+        CheckCameraRotationInput();
     }
 
     // ======================================================================
@@ -88,6 +94,18 @@ public class M_Input : MonoBehaviour
     {
         canClick = value;
         OnChangeClickActivation?.Invoke(this, value);
+    }
+
+    /// <summary>
+    /// Gets the pointer position on the floor (Plane at y = 0).
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetPointerPosition()
+    {
+        //Create a ray from the Mouse click position
+        Ray ray = _camera.GetCurrentCamera().ScreenPointToRay(Input.mousePosition);
+        floorPlane.Raycast(ray, out float enter); 
+        return ray.GetPoint(enter);
     }
     
     // ======================================================================
@@ -235,5 +253,13 @@ public class M_Input : MonoBehaviour
             return; // No input
 
         OnZoomingCameraInput?.Invoke(this, zoomAmount);
+    }
+    
+    private void CheckCameraRotationInput()
+    {
+        if(Input.GetKeyDown(rotateRightKey))
+            OnRotateRightInput?.Invoke(this, EventArgs.Empty);
+        if (Input.GetKeyDown(rotateLeftKey))
+            OnRotateLeftInput?.Invoke(this, EventArgs.Empty);
     }
 }
