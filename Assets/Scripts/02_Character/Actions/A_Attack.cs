@@ -27,6 +27,12 @@ public class A_Attack : A__Action
     /// </summary>
     /// <returns></returns>
     public Weapon GetCurrentWeapon() => currentWeapon;
+
+    /// <summary>
+    /// Changes the current weapon to the asked one.
+    /// </summary>
+    /// <param name="newWeapon"></param>
+    public void SetCurrentWeapon(Weapon newWeapon) => currentWeapon = newWeapon; 
     
     /// <summary>
     /// Returns the attackable tiles, depending on the rules.

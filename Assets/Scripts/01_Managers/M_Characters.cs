@@ -14,6 +14,7 @@ public class M_Characters : MonoBehaviour
 
     public event EventHandler<C__Character> OnCharacterHover;
     public event EventHandler<C__Character> OnCharacterExit;
+    public event EventHandler<C__Character> OnCharacterStartsTurn;
     
     public static M_Characters instance;
 
@@ -103,6 +104,8 @@ public class M_Characters : MonoBehaviour
         }
 
         current.EnableTilesFeedbacks();
+        
+        OnCharacterStartsTurn?.Invoke(this, newCurrentCharacter);
     }
 
     /// <summary>

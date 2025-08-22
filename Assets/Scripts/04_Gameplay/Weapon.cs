@@ -25,7 +25,7 @@ public class Weapon : ScriptableObject
     /// Returns the weapon's name.
     /// </summary>
     /// <returns></returns>
-    public string GetWeaponName() => weaponName;
+    public string GetName() => weaponName;
     
     /// <summary>
     /// Returns the weapon's damage range.
@@ -44,6 +44,12 @@ public class Weapon : ScriptableObject
     /// </summary>
     /// <returns></returns>
     public List<DamageType> GetDamageTypes() => damageType;
+    
+    /// <summary>
+    /// Returns the weapon's icon.
+    /// </summary>
+    /// <returns></returns>
+    public Sprite GetIcon() => icon;
 
     // ======================================================================
     // PRIVATE METHODS

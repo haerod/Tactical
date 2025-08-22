@@ -42,6 +42,7 @@
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
 - Replace Texts by TMP
+- Pass Current weapon from Attack to WeaponHolder
 
 ## OPTIMISATION
 - Create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)

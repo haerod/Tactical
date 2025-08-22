@@ -27,14 +27,23 @@ public class C_AnimatorScripts : MonoBehaviour
 
     private void Start()
     {
-        anim.runtimeAnimatorController = c.weaponHolder.GetCurrentWeaponGraphics().GetWeaponAnimatorController();
-        anim.SetBool(IsMelee, c.attack.GetCurrentWeapon().IsMeleeWeapon());
+        c.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
     }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Add the good animator controller depending on the given weapon.
+    /// </summary>
+    /// <param name="weaponGraphics"></param>
+    public void SetWeaponAnimation(WeaponGraphics weaponGraphics)
+    {
+        anim.runtimeAnimatorController = weaponGraphics.GetWeaponAnimatorController();
+        anim.SetBool(IsMelee, weaponGraphics.GetWeapon().IsMeleeWeapon());
+    }
+    
     /// <summary>
     /// Sets the Speed animator's parameter.
     /// </summary>
@@ -106,4 +115,13 @@ public class C_AnimatorScripts : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private void WeaponHolder_OnWeaponChange(object sender, WeaponGraphics weaponGraphics)
+    {
+        SetWeaponAnimation(weaponGraphics);
+    }
 }

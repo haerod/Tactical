@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class C_WeaponHolder : MonoBehaviour
@@ -13,10 +14,12 @@ public class C_WeaponHolder : MonoBehaviour
 
     private WeaponGraphics currentWeaponGraphics;
 
+    public event EventHandler<WeaponGraphics> OnWeaponChange;
+    
     // ======================================================================
     // MONOBEHAVIOR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -27,6 +30,14 @@ public class C_WeaponHolder : MonoBehaviour
     /// <returns></returns>
     public List<WeaponGraphics> GetWeaponGraphicsList() => weaponGraphicsList;
 
+    /// <summary>
+    /// Returns all the weapons as a list.
+    /// </summary>
+    /// <returns></returns>
+    public List<Weapon> GetWeaponList() => GetWeaponGraphicsList()
+        .Select(w => w.GetWeapon())
+        .ToList();
+    
     /// <summary>
     /// Returns the current weapon graphics.
     /// </summary>
@@ -46,7 +57,7 @@ public class C_WeaponHolder : MonoBehaviour
 
         return currentWeaponGraphics;
     }
-
+    
     /// <summary>
     /// Displays the asked weapon, hide the other one.
     /// </summary>
@@ -62,6 +73,8 @@ public class C_WeaponHolder : MonoBehaviour
 
             testedWeaponGraphics.gameObject.SetActive(isCurrentWeapon);
         }
+        
+        OnWeaponChange?.Invoke(this, currentWeaponGraphics);
     }
 
     // ======================================================================
