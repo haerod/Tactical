@@ -6,6 +6,7 @@ using UnityEngine;
 public class Weapon : ScriptableObject
 {
     [SerializeField] private string weaponName;
+    [SerializeField] private Sprite icon;
     [SerializeField] private Vector2Int damagesRange = new Vector2Int(3, 5);
     [SerializeField] private List<DamageType> damageType;
     [SerializeField] private bool isMeleeWeapon;
