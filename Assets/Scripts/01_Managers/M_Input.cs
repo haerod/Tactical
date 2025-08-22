@@ -31,6 +31,7 @@ public class M_Input : MonoBehaviour
     public event EventHandler<Tile> OnTileEnter;
     public event EventHandler<Tile> OnTileExit;
     public event EventHandler<Tile> OnTileClick;
+    public event EventHandler OnNoTile;
     
     public event EventHandler<C__Character> OnCharacterEnter;
     public event EventHandler<C__Character> OnCharacterExit;
@@ -167,6 +168,8 @@ public class M_Input : MonoBehaviour
                 OnCharacterExit?.Invoke(this, previousCharacter);
                 previousCharacter = null;
             }
+            
+            OnNoTile?.Invoke(this, EventArgs.Empty);
         }
     }
 

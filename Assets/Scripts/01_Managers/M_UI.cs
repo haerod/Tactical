@@ -35,8 +35,6 @@ public class M_UI : MonoBehaviour
     {
         _characters.GetCharacterList()
             .ForEach(character => DisplayCharacterCoverState(character, character.cover.GetCoverState()));
-
-        _input.OnCharacterClick += InputOnCharacterClick;
     }
 
     // ======================================================================
@@ -69,12 +67,6 @@ public class M_UI : MonoBehaviour
         endScreen.SetActive(true);
         endScreenText.text = $"{winner.unitTeam.name} are winners !";
     }
-
-    /// <summary>
-    /// Enables percent shoot text and sets the value.
-    /// </summary>
-    /// <param name="percent"></param>
-    public void ShowPercentText(int percent) => percentText.SetPercentShootText(percent);
 
     /// <summary>
     /// Disables percent shoot text.
@@ -113,9 +105,4 @@ public class M_UI : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-    
-    private void InputOnCharacterClick(object sender, C__Character e)
-    {
-        HidePercentText();
-    }
 }

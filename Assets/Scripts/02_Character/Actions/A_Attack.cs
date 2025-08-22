@@ -13,6 +13,8 @@ public class A_Attack : A__Action
     
     private Action onAttackDone;
 
+    public static event EventHandler OnAnyAttackStart;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -40,6 +42,7 @@ public class A_Attack : A__Action
     /// <param name="currentTarget"></param>
     public void Attack(C__Character currentTarget)
     {
+        
         c.SetCanPlayValue(false);
         
         if (!c.look.HasSightOn(currentTarget.tile)) 
@@ -53,8 +56,8 @@ public class A_Attack : A__Action
 
         int damages = c.weaponHolder.GetCurrentWeapon().GetDamages();
 
+        OnAnyAttackStart?.Invoke(this, EventArgs.Empty);
         _feedback.HideMovementFeedbacks();
-        _ui.HidePercentText();
         _input.SetActiveClick(false);
 
         _ui.SetActivePlayerUI_Action(false);

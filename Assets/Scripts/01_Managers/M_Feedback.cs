@@ -34,6 +34,11 @@ public class M_Feedback : MonoBehaviour
     [HideInInspector] public List<Tile> walkableTiles;
     [HideInInspector] public List<Tile> attackableTiles;
 
+    public event EventHandler<Tile> OnFreeTileEvent;
+    public event EventHandler<C__Character> OnHoverEnemy;
+    public event EventHandler<C__Character> OnHoverAlly;
+    public event EventHandler OnHoverItself;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -53,8 +58,8 @@ public class M_Feedback : MonoBehaviour
 
     private void Start()
     {
-        _input.OnTileExit += InputOnTileExit;
-        _input.OnTileEnter += InputOnTileEnter;
+        _input.OnTileExit += Input_OnTileExit;
+        _input.OnTileEnter += Input_OnTileEnter;
         _input.OnChangeClickActivation += Input_ChangeClickActivation;
     }
     
@@ -245,11 +250,15 @@ public class M_Feedback : MonoBehaviour
         
         if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
         {
-            _ui.HidePercentText();
             SetCursor(CursorType.Regular);
 
-            if (currentCharacter == currentTarget) 
+            if (currentCharacter == currentTarget)
+            {
+                OnHoverItself?.Invoke(this, EventArgs.Empty);
                 return; // Same character
+            }
+            OnHoverAlly?.Invoke(this, currentTarget);
+            
             if(!currentCharacter.actions.HasHealAction())
                 return; // Character can't heal
             if (currentTarget.health.IsFullLife())
@@ -259,13 +268,12 @@ public class M_Feedback : MonoBehaviour
         }
         else // Enemy
         {
+            OnHoverEnemy?.Invoke(this, currentTarget);
+            
             if(!currentCharacter.attack.AttackableTiles().Contains(currentTarget.tile))
                 return;
             
             SetCursor(CursorType.AimAndInSight);
-            _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(
-                currentCharacter.look.GetTilesOfLineOfSightOn(tile.coordinates).Count,
-                currentTarget.cover.GetCoverProtectionValueFrom(currentTarget.look)));        
         }
     }
 
@@ -275,11 +283,12 @@ public class M_Feedback : MonoBehaviour
     /// <param name="tile"></param>
     private void OnFreeTile(Tile tile)
     {
+        OnFreeTileEvent?.Invoke(this, tile);
+        
         C__Character currentCharacter = _characters.current;
         
         // Disable fight
         ShowCharacterCoverFeedbacks(tile.coordinates);
-        _ui.HidePercentText();
         
         // Get pathfinding
         List<Tile> currentPathfinding = Pathfinding.GetPath(
@@ -343,13 +352,13 @@ public class M_Feedback : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputOnTileExit(object sender, Tile tile)
+    private void Input_OnTileExit(object sender, Tile tile)
     {
         SetCursor(CursorType.OutMovement);
         HideCoverFeedbacks();
     }
 
-    private void InputOnTileEnter(object sender, Tile tile)
+    private void Input_OnTileEnter(object sender, Tile tile)
     {
         C__Character currentCharacter = _characters.current;
         
