@@ -42,6 +42,7 @@
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
 - Replace Texts by TMP
+- Hide/Enable tile feedback is on C__Character -> move it to M_Feedbacks
 
 ## OPTIMISATION
 - Create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
@@ -49,7 +50,6 @@
 
 ## FEATURES
 
-- Range of weapons (melee weapons)
 - Character can throw spells (like fireball)
 - Display weapons / characters infos on UI
 - Visual line of sight on hover an enemy

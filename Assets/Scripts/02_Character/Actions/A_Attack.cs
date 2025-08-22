@@ -25,12 +25,14 @@ public class A_Attack : A__Action
     /// Returns the attackable tiles, depending on the rules.
     /// </summary>
     /// <returns></returns>
-    public List<Tile> AttackableTiles() => 
-        c.look.CharactersVisibleInFog()
+    public List<Tile> AttackableTiles()
+    {
+        return c.look.CharactersVisibleInFog()
             .Where(chara => chara.unitTeam != c.unitTeam)
-            .Where(chara => c.look.HasSightOn(chara.tile))
+            .Where(chara => IsInRange(chara.tile))
             .Select(chara => chara.tile)
             .ToList();
+    }
 
     /// <summary>
     /// Attacks the target and starts an action in the end.
@@ -154,6 +156,19 @@ public class A_Attack : A__Action
         };
     }
     
+    private bool IsInRange(Tile tile)
+    {
+        Weapon currentWeapon = c.weaponHolder.GetCurrentWeapon();
+        List<Tile> los = c.look.GetTilesOfLineOfSightOn(tile.coordinates);
+
+        if (currentWeapon.GetTouchInView())
+            return c.look.HasSightOn(tile);
+        if (currentWeapon.IsMeleeWeapon())
+            return los.Count == 0;
+        else
+            return los.Count < currentWeapon.GetRange();
+    }
+    
     // ======================================================================
     // ACTION OVERRIDE METHODS
     // ======================================================================
@@ -162,8 +177,8 @@ public class A_Attack : A__Action
     {
         c.move.OrientTo(hoveredCharacter.transform.position);
         
-        if(!c.look.HasSightOn(hoveredCharacter.tile))
-            return; // Enemy is not visible
+        if(!IsInRange(hoveredCharacter.tile))
+            return; // Enemy is not visible or not in range
         
         c.anim.StartAim();
     }
@@ -178,6 +193,9 @@ public class A_Attack : A__Action
         if(c.team.IsAllyOf(clickedCharacter)) 
             return; // Same team
 
+        if(!IsInRange(clickedCharacter.tile))
+            return; // Enemy is not visible or not in range
+        
         // Attack
         Attack(clickedCharacter);
     }

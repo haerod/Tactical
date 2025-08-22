@@ -1,20 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "New weapon", menuName = "Basic Unity Tactical Tool/Weapon", order = 3)]
 public class Weapon : ScriptableObject
 {
     [SerializeField] private string weaponName;
     [SerializeField] private Sprite icon;
+    
+    [Header("DAMAGES")]
     [SerializeField] private Vector2Int damagesRange = new Vector2Int(3, 5);
     [SerializeField] private List<DamageType> damageType;
+    
+    [Header("RANGE")]
+    [SerializeField] private bool anythingInView = true;
     [SerializeField] private bool isMeleeWeapon;
+    [SerializeField] private int specificRange;
     
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Returns true if the weapon can touch anything in view (depending on the obstacles).
+    /// </summary>
+    public bool GetTouchInView() => anythingInView;
+
+    /// <summary>
+    /// Returns the range of the weapon.
+    /// </summary>
+    /// <returns></returns>
+    public int GetRange() => specificRange;
+    
     /// <summary>
     /// Returns true if the weapon is a melee weapon, else returns false.
     /// </summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.TextCore.Text;
+using static M__Managers;
 
 public class UI_WeaponSelectionButton : MonoBehaviour
 {
@@ -44,6 +44,8 @@ public class UI_WeaponSelectionButton : MonoBehaviour
             {
                 character.weaponHolder.SetCurrentWeapon(weapon);
                 character.weaponHolder.DisplayWeapon(weapon);
+                character.HideTilesFeedbacks();
+                character.EnableTilesFeedbacks();
                 holder.CreateWeaponButtons(character);
             });
         

@@ -259,6 +259,9 @@ public class M_Feedback : MonoBehaviour
         }
         else // Enemy
         {
+            if(!currentCharacter.attack.AttackableTiles().Contains(currentTarget.tile))
+                return;
+            
             SetCursor(CursorType.AimAndInSight);
             _ui.ShowPercentText(currentCharacter.attack.GetPercentToTouch(
                 currentCharacter.look.GetTilesOfLineOfSightOn(tile.coordinates).Count,

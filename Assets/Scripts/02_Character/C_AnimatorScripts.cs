@@ -28,6 +28,7 @@ public class C_AnimatorScripts : MonoBehaviour
     private void Start()
     {
         c.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
+        SetWeaponAnimation(c.weaponHolder.GetCurrentWeaponGraphics());
     }
 
     // ======================================================================
