@@ -3487,6 +3487,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7927524114172806328, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
 --- !u!1001 &801247600
@@ -8327,6 +8331,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7927524114172806328, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef7eaacee9481ba4e9a2d92edb4ac488, type: 3}
 --- !u!114 &1672517157 stripped
@@ -10816,9 +10824,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1919535264}
     m_Modifications:
+    - target: {fileID: 1298178860832744792, guid: 7d4269c91ce39b74f83e79363ac10d3f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2220433861757821208, guid: 7d4269c91ce39b74f83e79363ac10d3f, type: 3}
       propertyPath: m_Name
       value: Sniper (PC) - Team Light
+      objectReference: {fileID: 0}
+    - target: {fileID: 4645553542827357393, guid: 7d4269c91ce39b74f83e79363ac10d3f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4768188108386124555, guid: 7d4269c91ce39b74f83e79363ac10d3f, type: 3}
       propertyPath: m_RootOrder

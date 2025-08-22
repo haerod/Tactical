@@ -15,16 +15,15 @@ public class C__Character : Entity
     [Header("REFERENCES")]
     
     public C_Actions actions;
-    public A_Move move;
-    public C_Look look;
+    public C_AnimatorScripts anim; // With animator / skinned mesh renderer
+    public C_Behavior behavior;
     public A_Attack attack;
     public C_Cover cover;
     public C_Health health;
+    public C_Look look;
+    public A_Move move;
     public C_Team team;
-    public C_Behavior behavior;
     public C_UnitUI unitUI;
-    public C_AnimatorScripts anim; // With animator / skinned mesh renderer
-    [Space]
     public C_WeaponHolder weaponHolder;
 
     public Team unitTeam => Team();

@@ -42,12 +42,12 @@ public class UI_WeaponSelectionButton : MonoBehaviour
         buttonText.text = weapon.GetName();
         button.onClick.AddListener(delegate
             {
-                character.attack.SetCurrentWeapon(weapon);
+                character.weaponHolder.SetCurrentWeapon(weapon);
                 character.weaponHolder.DisplayWeapon(weapon);
                 holder.CreateWeaponButtons(character);
             });
         
-        if(weapon == character.attack.GetCurrentWeapon())
+        if(weapon == character.weaponHolder.GetCurrentWeapon())
             button.interactable = false;
     }
     

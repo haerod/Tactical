@@ -25,7 +25,7 @@ public class CharacterAutoChangeWeapon : MonoBehaviour
 
         current = GetComponent<C__Character>();
 
-        previousWeapon = current.attack.GetCurrentWeapon();
+        previousWeapon = current.weaponHolder.GetCurrentWeapon();
         EditorUtility.SetDirty(this);
     }
 
@@ -50,14 +50,14 @@ public class CharacterAutoChangeWeapon : MonoBehaviour
     /// Checks for modifications in the current used weapon.
     /// </summary>
     /// <returns></returns>
-    private bool AreModifications() => previousWeapon != current.attack.GetCurrentWeapon();
+    private bool AreModifications() => previousWeapon != current.weaponHolder.GetCurrentWeapon();
 
     /// <summary>
     /// Updates the modification checkers values.
     /// </summary>
     private void UpdateModificationValues()
     {
-        previousWeapon = current.attack.GetCurrentWeapon();
+        previousWeapon = current.weaponHolder.GetCurrentWeapon();
         EditorUtility.SetDirty(this);
     }
 
@@ -68,11 +68,11 @@ public class CharacterAutoChangeWeapon : MonoBehaviour
     {
         C_WeaponHolder weaponHolder = current.weaponHolder;
 
-        weaponHolder.DisplayWeapon(current.attack.GetCurrentWeapon());
+        weaponHolder.DisplayWeapon(current.weaponHolder.GetCurrentWeapon());
 
         foreach (WeaponGraphics testedWeaponGraphics in weaponHolder.GetWeaponGraphicsList())
         {
             EditorUtility.SetDirty(testedWeaponGraphics.gameObject); // Save the character modifications
-        }        
+        }
     }
 }

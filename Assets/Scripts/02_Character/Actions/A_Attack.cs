@@ -10,7 +10,6 @@ public class A_Attack : A__Action
     [Header("PARAMETERS")]
     
     [SerializeField] private int precision = 100;
-    [SerializeField] private Weapon currentWeapon;
     
     private Action onAttackDone;
 
@@ -21,18 +20,6 @@ public class A_Attack : A__Action
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Returns the current weapon.
-    /// </summary>
-    /// <returns></returns>
-    public Weapon GetCurrentWeapon() => currentWeapon;
-
-    /// <summary>
-    /// Changes the current weapon to the asked one.
-    /// </summary>
-    /// <param name="newWeapon"></param>
-    public void SetCurrentWeapon(Weapon newWeapon) => currentWeapon = newWeapon; 
     
     /// <summary>
     /// Returns the attackable tiles, depending on the rules.
@@ -62,7 +49,7 @@ public class A_Attack : A__Action
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
 
-        int damages = currentWeapon.GetDamages();
+        int damages = c.weaponHolder.GetCurrentWeapon().GetDamages();
 
         _feedback.HideMovementFeedbacks();
         _ui.HidePercentText();
@@ -156,7 +143,7 @@ public class A_Attack : A__Action
         {
             if (success)
             {
-                target.health.AddDamages(damages, currentWeapon.GetDamageTypes());
+                target.health.AddDamages(damages, c.weaponHolder.GetCurrentWeapon().GetDamageTypes());
             }
             else
             {

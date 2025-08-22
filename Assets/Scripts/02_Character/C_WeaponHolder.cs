@@ -6,11 +6,13 @@ using UnityEngine;
 
 public class C_WeaponHolder : MonoBehaviour
 {
-    [SerializeField] private List<WeaponGraphics> weaponGraphicsList;
+    [SerializeField] private Weapon currentWeapon;
+    [SerializeField] private List<Weapon> unitWeapons;
 
     [Header("REFERENCES")]
 
     [SerializeField] private C__Character c;
+    [SerializeField] private List<WeaponGraphics> weaponGraphicsList;
 
     private WeaponGraphics currentWeaponGraphics;
 
@@ -23,7 +25,18 @@ public class C_WeaponHolder : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Returns the current weapon.
+    /// </summary>
+    /// <returns></returns>
+    public Weapon GetCurrentWeapon() => currentWeapon;
 
+    /// <summary>
+    /// Changes the current weapon to the asked one.
+    /// </summary>
+    /// <param name="newWeapon"></param>
+    public void SetCurrentWeapon(Weapon newWeapon) => currentWeapon = newWeapon; 
     /// <summary>
     /// Returns the weapon graphic list.
     /// </summary>
@@ -34,9 +47,7 @@ public class C_WeaponHolder : MonoBehaviour
     /// Returns all the weapons as a list.
     /// </summary>
     /// <returns></returns>
-    public List<Weapon> GetWeaponList() => GetWeaponGraphicsList()
-        .Select(w => w.GetWeapon())
-        .ToList();
+    public List<Weapon> GetWeaponList() => unitWeapons;
     
     /// <summary>
     /// Returns the current weapon graphics.
@@ -49,7 +60,7 @@ public class C_WeaponHolder : MonoBehaviour
 
         foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
         {
-            bool isCurrentWeapon = testedWeaponGraphics.GetWeapon() == c.attack.GetCurrentWeapon();
+            bool isCurrentWeapon = testedWeaponGraphics.GetWeapon() == currentWeapon;
 
             if (isCurrentWeapon)
                 currentWeaponGraphics = testedWeaponGraphics;

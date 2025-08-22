@@ -119,6 +119,18 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5340496248363606861, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: currentWeapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 339ea4f7a238dcd47b50b79757c397c9, type: 2}
+    - target: {fileID: 5340496248363606861, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: unitWeapons.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5340496248363606861, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: unitWeapons.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 339ea4f7a238dcd47b50b79757c397c9, type: 2}
     - target: {fileID: 5571022486952568945, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: team
       value: 

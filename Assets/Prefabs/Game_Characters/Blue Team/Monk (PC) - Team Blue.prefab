@@ -79,6 +79,10 @@ PrefabInstance:
       propertyPath: m_WarningMessage
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2612751322092109208, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2793588244010223534, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: actions.Array.size
       value: 2
@@ -115,6 +119,10 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5340496248363606861, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: currentWeapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
     - target: {fileID: 5571022486952568945, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: team
       value: 
