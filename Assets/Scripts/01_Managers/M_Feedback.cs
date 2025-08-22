@@ -300,8 +300,7 @@ public class M_Feedback : MonoBehaviour
         square.SetSquare(tile.transform.position, tileInMoveRange);
         line.SetLines(
             currentPathfinding,
-            currentCharacter.move.movementRange, 
-            tile);
+            currentCharacter.move.movementRange);
 
         // Set cursor
         SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);

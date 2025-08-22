@@ -22,12 +22,11 @@ public class F_MoveLine : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Set the lines on the path, with the good colors.
+    /// Sets the lines on the path, with the good colors.
     /// </summary>
     /// <param name="path"></param>
     /// <param name="movementRange"></param>
-    /// <param name="endTile"></param>
-    public void SetLines(List<Tile> path, int movementRange, Tile endTile)
+    public void SetLines(List<Tile> path, int movementRange)
     {
         bool isEndTileInMovementRange = path.Count - 1 <= movementRange;
 
@@ -62,7 +61,7 @@ public class F_MoveLine : MonoBehaviour
     }
 
     /// <summary>
-    /// Disable the lines.
+    /// Disables the lines.
     /// </summary>
     public void DisableLines()
     {
