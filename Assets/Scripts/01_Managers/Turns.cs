@@ -11,6 +11,8 @@ public static class Turns
     // INITIALIZE
     // ======================================================================
 
+    public static event EventHandler OnVictory;
+    
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Start()
     {
@@ -121,16 +123,16 @@ public static class Turns
     /// </summary>
     private static void Victory()
     {
+        OnVictory?.Invoke(null, EventArgs.Empty);
+        
         C__Character current = _characters.current;
 
         _ui.SetActivePlayerUI_Turn(false);
-        _ui.EnableEndScreen(current);
 
         current.HideTilesFeedbacks();
 
         _input.SetActiveClick(false);
         _feedback.HideMovementFeedbacks();
-        _ui.HidePercentText();
     }
     
     // ======================================================================

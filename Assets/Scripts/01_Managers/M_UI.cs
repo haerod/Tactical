@@ -10,11 +10,8 @@ using static M__Managers;
 public class M_UI : MonoBehaviour
 {
     [Header("REFERENCES")]
-
-    [SerializeField] private Text endScreenText = null;
-    [SerializeField] private Button nextTurnButton = null;
-    [SerializeField] private GameObject endScreen = null;
-    [SerializeField] private UI_PercentShootText percentText;
+    
+    [SerializeField] private Button nextTurnButton;
 
     public static M_UI instance;
 
@@ -40,13 +37,13 @@ public class M_UI : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Enables / disables player's UI out of its turn.
     /// </summary>
     /// <param name="value"></param>
     public void SetActivePlayerUI_Turn(bool value) => nextTurnButton.gameObject.SetActive(value);
-
+    
     /// <summary>
     /// Enables / disables player's UI during its actions.
     /// </summary>
@@ -57,38 +54,29 @@ public class M_UI : MonoBehaviour
 
         nextTurnButton.gameObject.SetActive(value);
     }
-
-    /// <summary>
-    /// Enables the end screen (explaining which team wins).
-    /// </summary>
-    /// <param name="winner"></param>
-    public void EnableEndScreen(C__Character winner)
-    {
-        endScreen.SetActive(true);
-        endScreenText.text = $"{winner.unitTeam.name} are winners !";
-    }
-
-    /// <summary>
-    /// Disables percent shoot text.
-    /// </summary>
-    public void HidePercentText()
-    {
-        percentText.DisablePercentShootText();
-    }
-
+    
     /// <summary>
     /// Restarts the scene.
     /// Relied to the event on the button Replay.
     /// </summary>
     public void ClickOnReplay() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
+    
     /// <summary>
     /// Returns true if pointer is over UI. Else, returns false.
     /// </summary>
     /// <returns></returns>
     public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
-
-    public void DisplayCharacterCoverState(C__Character character, CoverInfo coverInfo)
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
+    /// <summary>
+    /// Displays the cover state of the character on its world UI (hover it).
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="coverInfo"></param>
+    private void DisplayCharacterCoverState(C__Character character, CoverInfo coverInfo)
     {
         if(coverInfo == null)
             character.unitUI.HideCoverState();
@@ -97,11 +85,7 @@ public class M_UI : MonoBehaviour
                 coverInfo.GetCoverType(), 
                 coverInfo.GetIsCovered() ? _feedback.GetCoveredColour() : _feedback.GetUncoveredColour());
     }
-    
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-    
+
     // ======================================================================
     // EVENTS
     // ======================================================================

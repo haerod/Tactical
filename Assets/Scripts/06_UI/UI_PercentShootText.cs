@@ -22,14 +22,16 @@ public class UI_PercentShootText : MonoBehaviour
 
     private void Start()
     {
-        _feedback.OnFreeTileEvent += Feedback_OnFreeTile;
         _input.OnNoTile += Input_OnNoTile;
+        _feedback.OnFreeTileEvent += Feedback_OnFreeTile;
         _feedback.OnHoverEnemy += Feedback_OnHoverEnemy;
         _feedback.OnHoverAlly += Feedback_OnHoverAlly;
         _feedback.OnHoverItself += Feedback_OnHoverItself;
         A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        Turns.OnVictory += Turns_OnVictory;
     }
-
+    
     private void Update()
     {
         SetPercentShootTextPosition();
@@ -126,4 +128,15 @@ public class UI_PercentShootText : MonoBehaviour
     {
         DisablePercentShootText();
     }
+    
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingTurnCharacter)
+    {
+        DisablePercentShootText();
+    }
+    
+    private void Turns_OnVictory(object sender, EventArgs e)
+    {
+        DisablePercentShootText();
+    }
+
 }

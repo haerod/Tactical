@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -35,7 +36,7 @@ public class C__Character : Entity
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -111,4 +112,8 @@ public class C__Character : Entity
     private Tile Tile() => _board
             ? _board.GetTileAtCoordinates(coordinates.x, coordinates.y)
             : FindAnyObjectByType<M_Board>().GetTileAtCoordinates(coordinates.x, coordinates.y);
+
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
 }

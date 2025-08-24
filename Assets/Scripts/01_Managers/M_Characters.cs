@@ -14,7 +14,8 @@ public class M_Characters : MonoBehaviour
 
     public event EventHandler<C__Character> OnCharacterHover;
     public event EventHandler<C__Character> OnCharacterExit;
-    public event EventHandler<C__Character> OnCharacterStartsTurn;
+    public event EventHandler<C__Character> OnCharacterTurnStart;
+    public event EventHandler<C__Character> OnCharacterTurnEnd;
     
     public static M_Characters instance;
 
@@ -65,17 +66,17 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     public void NewCurrentCharacter(C__Character newCurrentCharacter)
     {
+        OnCharacterTurnEnd?.Invoke(this, current);
+        
         // Old character
         if (current)
         {
-            current.HideTilesFeedbacks();
             current.actions.UnsubscribeToEvents();
             current.unitUI.Hide();
         }
 
         // Clear feedbacks and UI
         _feedback.HideMovementFeedbacks();
-        _ui.HidePercentText();
 
         // Change current character
         current = newCurrentCharacter;
@@ -105,7 +106,7 @@ public class M_Characters : MonoBehaviour
 
         current.EnableTilesFeedbacks();
         
-        OnCharacterStartsTurn?.Invoke(this, newCurrentCharacter);
+        OnCharacterTurnStart?.Invoke(this, newCurrentCharacter);
     }
 
     /// <summary>
