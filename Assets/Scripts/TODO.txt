@@ -30,13 +30,24 @@
 - Tiles material work with an enum, use a Scriptable object instead
 - Cursors in Actions (not in Feedbacks)
 
+- Feedbacks need to be independent of the manager
+    - Action effect
+    - Cover state
+    - Cursor
+    - Movement area
+    - Attackable tiles
+    - View lines (what is it ? fog?)
+    - Fog of war
+- UI
+    - button next turn
+    - replay button (victory screen)
+
 - Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
 - Fog of war in a single manager, can be enabled and disabled
 - Separate the logic between Turns and M_Characters
 - Ergonomic of characters
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
 - UI with recommendations
-- Turns -> Victory to events
 - Animator of the characters
 - Rename Character in Unit
 - Can add and remove Actions without bugs

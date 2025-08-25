@@ -21,9 +21,7 @@ public class M_Feedback : MonoBehaviour
     [SerializeField] private Color uncoveredColour = Color.red;
 
     [Header("REFERENCES")]
-
-    public F_MoveLine line;
-    public F_SelectionSquare square;
+    
     public F_ViewLines viewLines;
     [SerializeField] private F_CoversHolder coverHolder;
     [SerializeField] private GameObject actionEffectPrefab;
@@ -174,7 +172,6 @@ public class M_Feedback : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
     
     /// <summary>
     /// Actions happening if the pointer overlaps a free tile.

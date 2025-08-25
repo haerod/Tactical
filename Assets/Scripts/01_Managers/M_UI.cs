@@ -50,7 +50,8 @@ public class M_UI : MonoBehaviour
     /// <param name="value"></param>
     public void SetActivePlayerUI_Action(bool value)
     {
-        if (value == true && !_characters.current.behavior.playable) return; // EXIT : it's not player's turn
+        if (value == true && !_characters.current.behavior.playable) 
+            return; // EXIT : it's not player's turn
 
         nextTurnButton.gameObject.SetActive(value);
     }

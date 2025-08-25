@@ -17,7 +17,7 @@ public class F_ViewLines : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Enable view lines.
+    /// Enables view lines.
     /// </summary>
     /// <param name="tilesInView"></param>
     public void EnableViewLines(List<Tile> tilesInView)
@@ -56,7 +56,7 @@ public class F_ViewLines : MonoBehaviour
     }
 
     /// <summary>
-    /// Disable view lines.
+    /// Disables view lines.
     /// </summary>
     public void DisableViewLines()
     {
