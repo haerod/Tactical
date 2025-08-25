@@ -75,9 +75,6 @@ public class M_Characters : MonoBehaviour
             current.unitUI.Hide();
         }
 
-        // Clear feedbacks and UI
-        _feedback.HideMovementFeedbacks();
-
         // Change current character
         current = newCurrentCharacter;
 

@@ -83,7 +83,7 @@ public class F_SelectionSquare : MonoBehaviour
         DisableSquare();
     }
     
-    private void Feedback_OnOccupiedTile(object sender, Tile e)
+    private void Feedback_OnOccupiedTile(object sender, Tile occupiedTile)
     {
         DisableSquare();
     }

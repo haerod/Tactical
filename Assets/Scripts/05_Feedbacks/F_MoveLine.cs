@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using static M__Managers;
 
 public class F_MoveLine : MonoBehaviour
@@ -10,23 +12,36 @@ public class F_MoveLine : MonoBehaviour
 
     [Header("REFERENCES")]
 
-    [SerializeField] private LineRenderer line = null;
-    [SerializeField] private LineRenderer lineOut = null;
+    [SerializeField] private LineRenderer line;
+    [SerializeField] private LineRenderer lineOut;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
 
+    private void Start()
+    {
+        _feedback.OnMovableTile += Feedback_OnMovableTile;
+        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        Turns.OnVictory += Turns_OnVictory;
+        _feedback.OnOccupiedTileEvent += Feedback_OnOccupiedTile;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
     /// <summary>
     /// Sets the lines on the path, with the good colors.
     /// </summary>
     /// <param name="path"></param>
     /// <param name="movementRange"></param>
-    public void SetLines(List<Tile> path, int movementRange)
+    private void SetLines(List<Tile> path, int movementRange)
     {
         bool isEndTileInMovementRange = path.Count - 1 <= movementRange;
 
@@ -63,13 +78,38 @@ public class F_MoveLine : MonoBehaviour
     /// <summary>
     /// Disables the lines.
     /// </summary>
-    public void DisableLines()
+    private void DisableLines()
     {
         line.gameObject.SetActive(false);
         lineOut.gameObject.SetActive(false);
     }
 
     // ======================================================================
-    // PRIVATE METHODS
+    // EVENTS
     // ======================================================================
+    
+    private void Feedback_OnMovableTile(object sender, List<Tile> pathfinding)
+    {
+        SetLines(pathfinding, _characters.current.move.movementRange);
+    }
+
+    private void Attack_OnAnyAttackStart(object sender, EventArgs e)
+    {
+        DisableLines();
+    }
+    
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingTurnCharacter)
+    {
+        DisableLines();
+    }
+    
+    private void Turns_OnVictory(object sender, EventArgs e)
+    {
+        DisableLines();
+    }
+    
+    private void Feedback_OnOccupiedTile(object sender, Tile occupiedTile)
+    {
+        DisableLines();
+    }
 }

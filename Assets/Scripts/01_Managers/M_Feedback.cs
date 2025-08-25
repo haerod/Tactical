@@ -115,14 +115,6 @@ public class M_Feedback : MonoBehaviour
     }
 
     /// <summary>
-    /// Disables feedbacks for moving (selection square, direction lines)
-    /// </summary>
-    public void HideMovementFeedbacks()
-    {
-        line.DisableLines();
-    }
-
-    /// <summary>
     /// Show visible elements of the fog of war.
     /// </summary>
     public void ShowVisibleElements(List<Tile> visibleTiles) => SetFogVisualsActive(true, visibleTiles);
@@ -214,11 +206,6 @@ public class M_Feedback : MonoBehaviour
 
         bool tileInMoveRange = currentCharacter.move.CanMoveTo(tile);
 
-        // Show line movement feedback
-        line.SetLines(
-            currentPathfinding,
-            currentCharacter.move.movementRange);
-
         // Set cursor
         SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
     }
@@ -231,8 +218,6 @@ public class M_Feedback : MonoBehaviour
     {
         OnOccupiedTileEvent?.Invoke(this, tile);
         
-        HideMovementFeedbacks();
-
         C__Character currentCharacter = _characters.current;
         C__Character currentTarget = tile.character;
 

@@ -132,7 +132,6 @@ public static class Turns
         current.HideTilesFeedbacks();
 
         _input.SetActiveClick(false);
-        _feedback.HideMovementFeedbacks();
     }
     
     // ======================================================================
