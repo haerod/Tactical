@@ -43,7 +43,8 @@ public class Tile : Entity
     public List<EdgeElement> covers;
 
     [HideInInspector] public bool hasCovers => covers.Count > 0;
-
+    [HideInInspector] public Vector3 worldPosition => transform.position;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================

@@ -35,6 +35,8 @@ public class M_Feedback : MonoBehaviour
     [HideInInspector] public List<Tile> attackableTiles;
 
     public event EventHandler<Tile> OnFreeTileEvent;
+    public event EventHandler<List<Tile>> OnMovableTile;
+    public event EventHandler<Tile> OnOccupiedTileEvent;
     public event EventHandler<C__Character> OnHoverEnemy;
     public event EventHandler<C__Character> OnHoverAlly;
     public event EventHandler OnHoverItself;
@@ -117,7 +119,6 @@ public class M_Feedback : MonoBehaviour
     /// </summary>
     public void HideMovementFeedbacks()
     {
-        square.DisableSquare();
         line.DisableLines();
     }
 
@@ -182,6 +183,96 @@ public class M_Feedback : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    
+    /// <summary>
+    /// Actions happening if the pointer overlaps a free tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    private void OnFreeTile(Tile tile)
+    {
+        OnFreeTileEvent?.Invoke(this, tile);
+        
+        C__Character currentCharacter = _characters.current;
+        
+        // Disable fight
+        ShowCharacterCoverFeedbacks(tile.coordinates);
+        
+        // Get pathfinding
+        List<Tile> currentPathfinding = Pathfinding.GetPath(
+            currentCharacter.tile,
+            tile,
+            Pathfinding.TileInclusion.WithStartAndEnd,
+            new MovementRules(currentCharacter.move.walkableTiles, currentCharacter.move.GetTraversableCharacterTiles(), currentCharacter.move.useDiagonalMovement));
+
+        if (currentPathfinding.Count == 0)
+        {
+            SetCursor(CursorType.OutMovement);
+            return; // No path
+        }
+        
+        OnMovableTile?.Invoke(this, currentPathfinding);
+
+        bool tileInMoveRange = currentCharacter.move.CanMoveTo(tile);
+
+        // Show line movement feedback
+        line.SetLines(
+            currentPathfinding,
+            currentCharacter.move.movementRange);
+
+        // Set cursor
+        SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
+    }
+    
+    /// <summary>
+    /// Actions happening if the pointer overlaps an occupied tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    private void OnOccupiedTile(Tile tile)
+    {
+        OnOccupiedTileEvent?.Invoke(this, tile);
+        
+        HideMovementFeedbacks();
+
+        C__Character currentCharacter = _characters.current;
+        C__Character currentTarget = tile.character;
+
+        ShowTargetCoverFeedbacks(currentTarget);
+        
+        if (!currentCharacter.look.HasSightOn(tile))
+        {
+            SetCursor(CursorType.OutAimOrSight);
+            return; // Character not in sight
+        }
+        
+        if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
+        {
+            SetCursor(CursorType.Regular);
+
+            if (currentCharacter == currentTarget)
+            {
+                OnHoverItself?.Invoke(this, EventArgs.Empty);
+                return; // Same character
+            }
+            OnHoverAlly?.Invoke(this, currentTarget);
+            
+            if(!currentCharacter.actions.HasHealAction())
+                return; // Character can't heal
+            if (currentTarget.health.IsFullLife())
+                return; // Target is full life
+            
+            SetCursor(CursorType.Heal);
+        }
+        else // Enemy
+        {
+            OnHoverEnemy?.Invoke(this, currentTarget);
+            
+            if(!currentCharacter.attack.AttackableTiles().Contains(currentTarget.tile))
+                return;
+            
+            SetCursor(CursorType.AimAndInSight);
+        }
+    }
+    
     /// <summary>
     /// Sets cursor to its new appearance.
     /// </summary>
@@ -228,92 +319,6 @@ public class M_Feedback : MonoBehaviour
     /// Hides cover feedbacks.
     /// </summary>
     private void HideCoverFeedbacks() => coverHolder.HideCoverFeedbacks();
-    
-    /// <summary>
-    /// Actions happening if the pointer overlaps an occupied tile.
-    /// </summary>
-    /// <param name="tile"></param>
-    private void OnOccupiedTile(Tile tile)
-    {
-        HideMovementFeedbacks();
-
-        C__Character currentCharacter = _characters.current;
-        C__Character currentTarget = tile.character;
-
-        ShowTargetCoverFeedbacks(currentTarget);
-        
-        if (!currentCharacter.look.HasSightOn(tile))
-        {
-            SetCursor(CursorType.OutAimOrSight);
-            return; // Character not in sight
-        }
-        
-        if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
-        {
-            SetCursor(CursorType.Regular);
-
-            if (currentCharacter == currentTarget)
-            {
-                OnHoverItself?.Invoke(this, EventArgs.Empty);
-                return; // Same character
-            }
-            OnHoverAlly?.Invoke(this, currentTarget);
-            
-            if(!currentCharacter.actions.HasHealAction())
-                return; // Character can't heal
-            if (currentTarget.health.IsFullLife())
-                return; // Target is full life
-            
-            SetCursor(CursorType.Heal);
-        }
-        else // Enemy
-        {
-            OnHoverEnemy?.Invoke(this, currentTarget);
-            
-            if(!currentCharacter.attack.AttackableTiles().Contains(currentTarget.tile))
-                return;
-            
-            SetCursor(CursorType.AimAndInSight);
-        }
-    }
-
-    /// <summary>
-    /// Actions happening if the pointer overlaps a free tile.
-    /// </summary>
-    /// <param name="tile"></param>
-    private void OnFreeTile(Tile tile)
-    {
-        OnFreeTileEvent?.Invoke(this, tile);
-        
-        C__Character currentCharacter = _characters.current;
-        
-        // Disable fight
-        ShowCharacterCoverFeedbacks(tile.coordinates);
-        
-        // Get pathfinding
-        List<Tile> currentPathfinding = Pathfinding.GetPath(
-                        currentCharacter.tile,
-                        tile,
-                        Pathfinding.TileInclusion.WithStartAndEnd,
-                        new MovementRules(currentCharacter.move.walkableTiles, currentCharacter.move.GetTraversableCharacterTiles(), currentCharacter.move.useDiagonalMovement));
-
-        if (currentPathfinding.Count == 0)
-        {
-            SetCursor(CursorType.OutMovement);
-            return; // No path
-        }
-
-        bool tileInMoveRange = currentCharacter.move.CanMoveTo(tile);
-
-        // Show movement feedbacks (square and line)
-        square.SetSquare(tile.transform.position, tileInMoveRange);
-        line.SetLines(
-            currentPathfinding,
-            currentCharacter.move.movementRange);
-
-        // Set cursor
-        SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
-    }
     
     /// <summary>
     /// Shows and hides characters in fog of war.

@@ -35,16 +35,15 @@ public class UI_SlicedHealthBar : MonoBehaviour
             currentLifeBar.SetActive(i < health.currentHealth);
         }
     }
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
 
     /// <summary>
     /// Enables or disables the life bar.
     /// </summary>
-    /// <param name="value"></param>
-    public void SetLifeBarActive (bool value) => gameObject.SetActive(value);
-
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
+    private void SetLifeBarActive (bool value) => gameObject.SetActive(value);
 
     /// <summary>
     /// Displays max life on health bar.
