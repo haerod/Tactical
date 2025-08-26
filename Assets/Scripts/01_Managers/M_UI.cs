@@ -1,17 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using static M__Managers;
 
 public class M_UI : MonoBehaviour
 {
-    [Header("REFERENCES")]
-    
-    [SerializeField] private Button nextTurnButton;
-
     public static M_UI instance;
 
     // ======================================================================
@@ -36,12 +31,6 @@ public class M_UI : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Returns true if pointer is over UI. Else, returns false.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
     
     // ======================================================================
     // PRIVATE METHODS

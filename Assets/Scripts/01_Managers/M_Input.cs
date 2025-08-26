@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using UnityEngine.EventSystems;
 using static M__Managers;
 
 public class M_Input : MonoBehaviour
@@ -70,7 +71,7 @@ public class M_Input : MonoBehaviour
     {
         if (!canClick) 
             return; // Player can't click
-        if (_ui.IsPointerOverUI()) 
+        if (IsPointerOverUI()) 
             return; // Pointer over UI
 
         CheckRaycast();
@@ -113,6 +114,12 @@ public class M_Input : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Returns true if pointer is over UI. Else, returns false.
+    /// </summary>
+    /// <returns></returns>
+    private bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
+    
     /// <summary>
     /// Check over which object the pointer is (with raycast).
     /// </summary>
