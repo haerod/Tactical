@@ -14,6 +14,7 @@ public class A_Attack : A__Action
     private Action onAttackDone;
 
     public static event EventHandler OnAnyAttackStart;
+    public static event EventHandler<C__Character> OnAttackMiss;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -151,8 +152,8 @@ public class A_Attack : A__Action
             }
             else
             {
+                OnAttackMiss?.Invoke(this, target);
                 target.anim.StartDodge();
-                _feedback.ActionEffectFeedback("MISS", target.transform);
             }
             Wait(0.5f, () => {Turns.EndTurn();});
         };

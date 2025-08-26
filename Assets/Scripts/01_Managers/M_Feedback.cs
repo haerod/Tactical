@@ -116,18 +116,6 @@ public class M_Feedback : MonoBehaviour
     /// Show visible elements of the fog of war.
     /// </summary>
     public void ShowVisibleElements(List<Tile> visibleTiles) => SetFogVisualsActive(true, visibleTiles);
-
-    /// <summary>
-    /// Instantiates an action effect feedback prefab over the target object.
-    /// </summary>
-    /// <param name="text"></param>
-    /// <param name="referenceTarget"></param>
-    public void ActionEffectFeedback(string text, Transform referenceTarget)
-    {
-        F_ActionEffect insta = Instantiate(actionEffectPrefab, transform).GetComponent<F_ActionEffect>();
-        insta.SetText(text);
-        insta.PositionAt(referenceTarget);
-    }
     
     /// <summary>
     /// Enables/disables the view lines on border tiles and enables/disables fog mask.

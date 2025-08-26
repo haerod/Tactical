@@ -21,22 +21,19 @@ public class C_Health : MonoBehaviour
     [Space]
     [SerializeField] private List<DamageType> resistances;
     [SerializeField] private List<DamageType> weaknesses;
-
-
+    
     [Header("REFERENCES")]
 
-    [SerializeField] private C__Character c = null;
+    [SerializeField] private C__Character c;
 
      public int currentHealth = 5;
 
+     public static event EventHandler<int> OnAnyHealthLoss;
+     public static event EventHandler<int> OnAnyHealthGain;
+     
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-    
-    private void Awake()
-    {
-        // currentHealth = health;
-    }
     
     // ======================================================================
     // PUBLIC METHODS
@@ -137,7 +134,7 @@ public class C_Health : MonoBehaviour
             c.anim.StartHitReaction();
         }
 
-        _feedback.ActionEffectFeedback(damage.ToString(), transform.parent);
+        OnAnyHealthLoss?.Invoke(this, damage);
         c.unitUI.UpdateHealthBar();
     }
 
@@ -151,7 +148,7 @@ public class C_Health : MonoBehaviour
         if (currentHealth > health)
             currentHealth = health;
         
-        _feedback.ActionEffectFeedback(healAmount.ToString(), transform.parent);
+        OnAnyHealthGain?.Invoke(this, healAmount);
         c.unitUI.UpdateHealthBar();
     }
     
