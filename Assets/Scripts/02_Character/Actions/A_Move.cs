@@ -28,6 +28,9 @@ public class A_Move : A__Action
     private int index;
     private Vector3 destination;
 
+    public static event EventHandler OnAnyMovementStart;
+    public static event EventHandler OnAnyMovementEnd;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -176,6 +179,8 @@ public class A_Move : A__Action
     /// <param name="path"></param>
     private void MoveOnPath(List<Tile> path)
     {
+        OnAnyMovementStart?.Invoke(this, EventArgs.Empty);
+        
         c.SetCanPlayValue(false);
 
         currentPath = path.ToList();
@@ -188,7 +193,6 @@ public class A_Move : A__Action
         c.anim.ExitCrouch();
 
         _input.SetActiveClick(false);
-        _ui.SetActivePlayerUI_Action(false);
 
         c.HideTilesFeedbacks();
 
@@ -269,18 +273,16 @@ public class A_Move : A__Action
     /// </summary>
     private void EndMove()
     {
+        OnAnyMovementEnd?.Invoke(this, EventArgs.Empty);
         c.anim.SetSpeed(0f);
         
         if(c.cover.AreCoversAround())
             c.anim.EnterCrouch();
         
         _input.SetActiveClick();
-        _ui.SetActivePlayerUI_Action(true);
 
         if (_characters.current.behavior.playable)
-        {
             c.EnableTilesFeedbacks();
-        }
 
         Turns.EndTurn();
     }

@@ -14,6 +14,7 @@ public class A_Attack : A__Action
     private Action onAttackDone;
 
     public static event EventHandler OnAnyAttackStart;
+    public static event EventHandler OnAnyAttackEnd;
     public static event EventHandler<C__Character> OnAttackMiss;
 
     // ======================================================================
@@ -60,8 +61,6 @@ public class A_Attack : A__Action
         OnAnyAttackStart?.Invoke(this, EventArgs.Empty);
         _input.SetActiveClick(false);
 
-        _ui.SetActivePlayerUI_Action(false);
-
         c.anim.StartAttack();
 
         int percentOfTouch = GetPercentToTouch(
@@ -80,8 +79,8 @@ public class A_Attack : A__Action
     /// </summary>
     public void EndAttack()
     {
+        OnAnyAttackEnd?.Invoke(this, EventArgs.Empty);
         _camera.Shake();
-        _ui.SetActivePlayerUI_Action(true);
         onAttackDone();
 
         // Muzzle flash

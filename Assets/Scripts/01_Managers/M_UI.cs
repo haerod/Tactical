@@ -38,24 +38,6 @@ public class M_UI : MonoBehaviour
     // ======================================================================
     
     /// <summary>
-    /// Enables / disables player's UI out of its turn.
-    /// </summary>
-    /// <param name="value"></param>
-    public void SetActivePlayerUI_Turn(bool value) => nextTurnButton.gameObject.SetActive(value);
-    
-    /// <summary>
-    /// Enables / disables player's UI during its actions.
-    /// </summary>
-    /// <param name="value"></param>
-    public void SetActivePlayerUI_Action(bool value)
-    {
-        if (value == true && !_characters.current.behavior.playable) 
-            return; // EXIT : it's not player's turn
-
-        nextTurnButton.gameObject.SetActive(value);
-    }
-    
-    /// <summary>
     /// Returns true if pointer is over UI. Else, returns false.
     /// </summary>
     /// <returns></returns>

@@ -47,7 +47,7 @@ public static class Turns
             }
         }
     }
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -126,9 +126,7 @@ public static class Turns
         OnVictory?.Invoke(null, EventArgs.Empty);
         
         C__Character current = _characters.current;
-
-        _ui.SetActivePlayerUI_Turn(false);
-
+        
         current.HideTilesFeedbacks();
 
         _input.SetActiveClick(false);

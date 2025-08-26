@@ -91,13 +91,11 @@ public class M_Characters : MonoBehaviour
         {
             current.actions.SubscribeToEvents();
             _input.SetActiveClick();
-            _ui.SetActivePlayerUI_Turn(true);
         }
         // Non playable character (NPC)
         else
         {
             _input.SetActiveClick(false);
-            _ui.SetActivePlayerUI_Turn(false);
             current.behavior.PlayBehavior();
         }
 

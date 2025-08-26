@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5421335156117729343}
   - component: {fileID: 4426161523262609550}
   m_Layer: 0
-  m_Name: Canvas percent shoot
+  m_Name: Canvas Percent shoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 8371097886685703213}
   - component: {fileID: 4434001574810713064}
   m_Layer: 0
-  m_Name: Canvas action effect feedback
+  m_Name: Canvas Action effect feedback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -618,7 +618,7 @@ GameObject:
   - component: {fileID: 1958866177973267477}
   - component: {fileID: 1958866177973267478}
   m_Layer: 5
-  m_Name: Button Next Turn
+  m_Name: Button Next turn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -727,9 +727,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: M_Turns, Assembly-CSharp
-        m_MethodName: EndTurnOfCurrentCharacter
+      - m_Target: {fileID: 6114325314281802543}
+        m_TargetAssemblyTypeName: UI_TurnButtons, Assembly-CSharp
+        m_MethodName: ButtonNextTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -991,7 +991,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1958866179792405027}
+  - {fileID: 1958866179438022249}
   m_Father: {fileID: 1958866178010909291}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1175,8 +1177,9 @@ GameObject:
   - component: {fileID: 1958866178753650218}
   - component: {fileID: 1958866178753650219}
   - component: {fileID: 1958866178753650228}
+  - component: {fileID: 6114325314281802543}
   m_Layer: 5
-  m_Name: Canvas GUI
+  m_Name: Canvas Turns buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1264,6 +1267,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6114325314281802543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958866178753650229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1109d7b4b42465346acce192fceb33aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextTurnButton: {fileID: 1958866177973267478}
 --- !u!1 &1958866178818122974
 GameObject:
   m_ObjectHideFlags: 0
@@ -1331,7 +1347,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1958866178830440100
 MonoBehaviour:
@@ -1681,7 +1697,7 @@ Transform:
   - {fileID: 1958866178504323601}
   - {fileID: 1958866179109335308}
   m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1958866179323365529
 MonoBehaviour:
@@ -1729,7 +1745,7 @@ Transform:
   m_Children:
   - {fileID: 1958866177823873688}
   m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1958866179331537171
 MonoBehaviour:
@@ -1776,8 +1792,8 @@ Transform:
   m_LocalScale: {x: 10000, y: 10000.003, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 8
+  m_Father: {fileID: 1958866178310425238}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!212 &1958866179438022250
 SpriteRenderer:
@@ -1841,7 +1857,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1958866179528147546}
   m_Layer: 0
-  m_Name: UI / FEEDBACK
+  m_Name: UI and Feedbacks modules
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1864,10 +1880,8 @@ Transform:
   - {fileID: 3328499584482365978}
   - {fileID: 5498743567259767426}
   - {fileID: 8111866064363514475}
-  - {fileID: 1958866179792405027}
   - {fileID: 1958866179323365528}
   - {fileID: 1958866179331537170}
-  - {fileID: 1958866179438022249}
   - {fileID: 1958866178830440101}
   - {fileID: 438918607371576829}
   m_Father: {fileID: 1958866178818122973}
@@ -1934,8 +1948,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 5
+  m_Father: {fileID: 1958866178310425238}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1958866179792405036
 MonoBehaviour:
@@ -2488,7 +2502,7 @@ GameObject:
   - component: {fileID: 6839122709757513849}
   - component: {fileID: 3733272506781205548}
   m_Layer: 0
-  m_Name: Canvas wepons choice
+  m_Name: Canvas Wepons choice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2601,7 +2615,7 @@ GameObject:
   - component: {fileID: 438918607371576829}
   - component: {fileID: 438963347516236975}
   m_Layer: 0
-  m_Name: Cover feedback holder
+  m_Name: Cover feedbacks holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2620,7 +2634,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &438963347516236975
 MonoBehaviour:
@@ -2784,7 +2798,7 @@ GameObject:
   - component: {fileID: 365495760296105309}
   - component: {fileID: 1388924825732511913}
   m_Layer: 5
-  m_Name: Canvas victory
+  m_Name: Canvas Victory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
