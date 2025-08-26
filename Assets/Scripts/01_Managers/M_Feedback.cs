@@ -24,7 +24,6 @@ public class M_Feedback : MonoBehaviour
     
     public F_ViewLines viewLines;
     [SerializeField] private F_CoversHolder coverHolder;
-    [SerializeField] private GameObject actionEffectPrefab;
     
     public static M_Feedback instance;
     public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement, Heal } // /!\ If add/remove a cursor, update the SetCursor method
@@ -61,6 +60,9 @@ public class M_Feedback : MonoBehaviour
         _input.OnTileExit += Input_OnTileExit;
         _input.OnTileEnter += Input_OnTileEnter;
         _input.OnChangeClickActivation += Input_ChangeClickActivation;
+        
+        _characters.GetCharacterList()
+            .ForEach(character => DisplayCharacterCoverState(character, character.cover.GetCoverState()));
     }
     
     // ======================================================================
@@ -321,6 +323,21 @@ public class M_Feedback : MonoBehaviour
             .Except(visibleCharacters)
             .ToList()
             .ForEach(c => c.anim.SetVisualActives(false));
+    }
+    
+    /// <summary>
+    /// Displays the cover state of the character on its world UI (hover it).
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="coverInfo"></param>
+    private void DisplayCharacterCoverState(C__Character character, CoverInfo coverInfo)
+    {
+        if(coverInfo == null)
+            character.unitUI.HideCoverState();
+        else
+            character.unitUI.DisplayCoverState(
+                coverInfo.GetCoverType(), 
+                coverInfo.GetIsCovered() ? _feedback.GetCoveredColour() : _feedback.GetUncoveredColour());
     }
     
     // ======================================================================

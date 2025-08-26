@@ -972,9 +972,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1958866178310425238}
   - component: {fileID: 1958866178310425237}
-  - component: {fileID: 4033851203806385707}
   m_Layer: 0
-  m_Name: Feedbacks / UI
+  m_Name: Feedbacks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1018,22 +1017,8 @@ MonoBehaviour:
   uncoveredColour: {r: 1, g: 0.22352941, b: 0.22352941, a: 0.19607843}
   viewLines: {fileID: 1958866178830440100}
   coverHolder: {fileID: 438963347516236975}
-  actionEffectPrefab: {fileID: 6033107118601816470, guid: ae91c46367b9c1c479def716cae07ad6, type: 3}
   walkableTiles: []
   attackableTiles: []
---- !u!114 &4033851203806385707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958866178310425239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0a27db26abda4f43a4909cfe4f9ec04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nextTurnButton: {fileID: 1958866177973267478}
 --- !u!1 &1958866178504323603
 GameObject:
   m_ObjectHideFlags: 0
