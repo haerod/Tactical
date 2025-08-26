@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using static M__Managers;
 
@@ -23,6 +21,12 @@ public class UI_VictoryScreen : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Restarts the scene.
+    /// Relied to the event on the button Replay.
+    /// </summary>
+    public void ClickOnReplay() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     
     // ======================================================================
     // PRIVATE METHODS

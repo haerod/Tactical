@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bb20d22327d3db408c75e711516e2f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  missText: MISS
   actionEffectFeedbackPrefab: {fileID: 2426208648441898965, guid: 933a10a0a9155ea42bb16df22e00139a, type: 3}
 --- !u!1 &1889456144401965584
 GameObject:
@@ -2305,8 +2306,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: M_UI, Assembly-CSharp
+      - m_Target: {fileID: 1388924825732511913}
+        m_TargetAssemblyTypeName: UI_VictoryScreen, Assembly-CSharp
         m_MethodName: ClickOnReplay
         m_Mode: 1
         m_Arguments:

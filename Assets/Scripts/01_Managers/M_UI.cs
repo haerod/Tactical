@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
@@ -55,12 +54,6 @@ public class M_UI : MonoBehaviour
 
         nextTurnButton.gameObject.SetActive(value);
     }
-    
-    /// <summary>
-    /// Restarts the scene.
-    /// Relied to the event on the button Replay.
-    /// </summary>
-    public void ClickOnReplay() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     
     /// <summary>
     /// Returns true if pointer is over UI. Else, returns false.
