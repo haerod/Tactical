@@ -193,9 +193,7 @@ public class A_Move : A__Action
         c.anim.ExitCrouch();
 
         _input.SetActiveClick(false);
-
-        c.HideTilesFeedbacks();
-
+        
         StartCoroutine(MoveToDestination());
     }
     
@@ -282,7 +280,7 @@ public class A_Move : A__Action
         _input.SetActiveClick();
 
         if (_characters.current.behavior.playable)
-            c.EnableTilesFeedbacks();
+            c.DisplayFog();
 
         Turns.EndTurn();
     }

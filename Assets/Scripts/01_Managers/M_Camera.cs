@@ -86,8 +86,8 @@ public class M_Camera : MonoBehaviour
     /// <summary>
     /// Sets the camera's target.
     /// </summary>
-    /// <param name="target"></param>
-    public void SetTarget(Transform target) => this.target = target;
+    /// <param name="newTarget"></param>
+    public void SetTarget(Transform newTarget) => target = newTarget;
     
     /// <summary>
     /// Resets the camera's position to reach on its target (with the offset).
@@ -109,7 +109,8 @@ public class M_Camera : MonoBehaviour
     /// <param name="duration"></param>
     /// <param name="intensity"></param>
     /// <param name="timeBetweenShakes"></param>
-    public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f) => StartCoroutine(Shake_Co(duration, intensity, timeBetweenShakes));
+    public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f) => 
+        StartCoroutine(Shake_Co(duration, intensity, timeBetweenShakes));
 
     // ======================================================================
     // PRIVATE METHODS
@@ -164,20 +165,20 @@ public class M_Camera : MonoBehaviour
     /// <returns></returns>
     private IEnumerator Shake_Co(float duration, float intensity, float timeBetweenShakes)
     {
-        float currentTime = 0;
+        float shakeCurrentTime = 0;
 
-        while(currentTime < duration)
+        while(shakeCurrentTime < duration)
         {
             currentCamera.transform.localPosition = Random.onUnitSphere * intensity;
             yield return new WaitForSeconds(timeBetweenShakes);
-            currentTime += timeBetweenShakes;
+            shakeCurrentTime += timeBetweenShakes;
         }
 
         currentCamera.transform.localPosition = Vector3.zero;
     }
 
     /// <summary>
-    /// Rotates the camera arount Y axis.
+    /// Rotates the camera around Y axis.
     /// </summary>
     /// <param name="rotationValue"></param>
     private void RotateCamera(float rotationValue) => transform.Rotate(Vector3.up, rotationValue);

@@ -46,13 +46,9 @@ public class M_Feedback : MonoBehaviour
     {
         // Singleton
         if (!instance)
-        {
             instance = this;
-        }
         else
-        {
             Debug.LogError("There is more than one M_Feedback in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-        }
     }
 
     private void Start()
@@ -68,51 +64,6 @@ public class M_Feedback : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Shows the tiles of the movement area.
-    /// </summary>
-    public void ShowMovementArea(List<Tile> tilesToShow) =>
-        tilesToShow
-            .ForEach(t =>
-            {
-                t.SetMaterial(Tile.TileMaterial.Blue);
-                walkableTiles.Add(t);
-            });
-
-    /// <summary>
-    /// Resets the tiles skin and clears the movement area tiles list.
-    /// </summary>
-    public void HideMovementArea()
-    {
-        foreach (Tile tile in walkableTiles)
-        {
-            tile.ResetTileSkin();
-        }
-
-        walkableTiles.Clear();
-    }
-
-    /// <summary>
-    /// Shows the tiles a character can attack.
-    /// </summary>
-    public void ShowAttackableTiles(List<Tile> tilesToShow) =>
-        tilesToShow.
-            ForEach(t => {
-                t.SetMaterial(Tile.TileMaterial.Red);
-                attackableTiles.Add(t);
-            });
-
-    /// <summary>
-    /// Resets the tiles skin and clears the attackable tiles list.
-    /// </summary>
-    public void HideAttackableTiles()
-    {
-        attackableTiles
-            .ForEach(t => t.ResetTileSkin());
-
-        attackableTiles.Clear();
-    }
 
     /// <summary>
     /// Show visible elements of the fog of war.

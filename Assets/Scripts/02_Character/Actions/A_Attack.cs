@@ -52,7 +52,6 @@ public class A_Attack : A__Action
 
         C__Character target = currentTarget;
 
-        c.HideTilesFeedbacks();
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
 

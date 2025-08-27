@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ public class UI_WeaponSelectionButton : MonoBehaviour
     
     private C__Character character;
     private UI_WeaponButtonsHolder holder;
+    
+    public static event EventHandler<Weapon> OnAnyWeaponChanged;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -44,9 +47,8 @@ public class UI_WeaponSelectionButton : MonoBehaviour
             {
                 character.weaponHolder.SetCurrentWeapon(weapon);
                 character.weaponHolder.DisplayWeapon(weapon);
-                character.HideTilesFeedbacks();
-                character.EnableTilesFeedbacks();
                 holder.CreateWeaponButtons(character);
+                OnAnyWeaponChanged?.Invoke(this, weapon);
             });
         
         if(weapon == character.weaponHolder.GetCurrentWeapon())

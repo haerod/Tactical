@@ -31,21 +31,18 @@ public static class Turns
     {
         if (IsVictory()) // Victory
         {
-            Victory();
+            OnVictory?.Invoke(null, EventArgs.Empty);
+            _input.SetActiveClick(false);
+            return;
         }
-        else // Choose the next character or pass to another team.
-        {
-            C__Character nextTeamCharacter = NextCharacterInTheTeam();
+        
+        // Choose the next character or pass to another team.
+        C__Character nextTeamCharacter = NextCharacterInTheTeam();
 
-            if (nextTeamCharacter) // Another character in the team
-            {
-                _characters.NewCurrentCharacter(nextTeamCharacter);
-            }
-            else
-            {
-                NextTeam();
-            }
-        }
+        if (nextTeamCharacter) // Another character in the team
+            _characters.NewCurrentCharacter(nextTeamCharacter);
+        else
+            NextTeam();
     }
     
     // ======================================================================
@@ -117,20 +114,6 @@ public static class Turns
     /// Checks if it's currently victory.
     /// </summary>
     private static bool IsVictory() => _characters.IsFinalTeam(_characters.current);
-
-    /// <summary>
-    /// Enables victory screen and do the other things happening during victory
-    /// </summary>
-    private static void Victory()
-    {
-        OnVictory?.Invoke(null, EventArgs.Empty);
-        
-        C__Character current = _characters.current;
-        
-        current.HideTilesFeedbacks();
-
-        _input.SetActiveClick(false);
-    }
     
     // ======================================================================
     // EVENTS

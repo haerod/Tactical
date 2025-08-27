@@ -34,8 +34,6 @@
     - Cover state
     - Character's cover state
     - Cursor
-    - Movement area
-    - Attackable tiles
     - View lines (what is it ? fog?)
     - Fog of war
 - Unit UI
@@ -63,7 +61,8 @@
 
 - Display weapons / characters infos on UI
 
-- Visual line of sight on hover an enemy
+- Feedback of line of sight on visible enemies
+    - Visual line of sight on hover an enemy
 - Character can throw spells (like fireball)
 - Separate folders between Toy box and Technical box
 - Namespaces
@@ -84,7 +83,6 @@
 - Enemy spawners
 - Movements with special costs or obligation to stop
 - 3D grid
-- Feedback of line of sight on visible enemies
 - Tiles of different types
 - Can shoot from a step (lean)
 - Armor and shield

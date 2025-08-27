@@ -36,6 +36,7 @@ public class M_Characters : MonoBehaviour
     {
         _input.OnTileEnter += InputOnTileEnter;
         _input.OnTileExit += InputOnTileExit;
+        
         NewCurrentCharacter(_rules.GetFirstCharacter());
     }
 
@@ -66,11 +67,10 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     public void NewCurrentCharacter(C__Character newCurrentCharacter)
     {
-        OnCharacterTurnEnd?.Invoke(this, current);
-        
         // Old character
         if (current)
         {
+            OnCharacterTurnEnd?.Invoke(this, current);
             current.actions.UnsubscribeToEvents();
             current.unitUI.Hide();
         }
@@ -83,7 +83,6 @@ public class M_Characters : MonoBehaviour
         _camera.ResetPosition();
 
         // Character
-        current.HideTilesFeedbacks();
         current.unitUI.Display();
 
         // Playable character (PC)
@@ -99,7 +98,7 @@ public class M_Characters : MonoBehaviour
             current.behavior.PlayBehavior();
         }
 
-        current.EnableTilesFeedbacks();
+        current.DisplayFog();
         
         OnCharacterTurnStart?.Invoke(this, newCurrentCharacter);
     }

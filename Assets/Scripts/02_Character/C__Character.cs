@@ -61,29 +61,12 @@ public class C__Character : Entity
     public Team Team() => team.team;
 
     /// <summary>
-    /// Enables the feedbacks on the movable tiles and the attackable tiles.
+    /// Shows the visible fog visuals.
     /// </summary>
-    public void EnableTilesFeedbacks()
+    public void DisplayFog()
     {
         _feedback.SetFogVisualsActive(false);
         _feedback.ShowVisibleElements(look.VisibleTiles());
-
-        if (!behavior.playable) 
-            return; // NPC
-        if(!CanPlay()) 
-            return; // Can't play
-
-        _feedback.ShowAttackableTiles(attack.AttackableTiles());
-        _feedback.ShowMovementArea(move.MovementArea());
-    }
-
-    /// <summary>
-    /// Clears the feedbacks on the movable tiles and the attackable tiles and clears the linked lists.
-    /// </summary>
-    public void HideTilesFeedbacks()
-    {
-        _feedback.HideMovementArea();
-        _feedback.HideAttackableTiles();
     }
 
     /// <summary>
