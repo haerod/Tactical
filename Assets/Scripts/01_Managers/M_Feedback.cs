@@ -7,13 +7,6 @@ using static M__Managers;
 
 public class M_Feedback : MonoBehaviour
 {
-    [Header("CURSORS")]
-
-    [SerializeField] private Texture2D aimCursor;
-    [SerializeField] private Texture2D noLineOfSightCursor;
-    [SerializeField] private Texture2D cantGoCursor;
-    [SerializeField] private Texture2D healCursor;
-    
     [Header("COVERS")]
     
     [SerializeField] private int coverFeedbackRange = 2;
@@ -26,11 +19,7 @@ public class M_Feedback : MonoBehaviour
     [SerializeField] private F_CoversHolder coverHolder;
     
     public static M_Feedback instance;
-    public enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement, Heal } // /!\ If add/remove a cursor, update the SetCursor method
-
-    [HideInInspector] public List<Tile> walkableTiles;
-    [HideInInspector] public List<Tile> attackableTiles;
-
+    
     public event EventHandler<Tile> OnFreeTileEvent;
     public event EventHandler<List<Tile>> OnMovableTile;
     public event EventHandler<Tile> OnOccupiedTileEvent;
@@ -55,7 +44,6 @@ public class M_Feedback : MonoBehaviour
     {
         _input.OnTileExit += Input_OnTileExit;
         _input.OnTileEnter += Input_OnTileEnter;
-        _input.OnChangeClickActivation += Input_ChangeClickActivation;
         
         _characters.GetCharacterList()
             .ForEach(character => DisplayCharacterCoverState(character, character.cover.GetCoverState()));
@@ -135,17 +123,9 @@ public class M_Feedback : MonoBehaviour
             new MovementRules(currentCharacter.move.walkableTiles, currentCharacter.move.GetTraversableCharacterTiles(), currentCharacter.move.useDiagonalMovement));
 
         if (currentPathfinding.Count == 0)
-        {
-            SetCursor(CursorType.OutMovement);
             return; // No path
-        }
         
         OnMovableTile?.Invoke(this, currentPathfinding);
-
-        bool tileInMoveRange = currentCharacter.move.CanMoveTo(tile);
-
-        // Set cursor
-        SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
     }
     
     /// <summary>
@@ -161,67 +141,15 @@ public class M_Feedback : MonoBehaviour
 
         ShowTargetCoverFeedbacks(currentTarget);
         
-        if (!currentCharacter.look.HasSightOn(tile))
-        {
-            SetCursor(CursorType.OutAimOrSight);
-            return; // Character not in sight
-        }
-        
         if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
         {
-            SetCursor(CursorType.Regular);
-
             if (currentCharacter == currentTarget)
-            {
                 OnHoverItself?.Invoke(this, EventArgs.Empty);
-                return; // Same character
-            }
-            OnHoverAlly?.Invoke(this, currentTarget);
-            
-            if(!currentCharacter.actions.HasHealAction())
-                return; // Character can't heal
-            if (currentTarget.health.IsFullLife())
-                return; // Target is full life
-            
-            SetCursor(CursorType.Heal);
+            else
+                OnHoverAlly?.Invoke(this, currentTarget);
         }
         else // Enemy
-        {
             OnHoverEnemy?.Invoke(this, currentTarget);
-            
-            if(!currentCharacter.attack.AttackableTiles().Contains(currentTarget.tile))
-                return;
-            
-            SetCursor(CursorType.AimAndInSight);
-        }
-    }
-    
-    /// <summary>
-    /// Sets cursor to its new appearance.
-    /// </summary>
-    /// <param name="type"></param>
-    private void SetCursor(CursorType type)
-    {
-        switch (type)
-        {
-            case CursorType.Regular:
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                break;
-            case CursorType.AimAndInSight:
-                Cursor.SetCursor(aimCursor, new Vector2(16, 16), CursorMode.Auto);
-                break;
-            case CursorType.OutAimOrSight:
-                Cursor.SetCursor(noLineOfSightCursor, new Vector2(16, 16), CursorMode.Auto);
-                break;
-            case CursorType.OutMovement:
-                Cursor.SetCursor(cantGoCursor, new Vector2(16, 16), CursorMode.Auto);
-                break;
-            case CursorType.Heal:
-                Cursor.SetCursor(healCursor, new Vector2(16, 16), CursorMode.Auto);
-                break;
-            default:
-                break;
-        }
     }
     
     /// <summary>
@@ -294,22 +222,18 @@ public class M_Feedback : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-    
+
     private void Input_OnTileExit(object sender, Tile tile)
     {
-        SetCursor(CursorType.OutMovement);
         HideCoverFeedbacks();
     }
-
+    
     private void Input_OnTileEnter(object sender, Tile tile)
     {
         C__Character currentCharacter = _characters.current;
         
         if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
-        {
-            SetCursor(CursorType.OutMovement);
             return; // Can't go on this tile or can't play
-        }
         
         bool pointedCharacterIsVisible = !_rules.enableFogOfWar || currentCharacter.look.VisibleTiles().Contains(tile);
 
@@ -317,11 +241,5 @@ public class M_Feedback : MonoBehaviour
             OnOccupiedTile(tile);
         else
             OnFreeTile(tile);
-    }
-    
-    private void Input_ChangeClickActivation(object sender, bool canClickValue)
-    {
-        if(!canClickValue)
-            SetCursor(CursorType.Regular);
     }
 }
