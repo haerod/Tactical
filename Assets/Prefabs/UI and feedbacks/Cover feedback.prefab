@@ -81,7 +81,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &2631777264717938005
@@ -165,7 +165,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &3129561333849334982
@@ -221,6 +221,8 @@ MonoBehaviour:
   - {fileID: 2012086918675050530}
   - {fileID: 8899989330765411535}
   - {fileID: 2085053877892546027}
+  coveredColor: {fileID: 11400000, guid: cea5dda77b0d8ee41bf0aca959ce8de5, type: 2}
+  uncoveredColor: {fileID: 11400000, guid: 729b909114b50ce439cbf5f92c808bd1, type: 2}
 --- !u!1 &3379220627982243670
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +304,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &5550253933112669390
@@ -386,6 +388,6 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

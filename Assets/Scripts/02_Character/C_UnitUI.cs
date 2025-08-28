@@ -12,6 +12,8 @@ public class C_UnitUI : MonoBehaviour
     [SerializeField] private UI_SlicedHealthBar healthBar;
     [SerializeField] private UI_CoverState coverState;
     [SerializeField] private UI_OrientToCamera orientToCamera;
+    [SerializeField] private GameColor coveredColor;
+    [SerializeField] private GameColor uncoveredColor;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -21,6 +23,7 @@ public class C_UnitUI : MonoBehaviour
     {
         _characters.OnCharacterHover += Characters_OnCharacterHover;
         _characters.OnCharacterExit += Characters_OnCharacterExit;
+        DisplayCharacterCoverState(c.cover.GetCoverState());
     }
 
     // ======================================================================
@@ -51,18 +54,6 @@ public class C_UnitUI : MonoBehaviour
     public void UpdateHealthBar() => healthBar.DisplayCurrentHealth();
 
     /// <summary>
-    /// Hides the cover state's info.
-    /// </summary>
-    public void HideCoverState() => coverState.HideCoverState();
-
-    /// <summary>
-    /// Display the cover state's info.
-    /// </summary>
-    /// <param name="coverType"></param>
-    /// <param name="uncoveredColour"></param>
-    public void DisplayCoverState(CoverType coverType, Color uncoveredColour) => coverState.DisplayCoverState(coverType, uncoveredColour);
-
-    /// <summary>
     /// Orients the in-world UI to the camera.
     /// </summary>
     public void OrientToCamera() => orientToCamera.OrientToCamera();
@@ -70,7 +61,21 @@ public class C_UnitUI : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
+    /// <summary>
+    /// Displays the cover state of the character on its world UI (hover it).
+    /// </summary>
+    /// <param name="coverInfo"></param>
+    private void DisplayCharacterCoverState(CoverInfo coverInfo)
+    {
+        if (coverInfo == null)
+            coverState.HideCoverState();
+        else
+            coverState.DisplayCoverState(
+                coverInfo.GetCoverType(),
+                coverInfo.GetIsCovered() ? coveredColor.color : uncoveredColor.color);
+    }
+    
     // ======================================================================
     // EVENTS
     // ======================================================================

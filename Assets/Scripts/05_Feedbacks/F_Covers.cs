@@ -11,19 +11,12 @@ public class F_Covers : MonoBehaviour
     [Header("REFERENCES")]
     
     [SerializeField] private SpriteRenderer[] renderers;
-    
-    private Color coveredColour;
-    private Color uncoveredColour;
+    [SerializeField] GameColor coveredColor;
+    [SerializeField] GameColor uncoveredColor;
     
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
-    private void Start()
-    {
-        coveredColour = _feedback.GetCoveredColour();
-        uncoveredColour = _feedback.GetUncoveredColour();
-    }
 
     // ======================================================================
     // PUBLIC METHODS
@@ -116,7 +109,7 @@ public class F_Covers : MonoBehaviour
     private void ShowFeedbackRenderer(SpriteRenderer feedbackRenderer, CoverInfo info, bool isCentralTile)
     {
         feedbackRenderer.sprite = info.GetCoverType().GetCoverFeedbackSprite();
-        feedbackRenderer.color = info.GetIsCovered() ? coveredColour : uncoveredColour;
+        feedbackRenderer.color = info.GetIsCovered() ? coveredColor.color : uncoveredColor.color;
         if(isCentralTile)
             feedbackRenderer.color = new Color(feedbackRenderer.color.r, feedbackRenderer.color.g, feedbackRenderer.color.b, 1);
         

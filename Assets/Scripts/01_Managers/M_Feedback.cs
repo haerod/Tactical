@@ -7,11 +7,6 @@ using static M__Managers;
 
 public class M_Feedback : MonoBehaviour
 {
-    [Header("COVERS")]
-    
-    [SerializeField] private Color coveredColour = Color.blue;
-    [SerializeField] private Color uncoveredColour = Color.red;
-
     [Header("REFERENCES")]
     
     public F_ViewLines viewLines;
@@ -42,9 +37,6 @@ public class M_Feedback : MonoBehaviour
     private void Start()
     {
         _input.OnTileEnter += Input_OnTileEnter;
-        
-        _characters.GetCharacterList()
-            .ForEach(character => DisplayCharacterCoverState(character, character.cover.GetCoverState()));
     }
     
     // ======================================================================
@@ -74,21 +66,6 @@ public class M_Feedback : MonoBehaviour
             viewLines.DisableViewLines();
         }
     }
-    
-    // Cover feedbacks
-    // ===============
-    
-    /// <summary>
-    /// Returns the feedback's covered colour.
-    /// </summary>
-    /// <returns></returns>
-    public Color GetCoveredColour() => coveredColour;
-    
-    /// <summary>
-    /// Returns the feedback's uncovered colour.
-    /// </summary>
-    /// <returns></returns>
-    public Color GetUncoveredColour() => uncoveredColour;
     
     // ======================================================================
     // PRIVATE METHODS
@@ -170,21 +147,6 @@ public class M_Feedback : MonoBehaviour
             .Except(visibleCharacters)
             .ToList()
             .ForEach(c => c.anim.SetVisualActives(false));
-    }
-    
-    /// <summary>
-    /// Displays the cover state of the character on its world UI (hover it).
-    /// </summary>
-    /// <param name="character"></param>
-    /// <param name="coverInfo"></param>
-    private void DisplayCharacterCoverState(C__Character character, CoverInfo coverInfo)
-    {
-        if(coverInfo == null)
-            character.unitUI.HideCoverState();
-        else
-            character.unitUI.DisplayCoverState(
-                coverInfo.GetCoverType(), 
-                coverInfo.GetIsCovered() ? _feedback.GetCoveredColour() : _feedback.GetUncoveredColour());
     }
     
     // ======================================================================
