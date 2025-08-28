@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using static M__Managers;
 
 public class UI_PercentShootText : MonoBehaviour
@@ -14,7 +15,7 @@ public class UI_PercentShootText : MonoBehaviour
 
     [Header("REFERENCES")]
 
-    [SerializeField] private Text percentShootText;
+    [SerializeField] private TextMeshProUGUI percentShootText;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -23,7 +24,7 @@ public class UI_PercentShootText : MonoBehaviour
     private void Start()
     {
         _input.OnNoTile += Input_OnNoTile;
-        _feedback.OnFreeTileEvent += Feedback_OnFreeTile;
+        _feedback.OnFreeTile += Feedback_OnFreeTile;
         _feedback.OnHoverEnemy += Feedback_OnHoverEnemy;
         _feedback.OnHoverAlly += Feedback_OnHoverAlly;
         _feedback.OnHoverItself += Feedback_OnHoverItself;
@@ -41,11 +42,15 @@ public class UI_PercentShootText : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+
     /// <summary>
     /// Enables the percent shoot text and displays the value in percent.
     /// </summary>
     /// <param name="percent"></param>
-    public void SetPercentShootText(int percent)
+    private void SetPercentShootText(int percent)
     {
         percentShootText.gameObject.SetActive(true);
         percentShootText.text = percent + "%";
@@ -55,17 +60,17 @@ public class UI_PercentShootText : MonoBehaviour
             // 0
             case <= 0:
                 percentShootText.color = zeroColor;
-                percentShootText.fontStyle = FontStyle.Normal;
+                percentShootText.fontStyle = FontStyles.Normal;
                 break;
             // Regular
             case < 100:
                 percentShootText.color = basicColor;
-                percentShootText.fontStyle = FontStyle.Normal;
+                percentShootText.fontStyle = FontStyles.Normal;
                 break;
             // Critical
             default:
                 percentShootText.color = criticalColor;
-                percentShootText.fontStyle = FontStyle.Bold;
+                percentShootText.fontStyle = FontStyles.Bold;
                 break;
         }
     }
@@ -73,12 +78,8 @@ public class UI_PercentShootText : MonoBehaviour
     /// <summary>
     /// Disables the percent shoot text.
     /// </summary>
-    public void DisablePercentShootText() => percentShootText.gameObject.SetActive(false);
-
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-
+    private void DisablePercentShootText() => percentShootText.gameObject.SetActive(false);
+    
     /// <summary>
     /// Sets the text position at mouse position + offset.
     /// </summary>

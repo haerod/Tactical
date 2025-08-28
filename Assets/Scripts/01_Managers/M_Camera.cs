@@ -59,6 +59,7 @@ public class M_Camera : MonoBehaviour
         _input.OnRecenterCameraInput += Input_OnRecenterCameraInput;
         _input.OnRotateRightInput += Input_OnRotateRightCameraInput;
         _input.OnRotateLeftInput += Input_OnRotateLeftCameraInput;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         
         TileGrid boardTileGrid = _board.tileGrid;
 
@@ -207,4 +208,11 @@ public class M_Camera : MonoBehaviour
     private void Input_OnRotateLeftCameraInput(object sender, EventArgs e) => RotateCamera(90f);
 
     private void Input_OnRotateRightCameraInput(object sender, EventArgs e) => RotateCamera(-90f);
+    
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        _camera.SetTarget(startingCharacter.transform);
+        _camera.ResetPosition();
+    }
+
 }

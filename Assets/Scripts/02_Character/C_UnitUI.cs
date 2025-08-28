@@ -12,6 +12,7 @@ public class C_UnitUI : MonoBehaviour
     [SerializeField] private UI_SlicedHealthBar healthBar;
     [SerializeField] private UI_CoverState coverState;
     [SerializeField] private UI_OrientToCamera orientToCamera;
+    [Space]
     [SerializeField] private GameColor coveredColor;
     [SerializeField] private GameColor uncoveredColor;
     
@@ -21,37 +22,18 @@ public class C_UnitUI : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterHover += Characters_OnCharacterHover;
-        _characters.OnCharacterExit += Characters_OnCharacterExit;
+        _feedback.OnOccupiedTile += Feedback_OnOccupiedTile;
+        _input.OnTileExit += Input_OnTileExit;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        c.health.OnDeath += Health_OnDeath;
+        c.health.HealthChanged += Health_HealthChanged;
         DisplayCharacterCoverState(c.cover.GetCoverState());
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Shows the in-world UI over the character (health bar, cover state, etc.).
-    /// </summary>
-    public void Display()
-    {
-        healthBar.gameObject.SetActive(true);
-        coverState.gameObject.SetActive(true);
-    }
-
-    /// <summary>
-    /// Hides the in-world UI over the character (health bar, cover state, etc.).
-    /// </summary>
-    public void Hide()
-    {
-        healthBar.gameObject.SetActive(false);
-        coverState.gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Updates the health bar values.
-    /// </summary>
-    public void UpdateHealthBar() => healthBar.DisplayCurrentHealth();
 
     /// <summary>
     /// Orients the in-world UI to the camera.
@@ -61,6 +43,24 @@ public class C_UnitUI : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Shows the in-world UI over the character (health bar, cover state, etc.).
+    /// </summary>
+    private void Display()
+    {
+        healthBar.gameObject.SetActive(true);
+        coverState.gameObject.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Hides the in-world UI over the character (health bar, cover state, etc.).
+    /// </summary>
+    private void Hide()
+    {
+        healthBar.gameObject.SetActive(false);
+        coverState.gameObject.SetActive(false);
+    }
     
     /// <summary>
     /// Displays the cover state of the character on its world UI (hover it).
@@ -76,25 +76,71 @@ public class C_UnitUI : MonoBehaviour
                 coverInfo.GetIsCovered() ? coveredColor.color : uncoveredColor.color);
     }
     
+    /// <summary>
+    /// Updates the health bar values.
+    /// </summary>
+    private void UpdateHealthBar() => healthBar.DisplayCurrentHealth();
+    
+    /// <summary>
+    /// Starts a waits for "time" seconds and executes an action.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="onEnd"></param>
+    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
+
+    /// <summary>
+    /// Waits for "time" seconds and executes an action.
+    /// Called by Wait() method.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="onEnd"></param>
+    /// <returns></returns>
+    private IEnumerator Wait_Co(float time, Action onEnd)
+    {
+        yield return new WaitForSeconds(time);
+
+        onEnd();
+    }
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
 
-    private void Characters_OnCharacterHover(object sender, C__Character hoverCharacter)
+    private void Feedback_OnOccupiedTile(object sender, Tile hoveredTile)
     {
-        if(hoverCharacter != c)
-            return; // Not this character
-        
-        Display();
+        if(hoveredTile.character == c)
+            Display();
     }
-
-    private void Characters_OnCharacterExit(object sender, C__Character exitCharacter)
+    
+    private void Input_OnTileExit(object sender, Tile exitedTile)
     {
-        if(exitCharacter != c)
+        if(exitedTile.character != c)
             return; // Not this character
         if(_characters.current == c)
             return; // Is the current character
         
         Hide();
+    }
+    
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        if(startingCharacter == c)
+            Display();
+    }
+    
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    {
+        if(endingCharacter == c)
+            Hide();
+    }
+    
+    private void Health_OnDeath(object sender, EventArgs e)
+    {
+        Wait(1, () => { c.unitUI.Hide(); });
+    }
+    
+    private void Health_HealthChanged(object sender, EventArgs e)
+    {
+        UpdateHealthBar();
     }
 }

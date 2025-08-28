@@ -11,9 +11,9 @@ public class M_Feedback : MonoBehaviour
     
     public static M_Feedback instance;
     
-    public event EventHandler<Tile> OnFreeTileEvent;
+    public event EventHandler<Tile> OnFreeTile;
     public event EventHandler<List<Tile>> OnMovableTile;
-    public event EventHandler<Tile> OnOccupiedTileEvent;
+    public event EventHandler<Tile> OnOccupiedTile;
     public event EventHandler<C__Character> OnHoverEnemy;
     public event EventHandler<C__Character> OnHoverAlly;
     public event EventHandler OnHoverItself;
@@ -48,18 +48,20 @@ public class M_Feedback : MonoBehaviour
     /// Actions happening if the pointer overlaps a free tile.
     /// </summary>
     /// <param name="tile"></param>
-    private void OnFreeTile(Tile tile)
+    private void FreeTileHovered(Tile tile)
     {
-        OnFreeTileEvent?.Invoke(this, tile);
-        
         C__Character currentCharacter = _characters.current;
+
+        OnFreeTile?.Invoke(this, tile);
         
-        // Get pathfinding
         List<Tile> currentPathfinding = Pathfinding.GetPath(
             currentCharacter.tile,
             tile,
             Pathfinding.TileInclusion.WithStartAndEnd,
-            new MovementRules(currentCharacter.move.walkableTiles, currentCharacter.move.GetTraversableCharacterTiles(), currentCharacter.move.useDiagonalMovement));
+            new MovementRules(
+                currentCharacter.move.walkableTiles, 
+                currentCharacter.move.GetTraversableCharacterTiles(), 
+                currentCharacter.move.useDiagonalMovement));
 
         if (currentPathfinding.Count == 0)
             return; // No path
@@ -68,15 +70,15 @@ public class M_Feedback : MonoBehaviour
     }
     
     /// <summary>
-    /// Actions happening if the pointer overlaps an occupied tile.
+    /// Actions happening if the pointer overlaps a occupied by a character.
     /// </summary>
     /// <param name="tile"></param>
-    private void OnOccupiedTile(Tile tile)
+    private void OccupiedTileHovered(Tile tile)
     {
-        OnOccupiedTileEvent?.Invoke(this, tile);
-        
         C__Character currentCharacter = _characters.current;
         C__Character currentTarget = tile.character;
+        
+        OnOccupiedTile?.Invoke(this, tile);
         
         if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
         {
@@ -103,8 +105,8 @@ public class M_Feedback : MonoBehaviour
         bool pointedCharacterIsVisible = !_rules.IsFogOfWar() || currentCharacter.look.VisibleTiles().Contains(tile);
 
         if (tile.IsOccupiedByCharacter() && pointedCharacterIsVisible)
-            OnOccupiedTile(tile);
+            OccupiedTileHovered(tile);
         else
-            OnFreeTile(tile);
+            FreeTileHovered(tile);
     }
 }

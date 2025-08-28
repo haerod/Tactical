@@ -25,7 +25,7 @@ public class F_MoveLine : MonoBehaviour
         A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         Turns.OnVictory += Turns_OnVictory;
-        _feedback.OnOccupiedTileEvent += Feedback_OnOccupiedTile;
+        _feedback.OnOccupiedTile += Feedback_OnOccupiedTile;
     }
 
     // ======================================================================

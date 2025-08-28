@@ -28,8 +28,10 @@ public class C_Health : MonoBehaviour
 
      public int currentHealth = 5;
 
+     public event EventHandler HealthChanged;
      public static event EventHandler<int> OnAnyHealthLoss;
      public static event EventHandler<int> OnAnyHealthGain;
+     public event EventHandler OnDeath;
      
     // ======================================================================
     // MONOBEHAVIOUR
@@ -135,7 +137,7 @@ public class C_Health : MonoBehaviour
         }
 
         OnAnyHealthLoss?.Invoke(this, damage);
-        c.unitUI.UpdateHealthBar();
+        HealthChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void Heal(int healAmount, bool clampValue = true)
@@ -149,7 +151,7 @@ public class C_Health : MonoBehaviour
             currentHealth = health;
         
         OnAnyHealthGain?.Invoke(this, healAmount);
-        c.unitUI.UpdateHealthBar();
+        HealthChanged?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>
@@ -173,31 +175,10 @@ public class C_Health : MonoBehaviour
     /// </summary>
     private void Death()
     {
+        OnDeath?.Invoke(this, EventArgs.Empty);
         c.anim.Death();
         _characters.RemoveCharacter(c);
         _rules.RemoveCharacter(c);
         c.GetComponentInChildren<Collider>().gameObject.SetActive(false);
-        Wait(1, () => { c.unitUI.Hide(); });
-    }
-
-    /// <summary>
-    /// Starts a waits for "time" seconds and executes an action.
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="onEnd"></param>
-    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-
-    /// <summary>
-    /// Waits for "time" seconds and executes an action.
-    /// Called by Wait() method.
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="onEnd"></param>
-    /// <returns></returns>
-    IEnumerator Wait_Co(float time, Action onEnd)
-    {
-        yield return new WaitForSeconds(time);
-
-        onEnd();
     }
 }

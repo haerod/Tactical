@@ -67,6 +67,11 @@ public class M_Input : MonoBehaviour
             Debug.LogError("There is more than one M_Input in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
     }
 
+    private void Start()
+    {
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
+    }
+
     private void Update()
     {
         if (!canClick) 
@@ -271,5 +276,24 @@ public class M_Input : MonoBehaviour
             OnRotateRightInput?.Invoke(this, EventArgs.Empty);
         if (Input.GetKeyDown(rotateLeftKey))
             OnRotateLeftInput?.Invoke(this, EventArgs.Empty);
+    }
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter )
+    {
+        if (startingCharacter.behavior.playable) 
+            _input.SetActiveClick();
+        else
+            _input.SetActiveClick(false);
+
+        previousTile = null;
+        previousCharacter = null;
     }
 }

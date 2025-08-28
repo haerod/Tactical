@@ -29,25 +29,16 @@
 ## REFACTOR
 ## ========
 
-- Unit UI using events
-    - Health bar
-    - Cover feedbacks
-
 - M_Rules
     - Malus of precision by distance -> move it in character or weapon
     - Fog of war vision rules not in M_Rules
 
-- Replace Texts by TMP
-    - Canvas Percent Shoot
-    - Watch on prefabs
-    
-- Rename M_Feedbacks -> only interpreting inputs now (fusion with M_Inputs ?)
+- Rename M_Feedbacks -> only interpreting inputs now (fusion with M_Inputs ? / Static class in Inputs)
 - Tiles material work with an enum, use a Scriptable object instead
 - Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
 - Separate the logic between Turns and M_Characters
     - Turns logic as a Scriptable object in M_Characters
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
-- Animator of the characters
 - Rename Character in Unit
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
@@ -91,3 +82,4 @@
 - Armor and shield
 - Notes on elements
 - Ragdoll on death
+- Animator of the characters more usable

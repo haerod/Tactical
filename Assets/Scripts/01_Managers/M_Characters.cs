@@ -12,8 +12,6 @@ public class M_Characters : MonoBehaviour
     public C__Character current;    
     [SerializeField] private List<C__Character> characters;
 
-    public event EventHandler<C__Character> OnCharacterHover;
-    public event EventHandler<C__Character> OnCharacterExit;
     public event EventHandler<C__Character> OnCharacterTurnStart;
     public event EventHandler<C__Character> OnCharacterTurnEnd;
     
@@ -34,9 +32,6 @@ public class M_Characters : MonoBehaviour
 
     private void Start()
     {
-        _input.OnTileEnter += InputOnTileEnter;
-        _input.OnTileExit += InputOnTileExit;
-        
         NewCurrentCharacter(_rules.GetFirstCharacter());
     }
 
@@ -51,58 +46,32 @@ public class M_Characters : MonoBehaviour
     public List<C__Character> GetCharacterList() => characters;
 
     /// <summary>
-    /// Add a new character in the character's list.
+    /// Adds a new character in the character's list.
     /// </summary>
     /// <param name="character"></param>
     public void AddCharacter(C__Character character) => GetCharacterList().Add(character);
 
     /// <summary>
-    /// Remove a character from the character's list.
+    /// Removes a character from the character's list.
     /// </summary>
     /// <param name="character"></param>
     public void RemoveCharacter(C__Character character) => GetCharacterList().Remove(character);
     
     /// <summary>
-    /// Do all the things happening when a new current character is designated (reset camera, clear visual feedbacks, update UI, etc.)
+    /// Does all the things happening when a new current character is designated (reset camera, clear visual feedbacks, update UI, etc.)
     /// </summary>
     public void NewCurrentCharacter(C__Character newCurrentCharacter)
     {
-        // Old character
-        if (current)
-        {
+        if(current)
             OnCharacterTurnEnd?.Invoke(this, current);
-            current.actions.UnsubscribeToEvents();
-            current.unitUI.Hide();
-        }
 
-        // Change current character
         current = newCurrentCharacter;
-
-        // Camera
-        _camera.SetTarget(current.transform);
-        _camera.ResetPosition();
-
-        // Character
-        current.unitUI.Display();
-
-        // Playable character (PC)
-        if (current.behavior.playable) 
-        {
-            current.actions.SubscribeToEvents();
-            _input.SetActiveClick();
-        }
-        // Non playable character (NPC)
-        else
-        {
-            _input.SetActiveClick(false);
-            current.behavior.PlayBehavior();
-        }
         
         OnCharacterTurnStart?.Invoke(this, newCurrentCharacter);
     }
 
     /// <summary>
-    /// Return true if the character's team is the last team standing.
+    /// Returns true if the character's team is the last team standing.
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
@@ -112,7 +81,7 @@ public class M_Characters : MonoBehaviour
             .All(c => c.Team() == character.Team());
 
     /// <summary>
-    /// Return the team members of a character.
+    /// Returns the team members of a character.
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
@@ -120,7 +89,7 @@ public class M_Characters : MonoBehaviour
         GetCharacterList()
             .Where(c => c.Team() == character.Team())
             .ToList();
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -128,16 +97,4 @@ public class M_Characters : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-    
-    private void InputOnTileEnter(object sender, Tile tile)
-    {
-        if(tile.character)
-            OnCharacterHover?.Invoke(this, tile.character);
-    }
-
-    private void InputOnTileExit(object sender, Tile tile)
-    {
-        if(tile.character)
-            OnCharacterExit?.Invoke(this, tile.character);
-    }
 }

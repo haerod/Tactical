@@ -2425,6 +2425,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
+--- !u!114 &2010160965580618074 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3881942300243750694, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
+  m_PrefabInstance: {fileID: 3331233582057166460}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5211910966631692294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18a70d915e0d8df43a2240116f7c9754, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4627241086625148676 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7930179286621550968, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
@@ -2446,18 +2457,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7380984320251784826, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
   m_PrefabInstance: {fileID: 3331233582057166460}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1242646055588800613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5211910966631692294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18a70d915e0d8df43a2240116f7c9754, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4598890746202993601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2473,7 +2472,7 @@ MonoBehaviour:
   c: {fileID: 3541061014796538876}
   healthBar: {fileID: 5364162271039580364}
   coverState: {fileID: 4627241086625148676}
-  orientToCamera: {fileID: 1242646055588800613}
+  orientToCamera: {fileID: 2010160965580618074}
   coveredColor: {fileID: 11400000, guid: cea5dda77b0d8ee41bf0aca959ce8de5, type: 2}
   uncoveredColor: {fileID: 11400000, guid: 729b909114b50ce439cbf5f92c808bd1, type: 2}
 --- !u!1 &5364162270567414129 stripped

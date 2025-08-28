@@ -22,8 +22,8 @@ public class F_CoversHolder : MonoBehaviour
     private void Start()
     {
         GenerateCoverFeedbacks();
-        _feedback.OnFreeTileEvent += Feedback_OnFreeTile;
-        _feedback.OnOccupiedTileEvent += Feedback_OnOccupiedTile;
+        _feedback.OnFreeTile += Feedback_OnFreeTile;
+        _feedback.OnOccupiedTile += Feedback_OnOccupiedTile;
         A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
         _input.OnNoTile += Input_OnNoTile;
     }
