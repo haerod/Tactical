@@ -100,7 +100,7 @@ public class M_Feedback : MonoBehaviour
         if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
             return; // Can't go on this tile or can't play
         
-        bool pointedCharacterIsVisible = !_rules.enableFogOfWar || currentCharacter.look.VisibleTiles().Contains(tile);
+        bool pointedCharacterIsVisible = !_rules.IsFogOfWar() || currentCharacter.look.VisibleTiles().Contains(tile);
 
         if (tile.IsOccupiedByCharacter() && pointedCharacterIsVisible)
             OnOccupiedTile(tile);

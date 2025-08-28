@@ -55,7 +55,7 @@ public class A_Move : A__Action
             return new List<Tile>();
 
         // Fog of war disabled
-        if (!_rules.enableFogOfWar)
+        if (!_rules.IsFogOfWar())
             return _board
                 .GetTilesAround(c.tile, movementRange,useDiagonalMovement)
                 .Except(Blockers())
@@ -87,7 +87,7 @@ public class A_Move : A__Action
     {
         List<Tile> toReturn = new List<Tile>();
 
-        if (_rules.enableFogOfWar)
+        if (_rules.IsFogOfWar())
             toReturn.AddRange(_characters.GetCharacterList()
                 .Where(chara => IsBlockingPath(chara))
                 .Intersect(c.look.CharactersVisibleInFog())
@@ -136,10 +136,7 @@ public class A_Move : A__Action
     {
         Tile tileAtCoordinates = _board.GetTileAtCoordinates(coordinates);
         
-        if(!tileAtCoordinates)
-            return false; // No tile
-        
-        return CanWalkOn(tileAtCoordinates.type);
+        return tileAtCoordinates && CanWalkOn(tileAtCoordinates.type);
     }
     
     /// <summary>
@@ -152,7 +149,7 @@ public class A_Move : A__Action
         if (!c.CanPlay()) 
             return false; // Can't play
 
-        bool tileInFog =_rules.enableFogOfWar && !c.look.VisibleTiles().Contains(tile);
+        bool tileInFog =_rules.IsFogOfWar() && !c.look.VisibleTiles().Contains(tile);
         if (tileInFog && !c.move.movementInFogOfWarAllowed) 
             return false; // Tile in fog
 

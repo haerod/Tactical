@@ -31,45 +31,30 @@ public class F_FogOfWar : MonoBehaviour
     /// <summary>
     /// Show visible elements of the fog of war.
     /// </summary>
-    private void ShowVisibleElements(List<Tile> visibleTiles) => SetFogVisualsActive(true, visibleTiles);
-    
-    /// <summary>
-    /// Enables/disables the view lines on border tiles and enables/disables fog mask.
-    /// </summary>
-    private void SetFogVisualsActive(bool value, List<Tile> tilesInView = null)
+    private void ShowVisibleElements(List<Tile> visibleTiles)
     {
-        if (!_rules.enableFogOfWar) 
-            return; // No fog of war
-
-        if (value)
-        {
-            EnableViewLines(tilesInView);
-            DisplayCharactersInFogOfWar(tilesInView);
-        }
-        else
-        {
-            DisableViewLines();
-        }
+        DisableViewLines();
+        EnableViewLines(visibleTiles);
+        DisplayCharacters(visibleTiles);
     }
     
     /// <summary>
     /// Shows and hides characters in fog of war.
     /// </summary>
     /// <param name="visibleTiles"></param>
-    private void DisplayCharactersInFogOfWar(List<Tile> visibleTiles)
+    private void DisplayCharacters(List<Tile> visibleTiles)
     {
         List<C__Character> visibleCharacters = _characters.GetCharacterList()
             .Where(c =>
             {
                 if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
                     return true;
-                else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
+                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
                     return visibleTiles.Contains(c.tile) || c.unitTeam == _characters.current.unitTeam;
-                else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
+                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
                     return visibleTiles.Contains(c.tile);
-                else
-                    Debug.LogError("No rule, please add one here.");
-
+                
+                Debug.LogError("No rule, please add one here.");
                 return false;
             })
             .ToList();
@@ -147,10 +132,9 @@ public class F_FogOfWar : MonoBehaviour
     
     private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
     {
-        SetFogVisualsActive(false);
         ShowVisibleElements(startingCharacter.look.VisibleTiles());
     }
-
+    
     private void Move_OnAnyMovementEnd(object sender, EventArgs e)
     {
         C__Character currentCharacter = _characters.current;
@@ -158,7 +142,6 @@ public class F_FogOfWar : MonoBehaviour
         if (!currentCharacter.behavior.playable)
             return;
         
-        SetFogVisualsActive(false);
         ShowVisibleElements(currentCharacter.look.VisibleTiles());
     }
     
@@ -169,7 +152,6 @@ public class F_FogOfWar : MonoBehaviour
         if (!currentCharacter.behavior.playable)
             return;
         
-        SetFogVisualsActive(false);
         ShowVisibleElements(currentCharacter.look.VisibleTiles());
     }
 }

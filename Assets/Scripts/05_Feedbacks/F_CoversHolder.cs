@@ -63,13 +63,13 @@ public class F_CoversHolder : MonoBehaviour
     }
     
     /// <summary>
-    /// Hide all the cover feedbacks.
+    /// Hides all the cover feedbacks.
     /// </summary>
     private void HideCoverFeedbacks() => coverFeedbacks
         .ForEach(c => c.Hide());
     
     /// <summary>
-    /// Instantiate the cover feedbacks before use it (pooling).
+    /// Instantiates the cover feedbacks before use it (pooling).
     /// </summary>
     private void GenerateCoverFeedbacks()
     {

@@ -29,27 +29,28 @@
 ## REFACTOR
 ## ========
 
-- Rename M_Feedbacks -> only interpreting inputs now (fusion with M_Inputs ?)
-- Rules / VISION section to push in C_View
-- Tiles material work with an enum, use a Scriptable object instead
-- Cursors in Actions (not in Feedbacks)
-
-- Unit UI need to have independent parts
+- Unit UI using events
     - Health bar
     - Cover feedbacks
 
+- M_Rules
+    - Malus of precision by distance -> move it in character or weapon
+    - Fog of war vision rules not in M_Rules
+
+- Replace Texts by TMP
+    - Canvas Percent Shoot
+    - Watch on prefabs
+    
+- Rename M_Feedbacks -> only interpreting inputs now (fusion with M_Inputs ?)
+- Tiles material work with an enum, use a Scriptable object instead
 - Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
-- Fog of war not in level rules
 - Separate the logic between Turns and M_Characters
-- Ergonomic of characters
+    - Turns logic as a Scriptable object in M_Characters
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
-- UI with recommendations
 - Animator of the characters
 - Rename Character in Unit
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
-- Replace Texts by TMP
-- Hide/Enable tile feedback is on C__Character -> move it to M_Feedbacks
 
 ## OPTIMISATION
 ## ============
@@ -67,6 +68,7 @@
 - Character can throw spells (like fireball)
 - Separate folders between Toy box and Technical box
 - Namespaces
+- Ergonomic of characters (custom editor)
 - Actions systems: possibility between multiple designs
 - Online API like Unity (ask Simon)
 - Add events (FX, sound, etc.) for everything

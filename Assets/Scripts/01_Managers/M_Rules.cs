@@ -12,16 +12,13 @@ public class M_Rules : MonoBehaviour
     
     [Header("FOG OF WAR")]
     
-    public bool enableFogOfWar = true;
+    [SerializeField] private F_FogOfWar fogOfWar;
+    public enum VisibleInFogOfWar { InView, Allies, Everybody}
+    public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
 
     [Header("VISION")]
 
     public int percentReductionByDistance = 5;
-
-    public enum SeeAnShotThrough { Everybody, Nobody, AlliesOnly}
-    public SeeAnShotThrough canSeeAndShotThrough = SeeAnShotThrough.Everybody;
-    public enum VisibleInFogOfWar { InView, Allies, Everybody}
-    public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
     
     public static M_Rules instance;
 
@@ -33,29 +30,35 @@ public class M_Rules : MonoBehaviour
     {
         // Singleton
         if (!instance)
-        {
             instance = this;
-        }
         else
-        {
             Debug.LogError("There is more than one M_Rules in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-        }
     }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Returns true if there is an enabled fog of war.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFogOfWar() => fogOfWar && fogOfWar.gameObject.activeInHierarchy;
+    
+    /// <summary>
+    /// Returns the team play order list.
+    /// </summary>
+    /// <returns></returns>
     public List<TeamPlayOrder> GetTeamPlayOrders() => teamsPlayOrder;
     
     /// <summary>
-    /// Return the first character of the play order.
+    /// Returns the first character of the play order.
     /// </summary>
     /// <returns></returns>
     public C__Character GetFirstCharacter() => teamsPlayOrder[0].FirstCharacter();
     
     /// <summary>
-    /// Add a character to the Team play order.
+    /// Adds a character to the Team play order.
     /// </summary>
     /// <param name="characterToAdd"></param>
     public void AddCharacter(C__Character characterToAdd)
@@ -73,7 +76,7 @@ public class M_Rules : MonoBehaviour
     }
     
     /// <summary>
-    /// Remove a character from the Team play order
+    /// Removes a character from the Team play order
     /// </summary>
     /// <param name="characterToRemove"></param>
     public void RemoveCharacter(C__Character characterToRemove)
@@ -106,26 +109,26 @@ public class TeamPlayOrder
     public List<C__Character> GetCharactersPlayOrder() => charactersPlayOrder;
     
     /// <summary>
-    /// Return the first character of the team's characters play order.
+    /// Returns the first character of the team's characters play order.
     /// </summary>
     /// <returns></returns>
     public C__Character FirstCharacter() => charactersPlayOrder.First();
     
     /// <summary>
-    /// Return the next character of this team, or null if it's the last.
+    /// Returns the next character of this team, or null if it's the last.
     /// </summary>
     /// <param name="currentCharacter"></param>
     /// <returns></returns>
     public C__Character NextCharacter(C__Character currentCharacter) => currentCharacter == charactersPlayOrder.Last() ? null : charactersPlayOrder.Next(currentCharacter);
 
     /// <summary>
-    /// Remove a character from charactersPlayOrder.
+    /// Removes a character from charactersPlayOrder.
     /// </summary>
     /// <param name="characterToRemove"></param>
     public void RemoveCharacter(C__Character characterToRemove) => charactersPlayOrder.Remove(characterToRemove);
     
     /// <summary>
-    /// Add a character to charactersPlayOrder.
+    /// Adds a character to charactersPlayOrder.
     /// </summary>
     /// <param name="characterToAdd"></param>
     public void AddCharacter(C__Character characterToAdd) => charactersPlayOrder.Add(characterToAdd);

@@ -67,13 +67,12 @@ public class C_Look : MonoBehaviour
             {
                 if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
                     return true;
-                else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
+                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
                     return VisibleTiles().Contains(chara.tile) || c.team.IsAllyOf(_characters.current);
-                else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
+                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
                     return VisibleTiles().Contains(c.tile);
-                else
-                    Debug.LogError("No rule, please add one here.");
-
+                
+                Debug.LogError("No rule, please add one here.");
                 return false;
             })
             .ToList();
@@ -109,7 +108,8 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="targetCoordinates"></param>
     /// <returns></returns>
-    public List<Tile> GetTilesOfLineOfSightOn(Coordinates targetCoordinates) =>  LineOfSight.GetLineOfSight(c.coordinates, targetCoordinates)
+    public List<Tile> GetTilesOfLineOfSightOn(Coordinates targetCoordinates) =>  
+        LineOfSight.GetLineOfSight(c.coordinates, targetCoordinates)
             .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
             .ToList();
     
@@ -135,26 +135,15 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     private bool AreObstaclesOn(List<Tile> lineOfSight)
     {
-        if (Utils.IsVoidList(lineOfSight)) return false;
+        if (Utils.IsVoidList(lineOfSight)) 
+            return false;
 
         foreach (Tile t in lineOfSight)
         {
-            if (!t) continue; // Nothing
-            if (visualObstacles.Contains(t.type)) return true; // Line of sight blocker
-
-            // Character
-            C__Character chara = t.character;
-            if (!chara) continue; // There is no character
-
-            if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThrough.Nobody)
-            {
-                if (!chara.health.IsDead()) return true; // Other character
-            }
-            else if (_rules.canSeeAndShotThrough == M_Rules.SeeAnShotThrough.AlliesOnly)
-            {
-                // Are obstacle if enemy && alive
-                if ((chara.team.team != c.team.team) && (!chara.health.IsDead())) return true; // Enemy
-            }
+            if (!t) 
+                continue; // No tile
+            if (visualObstacles.Contains(t.type)) 
+                return true; // Line of sight blocker
         }
 
         return false; // No obstacle
