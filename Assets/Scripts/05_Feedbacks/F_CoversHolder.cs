@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,6 +7,8 @@ using static M__Managers;
 
 public class F_CoversHolder : MonoBehaviour
 {
+    [SerializeField] private int coverFeedbackRange = 2;
+    
     [Header("REFERENCES")]
     
     [SerializeField] private GameObject coverFeedbackPrefab;
@@ -15,14 +18,22 @@ public class F_CoversHolder : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
         GenerateCoverFeedbacks();
+        _feedback.OnFreeTileEvent += Feedback_OnFreeTile;
+        _feedback.OnOccupiedTileEvent += Feedback_OnOccupiedTile;
+        A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
+        _input.OnNoTile += Input_OnNoTile;
     }
     
     // ======================================================================
     // PUBLIC METHODS
+    // ======================================================================
+    
+    // ======================================================================
+    // PRIVATE METHODS
     // ======================================================================
     
     /// <summary>
@@ -30,7 +41,7 @@ public class F_CoversHolder : MonoBehaviour
     /// </summary>
     /// <param name="centerCoordinates"></param>
     /// <param name="coverInfos"></param>
-    public void DisplayCoverFeedbacksAround(Coordinates centerCoordinates, List<CoverInfo> coverInfos)
+    private void DisplayCoverFeedbacksAround(Coordinates centerCoordinates, List<CoverInfo> coverInfos)
     {
         for (int i = 0; i < coverFeedbacks.Count; i++)
         {
@@ -40,12 +51,12 @@ public class F_CoversHolder : MonoBehaviour
                 coverFeedbacks[i].Hide();
         }
     }
-
+    
     /// <summary>
     /// Displays the cover infos of a character pointed by the current character.
     /// </summary>
     /// <param name="coverInfo"></param>
-    public void DisplayTargetCoverFeedback(CoverInfo coverInfo)
+    private void DisplayTargetCoverFeedback(CoverInfo coverInfo)
     {
         HideCoverFeedbacks();
         coverFeedbacks[0].Display(coverInfo);
@@ -54,12 +65,8 @@ public class F_CoversHolder : MonoBehaviour
     /// <summary>
     /// Hide all the cover feedbacks.
     /// </summary>
-    public void HideCoverFeedbacks() => coverFeedbacks
+    private void HideCoverFeedbacks() => coverFeedbacks
         .ForEach(c => c.Hide());
-    
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
     
     /// <summary>
     /// Instantiate the cover feedbacks before use it (pooling).
@@ -67,7 +74,6 @@ public class F_CoversHolder : MonoBehaviour
     private void GenerateCoverFeedbacks()
     {
         coverFeedbacks = new List<F_Covers>();
-        int coverFeedbackRange = _feedback.GetCoverFeedbackRange();
         
         for (int i = 0; i < Mathf.Pow(coverFeedbackRange*2+1, 2); i++)
         {
@@ -76,4 +82,31 @@ public class F_CoversHolder : MonoBehaviour
             newCoverFeedback.Hide();
         }
     }
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
+    private void Feedback_OnFreeTile(object sender, Tile freeTile)
+    {
+        DisplayCoverFeedbacksAround(
+            freeTile.coordinates, 
+            _characters.current.cover.GetAllCoverInfosInRangeAt(freeTile.coordinates, coverFeedbackRange));
+    }
+    
+    private void Feedback_OnOccupiedTile(object sender, Tile occupiedTile)
+    {
+        DisplayTargetCoverFeedback(occupiedTile.character.cover.GetCoverStateFrom(_characters.current));
+    }
+    
+    private void Input_OnNoTile(object sender, EventArgs e)
+    {
+        HideCoverFeedbacks();
+    }
+    
+    private void Move_OnAnyMovementStart(object sender, EventArgs e)
+    {
+        HideCoverFeedbacks();
+    }
+
 }

@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4532018508539623107
 MonoBehaviour:
@@ -76,7 +76,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9050541824466806215
 MonoBehaviour:
@@ -1102,17 +1102,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f71fd896719c14d832df7320c6e510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimCursor: {fileID: 2800000, guid: 56df78ee021693f43a70ccbf02e7ad66, type: 3}
-  noLineOfSightCursor: {fileID: 2800000, guid: d8a895ea0c5ac8545bcb103d4db85a02, type: 3}
-  cantGoCursor: {fileID: 2800000, guid: a43f49f3247f01243a909531c94fde22, type: 3}
-  healCursor: {fileID: 2800000, guid: 9e128d21ebcfa734ba14326b624fdd32, type: 3}
   coverFeedbackRange: 2
   coveredColour: {r: 0.37254903, g: 0.9254902, b: 0.91764706, a: 0.19607843}
   uncoveredColour: {r: 1, g: 0.22352941, b: 0.22352941, a: 0.19607843}
   viewLines: {fileID: 1958866178830440100}
   coverHolder: {fileID: 438963347516236975}
-  walkableTiles: []
-  attackableTiles: []
 --- !u!1 &1958866178504323603
 GameObject:
   m_ObjectHideFlags: 0
@@ -1420,13 +1414,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1958866178830440102}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0.000000014901161, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0.010000001}
+  m_LocalScale: {x: 0.0001, y: 1, z: 0.00009999995}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 7
+  m_Father: {fileID: 1958866179438022249}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1958866178830440100
 MonoBehaviour:
@@ -1870,7 +1864,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 10000, y: 10000.003, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1958866178830440101}
   m_Father: {fileID: 1958866178310425238}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
@@ -1961,7 +1956,6 @@ Transform:
   - {fileID: 8111866064363514475}
   - {fileID: 1958866179323365528}
   - {fileID: 1958866179331537170}
-  - {fileID: 1958866178830440101}
   - {fileID: 438918607371576829}
   - {fileID: 7021431454697464025}
   - {fileID: 1350901100335044685}
@@ -2715,7 +2709,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1958866179528147546}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &438963347516236975
 MonoBehaviour:

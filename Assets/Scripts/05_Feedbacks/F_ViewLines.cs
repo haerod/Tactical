@@ -60,7 +60,8 @@ public class F_ViewLines : MonoBehaviour
     /// </summary>
     public void DisableViewLines()
     {
-        if (Utils.IsVoidList(viewArea)) return;
+        if (Utils.IsVoidList(viewArea)) 
+            return;
 
         foreach (Tile t in viewArea)
         {

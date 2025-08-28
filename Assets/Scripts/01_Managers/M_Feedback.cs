@@ -9,7 +9,6 @@ public class M_Feedback : MonoBehaviour
 {
     [Header("COVERS")]
     
-    [SerializeField] private int coverFeedbackRange = 2;
     [SerializeField] private Color coveredColour = Color.blue;
     [SerializeField] private Color uncoveredColour = Color.red;
 
@@ -42,7 +41,6 @@ public class M_Feedback : MonoBehaviour
 
     private void Start()
     {
-        _input.OnTileExit += Input_OnTileExit;
         _input.OnTileEnter += Input_OnTileEnter;
         
         _characters.GetCharacterList()
@@ -79,7 +77,7 @@ public class M_Feedback : MonoBehaviour
     
     // Cover feedbacks
     // ===============
-
+    
     /// <summary>
     /// Returns the feedback's covered colour.
     /// </summary>
@@ -91,12 +89,6 @@ public class M_Feedback : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public Color GetUncoveredColour() => uncoveredColour;
-    
-    /// <summary>
-    /// Returns the cover feedback range.
-    /// </summary>
-    /// <returns></returns>
-    public int GetCoverFeedbackRange() => coverFeedbackRange;
     
     // ======================================================================
     // PRIVATE METHODS
@@ -111,9 +103,6 @@ public class M_Feedback : MonoBehaviour
         OnFreeTileEvent?.Invoke(this, tile);
         
         C__Character currentCharacter = _characters.current;
-        
-        // Disable fight
-        ShowCharacterCoverFeedbacks(tile.coordinates);
         
         // Get pathfinding
         List<Tile> currentPathfinding = Pathfinding.GetPath(
@@ -138,8 +127,6 @@ public class M_Feedback : MonoBehaviour
         
         C__Character currentCharacter = _characters.current;
         C__Character currentTarget = tile.character;
-
-        ShowTargetCoverFeedbacks(currentTarget);
         
         if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
         {
@@ -151,25 +138,6 @@ public class M_Feedback : MonoBehaviour
         else // Enemy
             OnHoverEnemy?.Invoke(this, currentTarget);
     }
-    
-    /// <summary>
-    /// Shows cover feedbacks of a character.
-    /// </summary>
-    /// <param name="centerCoordinates"></param>
-    private void ShowCharacterCoverFeedbacks(Coordinates centerCoordinates) => 
-        coverHolder.DisplayCoverFeedbacksAround(centerCoordinates, _characters.current.cover.GetAllCoverInfosInRangeAt(centerCoordinates, GetCoverFeedbackRange()));
-
-    /// <summary>
-    /// Shows the cover feedback of a targeted character.
-    /// </summary>
-    /// <param name="targetCharacter"></param>
-    private void ShowTargetCoverFeedbacks(C__Character targetCharacter) => 
-        coverHolder.DisplayTargetCoverFeedback(targetCharacter.cover.GetCoverStateFrom(_characters.current));
-    
-    /// <summary>
-    /// Hides cover feedbacks.
-    /// </summary>
-    private void HideCoverFeedbacks() => coverHolder.HideCoverFeedbacks();
     
     /// <summary>
     /// Shows and hides characters in fog of war.
@@ -222,11 +190,6 @@ public class M_Feedback : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-
-    private void Input_OnTileExit(object sender, Tile tile)
-    {
-        HideCoverFeedbacks();
-    }
     
     private void Input_OnTileEnter(object sender, Tile tile)
     {
