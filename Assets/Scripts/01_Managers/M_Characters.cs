@@ -97,8 +97,6 @@ public class M_Characters : MonoBehaviour
             _input.SetActiveClick(false);
             current.behavior.PlayBehavior();
         }
-
-        current.DisplayFog();
         
         OnCharacterTurnStart?.Invoke(this, newCurrentCharacter);
     }

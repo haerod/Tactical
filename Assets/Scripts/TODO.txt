@@ -1,4 +1,5 @@
 ## DEBUG
+## ======
 
 # Character movement
 - Pathfinding is strange
@@ -21,24 +22,24 @@
 - restart the scene Example scene 3 teams -> when blue starts, it's an error on the life bar
 
 ## CONTENT
+## =======
 - Magical spells
 - Drone
 
 ## REFACTOR
+## ========
 
+- Rename M_Feedbacks -> only interpreting inputs now (fusion with M_Inputs ?)
 - Rules / VISION section to push in C_View
 - Tiles material work with an enum, use a Scriptable object instead
 - Cursors in Actions (not in Feedbacks)
 
-- Feedbacks need to be independent of the manager
-    - Fog of war
-        - View lines -> visible lines of the fog of war
 - Unit UI need to have independent parts
     - Health bar
     - Cover feedbacks
 
 - Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
-- Fog of war in a single manager, can be enabled and disabled
+- Fog of war not in level rules
 - Separate the logic between Turns and M_Characters
 - Ergonomic of characters
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
@@ -51,10 +52,13 @@
 - Hide/Enable tile feedback is on C__Character -> move it to M_Feedbacks
 
 ## OPTIMISATION
+## ============
+
 - Create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
 - Algorithm of line of sight checking progressively the tiles around
 
 ## FEATURES
+## ========
 
 - Display weapons / characters infos on UI
 

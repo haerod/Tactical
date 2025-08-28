@@ -84,7 +84,7 @@ public class F_CoversHolder : MonoBehaviour
     }
     
     // ======================================================================
-    // PRIVATE METHODS
+    // EVENTS
     // ======================================================================
     
     private void Feedback_OnFreeTile(object sender, Tile freeTile)

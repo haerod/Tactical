@@ -31,7 +31,7 @@ public class C__Character : Entity
     public int movementRange => move.movementRange;
     public Tile tile => Tile();
     
-    private bool hasPlayed = false;
+    private bool hasPlayed;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -59,16 +59,7 @@ public class C__Character : Entity
     /// </summary>
     /// <returns></returns>
     public Team Team() => team.team;
-
-    /// <summary>
-    /// Shows the visible fog visuals.
-    /// </summary>
-    public void DisplayFog()
-    {
-        _feedback.SetFogVisualsActive(false);
-        _feedback.ShowVisibleElements(look.VisibleTiles());
-    }
-
+    
     /// <summary>
     /// Returns if the character has already played.
     /// </summary>
@@ -95,7 +86,7 @@ public class C__Character : Entity
     private Tile Tile() => _board
             ? _board.GetTileAtCoordinates(coordinates.x, coordinates.y)
             : FindAnyObjectByType<M_Board>().GetTileAtCoordinates(coordinates.x, coordinates.y);
-
+    
     // ======================================================================
     // EVENTS
     // ======================================================================

@@ -9,9 +9,6 @@ public class M_Feedback : MonoBehaviour
 {
     [Header("REFERENCES")]
     
-    public F_ViewLines viewLines;
-    [SerializeField] private F_CoversHolder coverHolder;
-    
     public static M_Feedback instance;
     
     public event EventHandler<Tile> OnFreeTileEvent;
@@ -42,30 +39,6 @@ public class M_Feedback : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Show visible elements of the fog of war.
-    /// </summary>
-    public void ShowVisibleElements(List<Tile> visibleTiles) => SetFogVisualsActive(true, visibleTiles);
-    
-    /// <summary>
-    /// Enables/disables the view lines on border tiles and enables/disables fog mask.
-    /// </summary>
-    public void SetFogVisualsActive(bool value, List<Tile> tilesInView = null)
-    {
-        if (!_rules.enableFogOfWar) 
-            return; // No fog of war
-
-        if (value)
-        {
-            viewLines.EnableViewLines(tilesInView);
-            DisplayCharactersInFogOfWar(tilesInView);
-        }
-        else
-        {
-            viewLines.DisableViewLines();
-        }
-    }
     
     // ======================================================================
     // PRIVATE METHODS
@@ -114,39 +87,6 @@ public class M_Feedback : MonoBehaviour
         }
         else // Enemy
             OnHoverEnemy?.Invoke(this, currentTarget);
-    }
-    
-    /// <summary>
-    /// Shows and hides characters in fog of war.
-    /// </summary>
-    /// <param name="visibleTiles"></param>
-    private void DisplayCharactersInFogOfWar(List<Tile> visibleTiles)
-    {
-        List<C__Character> visibleCharacters = _characters.GetCharacterList()
-            .Where(c =>
-               {
-                   if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
-                       return true;
-                   else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
-                       return visibleTiles.Contains(c.tile) || c.unitTeam == _characters.current.unitTeam;
-                   else if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
-                       return visibleTiles.Contains(c.tile);
-                   else
-                       Debug.LogError("No rule, please add one here.");
-
-                   return false;
-               })
-            .ToList();
-
-        // Shows visible characters
-        visibleCharacters
-            .ForEach(c => c.anim.SetVisualActives(true));
-
-        // Hides invisible characters
-        _characters.GetCharacterList()
-            .Except(visibleCharacters)
-            .ToList()
-            .ForEach(c => c.anim.SetVisualActives(false));
     }
     
     // ======================================================================

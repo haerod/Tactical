@@ -30,6 +30,7 @@ public class A_Move : A__Action
 
     public static event EventHandler OnAnyMovementStart;
     public static event EventHandler OnAnyMovementEnd;
+    public static event EventHandler<Tile> OnTileEnter;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -235,6 +236,7 @@ public class A_Move : A__Action
             {
                 c.coordinates.x = currentPath[index].coordinates.x;
                 c.coordinates.y = currentPath[index].coordinates.y;
+                OnTileEnter?.Invoke(this, currentPath[index]);
 
                 if (IsTheLastTile()) 
                 {
@@ -278,10 +280,7 @@ public class A_Move : A__Action
             c.anim.EnterCrouch();
         
         _input.SetActiveClick();
-
-        if (_characters.current.behavior.playable)
-            c.DisplayFog();
-
+        
         Turns.EndTurn();
     }
     
