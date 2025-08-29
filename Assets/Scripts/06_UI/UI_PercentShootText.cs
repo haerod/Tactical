@@ -23,11 +23,11 @@ public class UI_PercentShootText : MonoBehaviour
 
     private void Start()
     {
-        _input.OnNoTile += Input_OnNoTile;
-        InputEvents.OnFreeTile += InputEvents_OnFreeTile;
-        InputEvents.OnHoverEnemy += InputEvents_OnHoverEnemy;
-        InputEvents.OnHoverAlly += InputEvents_OnHoverAlly;
-        InputEvents.OnHoverItself += InputEvents_OnHoverItself;
+        InputEvents.OnNoTile += InputEvents_OnNoTile;
+        InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
+        InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
+        InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
+        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
         A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         Turns.OnVictory += Turns_OnVictory;
@@ -93,17 +93,17 @@ public class UI_PercentShootText : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputEvents_OnFreeTile(object sender, Tile tile)
+    private void InputEvents_OnFreeTileEnter(object sender, Tile tile)
     {
         DisablePercentShootText();
     }
     
-    private void Input_OnNoTile(object sender, EventArgs e)
+    private void InputEvents_OnNoTile(object sender, EventArgs e)
     {
         DisablePercentShootText();
     }
 
-    private void InputEvents_OnHoverEnemy(object sender, C__Character enemy)
+    private void InputEvents_OnEnemyEnter(object sender, C__Character enemy)
     {
         C__Character currentCharacter = _characters.current;
         
@@ -115,12 +115,12 @@ public class UI_PercentShootText : MonoBehaviour
             enemy.cover.GetCoverProtectionValueFrom(enemy.look)));   
     }
     
-    private void InputEvents_OnHoverItself(object sender, EventArgs e)
+    private void InputEvents_OnItselfEnter(object sender, EventArgs e)
     {
         DisablePercentShootText();
     }
 
-    private void InputEvents_OnHoverAlly(object sender, C__Character ally)
+    private void InputEvents_OnAllyEnter(object sender, C__Character ally)
     {
         DisablePercentShootText();
     }

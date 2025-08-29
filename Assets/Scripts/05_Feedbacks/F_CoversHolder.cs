@@ -22,10 +22,10 @@ public class F_CoversHolder : MonoBehaviour
     private void Start()
     {
         GenerateCoverFeedbacks();
-        InputEvents.OnFreeTile += InputEvents_OnFreeTile;
-        InputEvents.OnOccupiedTile += InputEvents_OnOccupiedTile;
+        InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
+        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
         A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
-        _input.OnNoTile += Input_OnNoTile;
+        InputEvents.OnNoTile += InputEvents_OnNoTile;
     }
     
     // ======================================================================
@@ -87,19 +87,19 @@ public class F_CoversHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputEvents_OnFreeTile(object sender, Tile freeTile)
+    private void InputEvents_OnFreeTileEnter(object sender, Tile freeTile)
     {
         DisplayCoverFeedbacksAround(
             freeTile.coordinates, 
             _characters.current.cover.GetAllCoverInfosInRangeAt(freeTile.coordinates, coverFeedbackRange));
     }
     
-    private void InputEvents_OnOccupiedTile(object sender, Tile occupiedTile)
+    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
     {
-        DisplayTargetCoverFeedback(occupiedTile.character.cover.GetCoverStateFrom(_characters.current));
+        DisplayTargetCoverFeedback(hoveredCharacter.cover.GetCoverStateFrom(_characters.current));
     }
     
-    private void Input_OnNoTile(object sender, EventArgs e)
+    private void InputEvents_OnNoTile(object sender, EventArgs e)
     {
         HideCoverFeedbacks();
     }

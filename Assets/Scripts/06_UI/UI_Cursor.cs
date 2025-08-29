@@ -21,13 +21,13 @@ public class UI_Cursor : MonoBehaviour
 
     private void Start()
     {
-        InputEvents.OnMovableTile += InputEvents_OnMovableTile;
-        InputEvents.OnHoverAlly += InputEvents_OnHoverAlly;
-        InputEvents.OnHoverEnemy += InputEvents_OnHoverEnemy;
-        InputEvents.OnHoverItself += InputEvents_OnHoverItself;
-        _input.OnTileExit += Input_OnTileExit;
+        InputEvents.OnMovableTileEnter += InputEvents_OnMovableTileEnter;
+        InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
+        InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
+        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
+        InputEvents.OnTileExit += InputEvents_OnTileExit;
         _input.OnChangeClickActivation += Input_ChangeClickActivation;
-        _input.OnTileEnter += Input_OnTileEnter;
+        InputEvents.OnTileEnter += InputEvents_OnTileEnter;
     }
     
     // ======================================================================
@@ -70,7 +70,7 @@ public class UI_Cursor : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputEvents_OnMovableTile(object sender, List<Tile> pathfinding)
+    private void InputEvents_OnMovableTileEnter(object sender, List<Tile> pathfinding)
     {
         Tile endTile = pathfinding.LastOrDefault();
         
@@ -86,7 +86,7 @@ public class UI_Cursor : MonoBehaviour
         SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
     }
     
-    private void InputEvents_OnHoverAlly(object sender, C__Character hoveredAlly)
+    private void InputEvents_OnAllyEnter(object sender, C__Character hoveredAlly)
     {
         C__Character currentCharacter = _characters.current;
         
@@ -103,7 +103,7 @@ public class UI_Cursor : MonoBehaviour
         SetCursor(CursorType.Heal);
     }
     
-    private void InputEvents_OnHoverEnemy(object sender, C__Character hoveredEnemy)
+    private void InputEvents_OnEnemyEnter(object sender, C__Character hoveredEnemy)
     {
         C__Character currentCharacter = _characters.current;
         
@@ -118,12 +118,12 @@ public class UI_Cursor : MonoBehaviour
         SetCursor(CursorType.AimAndInSight);
     }
     
-    private void InputEvents_OnHoverItself(object sender, EventArgs e)
+    private void InputEvents_OnItselfEnter(object sender, EventArgs e)
     {
         SetCursor(CursorType.Regular);
     }
     
-    private void Input_OnTileExit(object sender, Tile tile)
+    private void InputEvents_OnTileExit(object sender, Tile tile)
     {
         SetCursor(CursorType.OutMovement);
     }
@@ -134,7 +134,7 @@ public class UI_Cursor : MonoBehaviour
             SetCursor(CursorType.Regular);
     }
     
-    private void Input_OnTileEnter(object sender, Tile tile)
+    private void InputEvents_OnTileEnter(object sender, Tile tile)
     {
         C__Character currentCharacter = _characters.current;
         

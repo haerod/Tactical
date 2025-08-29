@@ -15,22 +15,22 @@ public abstract class A__Action : MonoBehaviour
 
     public void SubscribeToEvents()
     {
-        _input.OnCharacterEnter += Input_OnCharacterEnter;
-        _input.OnCharacterExit += Input_OnCharacterExit;
-        _input.OnCharacterClick += Input_OnCharacterClick;
-        _input.OnTileEnter += Input_OnTileEnter;
-        _input.OnTileExit += Input_OnTileExit;
-        _input.OnTileClick += Input_OnTileClick;
+        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnCharacterExit += InputEvents_OnCharacterExit;
+        InputEvents.OnCharacterClick += InputEvents_OnCharacterClick;
+        InputEvents.OnTileEnter += InputEvents_OnTileEnter;
+        InputEvents.OnTileExit += InputEvents_OnTileExit;
+        InputEvents.OnTileClick += InputEvents_OnTileClick;
     }
 
     public void UnsubscribeToEvents()
     {
-        _input.OnCharacterEnter -= Input_OnCharacterEnter;
-        _input.OnCharacterExit -= Input_OnCharacterExit;
-        _input.OnCharacterClick -= Input_OnCharacterClick;
-        _input.OnTileEnter -= Input_OnTileEnter;
-        _input.OnTileExit -= Input_OnTileExit;
-        _input.OnTileClick -= Input_OnTileClick;
+        InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;
+        InputEvents.OnCharacterExit -= InputEvents_OnCharacterExit;
+        InputEvents.OnCharacterClick -= InputEvents_OnCharacterClick;
+        InputEvents.OnTileEnter -= InputEvents_OnTileEnter;
+        InputEvents.OnTileExit -= InputEvents_OnTileExit;
+        InputEvents.OnTileClick -= InputEvents_OnTileClick;
     }
     
     // ======================================================================
@@ -141,7 +141,7 @@ public abstract class A__Action : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Input_OnCharacterEnter(object sender, C__Character enteredCharacter)
+    private void InputEvents_OnCharacterEnter(object sender, C__Character enteredCharacter)
     {
         OnHoverAnyCharacter(enteredCharacter);
         
@@ -158,12 +158,12 @@ public abstract class A__Action : MonoBehaviour
         }
     }
 
-    private void Input_OnCharacterExit(object sender, C__Character leftCharacter)
+    private void InputEvents_OnCharacterExit(object sender, C__Character leftCharacter)
     {
         OnExitCharacter(leftCharacter);
     }
 
-    private void Input_OnCharacterClick(object sender, C__Character clickedCharacter)
+    private void InputEvents_OnCharacterClick(object sender, C__Character clickedCharacter)
     {
         OnClickAnyCharacter(clickedCharacter);
         
@@ -180,7 +180,7 @@ public abstract class A__Action : MonoBehaviour
         }
     }
 
-    private void Input_OnTileEnter(object sender, Tile enteredTile)
+    private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
         OnHoverTile(enteredTile);
         
@@ -190,12 +190,12 @@ public abstract class A__Action : MonoBehaviour
             OnHoverFreeTile(enteredTile);
     }
 
-    private void Input_OnTileExit(object sender, Tile leavedTile)
+    private void InputEvents_OnTileExit(object sender, Tile leavedTile)
     {
         OnExitTile(leavedTile);
     }
 
-    private void Input_OnTileClick(object sender, Tile clickedTile)
+    private void InputEvents_OnTileClick(object sender, Tile clickedTile)
     {
         OnClickTile(clickedTile);
     }

@@ -28,15 +28,6 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode zoomOutKey = KeyCode.G;
     
     public event EventHandler<bool> OnChangeClickActivation;
-    
-    public event EventHandler<Tile> OnTileEnter;
-    public event EventHandler<Tile> OnTileExit;
-    public event EventHandler<Tile> OnTileClick;
-    public event EventHandler OnNoTile;
-    
-    public event EventHandler<C__Character> OnCharacterEnter;
-    public event EventHandler<C__Character> OnCharacterExit;
-    public event EventHandler <C__Character> OnCharacterClick;
 
     public event EventHandler<Coordinates> OnMovingCameraInput;
     public event EventHandler<int> OnZoomingCameraInput;
@@ -155,36 +146,33 @@ public class M_Input : MonoBehaviour
                 return; // Already on pointed tile / character
 
             if(previousTile)
-                OnTileExit?.Invoke(this, previousTile);
+                InputEvents.TileUnhovered(previousTile);
             if(previousCharacter)
-                OnCharacterExit?.Invoke(this, previousCharacter);
+                InputEvents.CharacterUnhovered(previousCharacter);
             
             previousTile = tile;
             previousCharacter = character;
 
             if (tile)
-            {
-                OnTileEnter?.Invoke(this, previousTile);
-                InputEvents.OnTileHover(tile);
-            }
+                InputEvents.TileHovered(tile);
             if(character)
-                OnCharacterEnter?.Invoke(this, previousCharacter);
+                InputEvents.CharacterHovered(character);
         }
         else
         {
             if (previousTile)
             {
-                OnTileExit?.Invoke(this, previousTile);
+                InputEvents.TileUnhovered(previousTile);
                 previousTile = null;
             }
 
             if (previousCharacter)
             {
-                OnCharacterExit?.Invoke(this, previousCharacter);
+                InputEvents.CharacterUnhovered(previousCharacter);
                 previousCharacter = null;
             }
             
-            OnNoTile?.Invoke(this, EventArgs.Empty);
+            InputEvents.NothingHovered();
         }
     }
 
@@ -199,9 +187,9 @@ public class M_Input : MonoBehaviour
             return; // Not on a tile
 
         if (previousTile.character)
-            OnCharacterClick?.Invoke(this, previousTile.character);
+            InputEvents.CharacterClick(previousTile.character);
         else
-            OnTileClick?.Invoke(this, previousTile);;
+            InputEvents.TileClick(previousTile);
     }
 
     /// <summary>
@@ -303,19 +291,29 @@ public class M_Input : MonoBehaviour
 
 public static class InputEvents
 {
-    public static event EventHandler<Tile> OnFreeTile;
-    public static event EventHandler<List<Tile>> OnMovableTile;
-    public static event EventHandler<Tile> OnOccupiedTile;
-    public static event EventHandler<C__Character> OnHoverEnemy;
-    public static event EventHandler<C__Character> OnHoverAlly;
-    public static event EventHandler OnHoverItself;
+    public static event EventHandler<Tile> OnTileEnter;
+    public static event EventHandler<Tile> OnFreeTileEnter;
+    public static event EventHandler<List<Tile>> OnMovableTileEnter;
+    public static event EventHandler<Tile> OnTileExit;
+    public static event EventHandler<Tile> OnTileClick;
+    public static event EventHandler OnNoTile;
+    
+    public static event EventHandler<C__Character> OnCharacterEnter;
+    public static event EventHandler<C__Character> OnCharacterExit;
+    public static event EventHandler <C__Character> OnCharacterClick;
+    public static event EventHandler<C__Character> OnEnemyEnter;
+    public static event EventHandler<C__Character> OnAllyEnter;
+    public static event EventHandler OnItselfEnter;
+    
     
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
     
-    public static void OnTileHover(Tile tile)
+    public static void TileHovered(Tile tile)
     {
+        OnTileEnter?.Invoke(null, tile);
+        
         C__Character currentCharacter = _characters.current;
         
         if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
@@ -324,10 +322,16 @@ public static class InputEvents
         bool pointedCharacterIsVisible = !_rules.IsFogOfWar() || currentCharacter.look.VisibleTiles().Contains(tile);
 
         if (tile.IsOccupiedByCharacter() && pointedCharacterIsVisible)
-            OccupiedTileHovered(tile);
+            CharacterHoveredEvent(tile.character);
         else
             FreeTileHovered(tile);
     }
+    public static void TileUnhovered(Tile tile) => OnTileExit?.Invoke(null, tile);
+    public static void TileClick(Tile tile) => OnTileClick?.Invoke(null, tile);
+    public static void CharacterUnhovered(C__Character character) => OnCharacterExit?.Invoke(null, character);
+    public static void CharacterHovered(C__Character character) => OnCharacterEnter?.Invoke(null, character);
+    public static void CharacterClick(C__Character character)  => OnCharacterClick?.Invoke(null, character);
+    public static void NothingHovered() => OnNoTile?.Invoke(null, EventArgs.Empty);
     
     // ======================================================================
     // PRIVATE METHODS
@@ -341,7 +345,7 @@ public static class InputEvents
     {
         C__Character currentCharacter = _characters.current;
 
-        OnFreeTile?.Invoke(null, tile);
+        OnFreeTileEnter?.Invoke(null, tile);
         
         List<Tile> currentPathfinding = Pathfinding.GetPath(
             currentCharacter.tile,
@@ -355,32 +359,33 @@ public static class InputEvents
         if (currentPathfinding.Count == 0)
             return; // No path
         
-        OnMovableTile?.Invoke(null, currentPathfinding);
+        OnMovableTileEnter?.Invoke(null, currentPathfinding);
     }
     
     /// <summary>
     /// Events happening if the pointer overlaps a occupied by a character.
     /// </summary>
-    /// <param name="tile"></param>
-    private static void OccupiedTileHovered(Tile tile)
+    /// <param name="hoveredCharacter"></param>
+    private static void CharacterHoveredEvent(C__Character hoveredCharacter)
     {
         C__Character currentCharacter = _characters.current;
-        C__Character currentTarget = tile.character;
+        C__Character currentTarget = hoveredCharacter;
         
-        OnOccupiedTile?.Invoke(null, tile);
+        OnCharacterEnter?.Invoke(null, currentTarget);
         
         if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
         {
             if (currentCharacter == currentTarget)
-                OnHoverItself?.Invoke(null, EventArgs.Empty);
+                OnItselfEnter?.Invoke(null, EventArgs.Empty);
             else
-                OnHoverAlly?.Invoke(null, currentTarget);
+                OnAllyEnter?.Invoke(null, currentTarget);
         }
         else // Enemy
-            OnHoverEnemy?.Invoke(null, currentTarget);
+            OnEnemyEnter?.Invoke(null, currentTarget);
     }
     
     // ======================================================================
     // EVENTS
     // ======================================================================
+
 }

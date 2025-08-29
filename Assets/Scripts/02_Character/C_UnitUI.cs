@@ -22,8 +22,8 @@ public class C_UnitUI : MonoBehaviour
 
     private void Start()
     {
-        InputEvents.OnOccupiedTile += InputEvents_OnOccupiedTile;
-        _input.OnTileExit += Input_OnTileExit;
+        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnTileExit += InputEvents_OnTileExit;
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         c.health.OnDeath += Health_OnDeath;
@@ -106,13 +106,13 @@ public class C_UnitUI : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void InputEvents_OnOccupiedTile(object sender, Tile hoveredTile)
+    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
     {
-        if(hoveredTile.character == c)
+        if(hoveredCharacter == c)
             Display();
     }
     
-    private void Input_OnTileExit(object sender, Tile exitedTile)
+    private void InputEvents_OnTileExit(object sender, Tile exitedTile)
     {
         if(exitedTile.character != c)
             return; // Not this character
