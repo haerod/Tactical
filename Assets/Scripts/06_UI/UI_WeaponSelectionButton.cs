@@ -15,8 +15,6 @@ public class UI_WeaponSelectionButton : MonoBehaviour
     private C__Character character;
     private UI_WeaponButtonsHolder holder;
     
-    public static event EventHandler<Weapon> OnAnyWeaponChanged;
-    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -28,6 +26,7 @@ public class UI_WeaponSelectionButton : MonoBehaviour
     /// <summary>
     /// Sets the parameters to the button.
     /// </summary>
+    /// <param name="linkedHolder"></param>
     /// <param name="linkedCharacter"></param>
     public void SetParameters(UI_WeaponButtonsHolder linkedHolder, C__Character linkedCharacter)
     {
@@ -46,9 +45,7 @@ public class UI_WeaponSelectionButton : MonoBehaviour
         button.onClick.AddListener(delegate
             {
                 character.weaponHolder.SetCurrentWeapon(weapon);
-                character.weaponHolder.DisplayWeapon(weapon);
                 holder.CreateWeaponButtons(character);
-                OnAnyWeaponChanged?.Invoke(this, weapon);
             });
         
         if(weapon == character.weaponHolder.GetCurrentWeapon())

@@ -25,12 +25,6 @@ public class C_AnimatorScripts : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
-    private void Start()
-    {
-        c.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
-        SetWeaponAnimation(c.weaponHolder.GetCurrentWeaponGraphics());
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -120,9 +114,4 @@ public class C_AnimatorScripts : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-    
-    private void WeaponHolder_OnWeaponChange(object sender, WeaponGraphics weaponGraphics)
-    {
-        SetWeaponAnimation(weaponGraphics);
-    }
 }

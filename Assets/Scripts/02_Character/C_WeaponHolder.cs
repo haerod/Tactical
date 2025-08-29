@@ -16,11 +16,16 @@ public class C_WeaponHolder : MonoBehaviour
 
     private WeaponGraphics currentWeaponGraphics;
 
-    public event EventHandler<WeaponGraphics> OnWeaponChange;
+    public event EventHandler<Weapon> OnWeaponChange;
     
     // ======================================================================
     // MONOBEHAVIOR
     // ======================================================================
+    
+    private void Start()
+    {
+        c.anim.SetWeaponAnimation(c.weaponHolder.GetCurrentWeaponGraphics());
+    }
     
     // ======================================================================
     // PUBLIC METHODS
@@ -36,7 +41,14 @@ public class C_WeaponHolder : MonoBehaviour
     /// Changes the current weapon to the asked one.
     /// </summary>
     /// <param name="newWeapon"></param>
-    public void SetCurrentWeapon(Weapon newWeapon) => currentWeapon = newWeapon; 
+    public void SetCurrentWeapon(Weapon newWeapon)
+    {
+        currentWeapon = newWeapon;
+        DisplayWeapon();
+        
+        OnWeaponChange?.Invoke(this, currentWeapon);
+    }
+
     /// <summary>
     /// Returns the weapon graphic list.
     /// </summary>
@@ -69,15 +81,18 @@ public class C_WeaponHolder : MonoBehaviour
         return currentWeaponGraphics;
     }
     
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
     /// <summary>
     /// Displays the asked weapon, hide the other one.
     /// </summary>
-    /// <param name="weapon"></param>
-    public void DisplayWeapon(Weapon weapon)
+    private void DisplayWeapon()
     {
         foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
         {
-            bool isCurrentWeapon = testedWeaponGraphics.GetWeapon() == weapon;
+            bool isCurrentWeapon = testedWeaponGraphics.GetWeapon() == currentWeapon;
 
             if (isCurrentWeapon)
                 currentWeaponGraphics = testedWeaponGraphics;
@@ -85,11 +100,7 @@ public class C_WeaponHolder : MonoBehaviour
             testedWeaponGraphics.gameObject.SetActive(isCurrentWeapon);
         }
         
-        OnWeaponChange?.Invoke(this, currentWeaponGraphics);
+        c.anim.SetWeaponAnimation(GetCurrentWeaponGraphics());
     }
-
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
 
 }

@@ -27,7 +27,7 @@ public class A_Move : A__Action
     private List<Tile> currentPath;
     private int index;
     private Vector3 destination;
-
+    
     public event EventHandler OnMovementStart;
     public event EventHandler OnMovementEnd;
     public event EventHandler<Tile> OnUnitEnterTile;
@@ -78,29 +78,6 @@ public class A_Move : A__Action
             .Intersect(c.look.VisibleTiles())
             .Where(t => !t.IsOccupiedByCharacter())
             .ToList();
-    }
-
-    /// <summary>
-    /// Returns the characters which block the movement (depending on the rules).
-    /// </summary>
-    /// <returns></returns>
-    public List<Tile> GetTraversableCharacterTiles()
-    {
-        List<Tile> toReturn = new List<Tile>();
-
-        if (_rules.IsFogOfWar())
-            toReturn.AddRange(_characters.GetCharacterList()
-                .Where(chara => IsBlockingPath(chara))
-                .Intersect(c.look.CharactersVisibleInFog())
-                .Select(chara => chara.tile)
-                .ToList());
-
-        toReturn.AddRange(_characters.GetCharacterList()
-            .Where(chara => IsBlockingPath(chara))
-            .Select(chara => chara.tile)
-            .ToList());
-
-        return toReturn;
     }
 
     /// <summary>
@@ -283,18 +260,44 @@ public class A_Move : A__Action
     }
     
     /// <summary>
+    /// Returns the characters which block the movement (depending on the rules).
+    /// </summary>
+    /// <returns></returns>
+    private List<Tile> GetTraversableCharacterTiles()
+    {
+        List<Tile> toReturn = new List<Tile>();
+
+        if (_rules.IsFogOfWar())
+            toReturn.AddRange(_characters.GetCharacterList()
+                .Where(chara => IsBlockingPath(chara))
+                .Intersect(c.look.CharactersVisibleInFog())
+                .Select(chara => chara.tile)
+                .ToList());
+
+        toReturn.AddRange(_characters.GetCharacterList()
+            .Where(chara => IsBlockingPath(chara))
+            .Select(chara => chara.tile)
+            .ToList());
+
+        return toReturn;
+    }
+    
+    /// <summary>
     /// Returns true if the character blocks the path, depending on the capacity to pass through other characters.
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
     private bool IsBlockingPath(C__Character character)
     {
-        if (canPassThrough == PassThrough.Nobody)
-            return true;
-        if (canPassThrough == PassThrough.AlliesOnly && c.team.IsAllyOf(character))
-            return false;
-
-        return false;
+        switch (canPassThrough)
+        {
+            case PassThrough.Nobody:
+                return true;
+            case PassThrough.AlliesOnly when c.team.IsAllyOf(character):
+                return false;
+            default:
+                return false;
+        }
     }
     
     // ======================================================================

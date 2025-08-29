@@ -18,8 +18,6 @@ public class F_TilesActionPreview : MonoBehaviour
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         
-        UI_WeaponSelectionButton.OnAnyWeaponChanged += WeaponSelectionButton_OnAnyWeaponChanged;
-        
         Turns.OnVictory += Turns_OnVictory;
     }
     
@@ -100,6 +98,7 @@ public class F_TilesActionPreview : MonoBehaviour
         startingCharacter.move.OnMovementStart += Move_OnMovementStart;
         startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
         startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
+        startingCharacter.weaponHolder.OnWeaponChange += WeaponsHolder_OnWeaponChanged;
         
         ShowMovementArea(startingCharacter.move.MovementArea());
         ShowAttackableTiles(startingCharacter.attack.AttackableTiles());
@@ -115,6 +114,7 @@ public class F_TilesActionPreview : MonoBehaviour
         endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
         endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
         endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
+        endingCharacter.weaponHolder.OnWeaponChange -= WeaponsHolder_OnWeaponChanged;
         
         HideTilesFeedbacks();
     }
@@ -132,17 +132,10 @@ public class F_TilesActionPreview : MonoBehaviour
         ShowAttackableTiles(currentCharacter.attack.AttackableTiles());
     }
     
-    private void WeaponSelectionButton_OnAnyWeaponChanged(object sender, Weapon e)
+    private void WeaponsHolder_OnWeaponChanged(object sender, Weapon newWeapon)
     {
-        C__Character currentCharacter = _characters.current;
-        
-        if (!currentCharacter.behavior.playable)
-            return; // NPC
-        if(!currentCharacter.CanPlay()) 
-            return; // Can't play
-
         HideAttackableTiles();
-        ShowAttackableTiles(currentCharacter.attack.AttackableTiles());
+        ShowAttackableTiles(_characters.current.attack.AttackableTiles());
     }
     
     private void Turns_OnVictory(object sender, EventArgs e)

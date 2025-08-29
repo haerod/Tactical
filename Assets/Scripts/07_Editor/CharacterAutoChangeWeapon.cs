@@ -68,7 +68,7 @@ public class CharacterAutoChangeWeapon : MonoBehaviour
     {
         C_WeaponHolder weaponHolder = current.weaponHolder;
 
-        weaponHolder.DisplayWeapon(current.weaponHolder.GetCurrentWeapon());
+        weaponHolder.SetCurrentWeapon(weaponHolder.GetCurrentWeapon());
 
         foreach (WeaponGraphics testedWeaponGraphics in weaponHolder.GetWeaponGraphicsList())
         {
