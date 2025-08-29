@@ -6,8 +6,8 @@
     - Feedback line doesn't fit with the pathfinding (fit with the distance the character can walk)
 - If character pass through another, the last one losing its tile: because tiles have only one element on it
 
-# Border tiles
-- Border tiles change position sometimes (repro needed)
+# Edge covers
+- Edge covers change position sometimes (repro needed)
 
 # Fog of war
 - Tiles in fog of war where character can move and where an enemy is are displayed in red
@@ -21,6 +21,9 @@
 # Lifebar
 - restart the scene Example scene 3 teams -> when blue starts, it's an error on the life bar
 
+# Restart scene
+- bug on F_Covers, easy repro
+
 ## CONTENT
 ## =======
 - Magical spells
@@ -33,9 +36,8 @@
     - Malus of precision by distance -> move it in character or weapon
     - Fog of war vision rules not in M_Rules
 
-- Rename M_Feedbacks -> only interpreting inputs now (fusion with M_Inputs ? / Static class in Inputs)
+- Rename F_... and UI_... modules in Module_... (code and prefab)
 - Tiles material work with an enum, use a Scriptable object instead
-- Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
 - Separate the logic between Turns and M_Characters
     - Turns logic as a Scriptable object in M_Characters
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
@@ -54,6 +56,7 @@
 
 - Display weapons / characters infos on UI
 
+- Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
 - Feedback of line of sight on visible enemies
     - Visual line of sight on hover an enemy
 - Character can throw spells (like fireball)

@@ -24,10 +24,10 @@ public class UI_PercentShootText : MonoBehaviour
     private void Start()
     {
         _input.OnNoTile += Input_OnNoTile;
-        _feedback.OnFreeTile += Feedback_OnFreeTile;
-        _feedback.OnHoverEnemy += Feedback_OnHoverEnemy;
-        _feedback.OnHoverAlly += Feedback_OnHoverAlly;
-        _feedback.OnHoverItself += Feedback_OnHoverItself;
+        InputEvents.OnFreeTile += InputEvents_OnFreeTile;
+        InputEvents.OnHoverEnemy += InputEvents_OnHoverEnemy;
+        InputEvents.OnHoverAlly += InputEvents_OnHoverAlly;
+        InputEvents.OnHoverItself += InputEvents_OnHoverItself;
         A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         Turns.OnVictory += Turns_OnVictory;
@@ -93,7 +93,7 @@ public class UI_PercentShootText : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Feedback_OnFreeTile(object sender, Tile tile)
+    private void InputEvents_OnFreeTile(object sender, Tile tile)
     {
         DisablePercentShootText();
     }
@@ -103,7 +103,7 @@ public class UI_PercentShootText : MonoBehaviour
         DisablePercentShootText();
     }
 
-    private void Feedback_OnHoverEnemy(object sender, C__Character enemy)
+    private void InputEvents_OnHoverEnemy(object sender, C__Character enemy)
     {
         C__Character currentCharacter = _characters.current;
         
@@ -115,12 +115,12 @@ public class UI_PercentShootText : MonoBehaviour
             enemy.cover.GetCoverProtectionValueFrom(enemy.look)));   
     }
     
-    private void Feedback_OnHoverItself(object sender, EventArgs e)
+    private void InputEvents_OnHoverItself(object sender, EventArgs e)
     {
         DisablePercentShootText();
     }
 
-    private void Feedback_OnHoverAlly(object sender, C__Character ally)
+    private void InputEvents_OnHoverAlly(object sender, C__Character ally)
     {
         DisablePercentShootText();
     }

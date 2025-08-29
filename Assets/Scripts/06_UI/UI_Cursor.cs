@@ -21,10 +21,10 @@ public class UI_Cursor : MonoBehaviour
 
     private void Start()
     {
-        _feedback.OnMovableTile += Feedback_OnMovableTile;
-        _feedback.OnHoverAlly += Feedback_OnHoverAlly;
-        _feedback.OnHoverEnemy += Feedback_OnHoverEnemy;
-        _feedback.OnHoverItself += Feedback_OnHoverItself;
+        InputEvents.OnMovableTile += InputEvents_OnMovableTile;
+        InputEvents.OnHoverAlly += InputEvents_OnHoverAlly;
+        InputEvents.OnHoverEnemy += InputEvents_OnHoverEnemy;
+        InputEvents.OnHoverItself += InputEvents_OnHoverItself;
         _input.OnTileExit += Input_OnTileExit;
         _input.OnChangeClickActivation += Input_ChangeClickActivation;
         _input.OnTileEnter += Input_OnTileEnter;
@@ -70,7 +70,7 @@ public class UI_Cursor : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Feedback_OnMovableTile(object sender, List<Tile> pathfinding)
+    private void InputEvents_OnMovableTile(object sender, List<Tile> pathfinding)
     {
         Tile endTile = pathfinding.LastOrDefault();
         
@@ -86,7 +86,7 @@ public class UI_Cursor : MonoBehaviour
         SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
     }
     
-    private void Feedback_OnHoverAlly(object sender, C__Character hoveredAlly)
+    private void InputEvents_OnHoverAlly(object sender, C__Character hoveredAlly)
     {
         C__Character currentCharacter = _characters.current;
         
@@ -103,7 +103,7 @@ public class UI_Cursor : MonoBehaviour
         SetCursor(CursorType.Heal);
     }
     
-    private void Feedback_OnHoverEnemy(object sender, C__Character hoveredEnemy)
+    private void InputEvents_OnHoverEnemy(object sender, C__Character hoveredEnemy)
     {
         C__Character currentCharacter = _characters.current;
         
@@ -118,7 +118,7 @@ public class UI_Cursor : MonoBehaviour
         SetCursor(CursorType.AimAndInSight);
     }
     
-    private void Feedback_OnHoverItself(object sender, EventArgs e)
+    private void InputEvents_OnHoverItself(object sender, EventArgs e)
     {
         SetCursor(CursorType.Regular);
     }

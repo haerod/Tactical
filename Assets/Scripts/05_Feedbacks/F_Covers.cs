@@ -78,7 +78,9 @@ public class F_Covers : MonoBehaviour
     /// <summary>
     /// Hides all renderers.
     /// </summary>
-    private void HideAllRenderers() => renderers.ToList().ForEach(testedRenderer => testedRenderer.gameObject.SetActive(false));
+    private void HideAllRenderers() => renderers
+        .ToList()
+        .ForEach(testedRenderer => testedRenderer.gameObject.SetActive(false));
     
     /// <summary>
     /// Returns true if the feedback needs to be displayed.

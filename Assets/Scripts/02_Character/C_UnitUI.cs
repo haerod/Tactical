@@ -22,7 +22,7 @@ public class C_UnitUI : MonoBehaviour
 
     private void Start()
     {
-        _feedback.OnOccupiedTile += Feedback_OnOccupiedTile;
+        InputEvents.OnOccupiedTile += InputEvents_OnOccupiedTile;
         _input.OnTileExit += Input_OnTileExit;
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
@@ -106,7 +106,7 @@ public class C_UnitUI : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Feedback_OnOccupiedTile(object sender, Tile hoveredTile)
+    private void InputEvents_OnOccupiedTile(object sender, Tile hoveredTile)
     {
         if(hoveredTile.character == c)
             Display();

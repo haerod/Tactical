@@ -22,8 +22,8 @@ public class F_CoversHolder : MonoBehaviour
     private void Start()
     {
         GenerateCoverFeedbacks();
-        _feedback.OnFreeTile += Feedback_OnFreeTile;
-        _feedback.OnOccupiedTile += Feedback_OnOccupiedTile;
+        InputEvents.OnFreeTile += InputEvents_OnFreeTile;
+        InputEvents.OnOccupiedTile += InputEvents_OnOccupiedTile;
         A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
         _input.OnNoTile += Input_OnNoTile;
     }
@@ -87,14 +87,14 @@ public class F_CoversHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Feedback_OnFreeTile(object sender, Tile freeTile)
+    private void InputEvents_OnFreeTile(object sender, Tile freeTile)
     {
         DisplayCoverFeedbacksAround(
             freeTile.coordinates, 
             _characters.current.cover.GetAllCoverInfosInRangeAt(freeTile.coordinates, coverFeedbackRange));
     }
     
-    private void Feedback_OnOccupiedTile(object sender, Tile occupiedTile)
+    private void InputEvents_OnOccupiedTile(object sender, Tile occupiedTile)
     {
         DisplayTargetCoverFeedback(occupiedTile.character.cover.GetCoverStateFrom(_characters.current));
     }

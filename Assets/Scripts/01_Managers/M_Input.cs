@@ -162,8 +162,11 @@ public class M_Input : MonoBehaviour
             previousTile = tile;
             previousCharacter = character;
 
-            if(tile)
+            if (tile)
+            {
                 OnTileEnter?.Invoke(this, previousTile);
+                InputEvents.OnTileHover(tile);
+            }
             if(character)
                 OnCharacterEnter?.Invoke(this, previousCharacter);
         }
@@ -296,4 +299,88 @@ public class M_Input : MonoBehaviour
         previousTile = null;
         previousCharacter = null;
     }
+}
+
+public static class InputEvents
+{
+    public static event EventHandler<Tile> OnFreeTile;
+    public static event EventHandler<List<Tile>> OnMovableTile;
+    public static event EventHandler<Tile> OnOccupiedTile;
+    public static event EventHandler<C__Character> OnHoverEnemy;
+    public static event EventHandler<C__Character> OnHoverAlly;
+    public static event EventHandler OnHoverItself;
+    
+    // ======================================================================
+    // PUBLIC METHODS
+    // ======================================================================
+    
+    public static void OnTileHover(Tile tile)
+    {
+        C__Character currentCharacter = _characters.current;
+        
+        if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
+            return; // Can't go on this tile or can't play
+        
+        bool pointedCharacterIsVisible = !_rules.IsFogOfWar() || currentCharacter.look.VisibleTiles().Contains(tile);
+
+        if (tile.IsOccupiedByCharacter() && pointedCharacterIsVisible)
+            OccupiedTileHovered(tile);
+        else
+            FreeTileHovered(tile);
+    }
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
+    /// <summary>
+    /// Events happening if the pointer overlaps a free tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    private static void FreeTileHovered(Tile tile)
+    {
+        C__Character currentCharacter = _characters.current;
+
+        OnFreeTile?.Invoke(null, tile);
+        
+        List<Tile> currentPathfinding = Pathfinding.GetPath(
+            currentCharacter.tile,
+            tile,
+            Pathfinding.TileInclusion.WithStartAndEnd,
+            new MovementRules(
+                currentCharacter.move.walkableTiles, 
+                currentCharacter.move.GetTraversableCharacterTiles(), 
+                currentCharacter.move.useDiagonalMovement));
+
+        if (currentPathfinding.Count == 0)
+            return; // No path
+        
+        OnMovableTile?.Invoke(null, currentPathfinding);
+    }
+    
+    /// <summary>
+    /// Events happening if the pointer overlaps a occupied by a character.
+    /// </summary>
+    /// <param name="tile"></param>
+    private static void OccupiedTileHovered(Tile tile)
+    {
+        C__Character currentCharacter = _characters.current;
+        C__Character currentTarget = tile.character;
+        
+        OnOccupiedTile?.Invoke(null, tile);
+        
+        if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
+        {
+            if (currentCharacter == currentTarget)
+                OnHoverItself?.Invoke(null, EventArgs.Empty);
+            else
+                OnHoverAlly?.Invoke(null, currentTarget);
+        }
+        else // Enemy
+            OnHoverEnemy?.Invoke(null, currentTarget);
+    }
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
 }
