@@ -132,7 +132,7 @@ public class UI_PercentShootText : MonoBehaviour
         if(!currentCharacter.attack.AttackableTiles().Contains(enemy.tile))
             return;
         
-        SetPercentShootText(currentCharacter.attack.GetPercentToTouch(
+        SetPercentShootText(currentCharacter.attack.GetChanceToTouch(
             currentCharacter.look.GetTilesOfLineOfSightOn(enemy.tile.coordinates).Count,
             enemy.cover.GetCoverProtectionValueFrom(enemy.look)));   
     }

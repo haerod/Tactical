@@ -18,10 +18,19 @@ public class Weapon : ScriptableObject
     [SerializeField] private bool isMeleeWeapon;
     [SerializeField] private int specificRange;
     
+    [Header("PRECISION")]
+    [SerializeField] private int precisionMalusByDistance = 5;
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Returns the malus of precision by tile of distance with the target.
+    /// </summary>
+    /// <returns></returns>
+    public int GetPrecisionMalusByDistance() => precisionMalusByDistance;
+    
     /// <summary>
     /// Returns true if the weapon can touch anything in view (depending on the obstacles).
     /// </summary>

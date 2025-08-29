@@ -62,7 +62,7 @@ public class A_Attack : A__Action
 
         c.anim.StartAttack();
 
-        int percentOfTouch = GetPercentToTouch(
+        int percentOfTouch = GetChanceToTouch(
             c.look.GetTilesOfLineOfSightOn(currentTarget.coordinates).Count,
             currentTarget.cover.GetCoverProtectionValueFrom(c.look));
         
@@ -99,12 +99,12 @@ public class A_Attack : A__Action
     /// <param name="range"></param>
     /// <param name="protectionValue"></param>
     /// <returns></returns>
-    public int GetPercentToTouch(int range, int protectionValue)
+    public int GetChanceToTouch(int range, int protectionValue)
     {
         int precisionToReturn = precision - protectionValue;
 
         for (int i = 0; i < range; i++)
-            precisionToReturn -= _rules.percentReductionByDistance;
+            precisionToReturn -= c.weaponHolder.GetCurrentWeapon().GetPrecisionMalusByDistance();
         
         return precisionToReturn < 0 ? 0 : precisionToReturn;
     }

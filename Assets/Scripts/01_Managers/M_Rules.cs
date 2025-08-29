@@ -15,10 +15,6 @@ public class M_Rules : MonoBehaviour
     [SerializeField] private F_FogOfWar fogOfWar;
     public enum VisibleInFogOfWar { InView, Allies, Everybody}
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
-
-    [Header("VISION")]
-
-    public int percentReductionByDistance = 5;
     
     public static M_Rules instance;
 
