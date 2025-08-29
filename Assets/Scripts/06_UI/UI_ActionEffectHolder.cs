@@ -18,7 +18,8 @@ public class UI_ActionEffectHolder : MonoBehaviour
 
     private void Start()
     {
-        A_Attack.OnAttackMiss += Attack_OnAttackMiss;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         C_Health.OnAnyHealthLoss += Health_OnAnyHealthLoss;
         C_Health.OnAnyHealthGain += Health_OnAnyHealthGain;
     }
@@ -47,6 +48,16 @@ public class UI_ActionEffectHolder : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
+    
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        startingCharacter.attack.OnAttackMiss += Attack_OnAttackMiss;
+    }
+    
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    {
+        endingCharacter.attack.OnAttackMiss -= Attack_OnAttackMiss;
+    }
     
     private void Attack_OnAttackMiss(object sender, C__Character missedCharacter)
     {

@@ -16,10 +16,9 @@ public class F_FogOfWar : MonoBehaviour
     private void Start()
     {
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        A_Move.OnAnyMovementEnd += Move_OnAnyMovementEnd;
-        A_Move.OnTileEnter += Move_OnTileEnter;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -71,7 +70,7 @@ public class F_FogOfWar : MonoBehaviour
     }
     
     /// <summary>
-    /// Enables view lines.
+    /// Enables lines on tiles around the fog zone.
     /// </summary>
     /// <param name="tilesInView"></param>
     private void EnableViewLines(List<Tile> tilesInView)
@@ -110,7 +109,7 @@ public class F_FogOfWar : MonoBehaviour
     }
 
     /// <summary>
-    /// Disables view lines.
+    /// Disables lines on tiles around the fog zone.
     /// </summary>
     private void DisableViewLines()
     {
@@ -133,25 +132,24 @@ public class F_FogOfWar : MonoBehaviour
     private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
     {
         ShowVisibleElements(startingCharacter.look.VisibleTiles());
+        
+        startingCharacter.move.OnUnitEnterTile += Move_OnUnitEnterTile;
+        startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
     }
     
-    private void Move_OnAnyMovementEnd(object sender, EventArgs e)
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
     {
-        C__Character currentCharacter = _characters.current;
-        
-        if (!currentCharacter.behavior.playable)
-            return;
-        
-        ShowVisibleElements(currentCharacter.look.VisibleTiles());
+        endingCharacter.move.OnUnitEnterTile -= Move_OnUnitEnterTile;
+        endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
     }
     
-    private void Move_OnTileEnter(object sender, Tile e)
+    private void Move_OnMovementEnd(object sender, EventArgs e)
     {
-        C__Character currentCharacter = _characters.current;
-        
-        if (!currentCharacter.behavior.playable)
-            return;
-        
-        ShowVisibleElements(currentCharacter.look.VisibleTiles());
+        ShowVisibleElements(_characters.current.look.VisibleTiles());
+    }
+    
+    private void Move_OnUnitEnterTile(object sender, Tile enteredTile)
+    {
+        ShowVisibleElements(_characters.current.look.VisibleTiles());
     }
 }

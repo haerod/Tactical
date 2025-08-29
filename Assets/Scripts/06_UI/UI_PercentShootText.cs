@@ -23,14 +23,8 @@ public class UI_PercentShootText : MonoBehaviour
 
     private void Start()
     {
-        InputEvents.OnNoTile += InputEvents_OnNoTile;
-        InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
-        InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
-        InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
-        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
-        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
-        Turns.OnVictory += Turns_OnVictory;
     }
     
     private void Update()
@@ -93,6 +87,34 @@ public class UI_PercentShootText : MonoBehaviour
     // EVENTS
     // ======================================================================
     
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        if(!startingCharacter.behavior.playable)
+            return; // NPC
+        
+        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
+        InputEvents.OnNoTile += InputEvents_OnNoTile;
+        InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
+        InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
+        InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
+        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
+    }
+
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    {
+        if(!endingCharacter.behavior.playable)
+            return; // NPC
+        
+        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
+        InputEvents.OnNoTile -= InputEvents_OnNoTile;
+        InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
+        InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
+        InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
+        InputEvents.OnItselfEnter -= InputEvents_OnItselfEnter;
+        
+        DisablePercentShootText();
+    }
+    
     private void InputEvents_OnFreeTileEnter(object sender, Tile tile)
     {
         DisablePercentShootText();
@@ -125,19 +147,8 @@ public class UI_PercentShootText : MonoBehaviour
         DisablePercentShootText();
     }
     
-    private void Attack_OnAnyAttackStart(object sender, EventArgs e)
+    private void Attack_OnAttackStart(object sender, EventArgs e)
     {
         DisablePercentShootText();
     }
-    
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingTurnCharacter)
-    {
-        DisablePercentShootText();
-    }
-    
-    private void Turns_OnVictory(object sender, EventArgs e)
-    {
-        DisablePercentShootText();
-    }
-
 }

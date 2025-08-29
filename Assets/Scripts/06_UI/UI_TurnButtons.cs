@@ -16,13 +16,11 @@ public class UI_TurnButtons : MonoBehaviour
     private void Start()
     {
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
-        A_Attack.OnAnyAttackEnd += Attack_OnAnyAttackEnd;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        
         Turns.OnVictory += Turns_OnVictory;
-        A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
-        A_Move.OnAnyMovementEnd += Move_OnAnyMovementEnd;
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -48,15 +46,34 @@ public class UI_TurnButtons : MonoBehaviour
 
     private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
     {
-        SetTurnButtonsActive(startingCharacter.behavior.playable);
+        if(!startingCharacter.behavior.playable)
+            return; // NPC
+
+        startingCharacter.move.OnMovementStart += Move_OnMovementStart;
+        startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
+        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
+        startingCharacter.attack.OnAttackEnd += Attack_OnAttackEnd;
+        
+        SetTurnButtonsActive(true);
     }
     
-    private void Attack_OnAnyAttackStart(object sender, EventArgs e)
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    {
+        if(!endingCharacter.behavior.playable)
+            return; // NPC
+        
+        endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
+        endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
+        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
+        endingCharacter.attack.OnAttackEnd -= Attack_OnAttackEnd;
+    }
+    
+    private void Attack_OnAttackStart(object sender, EventArgs e)
     {
         SetTurnButtonsActive(false);
     }
     
-    private void Attack_OnAnyAttackEnd(object sender, EventArgs e)
+    private void Attack_OnAttackEnd(object sender, EventArgs e)
     {
         SetTurnButtonsActive(_characters.current.behavior.playable);
     }
@@ -66,13 +83,13 @@ public class UI_TurnButtons : MonoBehaviour
         SetTurnButtonsActive(false);
     }
     
-    private void Move_OnAnyMovementEnd(object sender, EventArgs e)
+    private void Move_OnMovementEnd(object sender, EventArgs e)
     {
         SetTurnButtonsActive(false);
     }
 
-    private void Move_OnAnyMovementStart(object sender, EventArgs e)
+    private void Move_OnMovementStart(object sender, EventArgs e)
     {
-        SetTurnButtonsActive(_characters.current.behavior.playable);
+        SetTurnButtonsActive(false);
     }
 }

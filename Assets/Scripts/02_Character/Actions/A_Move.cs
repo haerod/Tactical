@@ -28,9 +28,9 @@ public class A_Move : A__Action
     private int index;
     private Vector3 destination;
 
-    public static event EventHandler OnAnyMovementStart;
-    public static event EventHandler OnAnyMovementEnd;
-    public static event EventHandler<Tile> OnTileEnter;
+    public event EventHandler OnMovementStart;
+    public event EventHandler OnMovementEnd;
+    public event EventHandler<Tile> OnUnitEnterTile;
     public event EventHandler<List<Tile>> OnMovableTileEnter;
     
     // ======================================================================
@@ -178,7 +178,7 @@ public class A_Move : A__Action
     /// <param name="path"></param>
     private void MoveOnPath(List<Tile> path)
     {
-        OnAnyMovementStart?.Invoke(this, EventArgs.Empty);
+        OnMovementStart?.Invoke(this, EventArgs.Empty);
         
         c.SetCanPlayValue(false);
 
@@ -234,7 +234,7 @@ public class A_Move : A__Action
             {
                 c.coordinates.x = currentPath[index].coordinates.x;
                 c.coordinates.y = currentPath[index].coordinates.y;
-                OnTileEnter?.Invoke(this, currentPath[index]);
+                OnUnitEnterTile?.Invoke(this, currentPath[index]);
 
                 if (IsTheLastTile()) 
                 {
@@ -271,7 +271,7 @@ public class A_Move : A__Action
     /// </summary>
     private void EndMove()
     {
-        OnAnyMovementEnd?.Invoke(this, EventArgs.Empty);
+        OnMovementEnd?.Invoke(this, EventArgs.Empty);
         c.anim.SetSpeed(0f);
         
         if(c.cover.AreCoversAround())

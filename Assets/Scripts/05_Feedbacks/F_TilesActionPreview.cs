@@ -16,13 +16,11 @@ public class F_TilesActionPreview : MonoBehaviour
     private void Start()
     {
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        A_Move.OnAnyMovementEnd += Move_OnAnyMovementEnd;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        
         UI_WeaponSelectionButton.OnAnyWeaponChanged += WeaponSelectionButton_OnAnyWeaponChanged;
         
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         Turns.OnVictory += Turns_OnVictory;
-        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
-        A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
     }
     
     // ======================================================================
@@ -99,18 +97,36 @@ public class F_TilesActionPreview : MonoBehaviour
         if(!startingCharacter.CanPlay()) 
             return; // Can't play
         
+        startingCharacter.move.OnMovementStart += Move_OnMovementStart;
+        startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
+        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
+        
         ShowMovementArea(startingCharacter.move.MovementArea());
         ShowAttackableTiles(startingCharacter.attack.AttackableTiles());
     }
     
-    private void Move_OnAnyMovementEnd(object sender, EventArgs e)
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    {
+        if (!endingCharacter.behavior.playable) 
+            return; // NPC
+        if(!endingCharacter.CanPlay()) 
+            return; // Can't play
+        
+        endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
+        endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
+        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
+        
+        HideTilesFeedbacks();
+    }
+    
+    private void Move_OnMovementStart(object sender, EventArgs e)
+    {
+        HideTilesFeedbacks();
+    }
+    
+    private void Move_OnMovementEnd(object sender, EventArgs e)
     {
         C__Character currentCharacter = _characters.current;
-        
-        if (!currentCharacter.behavior.playable)
-            return; // NPC
-        if(!currentCharacter.CanPlay()) 
-            return; // Can't play
         
         ShowMovementArea(currentCharacter.move.MovementArea());
         ShowAttackableTiles(currentCharacter.attack.AttackableTiles());
@@ -129,22 +145,12 @@ public class F_TilesActionPreview : MonoBehaviour
         ShowAttackableTiles(currentCharacter.attack.AttackableTiles());
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
-    {
-        HideTilesFeedbacks();
-    }
-    
     private void Turns_OnVictory(object sender, EventArgs e)
     {
         HideTilesFeedbacks();
     }
 
-    private void Attack_OnAnyAttackStart(object sender, EventArgs e)
-    {
-        HideTilesFeedbacks();
-    }
-    
-    private void Move_OnAnyMovementStart(object sender, EventArgs e)
+    private void Attack_OnAttackStart(object sender, EventArgs e)
     {
         HideTilesFeedbacks();
     }

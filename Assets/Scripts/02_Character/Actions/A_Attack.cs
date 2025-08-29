@@ -13,9 +13,9 @@ public class A_Attack : A__Action
     
     private Action onAttackDone;
 
-    public static event EventHandler OnAnyAttackStart;
-    public static event EventHandler OnAnyAttackEnd;
-    public static event EventHandler<C__Character> OnAttackMiss;
+    public event EventHandler OnAttackStart;
+    public event EventHandler OnAttackEnd;
+    public event EventHandler<C__Character> OnAttackMiss;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -57,7 +57,7 @@ public class A_Attack : A__Action
 
         int damages = c.weaponHolder.GetCurrentWeapon().GetDamages();
 
-        OnAnyAttackStart?.Invoke(this, EventArgs.Empty);
+        OnAttackStart?.Invoke(this, EventArgs.Empty);
         _input.SetActiveClick(false);
 
         c.anim.StartAttack();
@@ -78,7 +78,7 @@ public class A_Attack : A__Action
     /// </summary>
     public void EndAttack()
     {
-        OnAnyAttackEnd?.Invoke(this, EventArgs.Empty);
+        OnAttackEnd?.Invoke(this, EventArgs.Empty);
         _camera.Shake();
         onAttackDone();
 
@@ -153,7 +153,7 @@ public class A_Attack : A__Action
                 OnAttackMiss?.Invoke(this, target);
                 target.anim.StartDodge();
             }
-            Wait(0.5f, () => {Turns.EndTurn();});
+            Wait(0.5f, Turns.EndTurn);
         };
     }
     

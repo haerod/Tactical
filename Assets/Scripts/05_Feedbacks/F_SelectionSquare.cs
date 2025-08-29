@@ -20,9 +20,8 @@ public class F_SelectionSquare : MonoBehaviour
     {
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
-        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
+        
         Turns.OnVictory += Turns_OnVictory;
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
     }
     
     // ======================================================================
@@ -59,6 +58,28 @@ public class F_SelectionSquare : MonoBehaviour
     // EVENTS
     // ======================================================================
 
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        if(!startingCharacter.behavior.playable)
+            return; // NPC
+        
+        startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
+        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
+        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+    }
+    
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    {
+        DisableSquare();
+        
+        if(!endingCharacter.behavior.playable)
+            return; // NPC
+        
+        endingCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
+        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
+        InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;
+    }
+
     private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
     {
         Tile lastTile = pathfinding.Last();
@@ -68,17 +89,9 @@ public class F_SelectionSquare : MonoBehaviour
         SetSquareAt(lastTile.worldPosition, tileInMoveRange);
     }
 
-    private void Attack_OnAnyAttackStart(object sender, EventArgs e)
+    private void Attack_OnAttackStart(object sender, EventArgs e)
     {
         DisableSquare();
-    }
-    
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingTurnCharacter)
-    {
-        DisableSquare();
-        
-        if(endingTurnCharacter.behavior.playable)
-            endingTurnCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
     }
     
     private void Turns_OnVictory(object sender, EventArgs e)
@@ -90,11 +103,4 @@ public class F_SelectionSquare : MonoBehaviour
     {
         DisableSquare();
     }
-    
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
-    {
-        if(startingCharacter.behavior.playable)
-            startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
-    }
-
 }

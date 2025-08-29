@@ -22,10 +22,8 @@ public class F_CoversHolder : MonoBehaviour
     private void Start()
     {
         GenerateCoverFeedbacks();
-        InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
-        A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
-        InputEvents.OnNoTile += InputEvents_OnNoTile;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
     }
     
     // ======================================================================
@@ -87,6 +85,28 @@ public class F_CoversHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        if (!startingCharacter.behavior.playable) 
+            return; // NPC
+        
+        startingCharacter.move.OnMovementStart += Move_OnMovementStart;
+        InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
+        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnNoTile += InputEvents_OnNoTile;
+    }
+    
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    {
+        if (!endingCharacter.behavior.playable) 
+            return; // NPC
+        
+        endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
+        InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
+        InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;
+        InputEvents.OnNoTile -= InputEvents_OnNoTile;
+    }
+    
     private void InputEvents_OnFreeTileEnter(object sender, Tile freeTile)
     {
         DisplayCoverFeedbacksAround(
@@ -104,9 +124,8 @@ public class F_CoversHolder : MonoBehaviour
         HideCoverFeedbacks();
     }
     
-    private void Move_OnAnyMovementStart(object sender, EventArgs e)
+    private void Move_OnMovementStart(object sender, EventArgs e)
     {
         HideCoverFeedbacks();
     }
-
 }
