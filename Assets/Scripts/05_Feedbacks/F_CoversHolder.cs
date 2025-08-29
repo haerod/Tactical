@@ -116,6 +116,9 @@ public class F_CoversHolder : MonoBehaviour
     
     private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
     {
+        if(!_characters.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
+            return; // Invisible character
+            
         DisplayTargetCoverFeedback(hoveredCharacter.cover.GetCoverStateFrom(_characters.current));
     }
     

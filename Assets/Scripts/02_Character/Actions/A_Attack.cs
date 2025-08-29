@@ -31,8 +31,7 @@ public class A_Attack : A__Action
     /// <returns></returns>
     public List<Tile> AttackableTiles()
     {
-        return c.look.CharactersVisibleInFog()
-            .Where(chara => chara.unitTeam != c.unitTeam)
+        return c.look.EnemiesVisibleInFog()
             .Where(chara => IsInRange(chara.tile))
             .Select(chara => chara.tile)
             .ToList();
@@ -78,7 +77,6 @@ public class A_Attack : A__Action
     /// </summary>
     public void EndAttack()
     {
-        OnAttackEnd?.Invoke(this, EventArgs.Empty);
         _camera.Shake();
         onAttackDone();
 
@@ -112,28 +110,7 @@ public class A_Attack : A__Action
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Starts a wait for "time" seconds and executes an action.
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="onEnd"></param>
-    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-
-    /// <summary>
-    /// Waits coroutine.
-    /// Called by Wait() method.
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="onEnd"></param>
-    /// <returns></returns>
-    private IEnumerator Wait_Co(float time, Action onEnd)
-    {
-        yield return new WaitForSeconds(time);
-
-        onEnd();
-    }
-
+    
     /// <summary>
     /// Sets OnAttackDone lambda.
     /// </summary>
@@ -153,7 +130,12 @@ public class A_Attack : A__Action
                 OnAttackMiss?.Invoke(this, target);
                 target.anim.StartDodge();
             }
-            Wait(0.5f, Turns.EndTurn);
+            
+            Wait(0.5f, () =>
+            {
+                OnAttackEnd?.Invoke(this, EventArgs.Empty);
+                Turns.EndTurn();
+            });
         };
     }
     
@@ -191,6 +173,8 @@ public class A_Attack : A__Action
     
     protected override void OnClickAnyCharacter(C__Character clickedCharacter)
     {
+        
+        
         if(c.team.IsAllyOf(clickedCharacter)) 
             return; // Same team
 

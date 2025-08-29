@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
@@ -37,6 +39,27 @@ public abstract class A__Action : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Starts a wait for "time" seconds and executes an action.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="onEnd"></param>
+    protected void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
+
+    /// <summary>
+    /// Waits coroutine.
+    /// Called by Wait() method.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="onEnd"></param>
+    /// <returns></returns>
+    private IEnumerator Wait_Co(float time, Action onEnd)
+    {
+        yield return new WaitForSeconds(time);
+
+        onEnd();
+    }
+    
     // Characters
     // ----------
     
@@ -143,6 +166,12 @@ public abstract class A__Action : MonoBehaviour
     
     private void InputEvents_OnCharacterEnter(object sender, C__Character enteredCharacter)
     {
+        if (!c.look.CharactersVisibleInFog().Contains(enteredCharacter))
+        {
+            OnHoverFreeTile(enteredCharacter.tile);
+            return; // Invisible character
+        }
+        
         OnHoverAnyCharacter(enteredCharacter);
         
         if (enteredCharacter == c)
@@ -165,6 +194,12 @@ public abstract class A__Action : MonoBehaviour
 
     private void InputEvents_OnCharacterClick(object sender, C__Character clickedCharacter)
     {
+        if (!c.look.CharactersVisibleInFog().Contains(clickedCharacter))
+        {
+            OnClickTile(clickedCharacter.tile);
+            return; // Invisible character
+        }
+        
         OnClickAnyCharacter(clickedCharacter);
         
         if (clickedCharacter == c)

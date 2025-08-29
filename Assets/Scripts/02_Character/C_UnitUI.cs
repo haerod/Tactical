@@ -22,7 +22,7 @@ public class C_UnitUI : MonoBehaviour
 
     private void Start()
     {
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
@@ -106,10 +106,12 @@ public class C_UnitUI : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
+    private void InputEvents_OnItselfEnter(object sender, EventArgs e)
     {
-        if(hoveredCharacter == c)
-            Display();
+        if(!_characters.current.look.CharactersVisibleInFog().Contains(c))
+            return; // Invisible character
+        
+        Display();
     }
     
     private void InputEvents_OnTileExit(object sender, Tile exitedTile)

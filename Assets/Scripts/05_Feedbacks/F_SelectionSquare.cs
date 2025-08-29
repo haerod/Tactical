@@ -64,6 +64,7 @@ public class F_SelectionSquare : MonoBehaviour
             return; // NPC
         
         startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
+        startingCharacter.move.OnMovementStart += Move_OnMovementStart;
         startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
     }
@@ -75,7 +76,8 @@ public class F_SelectionSquare : MonoBehaviour
         if(!endingCharacter.behavior.playable)
             return; // NPC
         
-        endingCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
+        endingCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;       
+        endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
         endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
         InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;
     }
@@ -89,6 +91,11 @@ public class F_SelectionSquare : MonoBehaviour
         SetSquareAt(lastTile.worldPosition, tileInMoveRange);
     }
 
+    private void Move_OnMovementStart(object sender, EventArgs e)
+    {
+        DisableSquare();
+    }
+    
     private void Attack_OnAttackStart(object sender, EventArgs e)
     {
         DisableSquare();
@@ -101,6 +108,9 @@ public class F_SelectionSquare : MonoBehaviour
     
     private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
     {
+        if(!_characters.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
+            return; // Invisible character
+        
         DisableSquare();
     }
 }

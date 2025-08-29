@@ -65,15 +65,17 @@ public class C_Look : MonoBehaviour
         return _characters.GetCharacterList()
             .Where(chara =>
             {
-                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
-                    return true;
-                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
-                    return VisibleTiles().Contains(chara.tile) || c.team.IsAllyOf(_characters.current);
-                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
-                    return VisibleTiles().Contains(c.tile);
-                
-                Debug.LogError("No rule, please add one here.");
-                return false;
+                switch (_rules.visibleInFogOfWar)
+                {
+                    case M_Rules.VisibleInFogOfWar.Everybody:
+                        return true;
+                    case M_Rules.VisibleInFogOfWar.Allies:
+                        return VisibleTiles().Contains(chara.tile) || c.team.IsAllyOf(_characters.current);
+                    case M_Rules.VisibleInFogOfWar.InView:
+                        return VisibleTiles().Contains(chara.tile);
+                    default:
+                        return false;
+                }
             })
             .ToList();
     }

@@ -92,6 +92,7 @@ public class F_MoveLine : MonoBehaviour
             return; // NPC
         
         startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
+        startingCharacter.move.OnMovementStart += Move_OnMovementStart;
         startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;   
     }
@@ -104,8 +105,14 @@ public class F_MoveLine : MonoBehaviour
             return; // NPC
         
         endingCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
+        endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
         endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
         InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;   
+    }
+    
+    private void Move_OnMovementStart(object sender, EventArgs e)
+    {
+        DisableLines();
     }
     
     private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
@@ -125,6 +132,9 @@ public class F_MoveLine : MonoBehaviour
     
     private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
     {
+        if(!_characters.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
+            return; // Invisible character
+        
         DisableLines();
     }
     

@@ -46,15 +46,17 @@ public class F_FogOfWar : MonoBehaviour
         List<C__Character> visibleCharacters = _characters.GetCharacterList()
             .Where(c =>
             {
-                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Everybody)
-                    return true;
-                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.Allies)
-                    return visibleTiles.Contains(c.tile) || c.unitTeam == _characters.current.unitTeam;
-                if (_rules.visibleInFogOfWar == M_Rules.VisibleInFogOfWar.InView)
-                    return visibleTiles.Contains(c.tile);
-                
-                Debug.LogError("No rule, please add one here.");
-                return false;
+                switch (_rules.visibleInFogOfWar)
+                {
+                    case M_Rules.VisibleInFogOfWar.Everybody:
+                        return true;
+                    case M_Rules.VisibleInFogOfWar.Allies:
+                        return visibleTiles.Contains(c.tile) || c.unitTeam == _characters.current.unitTeam;
+                    case M_Rules.VisibleInFogOfWar.InView:
+                        return visibleTiles.Contains(c.tile);
+                    default:
+                        return false;
+                }
             })
             .ToList();
 

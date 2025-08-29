@@ -201,7 +201,7 @@ public class A_Move : A__Action
         while (true)
         {
             _camera.ResetPosition();
-
+            
             if (c.transform.position != destination) // Move
             {
                 c.transform.position = Vector3.MoveTowards(c.transform.position, destination, speed * Time.deltaTime);
@@ -241,22 +241,33 @@ public class A_Move : A__Action
     /// Returns true if is the last tile of the movement.
     /// </summary>
     /// <returns></returns>
-    private bool IsTheLastTile() => index + 1 >= currentPath.Count || c.movementRange <= 0;
+    private bool IsTheLastTile()
+    {
+        if(index + 1 >= currentPath.Count)
+            return true; // Last tile
+        if(IsBlockingPath(currentPath[index + 1].character))
+            return true; // Blocked by a character
+        if(c.movementRange <= 0)
+            return true; // No movement range
+        
+        return false;
+    }
 
     /// <summary>
     /// Happens in the end of the movement.
     /// </summary>
     private void EndMove()
     {
-        OnMovementEnd?.Invoke(this, EventArgs.Empty);
         c.anim.SetSpeed(0f);
         
         if(c.cover.AreCoversAround())
             c.anim.EnterCrouch();
         
-        _input.SetActiveClick();
-        
-        Turns.EndTurn();
+        Wait(0.2f, () =>
+        {
+            OnMovementEnd?.Invoke(this, EventArgs.Empty);
+            Turns.EndTurn();
+        });
     }
     
     /// <summary>
@@ -289,11 +300,16 @@ public class A_Move : A__Action
     /// <returns></returns>
     private bool IsBlockingPath(C__Character character)
     {
+        if(!c.look.CharactersVisibleInFog().Contains(character))
+            return false; // Invisible character
+        
         switch (canPassThrough)
         {
             case PassThrough.Nobody:
                 return true;
             case PassThrough.AlliesOnly when c.team.IsAllyOf(character):
+                return false;
+            case PassThrough.Everybody:
                 return false;
             default:
                 return false;

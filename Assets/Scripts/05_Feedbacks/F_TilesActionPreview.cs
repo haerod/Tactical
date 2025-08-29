@@ -108,8 +108,6 @@ public class F_TilesActionPreview : MonoBehaviour
     {
         if (!endingCharacter.behavior.playable) 
             return; // NPC
-        if(!endingCharacter.CanPlay()) 
-            return; // Can't play
         
         endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
         endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
