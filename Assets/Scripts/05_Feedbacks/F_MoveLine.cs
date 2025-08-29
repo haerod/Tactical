@@ -21,11 +21,12 @@ public class F_MoveLine : MonoBehaviour
 
     private void Start()
     {
-        InputEvents.OnMovableTileEnter += InputEvents_OnMovableTileEnter;
-        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
         Turns.OnVictory += Turns_OnVictory;
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;    }
+        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;    
+    }
 
     // ======================================================================
     // PUBLIC METHODS
@@ -87,7 +88,7 @@ public class F_MoveLine : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputEvents_OnMovableTileEnter(object sender, List<Tile> pathfinding)
+    private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
     {
         SetLines(pathfinding, _characters.current.move.movementRange);
     }
@@ -100,6 +101,9 @@ public class F_MoveLine : MonoBehaviour
     private void Characters_OnCharacterTurnEnd(object sender, C__Character endingTurnCharacter)
     {
         DisableLines();
+        
+        if(endingTurnCharacter.behavior.playable)
+            endingTurnCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
     }
     
     private void Turns_OnVictory(object sender, EventArgs e)
@@ -110,5 +114,11 @@ public class F_MoveLine : MonoBehaviour
     private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
     {
         DisableLines();
+    }
+    
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        if(startingCharacter.behavior.playable)
+            startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
     }
 }

@@ -31,6 +31,7 @@ public class A_Move : A__Action
     public static event EventHandler OnAnyMovementStart;
     public static event EventHandler OnAnyMovementEnd;
     public static event EventHandler<Tile> OnTileEnter;
+    public event EventHandler<List<Tile>> OnMovableTileEnter;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -303,6 +304,20 @@ public class A_Move : A__Action
     protected override void OnHoverTile(Tile hoveredTile)
     {
         OrientTo(hoveredTile.transform.position);
+        
+        List<Tile> currentPathfinding = Pathfinding.GetPath(
+            c.tile,
+            hoveredTile,
+            Pathfinding.TileInclusion.WithStartAndEnd,
+            new MovementRules(
+                walkableTiles, 
+                GetTraversableCharacterTiles(), 
+                useDiagonalMovement));
+        
+        if (currentPathfinding.Count == 0)
+            return; // No path
+        
+        OnMovableTileEnter?.Invoke(this, currentPathfinding);
     }
 
     protected override void OnClickTile(Tile clickedTile)

@@ -293,7 +293,6 @@ public static class InputEvents
 {
     public static event EventHandler<Tile> OnTileEnter;
     public static event EventHandler<Tile> OnFreeTileEnter;
-    public static event EventHandler<List<Tile>> OnMovableTileEnter;
     public static event EventHandler<Tile> OnTileExit;
     public static event EventHandler<Tile> OnTileClick;
     public static event EventHandler OnNoTile;
@@ -305,12 +304,27 @@ public static class InputEvents
     public static event EventHandler<C__Character> OnAllyEnter;
     public static event EventHandler OnItselfEnter;
     
-    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    public static void TileHovered(Tile tile) => TileHoveredEvents(tile);
+    public static void TileUnhovered(Tile tile) => OnTileExit?.Invoke(null, tile);
+    public static void TileClick(Tile tile) => OnTileClick?.Invoke(null, tile);
+    public static void CharacterUnhovered(C__Character character) => OnCharacterExit?.Invoke(null, character);
+    public static void CharacterHovered(C__Character character) => CharacterHoveredEvents(character);
+    public static void CharacterClick(C__Character character)  => OnCharacterClick?.Invoke(null, character);
+    public static void NothingHovered() => OnNoTile?.Invoke(null, EventArgs.Empty);
     
-    public static void TileHovered(Tile tile)
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
+    /// <summary>
+    /// Events happening if the pointer overlaps a tile.
+    /// </summary>
+    /// <param name="tile"></param>
+    private static void TileHoveredEvents(Tile tile)
     {
         OnTileEnter?.Invoke(null, tile);
         
@@ -322,51 +336,19 @@ public static class InputEvents
         bool pointedCharacterIsVisible = !_rules.IsFogOfWar() || currentCharacter.look.VisibleTiles().Contains(tile);
 
         if (tile.IsOccupiedByCharacter() && pointedCharacterIsVisible)
-            CharacterHoveredEvent(tile.character);
-        else
-            FreeTileHovered(tile);
-    }
-    public static void TileUnhovered(Tile tile) => OnTileExit?.Invoke(null, tile);
-    public static void TileClick(Tile tile) => OnTileClick?.Invoke(null, tile);
-    public static void CharacterUnhovered(C__Character character) => OnCharacterExit?.Invoke(null, character);
-    public static void CharacterHovered(C__Character character) => OnCharacterEnter?.Invoke(null, character);
-    public static void CharacterClick(C__Character character)  => OnCharacterClick?.Invoke(null, character);
-    public static void NothingHovered() => OnNoTile?.Invoke(null, EventArgs.Empty);
-    
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-    
-    /// <summary>
-    /// Events happening if the pointer overlaps a free tile.
-    /// </summary>
-    /// <param name="tile"></param>
-    private static void FreeTileHovered(Tile tile)
-    {
-        C__Character currentCharacter = _characters.current;
-
+        {
+            CharacterHoveredEvents(tile.character);
+            return; // Tile occupied by a character
+        }
+        
         OnFreeTileEnter?.Invoke(null, tile);
-        
-        List<Tile> currentPathfinding = Pathfinding.GetPath(
-            currentCharacter.tile,
-            tile,
-            Pathfinding.TileInclusion.WithStartAndEnd,
-            new MovementRules(
-                currentCharacter.move.walkableTiles, 
-                currentCharacter.move.GetTraversableCharacterTiles(), 
-                currentCharacter.move.useDiagonalMovement));
-
-        if (currentPathfinding.Count == 0)
-            return; // No path
-        
-        OnMovableTileEnter?.Invoke(null, currentPathfinding);
     }
     
     /// <summary>
     /// Events happening if the pointer overlaps a occupied by a character.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    private static void CharacterHoveredEvent(C__Character hoveredCharacter)
+    private static void CharacterHoveredEvents(C__Character hoveredCharacter)
     {
         C__Character currentCharacter = _characters.current;
         C__Character currentTarget = hoveredCharacter;

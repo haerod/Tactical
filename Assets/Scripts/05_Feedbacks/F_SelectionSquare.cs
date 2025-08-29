@@ -18,9 +18,9 @@ public class F_SelectionSquare : MonoBehaviour
 
     private void Start()
     {
-        InputEvents.OnMovableTileEnter += InputEvents_OnMovableTileEnter;
-        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
         Turns.OnVictory += Turns_OnVictory;
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
     }
@@ -59,7 +59,7 @@ public class F_SelectionSquare : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void InputEvents_OnMovableTileEnter(object sender, List<Tile> pathfinding)
+    private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
     {
         Tile lastTile = pathfinding.Last();
 
@@ -76,6 +76,9 @@ public class F_SelectionSquare : MonoBehaviour
     private void Characters_OnCharacterTurnEnd(object sender, C__Character endingTurnCharacter)
     {
         DisableSquare();
+        
+        if(endingTurnCharacter.behavior.playable)
+            endingTurnCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
     }
     
     private void Turns_OnVictory(object sender, EventArgs e)
@@ -86,6 +89,12 @@ public class F_SelectionSquare : MonoBehaviour
     private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
     {
         DisableSquare();
+    }
+    
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        if(startingCharacter.behavior.playable)
+            startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
     }
 
 }

@@ -21,13 +21,16 @@ public class UI_Cursor : MonoBehaviour
 
     private void Start()
     {
-        InputEvents.OnMovableTileEnter += InputEvents_OnMovableTileEnter;
-        InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
-        InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
-        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
-        InputEvents.OnTileExit += InputEvents_OnTileExit;
-        _input.OnChangeClickActivation += Input_ChangeClickActivation;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
+        InputEvents.OnTileExit += InputEvents_OnTileExit;
+        InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
+        InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
+        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
+        
+        _input.OnChangeClickActivation += Input_ChangeClickActivation;
     }
     
     // ======================================================================
@@ -70,7 +73,7 @@ public class UI_Cursor : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputEvents_OnMovableTileEnter(object sender, List<Tile> pathfinding)
+    private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
     {
         Tile endTile = pathfinding.LastOrDefault();
         
@@ -140,5 +143,17 @@ public class UI_Cursor : MonoBehaviour
         
         if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
             SetCursor(CursorType.OutMovement);
+    }
+    
+    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    {
+        if(startingCharacter.behavior.playable)
+            startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
+    }
+    
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingTurnCharacter)
+    {
+        if(endingTurnCharacter.behavior.playable)
+            endingTurnCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
     }
 }
