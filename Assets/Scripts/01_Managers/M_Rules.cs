@@ -51,7 +51,7 @@ public class M_Rules : MonoBehaviour
     /// Returns the first character of the play order.
     /// </summary>
     /// <returns></returns>
-    public C__Character GetFirstCharacter() => teamsPlayOrder[0].FirstCharacter();
+    public C__Character GetFirstCharacter() => teamsPlayOrder[0].FirstUnit();
     
     /// <summary>
     /// Adds a character to the Team play order.
@@ -106,18 +106,32 @@ public class TeamPlayOrder
     public List<C__Character> GetCharactersPlayOrder() => charactersPlayOrder;
     
     /// <summary>
-    /// Returns the first character of the team's characters play order.
+    /// Returns the first unit of the team's characters play order.
     /// </summary>
     /// <returns></returns>
-    public C__Character FirstCharacter() => charactersPlayOrder.First();
+    public C__Character FirstUnit() => charactersPlayOrder.First();
     
     /// <summary>
-    /// Returns the next character of this team, or null if it's the last.
+    /// Returns the next unit of this team who can, or null if nobody exists or can.
     /// </summary>
     /// <param name="currentCharacter"></param>
     /// <returns></returns>
-    public C__Character NextCharacter(C__Character currentCharacter) => currentCharacter == charactersPlayOrder.Last() ? null : charactersPlayOrder.Next(currentCharacter);
-
+    public C__Character GetNextTeamPlayableUnit(C__Character currentCharacter)
+    {
+        List<C__Character> teamPlayableCharacter = charactersPlayOrder
+            .Where(chara => chara.CanPlay())
+            .ToList();
+        
+        return teamPlayableCharacter.Count == 0 ? null : teamPlayableCharacter.Next(currentCharacter);
+    }
+    
+    /// <summary>
+    /// Returns the next unit of the team, or null if nobody exist.
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <returns></returns>
+    public C__Character GetNextTeamUnit(C__Character unit) => charactersPlayOrder.Count == 0 ? null : charactersPlayOrder.Next(unit);
+    
     /// <summary>
     /// Removes a character from charactersPlayOrder.
     /// </summary>

@@ -37,18 +37,18 @@ public class M_Input : MonoBehaviour
     public event EventHandler OnRotateLeftInput;
     public event EventHandler OnRotateRightInput;
     
-    private bool canClick = true;
+    private bool canUsePlayerInput = true;
     private Tile previousTile;
     private C__Character previousCharacter;
     private Plane floorPlane = new Plane(Vector3.up, Vector3.zero);
     public static M_Input instance;
     
     private C__Character currentCharacter => _characters.current;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
         // Singleton
@@ -57,15 +57,15 @@ public class M_Input : MonoBehaviour
         else
             Debug.LogError("There is more than one M_Input in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
     }
-
+    
     private void Start()
     {
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
     }
-
+    
     private void Update()
     {
-        if (!canClick) 
+        if (!canUsePlayerInput) 
             return; // Player can't click
         if (IsPointerOverUI()) 
             return; // Pointer over UI
@@ -79,21 +79,21 @@ public class M_Input : MonoBehaviour
         CheckCameraZoomInput();
         CheckCameraRotationInput();
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
-    /// Sets if players can click or not on board objects
+    /// Sets if players can use inputs or not.
     /// </summary>
     /// <param name="value"></param>
-    public void SetActiveClick(bool value = true)
+    public void SetActivePlayerInput(bool value = true)
     {
-        canClick = value;
+        canUsePlayerInput = value;
         OnChangeClickActivation?.Invoke(this, value);
     }
-
+    
     /// <summary>
     /// Gets the pointer position on the floor (Plane at y = 0).
     /// </summary>
@@ -109,7 +109,7 @@ public class M_Input : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Returns true if pointer is over UI. Else, returns false.
     /// </summary>
@@ -175,7 +175,7 @@ public class M_Input : MonoBehaviour
             InputEvents.NothingHovered();
         }
     }
-
+    
     /// <summary>
     /// Checks if player click on a tile (or element on a tile), previously checked by CheckRaycast().
     /// </summary>
@@ -191,7 +191,7 @@ public class M_Input : MonoBehaviour
         else
             InputEvents.TileClick(previousTile);
     }
-
+    
     /// <summary>
     /// Checks input to change character to another in the same team.
     /// </summary>
@@ -200,7 +200,7 @@ public class M_Input : MonoBehaviour
         if (Input.GetKeyDown(changeCharacterKey))
             OnChangeCharacterInput?.Invoke(this, EventArgs.Empty);
     }
-
+    
     /// <summary>
     /// Checks input to end turn and passes to the next team turn.
     /// </summary>
@@ -209,7 +209,7 @@ public class M_Input : MonoBehaviour
         if (Input.GetKeyDown(endTurnKey))
             OnEndTurnInput?.Invoke(this, EventArgs.Empty);
     }
-
+    
     /// <summary>
     /// Checks input to recenter camera on the current character
     /// </summary>
@@ -218,7 +218,7 @@ public class M_Input : MonoBehaviour
         if (Input.GetKeyDown(recenterCameraKey))
             OnRecenterCameraInput?.Invoke(this, EventArgs.Empty);
     }
-
+    
     /// <summary>
     /// Checks if mouse is on the borders (so haves to move) or movement keys are pressed.
     /// </summary>
@@ -242,7 +242,7 @@ public class M_Input : MonoBehaviour
 
         OnMovingCameraInput?.Invoke(this, direction);
     }
-
+    
     /// <summary>
     /// Checks if zoom input is pressed.
     /// </summary>
@@ -280,13 +280,14 @@ public class M_Input : MonoBehaviour
     private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter )
     {
         if (startingCharacter.behavior.playable) 
-            _input.SetActiveClick();
+            _input.SetActivePlayerInput();
         else
-            _input.SetActiveClick(false);
+            _input.SetActivePlayerInput(false);
 
         previousTile = null;
         previousCharacter = null;
     }
+    
 }
 
 public static class InputEvents

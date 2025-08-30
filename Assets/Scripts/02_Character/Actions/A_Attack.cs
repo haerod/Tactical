@@ -54,7 +54,7 @@ public class A_Attack : A__Action
         int damages = c.weaponHolder.GetCurrentWeapon().GetDamages();
 
         OnAttackStart?.Invoke(this, EventArgs.Empty);
-        _input.SetActiveClick(false);
+        _input.SetActivePlayerInput(false);
 
         c.anim.StartAttack();
 

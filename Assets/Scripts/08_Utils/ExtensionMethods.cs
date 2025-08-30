@@ -19,7 +19,8 @@ public static class ExtensionMethods
     /// <returns></returns>
     public static T Next<T>(this List<T> list, int index)
     {
-        if (list.Count == 0) return default;
+        if (list.Count == 0) 
+            return default;
         return index + 1 < list.Count ? list[index + 1] : list[0];
     }
 
@@ -35,7 +36,8 @@ public static class ExtensionMethods
     public static T Next<T>(this List<T> list, T element)
     {
         int index = list.IndexOf(element);
-        if (list.Count == 0) return default;
+        if (list.Count == 0) 
+            return default;
         return index + 1 < list.Count ? list[index + 1] : list[0];
     }
 
@@ -50,7 +52,8 @@ public static class ExtensionMethods
     /// <returns></returns>
     public static T Previous<T>(this List<T> list, int index)
     {
-        if (list.Count == 0) return default;
+        if (list.Count == 0) 
+            return default;
         return index - 1 >= 0 ? list[index - 1] : list[list.Count - 1];
     }
 
@@ -66,7 +69,8 @@ public static class ExtensionMethods
     public static T Previous<T>(this List<T> list, T element)
     {
         int index = list.IndexOf(element);
-        if (list.Count == 0) return default;
+        if (list.Count == 0) 
+            return default;
         return index - 1 >= 0 ? list[index - 1] : list[list.Count - 1];
     }
 

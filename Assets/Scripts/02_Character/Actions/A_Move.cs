@@ -168,7 +168,7 @@ public class A_Move : A__Action
         c.anim.SetSpeed(animSpeed); // Blend tree anim speed
         c.anim.ExitCrouch();
 
-        _input.SetActiveClick(false);
+        _input.SetActivePlayerInput(false);
         
         StartCoroutine(MoveToDestination());
     }
