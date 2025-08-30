@@ -46,7 +46,7 @@ public class C_Look : MonoBehaviour
                     .ToList();
             case VisionType.GroupVision:
                 _characters
-                    .GetTeamMembers(c)
+                    .GetAlliesOf(c)
                     .ForEach(chara => toReturn.AddRange(chara.look.GetVisibleTiles()));
 
                 toReturn = toReturn
@@ -63,7 +63,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public List<C__Character> CharactersVisibleInFog() => _characters
-        .GetCharacterList()
+        .GetUnitsList()
             .Where(chara =>
             {
                 switch (_rules.visibleInFogOfWar)
@@ -110,7 +110,7 @@ public class C_Look : MonoBehaviour
     /// Returns the closest enemy on sight.
     /// </summary>
     /// <returns></returns>
-    public C__Character ClosestEnemyOnSight() => _characters.GetCharacterList()
+    public C__Character ClosestEnemyOnSight() => _characters.GetUnitsList()
             .Where(o => o != c) // remove emitter
             .Where(o => o.team.IsEnemyOf(c)) // get only enemies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight

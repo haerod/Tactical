@@ -726,6 +726,14 @@ PrefabInstance:
       propertyPath: characters.Array.data[3]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamPlayOrder.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958866178224547779, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
+      propertyPath: teamPlayOrder.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: ca99a341737608f4898402b1657e9567, type: 2}
     - target: {fileID: 1958866178818122973, guid: 422dfdfd6af2db147ac2962b36cacb64, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -844,7 +852,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2220433861757821208, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_Name
-      value: Hero (PC) - Team Light
+      value: Carabiner (PC) - Team Light
       objectReference: {fileID: 0}
     - target: {fileID: 4768188108386124555, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_RootOrder

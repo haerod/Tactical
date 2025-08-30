@@ -8,7 +8,8 @@ using static M__Managers;
 
 public class M_Characters : MonoBehaviour
 {
-    [HideInInspector] public C__Character current;    
+    [HideInInspector] public C__Character current;
+    [SerializeField] private List<Team> teamPlayOrder;
     [SerializeField] private List<C__Character> characters;
 
     public event EventHandler<C__Character> OnCharacterTurnStart;
@@ -28,33 +29,65 @@ public class M_Characters : MonoBehaviour
         else
             Debug.LogError("There is more than one M_Characters in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
     }
-
+    
     private void Start()
     {
         NewCurrentCharacter(_rules.GetFirstCharacter());
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
-    /// Returns the character's list.
+    /// Returns the full units list.
     /// </summary>
     /// <returns></returns>
-    public List<C__Character> GetCharacterList() => characters;
-
+    public List<C__Character> GetUnitsList() => characters;
+    
     /// <summary>
-    /// Adds a new character in the character's list.
+    /// Returns all enemies of the given unit.
     /// </summary>
-    /// <param name="character"></param>
-    public void AddCharacter(C__Character character) => GetCharacterList().Add(character);
-
+    /// <param name="unit"></param>
+    /// <returns></returns>
+    public List<C__Character> GetAlliesOf(C__Character unit) => characters
+        .Where(testedUnit => testedUnit.team.IsAllyOf(unit))
+        .ToList();
+    
     /// <summary>
-    /// Removes a character from the character's list.
+    /// Returns all enemies of the given unit.
     /// </summary>
-    /// <param name="character"></param>
-    public void RemoveCharacter(C__Character character) => GetCharacterList().Remove(character);
+    /// <param name="unit"></param>
+    /// <returns></returns>
+    public List<C__Character> GetEnemiesOf(C__Character unit) => characters
+        .Where(testedUnit => testedUnit.team.IsEnemyOf(unit))
+        .ToList();
+    
+    /// <summary>
+    /// Adds a new unit in the unit's list.
+    /// </summary>
+    /// <param name="unit"></param>
+    public void AddUnit(C__Character unit)
+    {
+        GetUnitsList().Add(unit);
+        
+        if(!teamPlayOrder.Contains(unit.unitTeam))
+            teamPlayOrder.Add(unit.unitTeam);
+    }
+    
+    /// <summary>
+    /// Removes a unit from the unit's list.
+    /// </summary>
+    /// <param name="unit"></param>
+    public void RemoveUnit(C__Character unit)
+    {
+        GetUnitsList().Remove(unit);
+        
+        if(IsAnotherUnitOfTheSameTeam(unit))
+            return; // Is another unit of the same team
+        
+        teamPlayOrder.Remove(unit.unitTeam);
+    }
     
     /// <summary>
     /// Does all the things happening when a new current character is designated (reset camera, clear visual feedbacks, update UI, etc.)
@@ -68,31 +101,29 @@ public class M_Characters : MonoBehaviour
         
         OnCharacterTurnStart?.Invoke(this, newCurrentCharacter);
     }
-
+    
     /// <summary>
-    /// Returns true if the character's team is the last team standing.
+    /// Returns true if the unit's team is the last team standing.
     /// </summary>
-    /// <param name="character"></param>
+    /// <param name="unit"></param>
     /// <returns></returns>
-    public bool IsFinalTeam(C__Character character) => 
-        GetCharacterList()
-            .Where(c => c != character)
-            .All(c => c.team.IsAllyOf(character));
-
-    /// <summary>
-    /// Returns the team members of a character.
-    /// </summary>
-    /// <param name="character"></param>
-    /// <returns></returns>
-    public List<C__Character> GetTeamMembers(C__Character character) => 
-        GetCharacterList()
-            .Where(c => c.team.IsAllyOf(character))
-            .ToList();
+    public bool IsFinalTeam(C__Character unit) => GetUnitsList()
+            .Where(c => c != unit)
+            .All(c => c.team.IsAllyOf(unit));
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Returns true if is another unit in the given unit team. Else returns false.
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <returns></returns>
+    private bool IsAnotherUnitOfTheSameTeam(C__Character unit) =>GetUnitsList()
+            .Where(testedUnit => testedUnit != unit)
+            .FirstOrDefault(testedUnit => testedUnit.team.IsAllyOf(unit));
+
     // ======================================================================
     // EVENTS
     // ======================================================================

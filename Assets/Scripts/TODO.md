@@ -24,15 +24,16 @@
 
 # REFACTOR
 
-- M_Rules
-    - Fog of war vision rules not in M_Rules -> fog of war as a Manager ?
-        - Fog of war view lines as Module
-    - Characters turn order in M_Characters
-    - Remove M_Rules
+## M_Rules
+- Fog of war vision rules not in M_Rules -> fog of war as a Manager ?
+    - Fog of war view lines as Module
+- Characters turn order in M_Characters
+- Remove M_Rules
 
-- Actions
-    - Replace EndTurn by EndAction (if an unit can do multiple actions)
+## Actions
+- Replace EndTurn by EndAction (if an unit can do multiple actions)
 
+## Others
 - Rename F_... and UI_... modules in Module_... (code and prefab)
 - Tiles material work with an enum, use a Scriptable object instead
 - Separate the logic between Turns and M_Characters
@@ -43,6 +44,7 @@
 - Maybe use raycasts for Autosnap
 - Try to kill a character during its own turn
     - OnDeath, need to end its turn
+- Create a class/scriptable object template in Rider
 
 # CONTENT 
 

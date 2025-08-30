@@ -23,7 +23,7 @@ public class CharacterAutoSnap : BaseAutoSnap
         if (!characters)
             return; // Exit prefab mode
 
-        characters.RemoveCharacter(character);
+        characters.RemoveUnit(character);
         rules.RemoveCharacter(character);
         EditorUtility.SetDirty(rules);
         EditorUtility.SetDirty(characters);
@@ -50,13 +50,13 @@ public class CharacterAutoSnap : BaseAutoSnap
     protected override void AddToManager()
     {
         rules.AddCharacter(character);
-        characters.AddCharacter(character);
+        characters.AddUnit(character);
     }
     
     protected override void RemoveFromManager()
     {
         rules.RemoveCharacter(character);
-        characters.RemoveCharacter(character);
+        characters.RemoveUnit(character);
     }
     protected override bool IsOnValidPosition()
     {

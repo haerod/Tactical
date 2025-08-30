@@ -279,13 +279,13 @@ public class A_Move : A__Action
         List<Tile> toReturn = new List<Tile>();
 
         if (_rules.IsFogOfWar())
-            toReturn.AddRange(_characters.GetCharacterList()
+            toReturn.AddRange(_characters.GetUnitsList()
                 .Where(chara => IsBlockingPath(chara))
                 .Intersect(c.look.CharactersVisibleInFog())
                 .Select(chara => chara.tile)
                 .ToList());
 
-        toReturn.AddRange(_characters.GetCharacterList()
+        toReturn.AddRange(_characters.GetUnitsList()
             .Where(chara => IsBlockingPath(chara))
             .Select(chara => chara.tile)
             .ToList());

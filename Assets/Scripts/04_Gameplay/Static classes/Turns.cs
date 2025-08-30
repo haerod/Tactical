@@ -11,7 +11,7 @@ public static class Turns
     // ======================================================================
     // INITIALIZE
     // ======================================================================
-
+    
     public static event EventHandler OnVictory;
     
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -81,7 +81,7 @@ public static class Turns
     /// </summary>
     private static void EndAllPlayableUnitsTurn()
     {
-        _characters.GetCharacterList()
+        _characters.GetUnitsList()
             .ForEach(c => c.SetCanPlayValue(false));
 
         EndTurn();

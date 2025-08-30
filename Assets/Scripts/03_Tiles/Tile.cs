@@ -306,5 +306,5 @@ public class Tile : Entity
     /// Returns null if is nobody on this tile.
     /// </summary>
     /// <returns></returns>
-    private C__Character Character() => _characters.GetCharacterList().FirstOrDefault(c => c.tile == this);
+    private C__Character Character() => _characters.GetUnitsList().FirstOrDefault(c => c.tile == this);
 }
