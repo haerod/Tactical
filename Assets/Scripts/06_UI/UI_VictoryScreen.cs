@@ -48,7 +48,7 @@ public class UI_VictoryScreen : MonoBehaviour
     
     private void Turns_OnVictory(object sender, EventArgs e)
     {
-        DisplayEndScreen(_characters.current.Team());
+        DisplayEndScreen(_characters.current.team.team);
     }
     
 }

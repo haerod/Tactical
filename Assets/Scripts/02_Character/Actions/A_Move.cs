@@ -68,7 +68,7 @@ public class A_Move : A__Action
             return _board
                 .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
                 .Except(Blockers())
-                .Where(t => !t.IsOccupiedByCharacter() || (t.IsOccupiedByCharacter() && !c.look.HasSightOn(t)))
+                .Where(t => !t.IsOccupiedByCharacter() || (t.IsOccupiedByCharacter() && !c.look.CanSee(t.character)))
                 .ToList();
 
         // Fog of war && can not walk in fog of war

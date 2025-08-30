@@ -27,7 +27,7 @@ public class C__Character : Entity
     public C_UnitUI unitUI;
     public C_WeaponHolder weaponHolder;
 
-    public Team unitTeam => Team();
+    public Team unitTeam => team.team;
     public int movementRange => move.movementRange;
     public Tile tile => Tile();
     
@@ -40,7 +40,7 @@ public class C__Character : Entity
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Moves the character at coordinates in world space.
     /// </summary>
@@ -53,12 +53,6 @@ public class C__Character : Entity
         transform.position = new Vector3(x, 0, y);
         EditorUtility.SetDirty(this);
     }
-
-    /// <summary>
-    /// Returns the team of this character.
-    /// </summary>
-    /// <returns></returns>
-    public Team Team() => team.team;
     
     /// <summary>
     /// Returns if the character has already played.

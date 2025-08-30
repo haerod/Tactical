@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static M__Managers;
 using System;
+using UnityEngine.TextCore.Text;
 
 public class C_Look : MonoBehaviour
 {
@@ -11,15 +12,15 @@ public class C_Look : MonoBehaviour
     [SerializeField] private List<TileType> visualObstacles;
     public enum VisionType { SingleVision, GroupVision}
     public VisionType visionType = VisionType.GroupVision;
-
+    
     [Header("REFERENCES")]
     
     [SerializeField] private C__Character c;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -29,7 +30,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public int GetRange() => range;
-
+    
     /// <summary>
     /// Returns all tiles in view depending on the rules.
     /// </summary>
@@ -38,31 +39,31 @@ public class C_Look : MonoBehaviour
     {
         List<Tile> toReturn = new List<Tile>();
 
-        if (visionType == VisionType.SingleVision)
-            return GetVisibleTiles()
-                .ToList();
-
-        else if(visionType == VisionType.GroupVision)
+        switch (visionType)
         {
-            _characters
-                .GetTeamMembers(c)
-                .ForEach(chara => toReturn.AddRange(chara.look.GetVisibleTiles()));
+            case VisionType.SingleVision:
+                return GetVisibleTiles()
+                    .ToList();
+            case VisionType.GroupVision:
+                _characters
+                    .GetTeamMembers(c)
+                    .ForEach(chara => toReturn.AddRange(chara.look.GetVisibleTiles()));
 
-            toReturn = toReturn
-                .Distinct()
-                .ToList();
+                toReturn = toReturn
+                    .Distinct()
+                    .ToList();
+                break;
         }
 
         return toReturn;
     }
-
+    
     /// <summary>
     /// Returns the characters visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<C__Character> CharactersVisibleInFog()
-    {
-        return _characters.GetCharacterList()
+    public List<C__Character> CharactersVisibleInFog() => _characters
+        .GetCharacterList()
             .Where(chara =>
             {
                 switch (_rules.visibleInFogOfWar)
@@ -78,7 +79,6 @@ public class C_Look : MonoBehaviour
                 }
             })
             .ToList();
-    }
     
     /// <summary>
     /// Returns the enemies visible in fog of war.
@@ -87,23 +87,14 @@ public class C_Look : MonoBehaviour
     public List<C__Character> EnemiesVisibleInFog() => CharactersVisibleInFog()
         .Where(testedCharacter => c.team.IsEnemyOf(testedCharacter))
         .ToList();
-
+    
     /// <summary>
-    /// Returns true if the character has the tile on sight.
+    /// Return true if the target character is visible.
     /// </summary>
-    /// <param name="tile"></param>
+    /// <param name="target"></param>
     /// <returns></returns>
-    public bool HasSightOn(Tile tile)
-    {
-        List<Tile> los = GetTilesOfLineOfSightOn(tile.coordinates);
-
-        if (AreObstaclesOn(los))
-            return false; // Obstacles
-        if (los.Count + 1 > range)
-            return false; // Out of view range
-
-        return true; // Has sight on target
-    }
+    public bool CanSee(C__Character target) =>
+        CharactersVisibleInFog().Contains(target) && HasSightOn(target.tile);
     
     /// <summary>
     /// Returns the tiles in the line of sight of the character on a tile.
@@ -125,32 +116,21 @@ public class C_Look : MonoBehaviour
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight
             .OrderBy(o => GetTilesOfLineOfSightOn(o.tile.coordinates).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Returns true if the character has obstacles on its line of sight.
     /// </summary>
     /// <param name="lineOfSight"></param>
     /// <returns></returns>
-    private bool AreObstaclesOn(List<Tile> lineOfSight)
-    {
-        if (Utils.IsVoidList(lineOfSight)) 
-            return false;
-
-        foreach (Tile t in lineOfSight)
-        {
-            if (!t) 
-                continue; // No tile
-            if (visualObstacles.Contains(t.type)) 
-                return true; // Line of sight blocker
-        }
-
-        return false; // No obstacle
-    }
-
+    private bool AreObstaclesOn(List<Coordinates> lineOfSight) => lineOfSight
+            .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
+            .Where(coordinates => coordinates)
+            .Any(t => visualObstacles.Contains(t.type));
+    
     /// <summary>
     /// Returns all tiles in view of THIS character.
     /// </summary>
@@ -159,7 +139,7 @@ public class C_Look : MonoBehaviour
     {
         List<Tile> toReturn =
             _board.GetTilesAround(c.tile, range, false)
-                .Where(o => HasSightOn(o))
+                .Where(HasSightOn)
                 .Where(o => !visualObstacles.Contains(o.type))
                 .ToList();
 
@@ -167,4 +147,24 @@ public class C_Look : MonoBehaviour
 
         return toReturn;
     }
+    
+    /// <summary>
+    /// Returns true if the character has the tile on sight, not including Fog of war.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
+    private bool HasSightOn(Tile tile)
+    {
+        List<Coordinates> los = LineOfSight.GetLineOfSight(c.coordinates, tile.coordinates);
+
+        if(los == null)
+            return true; // Nothing on LoS
+        if (los.Count + 1 > range)
+            return false; // Out of view range
+        if (AreObstaclesOn(los))
+            return false; // Obstacles
+
+        return true; // Has sight on target
+    }
+    
 }

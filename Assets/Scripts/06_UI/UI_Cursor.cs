@@ -93,7 +93,7 @@ public class UI_Cursor : MonoBehaviour
     {
         C__Character currentCharacter = _characters.current;
         
-        if (!currentCharacter.look.HasSightOn(hoveredAlly.tile))
+        if (!currentCharacter.look.CanSee(hoveredAlly))
         {
             SetCursor(CursorType.OutAimOrSight);
             return; // Character not in sight
@@ -110,7 +110,7 @@ public class UI_Cursor : MonoBehaviour
     {
         C__Character currentCharacter = _characters.current;
         
-        if (!currentCharacter.look.HasSightOn(hoveredEnemy.tile))
+        if (!currentCharacter.look.CanSee(hoveredEnemy))
         {
             SetCursor(CursorType.OutAimOrSight);
             return; // Character not in sight

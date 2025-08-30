@@ -51,7 +51,7 @@ public class F_FogOfWar : MonoBehaviour
                     case M_Rules.VisibleInFogOfWar.Everybody:
                         return true;
                     case M_Rules.VisibleInFogOfWar.Allies:
-                        return visibleTiles.Contains(c.tile) || c.unitTeam == _characters.current.unitTeam;
+                        return visibleTiles.Contains(c.tile) || c.team.IsAllyOf(_characters.current);
                     case M_Rules.VisibleInFogOfWar.InView:
                         return visibleTiles.Contains(c.tile);
                     default:

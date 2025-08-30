@@ -29,13 +29,10 @@ public class A_Attack : A__Action
     /// Returns the attackable tiles, depending on the rules.
     /// </summary>
     /// <returns></returns>
-    public List<Tile> AttackableTiles()
-    {
-        return c.look.EnemiesVisibleInFog()
+    public List<Tile> AttackableTiles() => c.look.EnemiesVisibleInFog()
             .Where(chara => IsInRange(chara.tile))
             .Select(chara => chara.tile)
             .ToList();
-    }
 
     /// <summary>
     /// Attacks the target and starts an action in the end.
@@ -46,7 +43,7 @@ public class A_Attack : A__Action
         
         c.SetCanPlayValue(false);
         
-        if (!c.look.HasSightOn(currentTarget.tile)) 
+        if (!c.look.CanSee(currentTarget)) 
             return; // Enemy not in sight
 
         C__Character target = currentTarget;
@@ -145,7 +142,7 @@ public class A_Attack : A__Action
         List<Tile> los = c.look.GetTilesOfLineOfSightOn(tile.coordinates);
 
         if (currentWeapon.GetTouchInView())
-            return c.look.HasSightOn(tile);
+            return c.look.CanSee(tile.character);
         if (currentWeapon.IsMeleeWeapon())
             return los.Count == 0;
         else

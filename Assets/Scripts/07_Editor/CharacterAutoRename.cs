@@ -63,7 +63,7 @@ public class CharacterAutoRename : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     private bool AreModifications() => previousBehavior != current.behavior.playable 
-        || previousTeam != current.team.team 
+        || previousTeam != current.unitTeam
         || previousName != current.unitName
         || previousMainTeamMaterial != current.unitTeam.mainMaterial
         || previousSecondaryTeamMaterial != current.unitTeam.secondaryMaterial
@@ -75,7 +75,7 @@ public class CharacterAutoRename : MonoBehaviour
     private void UpdateModificationValues()
     {
         previousBehavior = current.behavior.playable;
-        previousTeam = current.team.team;
+        previousTeam = current.unitTeam;
         previousName = current.unitName;
         previousMainTeamMaterial = current.unitTeam.mainMaterial;
         previousSecondaryTeamMaterial = current.unitTeam.secondaryMaterial;

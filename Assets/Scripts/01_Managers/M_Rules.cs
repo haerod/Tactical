@@ -59,7 +59,8 @@ public class M_Rules : MonoBehaviour
     /// <param name="characterToAdd"></param>
     public void AddCharacter(C__Character characterToAdd)
     {
-        TeamPlayOrder teamToAdd = teamsPlayOrder.FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.unitTeam);
+        TeamPlayOrder teamToAdd = teamsPlayOrder
+            .FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.unitTeam);
         
         if(teamToAdd != null)
             teamsPlayOrder

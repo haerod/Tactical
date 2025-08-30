@@ -108,7 +108,7 @@ public class C_Cover : MonoBehaviour
         
         List<C_Look> enemiesInView = c.look.EnemiesVisibleInFog()
             .Select(testedEnemy => testedEnemy.look)
-            .Where(testedViewer => testedViewer.HasSightOn(c.tile))
+            .Where(testedViewer => testedViewer.CanSee(c))
             .ToList();
 
         if (enemiesInView.Count == 0)

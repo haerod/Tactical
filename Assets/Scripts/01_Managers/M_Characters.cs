@@ -8,8 +8,7 @@ using static M__Managers;
 
 public class M_Characters : MonoBehaviour
 {
-    [Header("DEBUG")]
-    public C__Character current;    
+    [HideInInspector] public C__Character current;    
     [SerializeField] private List<C__Character> characters;
 
     public event EventHandler<C__Character> OnCharacterTurnStart;
@@ -78,7 +77,7 @@ public class M_Characters : MonoBehaviour
     public bool IsFinalTeam(C__Character character) => 
         GetCharacterList()
             .Where(c => c != character)
-            .All(c => c.Team() == character.Team());
+            .All(c => c.team.IsAllyOf(character));
 
     /// <summary>
     /// Returns the team members of a character.
@@ -87,7 +86,7 @@ public class M_Characters : MonoBehaviour
     /// <returns></returns>
     public List<C__Character> GetTeamMembers(C__Character character) => 
         GetCharacterList()
-            .Where(c => c.Team() == character.Team())
+            .Where(c => c.team.IsAllyOf(character))
             .ToList();
     
     // ======================================================================
