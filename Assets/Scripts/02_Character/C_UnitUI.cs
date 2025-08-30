@@ -29,6 +29,7 @@ public class C_UnitUI : MonoBehaviour
         c.health.OnDeath += Health_OnDeath;
         c.health.HealthChanged += Health_HealthChanged;
         DisplayCharacterCoverState(c.cover.GetCoverState());
+        healthBar.InitialiseBar();
     }
     
     // ======================================================================

@@ -36,6 +36,15 @@ public class UI_SlicedHealthBar : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Displays the current life and max life on life bar.
+    /// </summary>
+    public void InitialiseBar()
+    {
+        DisplayMaxHealth();
+        DisplayCurrentHealth();
+    }
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -77,14 +86,5 @@ public class UI_SlicedHealthBar : MonoBehaviour
                 0);
             rt.localPosition = localPosition;
         }
-    }
-
-    /// <summary>
-    /// Displays the current life and max life on life bar.
-    /// </summary>
-    private void InitialiseBar()
-    {
-        DisplayMaxHealth();
-        DisplayCurrentHealth();
     }
 }
