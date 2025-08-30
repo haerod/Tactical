@@ -38,7 +38,7 @@ public static class Turns
         }
         
         // Choose the next unit or pass to another team.
-        C__Character nextTeamUnit = NextUnitInTheTeam();
+        C__Character nextTeamUnit = NextPlayableUnitInTheTeam();
 
         if (nextTeamUnit) // Another character in the team
             _characters.NewCurrentCharacter(nextTeamUnit);
@@ -63,6 +63,20 @@ public static class Turns
     }
     
     /// <summary>
+    /// Returns the next unit which haves to play in the team, depending on the rules' play order.
+    /// Return null if nobody can play.
+    /// </summary>
+    /// <returns></returns>
+    private static C__Character NextPlayableUnitInTheTeam()
+    {
+        C__Character currentCharacter = _characters.current;
+        TeamPlayOrder currentTeamPlayOrder = GetTeamPlayOrder(currentCharacter);
+        C__Character nextCharacter = currentTeamPlayOrder.GetNextTeamPlayableUnit(currentCharacter);
+
+        return nextCharacter ? nextCharacter : null;
+    }
+    
+    /// <summary>
     /// Ends the turn of all the playable units of the team and passes to the next one to play.
     /// </summary>
     private static void EndAllPlayableUnitsTurn()
@@ -78,28 +92,13 @@ public static class Turns
     /// </summary>
     private static void NextTeam()
     {
-        TeamPlayOrder currentTeamPlayOrder = GetTeamPlayOrder(_characters.current);
-        TeamPlayOrder newTeamPlayOrder = _rules.GetTeamPlayOrders().Next(currentTeamPlayOrder);
+        TeamPlayOrder newTeamPlayOrder = _rules.NextTeam(_characters.current);
         
         newTeamPlayOrder
             .GetCharactersPlayOrder()
             .ForEach(character => character.SetCanPlayValue(true));
         
         _characters.NewCurrentCharacter(newTeamPlayOrder.FirstUnit());
-    }
-    
-    /// <summary>
-    /// Returns the next unit which haves to play in the team, depending on the rules' play order.
-    /// Return null if nobody can play.
-    /// </summary>
-    /// <returns></returns>
-    private static C__Character NextUnitInTheTeam()
-    {
-        C__Character currentCharacter = _characters.current;
-        TeamPlayOrder currentTeamPlayOrder = GetTeamPlayOrder(currentCharacter);
-        C__Character nextCharacter = currentTeamPlayOrder.GetNextTeamUnit(currentCharacter);
-
-        return nextCharacter ? nextCharacter : null;
     }
     
     /// <summary>

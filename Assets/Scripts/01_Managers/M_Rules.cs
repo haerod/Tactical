@@ -46,6 +46,24 @@ public class M_Rules : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public List<TeamPlayOrder> GetTeamPlayOrders() => teamsPlayOrder;
+
+    /// <summary>
+    /// Returns the next playing team if it exists, else returns null.
+    /// </summary>
+    /// <param name="currentUnit"></param>
+    /// <returns></returns>
+    public TeamPlayOrder NextTeam(C__Character currentUnit)
+    {
+        TeamPlayOrder currentTeamPlayOrder = teamsPlayOrder
+            .First(tpo => tpo.GetTeam() == currentUnit.unitTeam);
+
+        TeamPlayOrder nexTeamPlayOrder = teamsPlayOrder
+            .Where(tpo => tpo.IsAliveUnit())
+            .ToList()
+            .Next(currentTeamPlayOrder);
+
+        return nexTeamPlayOrder != currentTeamPlayOrder ? nexTeamPlayOrder : null;
+    }
     
     /// <summary>
     /// Returns the first character of the play order.
@@ -131,6 +149,12 @@ public class TeamPlayOrder
     /// <param name="unit"></param>
     /// <returns></returns>
     public C__Character GetNextTeamUnit(C__Character unit) => charactersPlayOrder.Count == 0 ? null : charactersPlayOrder.Next(unit);
+
+    /// <summary>
+    /// Returns true if is any unit alive in the team.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsAliveUnit() => charactersPlayOrder.Count > 0;
     
     /// <summary>
     /// Removes a character from charactersPlayOrder.
@@ -143,4 +167,5 @@ public class TeamPlayOrder
     /// </summary>
     /// <param name="characterToAdd"></param>
     public void AddCharacter(C__Character characterToAdd) => charactersPlayOrder.Add(characterToAdd);
+    
 }
