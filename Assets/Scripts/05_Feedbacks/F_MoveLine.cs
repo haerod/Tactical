@@ -90,6 +90,8 @@ public class F_MoveLine : MonoBehaviour
     {
         if(!startingCharacter.behavior.playable)
             return; // NPC
+        if(!startingCharacter.CanPlay())
+            return; // Can't play
         
         startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
         startingCharacter.move.OnMovementStart += Move_OnMovementStart;
@@ -99,10 +101,10 @@ public class F_MoveLine : MonoBehaviour
     
     private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
     {
-        DisableLines();
-        
         if(!endingCharacter.behavior.playable)
             return; // NPC
+        
+        DisableLines();
         
         endingCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
         endingCharacter.move.OnMovementStart -= Move_OnMovementStart;

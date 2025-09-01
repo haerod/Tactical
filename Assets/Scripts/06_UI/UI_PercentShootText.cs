@@ -97,7 +97,7 @@ public class UI_PercentShootText : MonoBehaviour
         InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
         InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
-        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
+        InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
     }
 
     private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
@@ -110,7 +110,7 @@ public class UI_PercentShootText : MonoBehaviour
         InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
         InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
-        InputEvents.OnItselfEnter -= InputEvents_OnItselfEnter;
+        InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
         
         DisablePercentShootText();
     }
@@ -140,7 +140,7 @@ public class UI_PercentShootText : MonoBehaviour
             enemy.cover.GetCoverProtectionValueFrom(enemy.look)));   
     }
     
-    private void InputEvents_OnItselfEnter(object sender, EventArgs e)
+    private void InputEvents_OnCurrentUnitEnter(object sender, EventArgs e)
     {
         DisablePercentShootText();
     }

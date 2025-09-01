@@ -22,16 +22,17 @@ public class C_UnitUI : MonoBehaviour
 
     private void Start()
     {
-        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
-        InputEvents.OnTileExit += InputEvents_OnTileExit;
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        
+        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnTileExit += InputEvents_OnTileExit;
         c.health.OnDeath += Health_OnDeath;
         c.health.HealthChanged += Health_HealthChanged;
         DisplayCharacterCoverState(c.cover.GetCoverState());
         healthBar.InitialiseBar();
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -107,9 +108,16 @@ public class C_UnitUI : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void InputEvents_OnItselfEnter(object sender, EventArgs e)
+    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
     {
-        if(!_characters.current.look.CharactersVisibleInFog().Contains(c))
+        if(hoveredCharacter != c)
+            return; // Another character
+        
+        C__Character currentUnit = _characters.current;
+        
+        if(currentUnit == c)
+            return; // Current character
+        if(!currentUnit.look.CharactersVisibleInFog().Contains(c))
             return; // Invisible character
         
         Display();
@@ -127,14 +135,18 @@ public class C_UnitUI : MonoBehaviour
     
     private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
     {
-        if(startingCharacter == c)
-            Display();
+        if(startingCharacter != c)
+            return; // Another unit's turn
+        
+        Display();
     }
     
     private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
     {
-        if(endingCharacter == c)
-            Hide();
+        if(endingCharacter != c)
+            return; // Another unit's turn
+        
+        Hide();
     }
     
     private void Health_OnDeath(object sender, EventArgs e)

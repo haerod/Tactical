@@ -28,7 +28,7 @@ public class UI_Cursor : MonoBehaviour
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
         InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
-        InputEvents.OnItselfEnter += InputEvents_OnItselfEnter;
+        InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
         
         _input.OnChangeClickActivation += Input_ChangeClickActivation;
     }
@@ -124,7 +124,7 @@ public class UI_Cursor : MonoBehaviour
         SetCursor(CursorType.AimAndInSight);
     }
     
-    private void InputEvents_OnItselfEnter(object sender, EventArgs e)
+    private void InputEvents_OnCurrentUnitEnter(object sender, EventArgs e)
     {
         SetCursor(CursorType.Regular);
     }

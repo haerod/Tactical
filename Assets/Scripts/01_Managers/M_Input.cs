@@ -303,7 +303,7 @@ public static class InputEvents
     public static event EventHandler <C__Character> OnCharacterClick;
     public static event EventHandler<C__Character> OnEnemyEnter;
     public static event EventHandler<C__Character> OnAllyEnter;
-    public static event EventHandler OnItselfEnter;
+    public static event EventHandler OnCurrentUnitEnter;
     
     // ======================================================================
     // PUBLIC METHODS
@@ -359,7 +359,7 @@ public static class InputEvents
         if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
         {
             if (currentCharacter == currentTarget)
-                OnItselfEnter?.Invoke(null, EventArgs.Empty);
+                OnCurrentUnitEnter?.Invoke(null, EventArgs.Empty);
             else
                 OnAllyEnter?.Invoke(null, currentTarget);
         }

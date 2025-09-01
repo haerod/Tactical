@@ -23,7 +23,7 @@ public class A_Move : A__Action
     [SerializeField] private float speed = 6;
     [Range(0,1f)]
     [SerializeField] private float animSpeed = .5f;
-
+    
     private List<Tile> currentPath;
     private int index;
     private Vector3 destination;
@@ -332,6 +332,9 @@ public class A_Move : A__Action
 
     protected override void OnHoverTile(Tile hoveredTile)
     {
+        if(!c.CanPlay())
+            return; // Can't play
+        
         OrientTo(hoveredTile.transform.position);
         
         List<Tile> currentPathfinding = Pathfinding.GetPath(

@@ -66,6 +66,11 @@ public class M_Characters : MonoBehaviour
         .Where(testedUnit => testedUnit.team.IsEnemyOf(unit))
         .ToList();
     
+    /// <summary>
+    /// Returns all the units of the given team.
+    /// </summary>
+    /// <param name="team"></param>
+    /// <returns></returns>
     public List<C__Character> GetUnitsOf(Team team) => GetUnitsList()
         .Where(testedUnit => testedUnit.unitTeam == team)
         .ToList();
@@ -104,6 +109,7 @@ public class M_Characters : MonoBehaviour
     
     /// <summary>
     /// Starts the turn of a given unit.
+    /// <param name="newCurrentUnit"></param>
     /// </summary>
     public void StartUnitTurn(C__Character newCurrentUnit)
     {
@@ -114,15 +120,17 @@ public class M_Characters : MonoBehaviour
     
     /// <summary>
     /// Ends the current unit's turn and passes to the next one (depending on the Turn Based System).
+    /// If it's an overrideNextUnit, passes to this unit.
+    /// <param name="overrideNextUnit"></param>
     /// </summary>
-    public void EndCurrentUnitTurn()
+    public void EndCurrentUnitTurn(C__Character overrideNextUnit = null)
     {
         if (_rules.IsVictory()) // Victory
             return;
 
         OnCharacterTurnEnd?.Invoke(this, current);
         
-        C__Character nextUnit = turnBasedSystem.GetNextUnit();
+        C__Character nextUnit = overrideNextUnit ? overrideNextUnit : turnBasedSystem.GetNextUnit();
 
         if (!nextUnit.team.IsTeammateOf(current))
         {
@@ -165,8 +173,7 @@ public class M_Characters : MonoBehaviour
         if(!nextTeamUnit)
             return; // No other team unit
         
-        EndCurrentUnitTurn();
-        StartUnitTurn(nextTeamUnit);
+        EndCurrentUnitTurn(nextTeamUnit);
     }
     
     // ======================================================================

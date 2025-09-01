@@ -13,14 +13,8 @@
 ## Camera
 - recenter camera doesn't work (function is called but does nothing)
 
-## Turns
-- if a character can't play, it has move feedback
-
 ## Restart scene
 - bug on F_Covers, easy repro
-
-## On aim an enemy
-- Life bar doesn't appear
 
 # REFACTOR
 

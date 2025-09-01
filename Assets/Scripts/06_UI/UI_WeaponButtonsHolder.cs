@@ -18,7 +18,8 @@ public class UI_WeaponButtonsHolder : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += CharactersOnCharacterTurnStart;
+        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
+        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
     }
 
     // ======================================================================
@@ -68,8 +69,16 @@ public class UI_WeaponButtonsHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void CharactersOnCharacterTurnStart(object sender, C__Character character)
+    private void Characters_OnCharacterTurnStart(object sender, C__Character character)
     {
+        if(!character.CanPlay())
+            return; // Can't play
+            
         CreateWeaponButtons(character);
+    }
+    
+    private void Characters_OnCharacterTurnEnd(object sender, C__Character e)
+    {
+        DestroyAllButtons();
     }
 }
