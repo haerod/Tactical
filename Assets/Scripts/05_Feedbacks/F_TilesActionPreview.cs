@@ -99,7 +99,7 @@ public class F_TilesActionPreview : MonoBehaviour
         startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
         startingCharacter.weaponHolder.OnWeaponChange += WeaponsHolder_OnWeaponChanged;
         
-        ShowMovementArea(startingCharacter.move.MovementArea());
+        ShowMovementArea(startingCharacter.move.movementArea);
         ShowAttackableTiles(startingCharacter.attack.AttackableTiles());
     }
     
@@ -125,7 +125,7 @@ public class F_TilesActionPreview : MonoBehaviour
     {
         C__Character currentCharacter = _characters.current;
         
-        ShowMovementArea(currentCharacter.move.MovementArea());
+        ShowMovementArea(currentCharacter.move.movementArea);
         ShowAttackableTiles(currentCharacter.attack.AttackableTiles());
     }
     

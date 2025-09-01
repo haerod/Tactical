@@ -32,6 +32,7 @@ public class C_Health : MonoBehaviour
      public static event EventHandler<int> OnAnyHealthLoss;
      public static event EventHandler<int> OnAnyHealthGain;
      public event EventHandler OnDeath;
+     public static event EventHandler OnAnyDeath;
      
     // ======================================================================
     // MONOBEHAVIOUR
@@ -176,6 +177,7 @@ public class C_Health : MonoBehaviour
     private void Death()
     {
         OnDeath?.Invoke(this, EventArgs.Empty);
+        OnAnyDeath?.Invoke(this, EventArgs.Empty);
         c.anim.Death();
         _characters.RemoveUnit(c);
         c.GetComponentInChildren<Collider>().gameObject.SetActive(false);

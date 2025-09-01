@@ -18,6 +18,7 @@ public class C_Look : MonoBehaviour
     [SerializeField] private C__Character c;
 
     public List<Tile> visibleTiles => GetVisibleTiles().ToList();
+    
     private List<Tile> currentVisibleTiles = new List<Tile>();
     private bool anythingChangedOnBoard = true;
     
@@ -76,8 +77,7 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    public bool CanSee(C__Character target) =>
-        CharactersVisibleInFog().Contains(target) && HasSightOn(target.tile);
+    public bool CanSee(C__Character target) => CharactersVisibleInFog().Contains(target);
     
     /// <summary>
     /// Returns the tiles in the line of sight of the character on a tile.
@@ -104,6 +104,10 @@ public class C_Look : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Returns the visible tiles of the character, and calculate it if something change.
+    /// </summary>
+    /// <returns></returns>
     private List<Tile> GetVisibleTiles()
     {
         if (!anythingChangedOnBoard) 

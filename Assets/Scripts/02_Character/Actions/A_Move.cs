@@ -28,6 +28,11 @@ public class A_Move : A__Action
     private int index;
     private Vector3 destination;
     
+    public List<Tile> movementArea => GetMovementArea().ToList();
+    private List<Tile> currentMovementArea = new List<Tile>();
+    private bool anythingChangedOnBoard = true;
+    
+    public static EventHandler OnAnyMovementStart;
     public event EventHandler OnMovementStart;
     public event EventHandler OnMovementEnd;
     public event EventHandler<Tile> OnUnitEnterTile;
@@ -39,46 +44,13 @@ public class A_Move : A__Action
 
     private void Start()
     {
-        if(c.cover.AreCoversAround())
-            c.anim.EnterCrouch();
+        A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
+        C_Health.OnAnyDeath += Health_OnAnyDeath;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Returns the move area depending on the rules.
-    /// </summary>
-    public List<Tile> MovementArea()
-    {
-        if (!c.CanPlay())
-            return new List<Tile>();
-
-        // Fog of war disabled
-        if (!_rules.IsFogOfWar())
-            return _board
-                .GetTilesAround(c.tile, movementRange,useDiagonalMovement)
-                .Except(Blockers())
-                .Where(t => !t.IsOccupiedByCharacter())
-                .ToList();
-
-        // Fog of war && can walk in fog of war
-        if (movementInFogOfWarAllowed)
-            return _board
-                .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
-                .Except(Blockers())
-                .Where(t => !t.IsOccupiedByCharacter() || (t.IsOccupiedByCharacter() && !c.look.CanSee(t.character)))
-                .ToList();
-
-        // Fog of war && can not walk in fog of war
-        return _board
-            .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
-            .Except(Blockers())
-            .Intersect(c.look.visibleTiles)
-            .Where(t => !t.IsOccupiedByCharacter())
-            .ToList();
-    }
 
     /// <summary>
     /// Orients this object to another position, except on Y axis. Possibility to add an offset (euler angles).
@@ -99,7 +71,7 @@ public class A_Move : A__Action
     }
 
     /// <summary>
-    /// Returns true if the character can walk on this type of tile.
+    /// Returns true if the unit can walk on this type of tile.
     /// </summary>
     /// <param name="tileType"></param>
     /// <returns></returns>
@@ -148,7 +120,44 @@ public class A_Move : A__Action
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Returns the move area depending on the rules.
+    /// </summary>
+    private List<Tile> GetMovementArea()
+    {
+        if (!anythingChangedOnBoard) 
+            return currentMovementArea.ToList(); // Nothing change
 
+        // Fog of war disabled
+        if (!_rules.IsFogOfWar())
+            currentMovementArea = _board
+                .GetTilesAround(c.tile, movementRange,useDiagonalMovement)
+                .Except(Blockers())
+                .Where(t => !t.IsOccupiedByCharacter())
+                .ToList();
+
+        // Fog of war && can walk in fog of war
+        else if (movementInFogOfWarAllowed)
+            currentMovementArea = _board
+                .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
+                .Except(Blockers())
+                .Where(t => !t.IsOccupiedByCharacter() || (t.IsOccupiedByCharacter() && !c.look.CanSee(t.character)))
+                .ToList();
+
+        // Fog of war && can not walk in fog of war
+        else
+            currentMovementArea = _board
+                .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
+                .Except(Blockers())
+                .Intersect(c.look.visibleTiles)
+                .Where(t => !t.IsOccupiedByCharacter())
+                .ToList();
+        
+        anythingChangedOnBoard = false;
+        return currentMovementArea.ToList();
+    }
+    
     /// <summary>
     /// Starts the movement on a path, with and action on end of this path.
     /// </summary>
@@ -156,6 +165,7 @@ public class A_Move : A__Action
     private void MoveOnPath(List<Tile> path)
     {
         OnMovementStart?.Invoke(this, EventArgs.Empty);
+        OnAnyMovementStart?.Invoke(this, EventArgs.Empty);
         
         c.SetCanPlayValue(false);
 
@@ -349,5 +359,19 @@ public class A_Move : A__Action
             clickedTile,
             Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)));
+    }
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private void Health_OnAnyDeath(object sender, EventArgs e)
+    {
+        anythingChangedOnBoard = true;
+    }
+
+    private void Move_OnAnyMovementStart(object sender, EventArgs e)
+    {
+        anythingChangedOnBoard = true;
     }
 }

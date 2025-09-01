@@ -18,13 +18,13 @@ public class C_Cover : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
     /// <summary>
-    /// Returns true if there is at less a cover around the character's coordinates.
+    /// Returns true if there is at less a cover around the unit's coordinates.
     /// </summary>
     /// <returns></returns>
     public bool AreCoversAround() => _board.GetAdjacentCoversAt(c.coordinates, GetCoveringTileTypes()).Count > 0;

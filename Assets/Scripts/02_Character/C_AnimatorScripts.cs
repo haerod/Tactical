@@ -25,6 +25,12 @@ public class C_AnimatorScripts : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
+    private void Start()
+    {
+        if(c.cover.AreCoversAround())
+            EnterCrouch();
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
