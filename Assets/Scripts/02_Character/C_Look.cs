@@ -37,6 +37,8 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     public List<Tile> VisibleTiles()
     {
+        print(c);
+        
         List<Tile> toReturn = new List<Tile>();
 
         switch (visionType)
@@ -126,11 +128,14 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <param name="lineOfSight"></param>
     /// <returns></returns>
-    private bool AreObstaclesOn(List<Coordinates> lineOfSight) => lineOfSight
+    private bool AreObstaclesOn(List<Coordinates> lineOfSight)
+    {
+        return lineOfSight
             .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
             .Where(coordinates => coordinates)
             .Any(t => visualObstacles.Contains(t.type));
-    
+    }
+
     /// <summary>
     /// Returns all tiles in view of THIS character.
     /// </summary>

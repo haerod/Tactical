@@ -3,12 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static M__Managers;
 
 public class M_Rules : MonoBehaviour
 {
-    [Header("PLAY ORDER")] 
+    [Header("VICTORY RULES")]
     
-    [SerializeField] private List<TeamPlayOrder> teamsPlayOrder; 
+    public VictoryCondition victoryCondition = VictoryCondition.Deathmatch;
+    public enum VictoryCondition { Deathmatch,}
     
     [Header("FOG OF WAR")]
     
@@ -17,11 +19,13 @@ public class M_Rules : MonoBehaviour
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
     
     public static M_Rules instance;
-
+    
+    public event EventHandler OnVictory;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
         // Singleton
@@ -30,7 +34,7 @@ public class M_Rules : MonoBehaviour
         else
             Debug.LogError("There is more than one M_Rules in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -40,67 +44,19 @@ public class M_Rules : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public bool IsFogOfWar() => fogOfWar && fogOfWar.gameObject.activeInHierarchy;
-    
-    /// <summary>
-    /// Returns the team play order list.
-    /// </summary>
-    /// <returns></returns>
-    public List<TeamPlayOrder> GetTeamPlayOrders() => teamsPlayOrder;
 
     /// <summary>
-    /// Returns the next playing team if it exists, else returns null.
+    /// Checks if it's currently victory.
     /// </summary>
-    /// <param name="currentUnit"></param>
-    /// <returns></returns>
-    public TeamPlayOrder NextTeam(C__Character currentUnit)
+    public bool IsVictory()
     {
-        TeamPlayOrder currentTeamPlayOrder = teamsPlayOrder
-            .First(tpo => tpo.GetTeam() == currentUnit.unitTeam);
+        if (_characters.GetEnemiesOf(_characters.current).Count > 0)
+            return false; // Not victory
+        
+        OnVictory?.Invoke(null, EventArgs.Empty);
+        _input.SetActivePlayerInput(false);
+        return true;
 
-        TeamPlayOrder nexTeamPlayOrder = teamsPlayOrder
-            .Where(tpo => tpo.IsAliveUnit())
-            .ToList()
-            .Next(currentTeamPlayOrder);
-
-        return nexTeamPlayOrder != currentTeamPlayOrder ? nexTeamPlayOrder : null;
-    }
-    
-    /// <summary>
-    /// Returns the first character of the play order.
-    /// </summary>
-    /// <returns></returns>
-    public C__Character GetFirstCharacter() => teamsPlayOrder[0].FirstUnit();
-    
-    /// <summary>
-    /// Adds a character to the Team play order.
-    /// </summary>
-    /// <param name="characterToAdd"></param>
-    public void AddCharacter(C__Character characterToAdd)
-    {
-        TeamPlayOrder teamToAdd = teamsPlayOrder
-            .FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.unitTeam);
-        
-        if(teamToAdd != null)
-            teamsPlayOrder
-                .FirstOrDefault(tpo => tpo.GetTeam() == characterToAdd.unitTeam)
-                ?.AddCharacter(characterToAdd);
-        else
-            teamsPlayOrder.Add(new TeamPlayOrder(characterToAdd.unitTeam, characterToAdd));
-        
-        EditorUtility.SetDirty(this);
-    }
-    
-    /// <summary>
-    /// Removes a character from the Team play order
-    /// </summary>
-    /// <param name="characterToRemove"></param>
-    public void RemoveCharacter(C__Character characterToRemove)
-    {
-        teamsPlayOrder
-            .FirstOrDefault(tpo => tpo.GetTeam() == characterToRemove.unitTeam)
-            ?.RemoveCharacter(characterToRemove);
-        
-        EditorUtility.SetDirty(this);
     }
 
     // ======================================================================
@@ -108,64 +64,63 @@ public class M_Rules : MonoBehaviour
     // ======================================================================
 }
 
-[Serializable]
-public class TeamPlayOrder
-{
-    [SerializeField] private Team team;
-    [SerializeField] private List<C__Character> charactersPlayOrder;
-
-    public TeamPlayOrder(Team team, C__Character newCharacter)
-    {
-        this.team = team;
-        charactersPlayOrder = new List<C__Character>();
-        charactersPlayOrder.Add(newCharacter);
-    }
-    public Team GetTeam() => team;
-    public List<C__Character> GetCharactersPlayOrder() => charactersPlayOrder;
-    
-    /// <summary>
-    /// Returns the first unit of the team's characters play order.
-    /// </summary>
-    /// <returns></returns>
-    public C__Character FirstUnit() => charactersPlayOrder.First();
-    
-    /// <summary>
-    /// Returns the next unit of this team who can, or null if nobody exists or can.
-    /// </summary>
-    /// <param name="currentCharacter"></param>
-    /// <returns></returns>
-    public C__Character GetNextTeamPlayableUnit(C__Character currentCharacter)
-    {
-        List<C__Character> teamPlayableCharacter = charactersPlayOrder
-            .Where(chara => chara.CanPlay())
-            .ToList();
-        
-        return teamPlayableCharacter.Count == 0 ? null : teamPlayableCharacter.Next(currentCharacter);
-    }
-    
-    /// <summary>
-    /// Returns the next unit of the team, or null if nobody exist.
-    /// </summary>
-    /// <param name="unit"></param>
-    /// <returns></returns>
-    public C__Character GetNextTeamUnit(C__Character unit) => charactersPlayOrder.Count == 0 ? null : charactersPlayOrder.Next(unit);
-
-    /// <summary>
-    /// Returns true if is any unit alive in the team.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsAliveUnit() => charactersPlayOrder.Count > 0;
-    
-    /// <summary>
-    /// Removes a character from charactersPlayOrder.
-    /// </summary>
-    /// <param name="characterToRemove"></param>
-    public void RemoveCharacter(C__Character characterToRemove) => charactersPlayOrder.Remove(characterToRemove);
-    
-    /// <summary>
-    /// Adds a character to charactersPlayOrder.
-    /// </summary>
-    /// <param name="characterToAdd"></param>
-    public void AddCharacter(C__Character characterToAdd) => charactersPlayOrder.Add(characterToAdd);
-    
-}
+// [Serializable]
+// public class TeamPlayOrder
+// {
+//     [SerializeField] private Team team;
+//     [SerializeField] private List<C__Character> charactersPlayOrder;
+//
+//     public TeamPlayOrder(Team team, C__Character newCharacter)
+//     {
+//         this.team = team;
+//         charactersPlayOrder = new List<C__Character>();
+//         charactersPlayOrder.Add(newCharacter);
+//     }
+//     public Team GetTeam() => team;
+//     public List<C__Character> GetCharactersPlayOrder() => charactersPlayOrder;
+//     
+//     /// <summary>
+//     /// Returns the first unit of the team's characters play order.
+//     /// </summary>
+//     /// <returns></returns>
+//     public C__Character FirstUnit() => charactersPlayOrder.First();
+//     
+//     /// <summary>
+//     /// Returns the next unit of this team who can, or null if nobody exists or can.
+//     /// </summary>
+//     /// <param name="currentCharacter"></param>
+//     /// <returns></returns>
+//     public C__Character GetNextTeamPlayableUnit(C__Character currentCharacter)
+//     {
+//         List<C__Character> teamPlayableCharacter = charactersPlayOrder
+//             .Where(chara => chara.CanPlay())
+//             .ToList();
+//         
+//         return teamPlayableCharacter.Count == 0 ? null : teamPlayableCharacter.Next(currentCharacter);
+//     }
+//     
+//     /// <summary>
+//     /// Returns the next unit of the team, or null if nobody exist.
+//     /// </summary>
+//     /// <param name="unit"></param>
+//     /// <returns></returns>
+//     public C__Character GetNextTeamUnit(C__Character unit) => charactersPlayOrder.Count == 0 ? null : charactersPlayOrder.Next(unit);
+//
+//     /// <summary>
+//     /// Returns true if is any unit alive in the team.
+//     /// </summary>
+//     /// <returns></returns>
+//     public bool IsAliveUnit() => charactersPlayOrder.Count > 0;
+//     
+//     /// <summary>
+//     /// Removes a character from charactersPlayOrder.
+//     /// </summary>
+//     /// <param name="characterToRemove"></param>
+//     public void RemoveCharacter(C__Character characterToRemove) => charactersPlayOrder.Remove(characterToRemove);
+//     
+//     /// <summary>
+//     /// Adds a character to charactersPlayOrder.
+//     /// </summary>
+//     /// <param name="characterToAdd"></param>
+//     public void AddCharacter(C__Character characterToAdd) => charactersPlayOrder.Add(characterToAdd);
+//}

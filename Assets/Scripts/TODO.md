@@ -28,7 +28,6 @@
 - Fog of war vision rules not in M_Rules -> fog of war as a Manager ?
     - Fog of war view lines as Module
 - Characters turn order in M_Characters
-- Remove M_Rules
 
 ## Actions
 - Replace EndTurn by EndAction (if an unit can do multiple actions)
@@ -36,8 +35,6 @@
 ## Others
 - Rename F_... and UI_... modules in Module_... (code and prefab)
 - Tiles material work with an enum, use a Scriptable object instead
-- Separate the logic between Turns and M_Characters
-    - Turns logic as a Scriptable object in M_Characters
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
 - Rename Character in Unit
 - Can add and remove Actions without bugs
@@ -45,11 +42,13 @@
 - Try to kill a character during its own turn
     - OnDeath, need to end its turn
 - Create a class/scriptable object template in Rider
+- Input.SetActivePlayInput in events and not in the code
 
 # CONTENT 
 
 - Magical spells
 - Drone
+- Different turn based system (ex: initiative)
 
 # OPTIMISATION
 
@@ -60,6 +59,7 @@
 
 - Display weapons / characters infos on UI
 
+- Team alliances (difference between Allie and Teammate)
 - Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
 - Feedback of line of sight on visible enemies
     - Visual line of sight on hover an enemy

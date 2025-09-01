@@ -56,6 +56,13 @@ public class C_Team : MonoBehaviour
     /// <returns></returns>
     public bool IsEnemyOf(C__Character testedCharacter) => team != testedCharacter.unitTeam;
     
+    /// <summary>
+    /// Returns true if the character is an ally of the given character. Else returns false.
+    /// </summary>
+    /// <param name="testedCharacter"></param>
+    /// <returns></returns>
+    public bool IsTeammateOf(C__Character testedCharacter) => team == testedCharacter.unitTeam;
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

@@ -131,7 +131,7 @@ public class A_Attack : A__Action
             Wait(0.5f, () =>
             {
                 OnAttackEnd?.Invoke(this, EventArgs.Empty);
-                Turns.EndTurn();
+                _characters.EndCurrentUnitTurn();
             });
         };
     }

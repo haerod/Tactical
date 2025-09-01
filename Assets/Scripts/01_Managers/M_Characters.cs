@@ -11,7 +11,8 @@ public class M_Characters : MonoBehaviour
     [HideInInspector] public C__Character current;
     [SerializeField] private List<Team> teamPlayOrder;
     [SerializeField] private List<C__Character> characters;
-
+    [SerializeField] private TurnBasedSystem turnBasedSystem;
+    
     public event EventHandler<C__Character> OnCharacterTurnStart;
     public event EventHandler<C__Character> OnCharacterTurnEnd;
     
@@ -32,7 +33,9 @@ public class M_Characters : MonoBehaviour
     
     private void Start()
     {
-        NewCurrentCharacter(_rules.GetFirstCharacter());
+        _input.OnChangeCharacterInput += Input_OnChangeCharacterInput;
+        _input.OnEndTurnInput += Input_OnEndTurnInput;
+        StartUnitTurn(turnBasedSystem.GetFirstCharacter());
     }
     
     // ======================================================================
@@ -63,6 +66,16 @@ public class M_Characters : MonoBehaviour
         .Where(testedUnit => testedUnit.team.IsEnemyOf(unit))
         .ToList();
     
+    public List<C__Character> GetUnitsOf(Team team) => GetUnitsList()
+        .Where(testedUnit => testedUnit.unitTeam == team)
+        .ToList();
+    
+    /// <summary>
+    /// Returns the teams play order.
+    /// </summary>
+    /// <returns></returns>
+    public List<Team> GetTeamsPlayOrder() => teamPlayOrder;
+    
     /// <summary>
     /// Adds a new unit in the unit's list.
     /// </summary>
@@ -90,26 +103,35 @@ public class M_Characters : MonoBehaviour
     }
     
     /// <summary>
-    /// Does all the things happening when a new current character is designated (reset camera, clear visual feedbacks, update UI, etc.)
+    /// Starts the turn of a given unit.
     /// </summary>
-    public void NewCurrentCharacter(C__Character newCurrentCharacter)
+    public void StartUnitTurn(C__Character newCurrentUnit)
     {
-        if(current)
-            OnCharacterTurnEnd?.Invoke(this, current);
-
-        current = newCurrentCharacter;
+        current = newCurrentUnit;
         
-        OnCharacterTurnStart?.Invoke(this, newCurrentCharacter);
+        OnCharacterTurnStart?.Invoke(this, newCurrentUnit);
     }
     
     /// <summary>
-    /// Returns true if the unit's team is the last team standing.
+    /// Ends the current unit's turn and passes to the next one (depending on the Turn Based System).
     /// </summary>
-    /// <param name="unit"></param>
-    /// <returns></returns>
-    public bool IsFinalTeam(C__Character unit) => GetUnitsList()
-            .Where(c => c != unit)
-            .All(c => c.team.IsAllyOf(unit));
+    public void EndCurrentUnitTurn()
+    {
+        if (_rules.IsVictory()) // Victory
+            return;
+
+        OnCharacterTurnEnd?.Invoke(this, current);
+        
+        C__Character nextUnit = turnBasedSystem.GetNextUnit();
+
+        if (!nextUnit.team.IsTeammateOf(current))
+        {
+            EndCurrentTeamTurn();
+            StartNextTeamTurn(nextUnit.unitTeam);
+        }
+        
+        StartUnitTurn(nextUnit);
+    }
     
     // ======================================================================
     // PRIVATE METHODS
@@ -124,7 +146,41 @@ public class M_Characters : MonoBehaviour
             .Where(testedUnit => testedUnit != unit)
             .FirstOrDefault(testedUnit => testedUnit.team.IsAllyOf(unit));
 
+    private void StartNextTeamTurn(Team nextTeam)
+    {
+        GetUnitsOf(nextTeam)
+            .ForEach(unit => unit.SetCanPlayValue(true));
+    }
+    
+    private void EndCurrentTeamTurn()
+    {
+        GetUnitsOf(current.unitTeam)
+            .ForEach(unit => unit.SetCanPlayValue(true));
+    }
+    
+    private void SwitchToNextTeamUnit()
+    {
+        C__Character nextTeamUnit = turnBasedSystem.NextTeamUnit();
+        
+        if(!nextTeamUnit)
+            return; // No other team unit
+        
+        EndCurrentUnitTurn();
+        StartUnitTurn(nextTeamUnit);
+    }
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
+    
+    private void Input_OnEndTurnInput(object sender, EventArgs e)
+    {
+        EndCurrentTeamTurn();
+        EndCurrentUnitTurn();
+    }
+    
+    private void Input_OnChangeCharacterInput(object sender, EventArgs e)
+    {
+        SwitchToNextTeamUnit();
+    }
 }

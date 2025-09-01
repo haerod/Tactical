@@ -24,8 +24,6 @@ public class CharacterAutoSnap : BaseAutoSnap
             return; // Exit prefab mode
 
         characters.RemoveUnit(character);
-        rules.RemoveCharacter(character);
-        EditorUtility.SetDirty(rules);
         EditorUtility.SetDirty(characters);
     }
 
@@ -49,15 +47,14 @@ public class CharacterAutoSnap : BaseAutoSnap
 
     protected override void AddToManager()
     {
-        rules.AddCharacter(character);
         characters.AddUnit(character);
     }
     
     protected override void RemoveFromManager()
     {
-        rules.RemoveCharacter(character);
         characters.RemoveUnit(character);
     }
+    
     protected override bool IsOnValidPosition()
     {
         Tile validTile = GetWalkableTileUnder();

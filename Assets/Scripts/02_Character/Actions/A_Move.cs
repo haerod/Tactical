@@ -266,7 +266,7 @@ public class A_Move : A__Action
         Wait(0.2f, () =>
         {
             OnMovementEnd?.Invoke(this, EventArgs.Empty);
-            Turns.EndTurn();
+            _characters.EndCurrentUnitTurn();
         });
     }
     

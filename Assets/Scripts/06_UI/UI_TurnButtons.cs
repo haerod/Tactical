@@ -17,8 +17,7 @@ public class UI_TurnButtons : MonoBehaviour
     {
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
-        
-        Turns.OnVictory += Turns_OnVictory;
+        _rules.OnVictory += Rules_OnVictory;
     }
 
     // ======================================================================
@@ -28,7 +27,7 @@ public class UI_TurnButtons : MonoBehaviour
     /// <summary>
     /// Events call on Next Turn button's click
     /// </summary>
-    public void ButtonNextTurn() => Turns.EndTurn();
+    public void ButtonNextTurn() => _characters.EndCurrentUnitTurn();
     
     // ======================================================================
     // PRIVATE METHODS
@@ -78,7 +77,7 @@ public class UI_TurnButtons : MonoBehaviour
         SetTurnButtonsActive(_characters.current.behavior.playable);
     }
     
-    private void Turns_OnVictory(object sender, EventArgs e)
+    private void Rules_OnVictory(object sender, EventArgs e)
     {
         SetTurnButtonsActive(false);
     }

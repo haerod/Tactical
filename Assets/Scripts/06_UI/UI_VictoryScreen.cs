@@ -15,7 +15,7 @@ public class UI_VictoryScreen : MonoBehaviour
     
     private void Start()
     {
-        Turns.OnVictory += Turns_OnVictory;
+        _rules.OnVictory += Rules_OnVictory;
     }
     
     // ======================================================================
@@ -46,7 +46,7 @@ public class UI_VictoryScreen : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Turns_OnVictory(object sender, EventArgs e)
+    private void Rules_OnVictory(object sender, EventArgs e)
     {
         DisplayEndScreen(_characters.current.team.team);
     }

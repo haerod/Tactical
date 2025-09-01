@@ -178,7 +178,6 @@ public class C_Health : MonoBehaviour
         OnDeath?.Invoke(this, EventArgs.Empty);
         c.anim.Death();
         _characters.RemoveUnit(c);
-        _rules.RemoveCharacter(c);
         c.GetComponentInChildren<Collider>().gameObject.SetActive(false);
     }
 }

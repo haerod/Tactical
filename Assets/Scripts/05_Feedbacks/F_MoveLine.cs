@@ -23,7 +23,7 @@ public class F_MoveLine : MonoBehaviour
     {
         _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
-        Turns.OnVictory += Turns_OnVictory;
+        _rules.OnVictory += Rules_OnVictory;
     }
 
     // ======================================================================
@@ -125,7 +125,7 @@ public class F_MoveLine : MonoBehaviour
         DisableLines();
     }
     
-    private void Turns_OnVictory(object sender, EventArgs e)
+    private void Rules_OnVictory(object sender, EventArgs e)
     {
         DisableLines();
     }
