@@ -52,7 +52,7 @@
 
 # OPTIMISATION
 
-- Create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (line of sight, walkable range, etc.)
+- Create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (walkable range, etc.)
 - Algorithm of line of sight checking progressively the tiles around
 
 # FEATURES

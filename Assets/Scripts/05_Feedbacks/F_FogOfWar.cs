@@ -133,7 +133,7 @@ public class F_FogOfWar : MonoBehaviour
     
     private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
     {
-        ShowVisibleElements(startingCharacter.look.VisibleTiles());
+        ShowVisibleElements(startingCharacter.look.visibleTiles);
         
         startingCharacter.move.OnUnitEnterTile += Move_OnUnitEnterTile;
         startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
@@ -147,11 +147,11 @@ public class F_FogOfWar : MonoBehaviour
     
     private void Move_OnMovementEnd(object sender, EventArgs e)
     {
-        ShowVisibleElements(_characters.current.look.VisibleTiles());
+        ShowVisibleElements(_characters.current.look.visibleTiles);
     }
     
     private void Move_OnUnitEnterTile(object sender, Tile enteredTile)
     {
-        ShowVisibleElements(_characters.current.look.VisibleTiles());
+        ShowVisibleElements(_characters.current.look.visibleTiles);
     }
 }

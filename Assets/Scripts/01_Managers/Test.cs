@@ -6,11 +6,17 @@ public class Test : MonoBehaviour
 {
     public static Test instance;
     
-    public CoverInfo coverInfo;
-    public List<CoverInfo> coverInfos;
-
+    public C__Character testCharacter;
+    public List<Tile> visibleTiles;
+    
     private void Awake()
     {
         instance = this;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.M))
+            print(testCharacter.look.visibleTiles.Count);
     }
 }

@@ -75,7 +75,7 @@ public class A_Move : A__Action
         return _board
             .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
             .Except(Blockers())
-            .Intersect(c.look.VisibleTiles())
+            .Intersect(c.look.visibleTiles)
             .Where(t => !t.IsOccupiedByCharacter())
             .ToList();
     }
@@ -127,7 +127,7 @@ public class A_Move : A__Action
         if (!c.CanPlay()) 
             return false; // Can't play
 
-        bool tileInFog =_rules.IsFogOfWar() && !c.look.VisibleTiles().Contains(tile);
+        bool tileInFog =_rules.IsFogOfWar() && !c.look.visibleTiles.Contains(tile);
         if (tileInFog && !c.move.movementInFogOfWarAllowed) 
             return false; // Tile in fog
 

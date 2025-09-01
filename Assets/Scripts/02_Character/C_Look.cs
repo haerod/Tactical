@@ -16,10 +16,20 @@ public class C_Look : MonoBehaviour
     [Header("REFERENCES")]
     
     [SerializeField] private C__Character c;
+
+    public List<Tile> visibleTiles => GetVisibleTiles().ToList();
+    private List<Tile> currentVisibleTiles = new List<Tile>();
+    private bool anythingChangedOnBoard = true;
     
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Start()
+    {
+        c.move.OnMovementStart += Move_OnMovementStart;
+        c.move.OnUnitEnterTile += Move_OnUnitEnterTile;
+    }
     
     // ======================================================================
     // PUBLIC METHODS
@@ -30,33 +40,6 @@ public class C_Look : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public int GetRange() => range;
-    
-    /// <summary>
-    /// Returns all tiles in view depending on the rules.
-    /// </summary>
-    /// <returns></returns>
-    public List<Tile> VisibleTiles()
-    {
-        List<Tile> toReturn = new List<Tile>();
-
-        switch (visionType)
-        {
-            case VisionType.SingleVision:
-                return GetVisibleTiles()
-                    .ToList();
-            case VisionType.GroupVision:
-                _characters
-                    .GetAlliesOf(c)
-                    .ForEach(chara => toReturn.AddRange(chara.look.GetVisibleTiles()));
-
-                toReturn = toReturn
-                    .Distinct()
-                    .ToList();
-                break;
-        }
-
-        return toReturn;
-    }
     
     /// <summary>
     /// Returns the characters visible in fog of war.
@@ -71,9 +54,9 @@ public class C_Look : MonoBehaviour
                     case M_Rules.VisibleInFogOfWar.Everybody:
                         return true;
                     case M_Rules.VisibleInFogOfWar.Allies:
-                        return VisibleTiles().Contains(chara.tile) || c.team.IsAllyOf(_characters.current);
+                        return visibleTiles.Contains(chara.tile) || c.team.IsAllyOf(_characters.current);
                     case M_Rules.VisibleInFogOfWar.InView:
-                        return VisibleTiles().Contains(chara.tile);
+                        return visibleTiles.Contains(chara.tile);
                     default:
                         return false;
                 }
@@ -121,26 +104,41 @@ public class C_Look : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
     
-    /// <summary>
-    /// Returns true if the character has obstacles on its line of sight.
-    /// </summary>
-    /// <param name="lineOfSight"></param>
-    /// <returns></returns>
-    private bool AreObstaclesOn(List<Coordinates> lineOfSight) => lineOfSight
-        .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
-        .Where(coordinates => coordinates)
-        .Any(t => visualObstacles.Contains(t.type));
+    private List<Tile> GetVisibleTiles()
+    {
+        if (!anythingChangedOnBoard) 
+            return currentVisibleTiles.ToList(); // Nothing change
+        
+        anythingChangedOnBoard = false;
+        
+        switch (visionType)
+        {
+            case VisionType.SingleVision:
+                return CalculateVisibleTiles()
+                    .ToList();
+            case VisionType.GroupVision:
+                _characters
+                    .GetAlliesOf(c)
+                    .ForEach(chara => currentVisibleTiles.AddRange(chara.look.CalculateVisibleTiles()));
 
+                currentVisibleTiles = currentVisibleTiles
+                    .Distinct()
+                    .ToList();
+                break;
+        }
+        
+        return currentVisibleTiles.ToList();
+    }
+    
     /// <summary>
     /// Returns all tiles in view of THIS character.
     /// </summary>
     /// <returns></returns>
-    private List<Tile> GetVisibleTiles()
+    private List<Tile> CalculateVisibleTiles()
     {
         List<Tile> toReturn =
             _board.GetTilesAround(c.tile, range, false)
                 .Where(HasSightOn)
-                .Where(o => !visualObstacles.Contains(o.type))
                 .ToList();
 
         toReturn.Add(c.tile);
@@ -149,7 +147,7 @@ public class C_Look : MonoBehaviour
     }
     
     /// <summary>
-    /// Returns true if the character has the tile on sight, not including Fog of war.
+    /// Returns true if the unit has the tile on sight, not including Fog of war.
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
@@ -161,10 +159,26 @@ public class C_Look : MonoBehaviour
             return true; // Nothing on LoS
         if (los.Count + 1 > range)
             return false; // Out of view range
-        if (AreObstaclesOn(los))
-            return false; // Obstacles
-
-        return true; // Has sight on target
+        
+        bool areObstacleOnLineOfSight = los
+            .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
+            .Where(coordinates => coordinates)
+            .Any(t => visualObstacles.Contains(t.type));;
+        
+        return !areObstacleOnLineOfSight; // Obstacles
     }
     
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
+    
+    private void Move_OnUnitEnterTile(object sender, Tile enteringTile)
+    {
+        anythingChangedOnBoard = true;
+    }
+
+    private void Move_OnMovementStart(object sender, EventArgs e)
+    {
+        anythingChangedOnBoard = true;
+    }
 }
