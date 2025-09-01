@@ -157,6 +157,9 @@ public class A_Attack : A__Action
     {
         c.move.OrientTo(hoveredCharacter.transform.position);
         
+        if(!c.CanPlay())
+            return; // Can't play
+        
         if(!IsInRange(hoveredCharacter.tile))
             return; // Enemy is not visible or not in range
         
@@ -165,12 +168,16 @@ public class A_Attack : A__Action
 
     protected override void OnExitCharacter(C__Character leftCharacter)
     {
+        if(!c.CanPlay())
+            return; // Can't play
+        
         c.anim.StopAim();
     }
     
     protected override void OnClickAnyCharacter(C__Character clickedCharacter)
     {
-        
+        if(!c.CanPlay())
+            return; // Can't play
         
         if(c.team.IsAllyOf(clickedCharacter)) 
             return; // Same team

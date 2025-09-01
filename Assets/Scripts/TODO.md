@@ -14,7 +14,7 @@
 - recenter camera doesn't work (function is called but does nothing)
 
 ## Turns
-- if a character can't play, it can attack (maybe move / it has feedbacks)
+- if a character can't play, it has move feedback
 
 ## Restart scene
 - bug on F_Covers, easy repro

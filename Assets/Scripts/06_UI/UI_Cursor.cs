@@ -110,10 +110,13 @@ public class UI_Cursor : MonoBehaviour
     {
         C__Character currentCharacter = _characters.current;
         
+        if(!currentCharacter.CanPlay())
+            return; // Unit can't play
+        
         if (!currentCharacter.look.CanSee(hoveredEnemy))
         {
             SetCursor(CursorType.OutAimOrSight);
-            return; // Character not in sight
+            return; // Unit not in sight
         }
         if(!currentCharacter.attack.AttackableTiles().Contains(hoveredEnemy.tile))
             return; // Not attackable

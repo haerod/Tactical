@@ -31,7 +31,7 @@ public class UI_PercentShootText : MonoBehaviour
     {
         SetPercentShootTextPosition();
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -68,7 +68,7 @@ public class UI_PercentShootText : MonoBehaviour
                 break;
         }
     }
-
+    
     /// <summary>
     /// Disables the percent shoot text.
     /// </summary>
@@ -129,8 +129,11 @@ public class UI_PercentShootText : MonoBehaviour
     {
         C__Character currentCharacter = _characters.current;
         
+        if(!currentCharacter.CanPlay())
+            return; // Unit can't play
+        
         if(!currentCharacter.attack.AttackableTiles().Contains(enemy.tile))
-            return;
+            return; // Enemy not visible
         
         SetPercentShootText(currentCharacter.attack.GetChanceToTouch(
             currentCharacter.look.GetTilesOfLineOfSightOn(enemy.tile.coordinates).Count,
