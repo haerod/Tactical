@@ -34,7 +34,7 @@ public class EdgeAutoSnap : BaseAutoSnap
         if (!board)
             return; // Exit prefab mode
 
-        board.edgeGrid.RemoveEdge(edgeEntity);
+        //board.edgeGrid.RemoveEdge(edgeEntity);
         EditorUtility.SetDirty(board);
     }
 
@@ -50,7 +50,11 @@ public class EdgeAutoSnap : BaseAutoSnap
         base.CheckGridPosition();
     }
 
-    protected override void AddToManager() => board.edgeGrid.AddEdge(edgeEntity);
+    protected override void AddToManager()
+    {
+        //board.edgeGrid.AddEdge(edgeEntity);
+    }
+
     protected override bool IsOnValidPosition() => IsTileUnder() && !IsOtherEdgeAtPosition();
 
     protected override void MoveObject(Coordinates coordinates)
@@ -71,7 +75,10 @@ public class EdgeAutoSnap : BaseAutoSnap
         transform.hasChanged = true;
     }
     
-    protected override void RemoveFromManager() => board.edgeGrid.RemoveEdge(edgeEntity);
+    protected override void RemoveFromManager()
+    {
+        //board.edgeGrid.RemoveEdge(edgeEntity);
+    }
 
     protected override void SetParametersDirty()
     {
@@ -101,7 +108,7 @@ public class EdgeAutoSnap : BaseAutoSnap
             .Any(edge => edge != edgeEntity);
 
     /// <summary>
-    /// Auto rotate the edge entity.
+    /// Auto rotates the edge entity.
     /// </summary>
     private void MoveCoverOnBorder()
     {
@@ -135,7 +142,7 @@ public class EdgeAutoSnap : BaseAutoSnap
     }
 
     /// <summary>
-    /// Rotate the cover depending the border (and the visual flipping).
+    /// Rotates the cover depending on the border (and the visual flipping).
     /// </summary>
     private void AutoRotateCover()
     {
