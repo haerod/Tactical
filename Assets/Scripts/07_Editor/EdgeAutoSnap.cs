@@ -70,7 +70,6 @@ public class EdgeAutoSnap : BaseAutoSnap
         base.SetParameters();
         edgeEntity = GetComponent<Edge>();
         board = FindAnyObjectByType<M_Board>();
-        print(board);
         transform.parent = board.transform;
         transform.hasChanged = true;
     }
