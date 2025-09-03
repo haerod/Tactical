@@ -14,7 +14,7 @@ public class A_Move : A__Action
     public enum PassThrough {Everybody, Nobody, AlliesOnly}
     public PassThrough canPassThrough = PassThrough.Nobody;
     public List<TileType> walkableTiles;
-
+    
     [Header("ANIMATION")]
     [Range(0,10f)]
     [SerializeField] private float speed = 6;
@@ -112,7 +112,7 @@ public class A_Move : A__Action
 
         return true; // In range
     }
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

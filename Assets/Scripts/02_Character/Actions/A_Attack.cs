@@ -30,7 +30,7 @@ public class A_Attack : A__Action
     /// </summary>
     /// <returns></returns>
     public List<Tile> AttackableTiles() => c.look.EnemiesVisibleInFog()
-            .Where(chara => IsInRange(chara.tile))
+            .Where(chara => IsTileInRange(chara.tile))
             .Select(chara => chara.tile)
             .ToList();
 
@@ -136,7 +136,12 @@ public class A_Attack : A__Action
         };
     }
     
-    private bool IsInRange(Tile tile)
+    /// <summary>
+    /// Returns true if the tile is in range.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
+    private bool IsTileInRange(Tile tile)
     {
         Weapon currentWeapon = c.weaponHolder.GetCurrentWeapon();
         List<Tile> los = c.look.GetTilesOfLineOfSightOn(tile.coordinates);
@@ -160,7 +165,7 @@ public class A_Attack : A__Action
         if(!c.CanPlay())
             return; // Can't play
         
-        if(!IsInRange(hoveredCharacter.tile))
+        if(!IsTileInRange(hoveredCharacter.tile))
             return; // Enemy is not visible or not in range
         
         c.anim.StartAim();
@@ -182,7 +187,7 @@ public class A_Attack : A__Action
         if(c.team.IsAllyOf(clickedCharacter)) 
             return; // Same team
 
-        if(!IsInRange(clickedCharacter.tile))
+        if(!IsTileInRange(clickedCharacter.tile))
             return; // Enemy is not visible or not in range
         
         // Attack

@@ -1,8 +1,5 @@
 # DEBUG
 
-## Edge covers
-- Edge covers change position sometimes (repro needed)
-
 ## Camera
 - recenter camera doesn't work (function is called but does nothing)
 
@@ -19,6 +16,10 @@
 ## Actions
 - Replace EndTurn by EndAction (if an unit can do multiple actions)
 
+## Melee weapons
+- Melee weapons don't care about covers
+- When unit hover a enemy and itself is covered, stand up animation
+
 ## Others
 - Rename F_... and UI_... modules in Module_... (code and prefab)
 - Tiles material work with an enum, use a Scriptable object instead
@@ -31,7 +32,7 @@
 - Create a class/scriptable object template in Rider
 - Input.SetActivePlayInput in events and not in the code
 
-# CONTENT 
+# CONTENT
 
 - Magical spells
 - Drone
@@ -48,8 +49,6 @@
 
 - Team alliances (difference between Allie and Teammate)
 - Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
-- Feedback of line of sight on visible enemies
-    - Visual line of sight on hover an enemy
 - Character can throw spells (like fireball)
 - Separate folders between Toy box and Technical box
 - Namespaces
