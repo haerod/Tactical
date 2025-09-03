@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Cover : MonoBehaviour
 {
     [SerializeField] private TileType tileType;
     [SerializeField] private Tile tile;
-    [SerializeField] private EdgeElement edgeElement;
+    [FormerlySerializedAs("edgeElement")] [SerializeField] private Edge edge;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -16,7 +17,7 @@ public class Cover : MonoBehaviour
     private void Awake()
     {
         tile = GetComponent<Tile>();
-        edgeElement = GetComponent<EdgeElement>();
+        edge = GetComponent<Edge>();
     }
 
     // ======================================================================
@@ -39,7 +40,7 @@ public class Cover : MonoBehaviour
     /// Returns the associated edge element, or null if it's on a tile.
     /// </summary>
     /// <returns></returns>
-    public EdgeElement GetEdgeElement() => edgeElement;
+    public Edge GetEdgeElement() => edge;
 
     /// <summary>
     /// Returns the world coordinates of the cover as a Vector2.
@@ -47,7 +48,7 @@ public class Cover : MonoBehaviour
     /// <returns></returns>
     public Vector2 GetWorldCoordinatesAsVector2()
     {
-        if (edgeElement) // Cover on edges
+        if (edge) // Cover on edges
             return new Vector2(GetEdgeElement().elementPosition.x, GetEdgeElement().elementPosition.y);
         
         return GetTile().coordinates.ToVector2(); // Cover on tile

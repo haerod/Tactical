@@ -1,12 +1,5 @@
 # DEBUG
 
-## Character movement
-
-- Pathfinding is strange
-    - Feedback line doesn't fit with the pathfinding (fit with the distance the character can walk)
-    - Moving zone not updated with new pathfinding rules (can pass by diagonals with a cover)
-- If character pass through another, the last one losing its tile: because tiles have only one element on it
-
 ## Edge covers
 - Edge covers change position sometimes (repro needed)
 

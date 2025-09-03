@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class EdgeElement : MonoBehaviour
+public class Edge : Entity
 {
     public TileType type;
 
@@ -18,8 +18,8 @@ public class EdgeElement : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    public void SetEdgeElementPosition(Vector2 position) => elementPosition = position;
+    
+    public void SetEdgePosition(Vector2 position) => elementPosition = position;
 
     /// <summary>
     /// Returns true if it's between two asked tiles.

@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Serialization;
 
 [ExecuteInEditMode]
-public class EdgeElementAutoSnap : BaseAutoSnap
+public class EdgeAutoSnap : BaseAutoSnap
 {
     [SerializeField] private bool flipVisuals;
 
     [Header("REFERENCES")]
 
-    [SerializeField] private Transform coverTransform;
+    [SerializeField] private Transform edgeTransform;
 
     [HideInInspector] public M_Board board; // Note : Let it serializable to be dirty.
-    [HideInInspector] public EdgeElement cover; // Note : Let it serializable to be dirty.
+    [HideInInspector] public Edge edgeEntity; // Note : Let it serializable to be dirty.
     [HideInInspector] public Tile parentTile; // Note : Let it serializable to be dirty.
 
     private Vector3 positionBeforeMovement;
@@ -23,15 +25,20 @@ public class EdgeElementAutoSnap : BaseAutoSnap
     // MONOBEHAVIOUR
     // ======================================================================
 
+#if UNITY_EDITOR
+
     private void OnDestroy()
     {
         if (!IsInEditor())
-            return; // Not in editor mode
+            return; // Not editor mode
         if (!board)
             return; // Exit prefab mode
 
-        RemoveFromManager();
+        board.edgeGrid.RemoveEdge(edgeEntity);
+        EditorUtility.SetDirty(board);
     }
+
+#endif
 
     // ======================================================================
     // INHERITED
@@ -43,65 +50,34 @@ public class EdgeElementAutoSnap : BaseAutoSnap
         base.CheckGridPosition();
     }
 
-    protected override void AddToManager()
-    {
-        Tile validTile = GetTileUnder();
-
-        if (!validTile)
-            return; // No valid tile
-
-        validTile.AddCover(cover);
-        parentTile = validTile;
-
-        cover.SetEdgeElementPosition(new Vector2(
-            coverTransform.position.x, 
-            coverTransform.position.z));
-
-        EditorUtility.SetDirty(this);
-        EditorUtility.SetDirty(cover);
-    }
-
-    protected override bool IsOnValidPosition()
-    {
-        Tile validTile = GetTileUnder();
-        EdgeElement otherCover = GetOtherEdgeElementAtPosition();
-
-        if (!validTile || otherCover)
-        {
-            isLocated = false;
-            return false;
-        }
-
-        return true;
-    }
+    protected override void AddToManager() => board.edgeGrid.AddEdge(edgeEntity);
+    protected override bool IsOnValidPosition() => IsTileUnder() && !IsOtherEdgeAtPosition();
 
     protected override void MoveObject(Coordinates coordinates)
     {
-        transform.position = new Vector3(coordinates.x, 0, coordinates.y);
-        MoveCoverOnBorder();
+        transform.position = new Vector3(
+            Utils.RoundToHalf(transform.position.x), 
+            0, 
+            Utils.RoundToHalf(transform.position.z));
     }
-
+    
     protected override void SetParameters()
     {
         base.SetParameters();
+        edgeEntity = GetComponent<Edge>();
         board = FindAnyObjectByType<M_Board>();
-        cover = GetComponent<EdgeElement>();
+        print(board);
         transform.parent = board.transform;
+        transform.hasChanged = true;
     }
-
-    protected override void RemoveFromManager()
-    {
-        if (parentTile)
-        {
-            parentTile.RemoveCover(cover);
-            EditorUtility.SetDirty(this);
-        }
-    }
+    
+    protected override void RemoveFromManager() => board.edgeGrid.RemoveEdge(edgeEntity);
 
     protected override void SetParametersDirty()
     {
         EditorUtility.SetDirty(this);
         EditorUtility.SetDirty(gameObject);
+        EditorUtility.SetDirty(board);
     }
 
     // ======================================================================
@@ -113,47 +89,19 @@ public class EdgeElementAutoSnap : BaseAutoSnap
     // ======================================================================
 
     /// <summary>
-    /// Get the tile under the character, if it can walk on.
+    /// Returns true if it's tile under the element.
     /// </summary>
     /// <returns></returns>
-    private Tile GetTileUnder()
-    {
-        Collider[] colliderTileArray = Physics.OverlapSphere(transform.position, .1f);
+    private bool IsTileUnder() => Physics.OverlapSphere(transform.position, .1f)
+            .Any(collider => collider.GetComponent<Tile>());
 
-        foreach (Collider colliderTile in colliderTileArray)
-        {
-            Tile testedTile = colliderTile.GetComponent<Tile>();
-
-            if (!testedTile)
-                continue; // No tile
-
-            return testedTile;
-        }
-
-        return null;
-    }
-
-    private EdgeElement GetOtherEdgeElementAtPosition()
-    {
-        Collider[] colliderCoverArray = Physics.OverlapSphere(coverTransform.position, .1f);
-
-        foreach (Collider colliderCover in colliderCoverArray)
-        {
-            EdgeElement testedEdgeElement = colliderCover.GetComponentInParent<EdgeElement>();
-
-            if (!testedEdgeElement)
-                continue; // No edge element
-            if (testedEdgeElement == cover)
-                continue; // Same edge element
-
-            return testedEdgeElement;
-        }
-
-        return null;
-    }
+    private bool IsOtherEdgeAtPosition() => Physics.OverlapSphere(edgeTransform.position, .1f)
+            .Where(collider => collider.GetComponentInParent<Edge>())
+            .Select(collider => collider.GetComponentInParent<Edge>())
+            .Any(edge => edge != edgeEntity);
 
     /// <summary>
-    /// Auto rotate the cover.
+    /// Auto rotate the edge entity.
     /// </summary>
     private void MoveCoverOnBorder()
     {
@@ -170,14 +118,14 @@ public class EdgeElementAutoSnap : BaseAutoSnap
 
         if (absX > absZ)
         {
-            coverTransform.transform.localPosition = new Vector3(
+            edgeTransform.transform.localPosition = new Vector3(
                 .5f * Mathf.Sign(positionOnSnap.x),
                 transform.localPosition.y,
                 0);
         }
         else
         {
-            coverTransform.transform.localPosition = new Vector3(
+            edgeTransform.transform.localPosition = new Vector3(
                 0,
                 transform.localPosition.y,
                 .5f * Mathf.Sign(positionOnSnap.z));
@@ -191,13 +139,13 @@ public class EdgeElementAutoSnap : BaseAutoSnap
     /// </summary>
     private void AutoRotateCover()
     {
-        if (coverTransform.localPosition.x % 1 == 0)
-            coverTransform.eulerAngles = Vector3.up * 90f;
+        if (edgeTransform.localPosition.x % 1 == 0)
+            edgeTransform.eulerAngles = Vector3.up * 90f;
         else
-            coverTransform.eulerAngles = Vector3.zero;
+            edgeTransform.eulerAngles = Vector3.zero;
 
         if (flipVisuals)
-            coverTransform.eulerAngles += Vector3.up * 180f;
+            edgeTransform.eulerAngles += Vector3.up * 180f;
     }
 
 }

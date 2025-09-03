@@ -177,7 +177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileType: {fileID: 11400000, guid: 6039eeca6c9a6244cb3199ce13c0e656, type: 2}
   tile: {fileID: 0}
-  edgeElement: {fileID: 0}
+  edge: {fileID: 0}
 --- !u!114 &461920283813862496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,11 +193,12 @@ MonoBehaviour:
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   gizmoSize: {x: 1, y: 1, z: 1}
   gizmoOffset: {x: 0, y: -0.49, z: 0}
+  snapOn: 1
   isLocated: 1
   flipVisuals: 0
-  coverTransform: {fileID: 1053721192050549965}
+  edgeTransform: {fileID: 8494549904505113954}
   board: {fileID: 0}
-  cover: {fileID: 0}
+  edgeEntity: {fileID: 0}
   parentTile: {fileID: 0}
 --- !u!114 &2313183811182661076
 MonoBehaviour:
@@ -211,6 +212,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e5316c5a038b343b72abf5719596b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coordinates:
+    x: 0
+    y: 0
   type: {fileID: 11400000, guid: b8148e897a136154ca877f10c4025a85, type: 2}
   elementPosition: {x: 0, y: 0}
 --- !u!1 &6839885580050274853

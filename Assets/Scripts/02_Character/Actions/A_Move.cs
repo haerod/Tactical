@@ -14,9 +14,6 @@ public class A_Move : A__Action
     public enum PassThrough {Everybody, Nobody, AlliesOnly}
     public PassThrough canPassThrough = PassThrough.Nobody;
     public List<TileType> walkableTiles;
-    
-    [Header("FOG OF WAR")]
-    public bool movementInFogOfWarAllowed = false;
 
     [Header("ANIMATION")]
     [Range(0,10f)]
@@ -99,8 +96,7 @@ public class A_Move : A__Action
         if (!c.CanPlay()) 
             return false; // Can't play
 
-        bool tileInFog =_rules.IsFogOfWar() && !c.look.visibleTiles.Contains(tile);
-        if (tileInFog && !c.move.movementInFogOfWarAllowed) 
+        if (_rules.IsFogOfWar() && !c.look.visibleTiles.Contains(tile)) 
             return false; // Tile in fog
 
         List<Tile> path = Pathfinding.GetPath(
@@ -129,32 +125,37 @@ public class A_Move : A__Action
         if (!anythingChangedOnBoard) 
             return currentMovementArea.ToList(); // Nothing change
 
-        // Fog of war disabled
-        if (!_rules.IsFogOfWar())
-            currentMovementArea = _board
-                .GetTilesAround(c.tile, movementRange,useDiagonalMovement)
-                .Except(Blockers())
-                .Where(t => !t.IsOccupiedByCharacter())
-                .ToList();
-
-        // Fog of war && can walk in fog of war
-        else if (movementInFogOfWarAllowed)
-            currentMovementArea = _board
-                .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
-                .Except(Blockers())
-                .Where(t => !t.IsOccupiedByCharacter() || (t.IsOccupiedByCharacter() && !c.look.CanSee(t.character)))
-                .ToList();
-
-        // Fog of war && can not walk in fog of war
-        else
-            currentMovementArea = _board
-                .GetTilesAround(c.tile, movementRange, useDiagonalMovement)
-                .Except(Blockers())
-                .Intersect(c.look.visibleTiles)
-                .Where(t => !t.IsOccupiedByCharacter())
-                .ToList();
+        currentMovementArea.Clear();
+        List<Tile> tilesToTest = new();
+        List<Tile> tilesToTestNextTurn = new();
+        List<Tile> alreadyTested = new();
         
+        tilesToTest.Add(c.tile);
+        
+        for (int i = 0; i < movementRange; i++)
+        {
+            foreach (Tile testedTile in tilesToTest)
+            {
+                tilesToTestNextTurn.AddRange(_board
+                    .GetTilesAround(testedTile, 1, useDiagonalMovement)
+                    .Where(tile => Pathfinding.IsDirectionWalkable(tile, testedTile, new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)))
+                    .Except(alreadyTested)
+                    .Except(tilesToTest)
+                    .ToList());
+            }
+            
+            alreadyTested.AddRange(tilesToTest);
+            currentMovementArea.AddRange(tilesToTestNextTurn);
+            tilesToTest = tilesToTestNextTurn.ToList();
+            tilesToTestNextTurn.Clear();
+        }
+
         anythingChangedOnBoard = false;
+        
+        currentMovementArea = currentMovementArea
+            .Intersect(c.look.visibleTiles)
+            .ToList();
+
         return currentMovementArea.ToList();
     }
     

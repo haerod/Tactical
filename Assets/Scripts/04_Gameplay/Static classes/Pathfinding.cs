@@ -7,11 +7,11 @@ using static M__Managers;
 public static class Pathfinding
 {
     public enum TileInclusion { WithStart, WithEnd, WithStartAndEnd, WithoutStartAndEnd}
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Returns the path.
     /// If no path, returns an empty list.
@@ -99,10 +99,6 @@ public static class Pathfinding
         return toReturn;
     }
 
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-
     /// <summary>
     /// Return true if it's a path between the current and the tested tile.
     /// </summary>
@@ -110,17 +106,13 @@ public static class Pathfinding
     /// <param name="currentTile"></param>
     /// <param name="rules"></param>
     /// <returns></returns>
-    private static bool IsDirectionWalkable(Tile destinationTile, Tile currentTile, MovementRules rules)
+    public static bool IsDirectionWalkable(Tile destinationTile, Tile currentTile, MovementRules rules)
     {
         if (rules.blockingCharacterTiles.Contains(destinationTile))
             return false; // Blocking character
 
         if (!rules.allowedTileTypes.Contains(destinationTile.type))
             return false; // Not walkable
-
-        if (destinationTile.hasCovers)
-            if (currentTile.IsCoverBetween(destinationTile, rules.allowedTileTypes))
-                return false; // Cover between start and end and not walkable
 
         if (rules.useDiagonals)
             if (currentTile.IsDiagonalWith(destinationTile))
@@ -129,7 +121,11 @@ public static class Pathfinding
 
         return true;
     }
-
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
     /// <summary>
     /// Return true if the path is the tiles in diagonal between the tested and current tile is a blocker.
     /// </summary>
@@ -146,12 +142,6 @@ public static class Pathfinding
 
             if (!rules.allowedTileTypes.Contains(t.type))
                 return true; // A diagonal contains a blocker
-
-            if (testedTile.IsCoverBetween(t, rules.allowedTileTypes))
-                return true; // A diagonal contains cover
-
-            if (currentTile.IsCoverBetween(t, rules.allowedTileTypes))
-                return true; // A diagonal contains cover
         }
 
         return false;
@@ -163,7 +153,7 @@ public class MovementRules
     public readonly List<TileType> allowedTileTypes;
     public readonly List<Tile> blockingCharacterTiles;
     public readonly bool useDiagonals;
-
+    
     public MovementRules(List<TileType> allowedTileTypes, List<Tile> blockingCharacterTiles, bool  useDiagonals)
     {
         this.allowedTileTypes = allowedTileTypes;

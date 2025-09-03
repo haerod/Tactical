@@ -25,7 +25,7 @@ public static class LineOfSight
         Vector2 segmentDirection = new Vector2(endCoordinate.x - startCoordinate.x, endCoordinate.y - startCoordinate.y);
         // Get the length of distance
         float length = Mathf.Max(Mathf.Abs(segmentDirection.x), Mathf.Abs(segmentDirection.y));
-
+        
         if(inclusion is Including.StartOnly or Including.StartAndEnd)
             toReturn.Add(startCoordinate);
 

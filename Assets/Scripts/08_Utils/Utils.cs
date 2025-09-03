@@ -17,5 +17,5 @@ public static class Utils
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static float RoundToHalf(float value) => Mathf.Sign(value) * (Mathf.Abs((int)value) + 0.5f);
+    public static float RoundToHalf(float value) => Mathf.Round(value * 2) / 2;
 }

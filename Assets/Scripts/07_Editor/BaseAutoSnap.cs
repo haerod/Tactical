@@ -12,6 +12,9 @@ public abstract class BaseAutoSnap : MonoBehaviour
     [SerializeField] private Vector3 gizmoSize = Vector3.one;
     [SerializeField] private Vector3 gizmoOffset = Vector3.zero;
 
+    private enum SnapOn { Tile, Edge, Vertex }
+    [SerializeField] private SnapOn snapOn = SnapOn.Tile;
+    
     public bool isLocated = true; // Note : Let it serializable to be dirty.
 
     // ======================================================================
@@ -65,9 +68,29 @@ public abstract class BaseAutoSnap : MonoBehaviour
     /// </summary>
     protected virtual void CheckGridPosition()
     {
-        Coordinates coordinates = new Coordinates(
-                Mathf.RoundToInt(transform.position.x),
-                Mathf.RoundToInt(transform.position.z));
+        Coordinates coordinates;
+
+        switch (snapOn)
+        {
+            case SnapOn.Tile:
+               coordinates = new Coordinates(
+                    Mathf.RoundToInt(transform.position.x),
+                    Mathf.RoundToInt(transform.position.z));
+                break;
+            case SnapOn.Edge:
+                coordinates = new Coordinates(
+                    Mathf.RoundToInt(transform.position.x),
+                    Mathf.RoundToInt(transform.position.z));
+                break;
+            case SnapOn.Vertex:
+                coordinates = new Coordinates(
+                    Mathf.RoundToInt(transform.position.x),
+                    Mathf.RoundToInt(transform.position.z));                
+                break;
+            default:
+                coordinates = null;
+                break;
+        }
         
         RemoveFromManager();
         MoveObject(coordinates);

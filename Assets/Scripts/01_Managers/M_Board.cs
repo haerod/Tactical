@@ -11,11 +11,11 @@ public class M_Board : MonoBehaviour
     [Header("DEBUG")]
     public TileGrid tileGrid;
     public static M_Board instance;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
         // Singleton
@@ -27,11 +27,11 @@ public class M_Board : MonoBehaviour
         if (Application.isPlaying)
             tileGrid.Setup();
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Returns the tile at (x,y) coordinates.
     /// </summary>
@@ -39,8 +39,14 @@ public class M_Board : MonoBehaviour
     /// <param name="y"></param>
     /// <returns></returns>
     public Tile GetTileAtCoordinates(int x, int y) => tileGrid[x, y];
+    
+    /// <summary>
+    /// Returns the tile at given coordinates.
+    /// </summary>
+    /// <param name="coordinates"></param>
+    /// <returns></returns>
     public Tile GetTileAtCoordinates(Coordinates coordinates) => tileGrid[coordinates.x, coordinates.y];
-
+    
     /// <summary>
     /// Returns a tile with an offset if it exists, otherwise returns null.
     /// </summary>
@@ -258,7 +264,7 @@ public class M_Board : MonoBehaviour
 
         return toReturn;
     }
-
+    
     /// <summary>
     /// With two tiles in diagonal, returns the two other tiles to make a square.
     /// </summary>
@@ -287,38 +293,7 @@ public class M_Board : MonoBehaviour
 
         return new List<Tile> { tile3, tile4 };
     }
-
-    /// <summary>
-    /// Returns the edge element between two coordinates, returns null if it's nothing.
-    /// </summary>
-    /// <param name="coordinates1"></param>
-    /// <param name="coordinates2"></param>
-    /// <returns></returns>
-    public EdgeElement GetEdgeElementBetweenAdjacentCoordinates(Coordinates coordinates1, Coordinates coordinates2)
-    {
-        Tile tile1 = GetTileAtCoordinates(coordinates1);
-        Tile tile2 = GetTileAtCoordinates(coordinates2);
-
-        List<EdgeElement> testedCovers = new List<EdgeElement>();
-        
-        if (!tile1 && !tile2)
-            return null; // No tiles, so no covers
-        
-        if(tile1)
-            if(tile1.hasCovers)
-                testedCovers.AddRange(tile1.GetCovers());
-        
-        if(tile2)
-            if(tile2.hasCovers)
-                testedCovers.AddRange(tile2.GetCovers());
-        
-        if(testedCovers.Count == 0)
-            return null; // No covers
-
-        return testedCovers
-            .FirstOrDefault(cover => cover.IsBetweenCoordinates(coordinates1, coordinates2));
-    }
-
+    
     /// <summary>
     /// Returns the covers adjacent (without diagonals) at coordinates.
     /// </summary>
@@ -341,21 +316,6 @@ public class M_Board : MonoBehaviour
                 if (tileCover && coveringTypes.Contains(tileCover.GetCoveringTileType()))
                     coversToReturn.Add(tileCover);
             }
-
-            EdgeElement edgeElementBetween = GetEdgeElementBetweenAdjacentCoordinates(coordinates, aroundCoordinates);
-            
-            if(!edgeElementBetween) 
-                continue; // No edge element between coordinates
-
-            Cover edgeCover = edgeElementBetween.GetComponent<Cover>();
-            
-            if(!edgeCover)
-                continue; // No cover on edge element
-            
-            if (!coveringTypes.Contains(edgeCover.GetCoveringTileType()))
-                continue; // Element no covering
-            
-            coversToReturn.Add(edgeCover);
         }
         
         return coversToReturn;

@@ -5,9 +5,9 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     public static Test instance;
-    
-    public C__Character testCharacter;
-    public List<Tile> visibleTiles;
+
+    public Tile tile1, tile2;
+    public List<TileType> allowedTileTypes;
     
     private void Awake()
     {
@@ -16,7 +16,5 @@ public class Test : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.M))
-            print(testCharacter.look.visibleTiles.Count);
     }
 }

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using static M__Managers;
+using TMPro;
+using UnityEngine.Serialization;
 
 public class Tile : Entity
 {
@@ -39,15 +42,25 @@ public class Tile : Entity
     [SerializeField] private GameObject downLine;
     [SerializeField] private GameObject leftLine;
     [SerializeField] private GameObject rightLine;
-
-    public List<EdgeElement> covers;
-
-    [HideInInspector] public bool hasCovers => covers.Count > 0;
+    [SerializeField] private TextMeshProUGUI coordinatesText;
+    
+    [Header("DEBUG")]
+    [SerializeField] private bool showCoordinates;
+    
     [HideInInspector] public Vector3 worldPosition => transform.position;
     
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Start()
+    {
+        if(!showCoordinates)
+            return;
+        
+        coordinatesText.gameObject.SetActive(true);
+        coordinatesText.text = coordinates.x + "," + coordinates.y;
+    }
 
     // ======================================================================
     // PUBLIC METHODS
@@ -72,12 +85,6 @@ public class Tile : Entity
         EditorUtility.SetDirty(this);
         EditorUtility.SetDirty(gameObject);
     }
-    
-    /// <summary>
-    /// Returns covers attached to this tile.
-    /// </summary>
-    /// <returns></returns>
-    public List<EdgeElement> GetCovers() => covers;
 
     /// <summary>
     /// Moves tile position at the asked coordinates.
@@ -97,92 +104,6 @@ public class Tile : Entity
         cost = parent.cost + GetCost(parentTile);
         heuristic = (Mathf.Abs(endTile.coordinates.x - coordinates.x) + Mathf.Abs(endTile.coordinates.y - coordinates.y)) * 10;
         f = cost + heuristic;
-    }
-
-    /// <summary>
-    /// Adds a cover in covers list.
-    /// </summary>
-    /// <param name="cover"></param>
-    public void AddCover(EdgeElement cover)
-    {
-        if (covers.Contains(cover))
-            return; // Already this cover in the list
-
-        covers.Add(cover);
-        EditorUtility.SetDirty(this);
-    }
-
-    /// <summary>
-    /// Removes a cover form covers list.
-    /// </summary>
-    /// <param name="cover"></param>
-    public void RemoveCover(EdgeElement cover)
-    {
-        if (!covers.Contains(cover))
-            return; // This cover doesn't in the list
-
-        covers.Remove(cover);
-        EditorUtility.SetDirty(this);
-    }
-
-    /// <summary>
-    /// Returns true if it's a cover between this tile and another tile.
-    /// </summary>
-    /// <param name="otherTile"></param>
-    /// <param name="allowedWalkableTypes"></param>
-    /// <returns></returns>
-    public bool IsCoverBetween(Tile otherTile, List<TileType> allowedWalkableTypes)
-    {            
-        List<EdgeElement> testedCovers = new List<EdgeElement>();
-
-        if(!Utils.IsVoidList(GetCovers()))
-            testedCovers.AddRange(GetCovers());
-        if(!Utils.IsVoidList(otherTile.GetCovers()))
-            testedCovers.AddRange(otherTile.GetCovers());
-
-        return testedCovers
-            .Where(c => !allowedWalkableTypes.Contains(c.type))
-            .FirstOrDefault(c => c.IsBetweenTiles(this, otherTile));
-    }
-    public bool IsCoverBetween(Tile otherTile)
-    {            
-        List<EdgeElement> testedCovers = new List<EdgeElement>();
-
-        if(!Utils.IsVoidList(GetCovers()))
-            testedCovers.AddRange(GetCovers());
-        if(!Utils.IsVoidList(otherTile.GetCovers()))
-            testedCovers.AddRange(otherTile.GetCovers());
-
-        return testedCovers
-            .FirstOrDefault(c => c.IsBetweenTiles(this, otherTile));
-    }
-    public bool IsCoverBetween(Coordinates otherCoordinates)
-    {
-        List<EdgeElement> testedCovers = GetCovers();
-
-        if (testedCovers.Count == 0)
-            return false;
-
-        return testedCovers
-            .FirstOrDefault(cover => cover.IsBetweenCoordinates(coordinates, otherCoordinates));
-    }
-
-    /// <summary>
-    /// Returns the cover between two tiles.
-    /// </summary>
-    /// <param name="otherTile"></param>
-    /// <returns></returns>
-    public EdgeElement CoverBetween(Tile otherTile)
-    {
-        List<EdgeElement> testedCovers = new List<EdgeElement>();
-
-        if(!Utils.IsVoidList(GetCovers()))
-            testedCovers.AddRange(GetCovers());
-        if(!Utils.IsVoidList(otherTile.GetCovers()))
-            testedCovers.AddRange(otherTile.GetCovers());
-
-        return testedCovers
-            .FirstOrDefault(c => c.IsBetweenTiles(this, otherTile));
     }
 
     /// <summary>
