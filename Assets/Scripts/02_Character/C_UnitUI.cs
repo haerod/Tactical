@@ -11,6 +11,7 @@ public class C_UnitUI : MonoBehaviour
     [SerializeField] private C__Character c;
     [SerializeField] private UI_SlicedHealthBar healthBar;
     [SerializeField] private UI_CoverState coverState;
+    [SerializeField] private UI_OutOfRangeIcon outOfRangeIcon;
     [SerializeField] private UI_OrientToCamera orientToCamera;
     [Space]
     [SerializeField] private GameColor coveredColor;
@@ -26,6 +27,7 @@ public class C_UnitUI : MonoBehaviour
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         c.health.OnDeath += Health_OnDeath;
         c.health.HealthChanged += Health_HealthChanged;
@@ -77,7 +79,18 @@ public class C_UnitUI : MonoBehaviour
                 coverInfo.GetCoverType(),
                 coverInfo.GetIsCovered() ? coveredColor.color : uncoveredColor.color);
     }
-    
+
+    private void DisplayOutOfRangeIcon()
+    {
+        Display();
+        outOfRangeIcon.Display();
+    }
+
+    private void HideOutOfRangeIcon()
+    {
+        outOfRangeIcon.Hide();
+    }
+
     /// <summary>
     /// Updates the health bar values.
     /// </summary>
@@ -108,31 +121,6 @@ public class C_UnitUI : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
-    {
-        if(hoveredCharacter != c)
-            return; // Another character
-        
-        C__Character currentUnit = _characters.current;
-        
-        if(currentUnit == c)
-            return; // Current character
-        if(!currentUnit.look.CharactersVisibleInFog().Contains(c))
-            return; // Invisible character
-        
-        Display();
-    }
-    
-    private void InputEvents_OnTileExit(object sender, Tile exitedTile)
-    {
-        if(exitedTile.character != c)
-            return; // Not this character
-        if(_characters.current == c)
-            return; // Is the current character
-        
-        Hide();
-    }
-    
     private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
     {
         if(startingCharacter != c)
@@ -149,6 +137,21 @@ public class C_UnitUI : MonoBehaviour
         Hide();
     }
     
+    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
+    {
+        if(hoveredCharacter != c)
+            return; // Another character
+        
+        C__Character currentUnit = _characters.current;
+        
+        if(currentUnit == c)
+            return; // Current character
+        if(!currentUnit.look.CharactersVisibleInFog().Contains(c))
+            return; // Invisible character
+        
+        Display();
+    }
+    
     private void Health_OnDeath(object sender, EventArgs e)
     {
         Wait(1, () => { c.unitUI.Hide(); });
@@ -157,5 +160,36 @@ public class C_UnitUI : MonoBehaviour
     private void Health_HealthChanged(object sender, EventArgs e)
     {
         UpdateHealthBar();
+    }
+    
+    private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
+    {
+        C__Character currentUnit = _characters.current;
+        
+        
+        if(currentUnit.team.IsTeammateOf(c))
+            return; // Teammate
+        if(!currentUnit.look.CanSee(c))
+            return; // Not visible
+        if(!currentUnit.behavior.playable)
+            return; // NPC
+        if(!currentUnit.move.movementArea.Contains(enteredTile))
+            return; // Tile not in movement area
+        if(c.look.visibleTiles.Contains(enteredTile))
+            HideOutOfRangeIcon();
+        else
+            DisplayOutOfRangeIcon();
+    }
+    
+    private void InputEvents_OnTileExit(object sender, Tile exitedTile)
+    {
+        //HideOutOfRangeIcon();
+        
+        if(exitedTile.character != c)
+            return; // Not this character
+        if(_characters.current == c)
+            return; // Is the current character
+        
+        Hide();
     }
 }

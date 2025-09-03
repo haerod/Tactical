@@ -6,24 +6,31 @@
 ## Restart scene
 - bug on F_Covers, easy repro
 
+## Behavior
+- If NPC target character out of view, it waits indefinively
+
 # REFACTOR
 
 ## M_Rules
 - Fog of war vision rules not in M_Rules -> fog of war as a Manager ?
     - Fog of war view lines as Module
-- Characters turn order in M_Characters
 
 ## Actions
 - Replace EndTurn by EndAction (if an unit can do multiple actions)
 
 ## Melee weapons
-- Melee weapons don't care about covers
+- Melee weapons don't have to care about covers
 - When unit hover a enemy and itself is covered, stand up animation
+
+## Unit UI
+- Make any unit UI independent of the main script
+
+## Tiles
+- Tiles material work with an enum, use a Scriptable object instead
+- Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
 
 ## Others
 - Rename F_... and UI_... modules in Module_... (code and prefab)
-- Tiles material work with an enum, use a Scriptable object instead
-- Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
 - Rename Character in Unit
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
