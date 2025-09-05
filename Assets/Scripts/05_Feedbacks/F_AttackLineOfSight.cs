@@ -13,9 +13,8 @@ public class F_AttackLineOfSight : MonoBehaviour
 {
     [Header("REFERENCES")]
     [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private float lineHeight = .7f;
     
-    private bool isShowing = false;
+    private bool isShowing;
     private C__Character attacker, target;
     
     // ======================================================================

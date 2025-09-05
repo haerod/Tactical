@@ -7,7 +7,10 @@
 - bug on F_Covers, easy repro
 
 ## Behavior
-- If NPC target character out of view, it waits indefinively
+- If NPC target character out of view, it waits indefinitely
+
+## UI life bar
+- Enables at start without any reason
 
 # REFACTOR
 

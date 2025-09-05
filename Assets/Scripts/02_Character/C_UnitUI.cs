@@ -9,7 +9,6 @@ public class C_UnitUI : MonoBehaviour
     [Header("REFERENCES")]
     
     [SerializeField] private C__Character c;
-    [SerializeField] private UI_SlicedHealthBar healthBar;
     [SerializeField] private UI_CoverState coverState;
     [SerializeField] private UI_OutOfRangeIcon outOfRangeIcon;
     [SerializeField] private UI_OrientToCamera orientToCamera;
@@ -30,9 +29,7 @@ public class C_UnitUI : MonoBehaviour
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         c.health.OnDeath += Health_OnDeath;
-        c.health.HealthChanged += Health_HealthChanged;
         DisplayCharacterCoverState(c.cover.GetCoverState());
-        healthBar.InitialiseBar();
     }
 
     // ======================================================================
@@ -53,7 +50,6 @@ public class C_UnitUI : MonoBehaviour
     /// </summary>
     private void Display()
     {
-        healthBar.gameObject.SetActive(true);
         coverState.gameObject.SetActive(true);
     }
     
@@ -62,7 +58,6 @@ public class C_UnitUI : MonoBehaviour
     /// </summary>
     private void Hide()
     {
-        healthBar.gameObject.SetActive(false);
         coverState.gameObject.SetActive(false);
     }
     
@@ -90,11 +85,6 @@ public class C_UnitUI : MonoBehaviour
     {
         outOfRangeIcon.Hide();
     }
-
-    /// <summary>
-    /// Updates the health bar values.
-    /// </summary>
-    private void UpdateHealthBar() => healthBar.DisplayCurrentHealth();
     
     /// <summary>
     /// Starts a waits for "time" seconds and executes an action.
@@ -157,15 +147,9 @@ public class C_UnitUI : MonoBehaviour
         Wait(1, () => { c.unitUI.Hide(); });
     }
     
-    private void Health_HealthChanged(object sender, EventArgs e)
-    {
-        UpdateHealthBar();
-    }
-    
     private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
         C__Character currentUnit = _characters.current;
-        
         
         if(currentUnit.team.IsTeammateOf(c))
             return; // Teammate
