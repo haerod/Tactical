@@ -9,12 +9,8 @@ public class C_UnitUI : MonoBehaviour
     [Header("REFERENCES")]
     
     [SerializeField] private C__Character c;
-    [SerializeField] private UI_CoverState coverState;
     [SerializeField] private UI_OutOfRangeIcon outOfRangeIcon;
     [SerializeField] private UI_OrientToCamera orientToCamera;
-    [Space]
-    [SerializeField] private GameColor coveredColor;
-    [SerializeField] private GameColor uncoveredColor;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -22,14 +18,7 @@ public class C_UnitUI : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
-        
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
-        InputEvents.OnTileExit += InputEvents_OnTileExit;
-        c.health.OnDeath += Health_OnDeath;
-        DisplayCharacterCoverState(c.cover.GetCoverState());
     }
 
     // ======================================================================
@@ -40,44 +29,14 @@ public class C_UnitUI : MonoBehaviour
     /// Orients the in-world UI to the camera.
     /// </summary>
     public void OrientToCamera() => orientToCamera.OrientToCamera();
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Shows the in-world UI over the character (health bar, cover state, etc.).
-    /// </summary>
-    private void Display()
-    {
-        coverState.gameObject.SetActive(true);
-    }
-    
-    /// <summary>
-    /// Hides the in-world UI over the character (health bar, cover state, etc.).
-    /// </summary>
-    private void Hide()
-    {
-        coverState.gameObject.SetActive(false);
-    }
-    
-    /// <summary>
-    /// Displays the cover state of the character on its world UI (hover it).
-    /// </summary>
-    /// <param name="coverInfo"></param>
-    private void DisplayCharacterCoverState(CoverInfo coverInfo)
-    {
-        if (coverInfo == null)
-            coverState.HideCoverState();
-        else
-            coverState.DisplayCoverState(
-                coverInfo.GetCoverType(),
-                coverInfo.GetIsCovered() ? coveredColor.color : uncoveredColor.color);
-    }
 
     private void DisplayOutOfRangeIcon()
     {
-        Display();
+        //Display();
         outOfRangeIcon.Display();
     }
 
@@ -110,42 +69,6 @@ public class C_UnitUI : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
-    {
-        if(startingCharacter != c)
-            return; // Another unit's turn
-        
-        Display();
-    }
-    
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
-    {
-        if(endingCharacter != c)
-            return; // Another unit's turn
-        
-        Hide();
-    }
-    
-    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
-    {
-        if(hoveredCharacter != c)
-            return; // Another character
-        
-        C__Character currentUnit = _characters.current;
-        
-        if(currentUnit == c)
-            return; // Current character
-        if(!currentUnit.look.CharactersVisibleInFog().Contains(c))
-            return; // Invisible character
-        
-        Display();
-    }
-    
-    private void Health_OnDeath(object sender, EventArgs e)
-    {
-        Wait(1, () => { c.unitUI.Hide(); });
-    }
     
     private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
@@ -163,17 +86,5 @@ public class C_UnitUI : MonoBehaviour
             HideOutOfRangeIcon();
         else
             DisplayOutOfRangeIcon();
-    }
-    
-    private void InputEvents_OnTileExit(object sender, Tile exitedTile)
-    {
-        //HideOutOfRangeIcon();
-        
-        if(exitedTile.character != c)
-            return; // Not this character
-        if(_characters.current == c)
-            return; // Is the current character
-        
-        Hide();
     }
 }

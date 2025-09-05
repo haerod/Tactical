@@ -12,6 +12,9 @@
 ## UI life bar
 - Enables at start without any reason
 
+## Cover system
+- C_Cover works sometimes, need a pass of QA/debug
+
 # REFACTOR
 
 ## M_Rules
@@ -26,7 +29,7 @@
 - When unit hover a enemy and itself is covered, stand up animation
 
 ## Unit UI
-- Make any unit UI independent of the main script
+- Make Out of sight icon independent of C_UnitUI
 
 ## Tiles
 - Tiles material work with an enum, use a Scriptable object instead

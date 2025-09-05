@@ -127,6 +127,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coverStateImage: {fileID: 5264579893866603245}
+  unit: {fileID: 0}
+  coveredColor: {fileID: 11400000, guid: cea5dda77b0d8ee41bf0aca959ce8de5, type: 2}
+  uncoveredColor: {fileID: 11400000, guid: 729b909114b50ce439cbf5f92c808bd1, type: 2}
 --- !u!1 &5575884930533512708
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,6 +337,7 @@ MonoBehaviour:
   lifeLayoutGroup: {fileID: 7227079351083708174}
   lifeImage: {fileID: 7864811601543963247, guid: ca6e750df9ab2474297f2999d3cf8a28, type: 3}
   health: {fileID: 0}
+  unit: {fileID: 0}
 --- !u!1 &7380984320251784826
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,7 +468,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   c: {fileID: 0}
-  healthBar: {fileID: 7227079351546904240}
   coverState: {fileID: 7930179286621550968}
   outOfRangeIcon: {fileID: 4871433213992509702}
   orientToCamera: {fileID: 3881942300243750694}
