@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using static M__Managers;
 using System;
+using UnityEngine.Serialization;
 using UnityEngine.TextCore.Text;
 
-public class C_Look : MonoBehaviour
+public class U_Look : MonoBehaviour
 {
     [SerializeField] private int range = 5;
     [SerializeField] private List<TileType> visualObstacles;
@@ -15,7 +16,7 @@ public class C_Look : MonoBehaviour
     
     [Header("REFERENCES")]
     
-    [SerializeField] private C__Character c;
+    [SerializeField] private U__Unit unit;
 
     public List<Tile> visibleTiles => GetVisibleTiles().ToList();
     
@@ -28,8 +29,8 @@ public class C_Look : MonoBehaviour
 
     private void Start()
     {
-        c.move.OnMovementStart += Move_OnMovementStart;
-        c.move.OnUnitEnterTile += Move_OnUnitEnterTile;
+        unit.move.OnMovementStart += Move_OnMovementStart;
+        unit.move.OnUnitEnterTile += Move_OnUnitEnterTile;
     }
     
     // ======================================================================
@@ -37,16 +38,16 @@ public class C_Look : MonoBehaviour
     // ======================================================================
     
     /// <summary>
-    /// Returns the view range of the character.
+    /// Returns the view range of the unit.
     /// </summary>
     /// <returns></returns>
     public int GetRange() => range;
     
     /// <summary>
-    /// Returns the characters visible in fog of war.
+    /// Returns the units visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<C__Character> CharactersVisibleInFog() => _characters
+    public List<U__Unit> CharactersVisibleInFog() => _units
         .GetUnitsList()
             .Where(chara =>
             {
@@ -55,7 +56,7 @@ public class C_Look : MonoBehaviour
                     case M_Rules.VisibleInFogOfWar.Everybody:
                         return true;
                     case M_Rules.VisibleInFogOfWar.Allies:
-                        return visibleTiles.Contains(chara.tile) || c.team.IsAllyOf(_characters.current);
+                        return visibleTiles.Contains(chara.tile) || unit.team.IsAllyOf(_units.current);
                     case M_Rules.VisibleInFogOfWar.InView:
                         return visibleTiles.Contains(chara.tile);
                     default:
@@ -68,24 +69,24 @@ public class C_Look : MonoBehaviour
     /// Returns the enemies visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<C__Character> EnemiesVisibleInFog() => CharactersVisibleInFog()
-        .Where(testedCharacter => c.team.IsEnemyOf(testedCharacter))
+    public List<U__Unit> EnemiesVisibleInFog() => CharactersVisibleInFog()
+        .Where(testedCharacter => unit.team.IsEnemyOf(testedCharacter))
         .ToList();
     
     /// <summary>
-    /// Return true if the target character is visible.
+    /// Return true if the target unit is visible.
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    public bool CanSee(C__Character target) => CharactersVisibleInFog().Contains(target);
+    public bool CanSee(U__Unit target) => CharactersVisibleInFog().Contains(target);
     
     /// <summary>
-    /// Returns the tiles in the line of sight of the character on a tile.
+    /// Returns the tiles in the line of sight of the unit on a tile.
     /// </summary>
     /// <param name="targetCoordinates"></param>
     /// <returns></returns>
     public List<Tile> GetTilesOfLineOfSightOn(Coordinates targetCoordinates) =>  
-        LineOfSight.GetLineOfSight(c.coordinates, targetCoordinates)
+        LineOfSight.GetLineOfSight(unit.coordinates, targetCoordinates)
             .Select(coordinates => _board.GetTileAtCoordinates(coordinates))
             .ToList();
     
@@ -93,9 +94,9 @@ public class C_Look : MonoBehaviour
     /// Returns the closest enemy on sight.
     /// </summary>
     /// <returns></returns>
-    public C__Character ClosestEnemyOnSight() => _characters.GetUnitsList()
-            .Where(o => o != c) // remove emitter
-            .Where(o => o.team.IsEnemyOf(c)) // get only enemies
+    public U__Unit ClosestEnemyOnSight() => _units.GetUnitsList()
+            .Where(o => o != unit) // remove emitter
+            .Where(o => o.team.IsEnemyOf(unit)) // get only enemies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight
             .OrderBy(o => GetTilesOfLineOfSightOn(o.tile.coordinates).Count()) // order enemies by distance
             .FirstOrDefault(); // return the lowest
@@ -105,7 +106,7 @@ public class C_Look : MonoBehaviour
     // ======================================================================
     
     /// <summary>
-    /// Returns the visible tiles of the character, and calculate it if something change.
+    /// Returns the visible tiles of the unit, and calculate it if something change.
     /// </summary>
     /// <returns></returns>
     private List<Tile> GetVisibleTiles()
@@ -121,8 +122,8 @@ public class C_Look : MonoBehaviour
                 return CalculateVisibleTiles()
                     .ToList();
             case VisionType.GroupVision:
-                _characters
-                    .GetAlliesOf(c)
+                _units
+                    .GetAlliesOf(unit)
                     .ForEach(chara => currentVisibleTiles.AddRange(chara.look.CalculateVisibleTiles()));
 
                 currentVisibleTiles = currentVisibleTiles
@@ -135,17 +136,17 @@ public class C_Look : MonoBehaviour
     }
     
     /// <summary>
-    /// Returns all tiles in view of THIS character.
+    /// Returns all tiles in view of THIS unit.
     /// </summary>
     /// <returns></returns>
     private List<Tile> CalculateVisibleTiles()
     {
         List<Tile> toReturn =
-            _board.GetTilesAround(c.tile, range, false)
+            _board.GetTilesAround(unit.tile, range, false)
                 .Where(HasSightOn)
                 .ToList();
 
-        toReturn.Add(c.tile);
+        toReturn.Add(unit.tile);
 
         return toReturn;
     }
@@ -157,7 +158,7 @@ public class C_Look : MonoBehaviour
     /// <returns></returns>
     private bool HasSightOn(Tile tile)
     {
-        List<Coordinates> los = LineOfSight.GetLineOfSight(c.coordinates, tile.coordinates);
+        List<Coordinates> los = LineOfSight.GetLineOfSight(unit.coordinates, tile.coordinates);
 
         if(los == null)
             return true; // Nothing on LoS

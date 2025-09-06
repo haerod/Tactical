@@ -15,8 +15,8 @@ public class FogOfWar : MonoBehaviour
     
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
 
     // ======================================================================
@@ -43,7 +43,7 @@ public class FogOfWar : MonoBehaviour
     /// <param name="visibleTiles"></param>
     private void DisplayCharacters(List<Tile> visibleTiles)
     {
-        List<C__Character> visibleCharacters = _characters.GetUnitsList()
+        List<U__Unit> visibleCharacters = _units.GetUnitsList()
             .Where(c =>
             {
                 switch (_rules.visibleInFogOfWar)
@@ -51,7 +51,7 @@ public class FogOfWar : MonoBehaviour
                     case M_Rules.VisibleInFogOfWar.Everybody:
                         return true;
                     case M_Rules.VisibleInFogOfWar.Allies:
-                        return visibleTiles.Contains(c.tile) || c.team.IsAllyOf(_characters.current);
+                        return visibleTiles.Contains(c.tile) || c.team.IsAllyOf(_units.current);
                     case M_Rules.VisibleInFogOfWar.InView:
                         return visibleTiles.Contains(c.tile);
                     default:
@@ -65,7 +65,7 @@ public class FogOfWar : MonoBehaviour
             .ForEach(c => c.anim.SetVisualActives(true));
 
         // Hides invisible characters
-        _characters.GetUnitsList()
+        _units.GetUnitsList()
             .Except(visibleCharacters)
             .ToList()
             .ForEach(c => c.anim.SetVisualActives(false));
@@ -131,7 +131,7 @@ public class FogOfWar : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         ShowVisibleElements(startingCharacter.look.visibleTiles);
         
@@ -139,7 +139,7 @@ public class FogOfWar : MonoBehaviour
         startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         endingCharacter.move.OnUnitEnterTile -= Move_OnUnitEnterTile;
         endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
@@ -147,11 +147,11 @@ public class FogOfWar : MonoBehaviour
     
     private void Move_OnMovementEnd(object sender, EventArgs e)
     {
-        ShowVisibleElements(_characters.current.look.visibleTiles);
+        ShowVisibleElements(_units.current.look.visibleTiles);
     }
     
     private void Move_OnUnitEnterTile(object sender, Tile enteredTile)
     {
-        ShowVisibleElements(_characters.current.look.visibleTiles);
+        ShowVisibleElements(_units.current.look.visibleTiles);
     }
 }

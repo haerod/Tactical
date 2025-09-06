@@ -6,12 +6,12 @@ using UnityEditor;
 using System;
 
 [ExecuteInEditMode]
-public class CharacterAutoRename : MonoBehaviour
+public class UnitAutoRename : MonoBehaviour
 {
     [SerializeField] private string playableCharacterDesignation = "PC";
     [SerializeField] private string notPlayableCharacterDesignation = "NPC";
     
-    private C__Character current;
+    private U__Unit current;
 
     private bool previousBehavior;
     private Team previousTeam;
@@ -32,7 +32,7 @@ public class CharacterAutoRename : MonoBehaviour
             return;
         }
 
-        current = GetComponent<C__Character>();
+        current = GetComponent<U__Unit>();
 
         previousBehavior = current.behavior.playable;
         previousTeam = current.unitTeam;
@@ -96,8 +96,8 @@ public class CharacterAutoRename : MonoBehaviour
                 current.behavior.playable ? playableCharacterDesignation : notPlayableCharacterDesignation);
         }
 
-        EditorUtility.SetDirty(current.gameObject); // Save the character modifications
-        EditorUtility.SetDirty(current.move); // Save the character modifications
+        EditorUtility.SetDirty(current.gameObject); // Save the unit's modifications
+        EditorUtility.SetDirty(current.move); // Save the unit's modifications
     }
 
     /// <summary>

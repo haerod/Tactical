@@ -39,11 +39,11 @@ public class M_Input : MonoBehaviour
     
     private bool canUsePlayerInput = true;
     private Tile previousTile;
-    private C__Character previousCharacter;
+    private U__Unit previousCharacter;
     private Plane floorPlane = new Plane(Vector3.up, Vector3.zero);
     public static M_Input instance;
     
-    private C__Character currentCharacter => _characters.current;
+    private U__Unit currentCharacter => _units.current;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -60,7 +60,7 @@ public class M_Input : MonoBehaviour
     
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
     }
     
     private void Update()
@@ -128,12 +128,12 @@ public class M_Input : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Tile tile;
-            C__Character character;
+            U__Unit character;
 
             // On a character's collider, get the character's tile
             if (hit.transform.CompareTag("Clickable"))
             {
-                character = hit.transform.GetComponentInParent<C__Character>();
+                character = hit.transform.GetComponentInParent<U__Unit>();
                 tile = character.tile;
             }
             else
@@ -277,7 +277,7 @@ public class M_Input : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter )
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter )
     {
         if (startingCharacter.behavior.playable) 
             _input.SetActivePlayerInput();
@@ -298,11 +298,11 @@ public static class InputEvents
     public static event EventHandler<Tile> OnTileClick;
     public static event EventHandler OnNoTile;
     
-    public static event EventHandler<C__Character> OnCharacterEnter;
-    public static event EventHandler<C__Character> OnCharacterExit;
-    public static event EventHandler <C__Character> OnCharacterClick;
-    public static event EventHandler<C__Character> OnEnemyEnter;
-    public static event EventHandler<C__Character> OnAllyEnter;
+    public static event EventHandler<U__Unit> OnCharacterEnter;
+    public static event EventHandler<U__Unit> OnCharacterExit;
+    public static event EventHandler <U__Unit> OnCharacterClick;
+    public static event EventHandler<U__Unit> OnEnemyEnter;
+    public static event EventHandler<U__Unit> OnAllyEnter;
     public static event EventHandler OnCurrentUnitEnter;
     
     // ======================================================================
@@ -312,9 +312,9 @@ public static class InputEvents
     public static void TileHovered(Tile tile) => TileHoveredEvents(tile);
     public static void TileUnhovered(Tile tile) => OnTileExit?.Invoke(null, tile);
     public static void TileClick(Tile tile) => OnTileClick?.Invoke(null, tile);
-    public static void CharacterUnhovered(C__Character character) => OnCharacterExit?.Invoke(null, character);
-    public static void CharacterHovered(C__Character character) => CharacterHoveredEvents(character);
-    public static void CharacterClick(C__Character character)  => OnCharacterClick?.Invoke(null, character);
+    public static void CharacterUnhovered(U__Unit character) => OnCharacterExit?.Invoke(null, character);
+    public static void CharacterHovered(U__Unit character) => CharacterHoveredEvents(character);
+    public static void CharacterClick(U__Unit character)  => OnCharacterClick?.Invoke(null, character);
     public static void NothingHovered() => OnNoTile?.Invoke(null, EventArgs.Empty);
     
     // ======================================================================
@@ -329,7 +329,7 @@ public static class InputEvents
     {
         OnTileEnter?.Invoke(null, tile);
         
-        C__Character currentCharacter = _characters.current;
+        U__Unit currentCharacter = _units.current;
         
         if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
             return; // Can't go on this tile or can't play
@@ -349,10 +349,10 @@ public static class InputEvents
     /// Events happening if the pointer overlaps a occupied by a character.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    private static void CharacterHoveredEvents(C__Character hoveredCharacter)
+    private static void CharacterHoveredEvents(U__Unit hoveredCharacter)
     {
-        C__Character currentCharacter = _characters.current;
-        C__Character currentTarget = hoveredCharacter;
+        U__Unit currentCharacter = _units.current;
+        U__Unit currentTarget = hoveredCharacter;
         
         OnCharacterEnter?.Invoke(null, currentTarget);
         

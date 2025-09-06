@@ -21,8 +21,8 @@ public class FM_Cursor : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
@@ -83,15 +83,15 @@ public class FM_Cursor : MonoBehaviour
             return; // No path
         }
         
-        bool tileInMoveRange = _characters.current.move.CanMoveTo(endTile);
+        bool tileInMoveRange = _units.current.move.CanMoveTo(endTile);
 
         // Set cursor
         SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
     }
     
-    private void InputEvents_OnAllyEnter(object sender, C__Character hoveredAlly)
+    private void InputEvents_OnAllyEnter(object sender, U__Unit hoveredAlly)
     {
-        C__Character currentCharacter = _characters.current;
+        U__Unit currentCharacter = _units.current;
         
         if (!currentCharacter.look.CanSee(hoveredAlly))
         {
@@ -106,9 +106,9 @@ public class FM_Cursor : MonoBehaviour
         SetCursor(CursorType.Heal);
     }
     
-    private void InputEvents_OnEnemyEnter(object sender, C__Character hoveredEnemy)
+    private void InputEvents_OnEnemyEnter(object sender, U__Unit hoveredEnemy)
     {
-        C__Character currentCharacter = _characters.current;
+        U__Unit currentCharacter = _units.current;
         
         if(!currentCharacter.CanPlay())
             return; // Unit can't play
@@ -142,19 +142,19 @@ public class FM_Cursor : MonoBehaviour
     
     private void InputEvents_OnTileEnter(object sender, Tile tile)
     {
-        C__Character currentCharacter = _characters.current;
+        U__Unit currentCharacter = _units.current;
         
         if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
             SetCursor(CursorType.OutMovement);
     }
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         if(startingCharacter.behavior.playable)
             startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingTurnCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingTurnCharacter)
     {
         if(endingTurnCharacter.behavior.playable)
             endingTurnCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;

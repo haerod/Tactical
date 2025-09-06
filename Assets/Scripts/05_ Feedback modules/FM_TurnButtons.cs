@@ -15,8 +15,8 @@ public class FM_TurnButtons : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _rules.OnVictory += Rules_OnVictory;
     }
 
@@ -27,7 +27,7 @@ public class FM_TurnButtons : MonoBehaviour
     /// <summary>
     /// Events call on Next Turn button's click
     /// </summary>
-    public void ButtonNextTurn() => _characters.EndCurrentUnitTurn();
+    public void ButtonNextTurn() => _units.EndCurrentUnitTurn();
     
     // ======================================================================
     // PRIVATE METHODS
@@ -43,7 +43,7 @@ public class FM_TurnButtons : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         if(!startingCharacter.behavior.playable)
             return; // NPC
@@ -56,7 +56,7 @@ public class FM_TurnButtons : MonoBehaviour
         SetTurnButtonsActive(true);
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         if(!endingCharacter.behavior.playable)
             return; // NPC
@@ -74,7 +74,7 @@ public class FM_TurnButtons : MonoBehaviour
     
     private void Attack_OnAttackEnd(object sender, EventArgs e)
     {
-        SetTurnButtonsActive(_characters.current.behavior.playable);
+        SetTurnButtonsActive(_units.current.behavior.playable);
     }
     
     private void Rules_OnVictory(object sender, EventArgs e)

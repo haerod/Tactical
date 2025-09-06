@@ -2,13 +2,13 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
-public class C_AnimatorScripts : MonoBehaviour
+public class U_AnimatorScripts : MonoBehaviour
 {
     [Header("REFERENCES")]
 
-    public C__Character c;
-
+    [SerializeField] private U__Unit unit;
     [SerializeField] private Animator anim;
     [SerializeField] private List<GameObject> visuals;
 
@@ -27,10 +27,10 @@ public class C_AnimatorScripts : MonoBehaviour
 
     private void Start()
     {
-        if(c.cover.AreCoversAround())
+        if(unit.cover.AreCoversAround())
             EnterCrouch();
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -74,9 +74,9 @@ public class C_AnimatorScripts : MonoBehaviour
     {
         anim.SetBool(Attack, false);
         anim.SetBool(Aim, false);
-        c.attack.EndAttack();
+        unit.attack.EndAttack();
     }
-
+    
     /// <summary>
     /// Starts the hit reaction animation.
     /// </summary>

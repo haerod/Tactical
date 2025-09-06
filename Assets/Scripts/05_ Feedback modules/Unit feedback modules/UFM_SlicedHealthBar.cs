@@ -13,8 +13,8 @@ public class UFM_SlicedHealthBar : MonoBehaviour
     [SerializeField] private float spacing = 2;
     [SerializeField] private RectTransform lifeLayoutGroup;
     [SerializeField] private GameObject lifeImage;
-    [SerializeField] private C_Health health;
-    [SerializeField] private C__Character unit;
+    [SerializeField] private U_Health health;
+    [SerializeField] private U__Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -24,8 +24,8 @@ public class UFM_SlicedHealthBar : MonoBehaviour
     {
         InitialiseBar();
 
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
@@ -133,7 +133,7 @@ public class UFM_SlicedHealthBar : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingUnit)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
         if(startingUnit != unit)
             return; // Another character
@@ -141,7 +141,7 @@ public class UFM_SlicedHealthBar : MonoBehaviour
         Show();
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
         if(endingUnit != unit)
             return; // Another character
@@ -149,12 +149,12 @@ public class UFM_SlicedHealthBar : MonoBehaviour
         Hide();
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredUnit)
+    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredUnit)
     {
         if(hoveredUnit != unit)
             return; // Another character
         
-        C__Character currentUnit = _characters.current;
+        U__Unit currentUnit = _units.current;
         
         if(currentUnit == unit)
             return; // Current unit
@@ -178,7 +178,7 @@ public class UFM_SlicedHealthBar : MonoBehaviour
     {
         if(exitedTile.character != unit)
             return; // Not this character
-        if(_characters.current == unit)
+        if(_units.current == unit)
             return; // Is the current character
         
         Hide();
@@ -186,7 +186,7 @@ public class UFM_SlicedHealthBar : MonoBehaviour
     
     private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
-        C__Character currentUnit = _characters.current;
+        U__Unit currentUnit = _units.current;
         
         if(currentUnit.team.IsTeammateOf(unit))
             return; // Teammate

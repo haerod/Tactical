@@ -12,7 +12,7 @@ public class FM_WeaponSelectionButton : MonoBehaviour
     [SerializeField] private Image weaponSprite;
     [SerializeField] private TextMeshProUGUI buttonText;
     
-    private C__Character character;
+    private U__Unit character;
     private FM_WeaponButtonsHolder holder;
     
     // ======================================================================
@@ -28,7 +28,7 @@ public class FM_WeaponSelectionButton : MonoBehaviour
     /// </summary>
     /// <param name="linkedHolder"></param>
     /// <param name="linkedCharacter"></param>
-    public void SetParameters(FM_WeaponButtonsHolder linkedHolder, C__Character linkedCharacter)
+    public void SetParameters(FM_WeaponButtonsHolder linkedHolder, U__Unit linkedCharacter)
     {
         holder = linkedHolder;
         character = linkedCharacter;

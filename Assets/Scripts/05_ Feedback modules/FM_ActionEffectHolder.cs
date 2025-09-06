@@ -18,10 +18,10 @@ public class FM_ActionEffectHolder : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
-        C_Health.OnAnyHealthLoss += Health_OnAnyHealthLoss;
-        C_Health.OnAnyHealthGain += Health_OnAnyHealthGain;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        U_Health.OnAnyHealthLoss += Health_OnAnyHealthLoss;
+        U_Health.OnAnyHealthGain += Health_OnAnyHealthGain;
     }
 
     // ======================================================================
@@ -49,24 +49,24 @@ public class FM_ActionEffectHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         startingCharacter.attack.OnAttackMiss += Attack_OnAttackMiss;
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         endingCharacter.attack.OnAttackMiss -= Attack_OnAttackMiss;
     }
     
-    private void Attack_OnAttackMiss(object sender, C__Character missedCharacter)
+    private void Attack_OnAttackMiss(object sender, U__Unit missedCharacter)
     {
         DisplayActionEffectFeedback(missText, missedCharacter.transform);
     }
     
     private void Health_OnAnyHealthLoss(object sender, int healthLoss)
     {
-        C_Health health = (C_Health) sender;
+        U_Health health = (U_Health) sender;
         Transform target = health.transform;
         
         DisplayActionEffectFeedback(healthLoss.ToString(), target);
@@ -74,7 +74,7 @@ public class FM_ActionEffectHolder : MonoBehaviour
     
     private void Health_OnAnyHealthGain(object sender, int healthGain)
     {
-        C_Health health = (C_Health) sender;
+        U_Health health = (U_Health) sender;
         Transform target = health.transform;
         
         DisplayActionEffectFeedback(healthGain.ToString(), target);

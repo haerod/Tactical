@@ -7,7 +7,7 @@ using static M__Managers;
 public class UFM_OutOfRangeIcon : MonoBehaviour
 {
     [SerializeField] private GameObject outOfRangeIcon;
-    [SerializeField] private C__Character unit;
+    [SerializeField] private U__Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -42,7 +42,7 @@ public class UFM_OutOfRangeIcon : MonoBehaviour
     
     private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
-        C__Character currentUnit = _characters.current;
+        U__Unit currentUnit = _units.current;
         
         if(currentUnit.team.IsTeammateOf(unit))
             return; // Teammate

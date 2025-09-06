@@ -7,6 +7,6 @@
     public static M_Input _input => M_Input.instance;
     public static M_Rules _rules => M_Rules.instance;
     public static M_Board _board => M_Board.instance;
-    public static M_Characters _characters => M_Characters.instance;
+    public static M_Units _units => M_Units.instance;
     public static M_Camera _camera => M_Camera.instance;
 }

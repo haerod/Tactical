@@ -21,8 +21,8 @@ public class FM_MoveLine : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _rules.OnVictory += Rules_OnVictory;
     }
 
@@ -86,7 +86,7 @@ public class FM_MoveLine : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         if(!startingCharacter.behavior.playable)
             return; // NPC
@@ -99,7 +99,7 @@ public class FM_MoveLine : MonoBehaviour
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;   
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         if(!endingCharacter.behavior.playable)
             return; // NPC
@@ -119,7 +119,7 @@ public class FM_MoveLine : MonoBehaviour
     
     private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
     {
-        SetLines(pathfinding, _characters.current.move.movementRange);
+        SetLines(pathfinding, _units.current.move.movementRange);
     }
 
     private void Attack_OnAttackStart(object sender, EventArgs e)
@@ -132,9 +132,9 @@ public class FM_MoveLine : MonoBehaviour
         DisableLines();
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
+    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredCharacter)
     {
-        if(!_characters.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
+        if(!_units.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character
         
         DisableLines();

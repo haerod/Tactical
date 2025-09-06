@@ -42,7 +42,7 @@ public class A_Move : A__Action
     private void Start()
     {
         A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
-        C_Health.OnAnyDeath += Health_OnAnyDeath;
+        U_Health.OnAnyDeath += Health_OnAnyDeath;
     }
     
     // ======================================================================
@@ -277,7 +277,7 @@ public class A_Move : A__Action
         Wait(0.2f, () =>
         {
             OnMovementEnd?.Invoke(this, EventArgs.Empty);
-            _characters.EndCurrentUnitTurn();
+            _units.EndCurrentUnitTurn();
         });
     }
     
@@ -290,13 +290,13 @@ public class A_Move : A__Action
         List<Tile> toReturn = new List<Tile>();
 
         if (_rules.IsFogOfWar())
-            toReturn.AddRange(_characters.GetUnitsList()
+            toReturn.AddRange(_units.GetUnitsList()
                 .Where(chara => IsBlockingPath(chara))
                 .Intersect(c.look.CharactersVisibleInFog())
                 .Select(chara => chara.tile)
                 .ToList());
 
-        toReturn.AddRange(_characters.GetUnitsList()
+        toReturn.AddRange(_units.GetUnitsList()
             .Where(chara => IsBlockingPath(chara))
             .Select(chara => chara.tile)
             .ToList());
@@ -309,7 +309,7 @@ public class A_Move : A__Action
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
-    private bool IsBlockingPath(C__Character character)
+    private bool IsBlockingPath(U__Unit character)
     {
         if(!c.look.CharactersVisibleInFog().Contains(character))
             return false; // Invisible character

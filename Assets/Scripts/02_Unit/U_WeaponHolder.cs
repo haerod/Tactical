@@ -3,15 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class C_WeaponHolder : MonoBehaviour
+public class U_WeaponHolder : MonoBehaviour
 {
     [SerializeField] private Weapon currentWeapon;
     [SerializeField] private List<Weapon> unitWeapons;
 
     [Header("REFERENCES")]
 
-    [SerializeField] private C__Character c;
+    [SerializeField] private U__Unit unit;
     [SerializeField] private List<WeaponGraphics> weaponGraphicsList;
 
     private WeaponGraphics currentWeaponGraphics;
@@ -24,7 +25,7 @@ public class C_WeaponHolder : MonoBehaviour
     
     private void Start()
     {
-        c.anim.SetWeaponAnimation(c.weaponHolder.GetCurrentWeaponGraphics());
+        unit.anim.SetWeaponAnimation(unit.weaponHolder.GetCurrentWeaponGraphics());
     }
     
     // ======================================================================
@@ -100,7 +101,7 @@ public class C_WeaponHolder : MonoBehaviour
             testedWeaponGraphics.gameObject.SetActive(isCurrentWeapon);
         }
         
-        c.anim.SetWeaponAnimation(GetCurrentWeaponGraphics());
+        unit.anim.SetWeaponAnimation(GetCurrentWeaponGraphics());
     }
 
 }

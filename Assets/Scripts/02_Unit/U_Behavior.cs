@@ -3,24 +3,25 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 using static M__Managers;
 
-public class C_Behavior : MonoBehaviour
+public class U_Behavior : MonoBehaviour
 {
     public bool playable = true;
 
     // * None : pass turn
     // * Follower : follow target, if target
-    // * Offensive : find a target and attack it until it doent't have any action points
-    public enum Behavior { None, Follower, Offensive}
-    public Behavior behavior = Behavior.None;
-
-    public C__Character target;
-
+    // * Offensive : find a target and attack it until it doesn't have any action points
+    private enum Behavior { None, Follower, Offensive}
+    [SerializeField] private Behavior behavior = Behavior.None;
+    
     [Header("REFERENCES")]
 
-    [SerializeField] private C__Character c = null;
-
+    [SerializeField] private U__Unit unit;
+    
+    private U__Unit targetUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -30,24 +31,21 @@ public class C_Behavior : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Start the character behavior.
+    /// Start the unit's behavior.
     /// </summary>
     public void PlayBehavior()
     {
         switch (behavior)
         {
             case Behavior.None:
-                c.SetCanPlayValue(false);
-                Wait(1,
-                    () => _characters.EndCurrentUnitTurn());
+                unit.SetCanPlayValue(false);
+                Wait(1, () => _units.EndCurrentUnitTurn());
                 break;
             case Behavior.Follower:
-                Wait(1, 
-                    () => _characters.EndCurrentUnitTurn());
+                Wait(1, () => _units.EndCurrentUnitTurn());
                 break;
             case Behavior.Offensive:
-                Wait(1, 
-                    () => AcquireTarget());
+                Wait(1, AcquireTarget);
                 break;
             default:
                 break;
@@ -59,20 +57,20 @@ public class C_Behavior : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Choose the closest enemy target.
+    /// Choose the closest enemy unit as target.
     /// </summary>
     private void AcquireTarget()
     {
-        target = c.look.ClosestEnemyOnSight();
+        targetUnit = unit.look.ClosestEnemyOnSight();
 
-        if(!target || target.health.IsDead() || _rules.IsVictory()) 
+        if(!targetUnit || targetUnit.health.IsDead() || _rules.IsVictory()) 
         {
-            c.SetCanPlayValue(false);
-            _characters.EndCurrentUnitTurn();
+            unit.SetCanPlayValue(false);
+            _units.EndCurrentUnitTurn();
             return; // Nobody in sight
         }
 
-        c.attack.Attack(target);
+        unit.attack.Attack(targetUnit);
     }
 
     /// <summary>

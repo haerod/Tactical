@@ -20,6 +20,9 @@
 
 # REFACTOR
 
+## Animations
+- Set the animations more instant
+
 ## M_Rules
 - Fog of war vision rules not in M_Rules -> fog of war as a Manager ?
     - Fog of war view lines as Module
@@ -35,8 +38,10 @@
 - Tiles material work with an enum, use a Scriptable object instead
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
 
+## Team
+- Make a distinction between Ally and Teammate
+
 ## Others
-- Rename Character in Unit
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
 - Try to kill a character during its own turn

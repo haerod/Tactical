@@ -23,8 +23,8 @@ public class FM_PercentShootText : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
     
     private void Update()
@@ -87,7 +87,7 @@ public class FM_PercentShootText : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         if(!startingCharacter.behavior.playable)
             return; // NPC
@@ -100,7 +100,7 @@ public class FM_PercentShootText : MonoBehaviour
         InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
     }
 
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         if(!endingCharacter.behavior.playable)
             return; // NPC
@@ -125,9 +125,9 @@ public class FM_PercentShootText : MonoBehaviour
         DisablePercentShootText();
     }
 
-    private void InputEvents_OnEnemyEnter(object sender, C__Character enemy)
+    private void InputEvents_OnEnemyEnter(object sender, U__Unit enemy)
     {
-        C__Character currentCharacter = _characters.current;
+        U__Unit currentCharacter = _units.current;
         
         if(!currentCharacter.CanPlay())
             return; // Unit can't play
@@ -145,7 +145,7 @@ public class FM_PercentShootText : MonoBehaviour
         DisablePercentShootText();
     }
 
-    private void InputEvents_OnAllyEnter(object sender, C__Character ally)
+    private void InputEvents_OnAllyEnter(object sender, U__Unit ally)
     {
         DisablePercentShootText();
     }

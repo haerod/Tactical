@@ -15,7 +15,7 @@ public class A_Attack : A__Action
 
     public event EventHandler OnAttackStart;
     public event EventHandler OnAttackEnd;
-    public event EventHandler<C__Character> OnAttackMiss;
+    public event EventHandler<U__Unit> OnAttackMiss;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -38,7 +38,7 @@ public class A_Attack : A__Action
     /// Attacks the target and starts an action in the end.
     /// </summary>
     /// <param name="currentTarget"></param>
-    public void Attack(C__Character currentTarget)
+    public void Attack(U__Unit currentTarget)
     {
         
         c.SetCanPlayValue(false);
@@ -46,7 +46,7 @@ public class A_Attack : A__Action
         if (!c.look.CanSee(currentTarget)) 
             return; // Enemy not in sight
 
-        C__Character target = currentTarget;
+        U__Unit target = currentTarget;
 
         c.move.OrientTo(target.transform.position);
         target.move.OrientTo(c.transform.position);
@@ -114,7 +114,7 @@ public class A_Attack : A__Action
     /// <param name="success"></param>
     /// <param name="damages"></param>
     /// <param name="target"></param>
-    private void SetOnAttackDone(bool success, int damages, C__Character target)
+    private void SetOnAttackDone(bool success, int damages, U__Unit target)
     {
         onAttackDone = () =>
         {
@@ -131,7 +131,7 @@ public class A_Attack : A__Action
             Wait(0.5f, () =>
             {
                 OnAttackEnd?.Invoke(this, EventArgs.Empty);
-                _characters.EndCurrentUnitTurn();
+                _units.EndCurrentUnitTurn();
             });
         };
     }
@@ -158,7 +158,7 @@ public class A_Attack : A__Action
     // ACTION OVERRIDE METHODS
     // ======================================================================
 
-    protected override void OnHoverEnemy(C__Character hoveredCharacter)
+    protected override void OnHoverEnemy(U__Unit hoveredCharacter)
     {
         c.move.OrientTo(hoveredCharacter.transform.position);
         
@@ -171,7 +171,7 @@ public class A_Attack : A__Action
         c.anim.StartAim();
     }
 
-    protected override void OnExitCharacter(C__Character leftCharacter)
+    protected override void OnExitCharacter(U__Unit leftCharacter)
     {
         if(!c.CanPlay())
             return; // Can't play
@@ -179,7 +179,7 @@ public class A_Attack : A__Action
         c.anim.StopAim();
     }
     
-    protected override void OnClickAnyCharacter(C__Character clickedCharacter)
+    protected override void OnClickAnyCharacter(U__Unit clickedCharacter)
     {
         if(!c.CanPlay())
             return; // Can't play

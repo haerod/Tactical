@@ -9,7 +9,7 @@ public abstract class A__Action : MonoBehaviour
 {
     [Header("REFERENCES")]
     
-    [SerializeField] protected C__Character c;
+    [SerializeField] protected U__Unit c;
     
     // ======================================================================
     // PUBLIC METHODS
@@ -67,25 +67,25 @@ public abstract class A__Action : MonoBehaviour
     /// Happens when any character is hovered, including itself.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    protected virtual void OnHoverAnyCharacter(C__Character hoveredCharacter) { }
+    protected virtual void OnHoverAnyCharacter(U__Unit hoveredCharacter) { }
 
     /// <summary>
     /// Happens when any character is hovered, except itself.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    protected virtual void OnHoverAnyOtherCharacter(C__Character hoveredCharacter) { }
+    protected virtual void OnHoverAnyOtherCharacter(U__Unit hoveredCharacter) { }
     
     /// <summary>
     /// Happens when an ally is hovered.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    protected virtual void OnHoverAlly(C__Character hoveredCharacter) { }
+    protected virtual void OnHoverAlly(U__Unit hoveredCharacter) { }
 
     /// <summary>
     /// Happens when an enemy is hovered.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    protected virtual void OnHoverEnemy(C__Character hoveredCharacter) { }
+    protected virtual void OnHoverEnemy(U__Unit hoveredCharacter) { }
     
     /// <summary>
     /// Happens when the character is hovered.
@@ -96,31 +96,31 @@ public abstract class A__Action : MonoBehaviour
     /// Happens when the cursor leaves any character.
     /// </summary>
     /// <param name="leftCharacter"></param>
-    protected virtual void OnExitCharacter(C__Character leftCharacter) { }
+    protected virtual void OnExitCharacter(U__Unit leftCharacter) { }
     
     /// <summary>
     /// Happens when any character is hovered, including itself.
     /// </summary>
     /// <param name="clickedCharacter"></param>
-    protected virtual void OnClickAnyCharacter(C__Character clickedCharacter) { }
+    protected virtual void OnClickAnyCharacter(U__Unit clickedCharacter) { }
     
     /// <summary>
     /// Happens when any character is clicked, except itself.
     /// </summary>
     /// <param name="clickedCharacter"></param>
-    protected virtual void OnClickAnyOtherCharacter(C__Character clickedCharacter) { }
+    protected virtual void OnClickAnyOtherCharacter(U__Unit clickedCharacter) { }
     
     /// <summary>
     /// Happens when an ally is clicked.
     /// </summary>
     /// <param name="clickedCharacter"></param>
-    protected virtual void OnClickAlly(C__Character clickedCharacter) { }
+    protected virtual void OnClickAlly(U__Unit clickedCharacter) { }
     
     /// <summary>
     /// Happens when an enemy is clicked.
     /// </summary>
     /// <param name="clickedCharacter"></param>
-    protected virtual void OnClickEnemy(C__Character clickedCharacter) { }
+    protected virtual void OnClickEnemy(U__Unit clickedCharacter) { }
     
     /// <summary>
     /// Happens when the character is clicked.
@@ -164,7 +164,7 @@ public abstract class A__Action : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputEvents_OnCharacterEnter(object sender, C__Character enteredCharacter)
+    private void InputEvents_OnCharacterEnter(object sender, U__Unit enteredCharacter)
     {
         if (!c.look.CharactersVisibleInFog().Contains(enteredCharacter))
         {
@@ -187,12 +187,12 @@ public abstract class A__Action : MonoBehaviour
         }
     }
 
-    private void InputEvents_OnCharacterExit(object sender, C__Character leftCharacter)
+    private void InputEvents_OnCharacterExit(object sender, U__Unit leftCharacter)
     {
         OnExitCharacter(leftCharacter);
     }
 
-    private void InputEvents_OnCharacterClick(object sender, C__Character clickedCharacter)
+    private void InputEvents_OnCharacterClick(object sender, U__Unit clickedCharacter)
     {
         if (!c.look.CharactersVisibleInFog().Contains(clickedCharacter))
         {

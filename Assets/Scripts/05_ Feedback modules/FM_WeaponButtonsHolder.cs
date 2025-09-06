@@ -18,8 +18,8 @@ public class FM_WeaponButtonsHolder : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
 
     // ======================================================================
@@ -30,7 +30,7 @@ public class FM_WeaponButtonsHolder : MonoBehaviour
     /// Destroys the old buttons, creates new ones and gives them parameters.
     /// </summary>
     /// <param name="character"></param>
-    public void CreateWeaponButtons(C__Character character)
+    public void CreateWeaponButtons(U__Unit character)
     {
         DestroyAllButtons();
         
@@ -69,7 +69,7 @@ public class FM_WeaponButtonsHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character character)
+    private void Units_OnUnitTurnStart(object sender, U__Unit character)
     {
         if(!character.CanPlay())
             return; // Can't play
@@ -77,7 +77,7 @@ public class FM_WeaponButtonsHolder : MonoBehaviour
         CreateWeaponButtons(character);
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character e)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit e)
     {
         DestroyAllButtons();
     }

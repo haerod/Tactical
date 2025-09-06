@@ -50,7 +50,7 @@ public class M_Rules : MonoBehaviour
     /// </summary>
     public bool IsVictory()
     {
-        if (_characters.GetEnemiesOf(_characters.current).Count > 0)
+        if (_units.GetEnemiesOf(_units.current).Count > 0)
             return false; // Not victory
         
         OnVictory?.Invoke(null, EventArgs.Empty);

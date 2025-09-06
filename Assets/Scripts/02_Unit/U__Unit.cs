@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static M__Managers;
 
-public class C__Character : Entity
+public class U__Unit : Entity
 {
     [Header("NAME")]
     
@@ -15,18 +15,18 @@ public class C__Character : Entity
 
     [Header("REFERENCES")]
     
-    public C_Actions actions;
-    public C_AnimatorScripts anim; // With animator / skinned mesh renderer
-    public C_Behavior behavior;
+    public U_Actions actions;
+    public U_AnimatorScripts anim; // With animator / skinned mesh renderer
+    public U_Behavior behavior;
     public A_Attack attack;
-    public C_Cover cover;
-    public C_Health health;
-    public C_Look look;
+    public U_Cover cover;
+    public U_Health health;
+    public U_Look look;
     public A_Move move;
-    public C_Team team;
-    public C_UnitUI unitUI;
-    public C_WeaponHolder weaponHolder;
-
+    public U_Team team;
+    public U_UnitUI unitUI;
+    public U_WeaponHolder weaponHolder;
+    
     public Team unitTeam => team.team;
     public int movementRange => move.movementRange;
     public Tile tile => Tile();
@@ -42,7 +42,7 @@ public class C__Character : Entity
     // ======================================================================
     
     /// <summary>
-    /// Moves the character at coordinates in world space.
+    /// Moves the unit at coordinates in world space.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -55,7 +55,7 @@ public class C__Character : Entity
     }
     
     /// <summary>
-    /// Returns if the character has already played.
+    /// Returns if the unit has already played.
     /// </summary>
     /// <returns></returns>
     public bool CanPlay() => !hasPlayed;
@@ -64,17 +64,14 @@ public class C__Character : Entity
     /// Sets hasPlay to true or false.
     /// </summary>
     /// <param name="value"></param>
-    public void SetCanPlayValue(bool value)
-    {
-        hasPlayed = !value;
-    }
+    public void SetCanPlayValue(bool value) => hasPlayed = !value;
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
     /// <summary>
-    /// Returns the tile of this character.
+    /// Returns the tile of this unit.
     /// </summary>
     /// <returns></returns>
     private Tile Tile() => _board

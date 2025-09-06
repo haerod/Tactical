@@ -15,8 +15,8 @@ public class FM_TilesActionPreview : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _rules.OnVictory += Rules_OnVictory;
     }
     
@@ -76,7 +76,7 @@ public class FM_TilesActionPreview : MonoBehaviour
     /// </summary>
     private void HideTilesFeedbacks()
     {
-        if (!_characters.current.behavior.playable)
+        if (!_units.current.behavior.playable)
             return; // NPC
         
         HideMovementArea();
@@ -87,7 +87,7 @@ public class FM_TilesActionPreview : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         if (!startingCharacter.behavior.playable) 
             return; // NPC
@@ -103,7 +103,7 @@ public class FM_TilesActionPreview : MonoBehaviour
         ShowAttackableTiles(startingCharacter.attack.AttackableTiles());
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         if (!endingCharacter.behavior.playable) 
             return; // NPC
@@ -123,7 +123,7 @@ public class FM_TilesActionPreview : MonoBehaviour
     
     private void Move_OnMovementEnd(object sender, EventArgs e)
     {
-        C__Character currentCharacter = _characters.current;
+        U__Unit currentCharacter = _units.current;
         
         ShowMovementArea(currentCharacter.move.movementArea);
         ShowAttackableTiles(currentCharacter.attack.AttackableTiles());
@@ -132,7 +132,7 @@ public class FM_TilesActionPreview : MonoBehaviour
     private void WeaponsHolder_OnWeaponChanged(object sender, Weapon newWeapon)
     {
         HideAttackableTiles();
-        ShowAttackableTiles(_characters.current.attack.AttackableTiles());
+        ShowAttackableTiles(_units.current.attack.AttackableTiles());
     }
     
     private void Rules_OnVictory(object sender, EventArgs e)

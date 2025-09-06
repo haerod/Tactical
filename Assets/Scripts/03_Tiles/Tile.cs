@@ -23,7 +23,7 @@ public class Tile : Entity
     public enum TileMaterial { Yellow, Grey, Red, Green, Blue }
     public enum Directions { Top, Down, Right, Left }
 
-    public C__Character character => Character();
+    public U__Unit character => Character();
 
     [Header("REFERENCES")]
 
@@ -227,5 +227,5 @@ public class Tile : Entity
     /// Returns null if is nobody on this tile.
     /// </summary>
     /// <returns></returns>
-    private C__Character Character() => _characters.GetUnitsList().FirstOrDefault(c => c.tile == this);
+    private U__Unit Character() => _units.GetUnitsList().FirstOrDefault(c => c.tile == this);
 }

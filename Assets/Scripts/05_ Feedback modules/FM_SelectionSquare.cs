@@ -18,8 +18,8 @@ public class FM_SelectionSquare : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _rules.OnVictory += Rules_OnVictory;
     }
     
@@ -57,7 +57,7 @@ public class FM_SelectionSquare : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         if(!startingCharacter.behavior.playable)
             return; // NPC
@@ -68,7 +68,7 @@ public class FM_SelectionSquare : MonoBehaviour
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         DisableSquare();
         
@@ -85,7 +85,7 @@ public class FM_SelectionSquare : MonoBehaviour
     {
         Tile lastTile = pathfinding.Last();
 
-        bool tileInMoveRange = _characters.current.move.CanMoveTo(lastTile);
+        bool tileInMoveRange = _units.current.move.CanMoveTo(lastTile);
 
         SetSquareAt(lastTile.worldPosition, tileInMoveRange);
     }
@@ -105,9 +105,9 @@ public class FM_SelectionSquare : MonoBehaviour
         DisableSquare();
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
+    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredCharacter)
     {
-        if(!_characters.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
+        if(!_units.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character
         
         DisableSquare();

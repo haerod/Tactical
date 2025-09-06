@@ -2,13 +2,13 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using System.Linq;
+using UnityEngine.Serialization;
 
 [ExecuteInEditMode]
-public class CharacterAutoSnap : BaseAutoSnap
+public class UnitAutoSnap : BaseAutoSnap
 {
-    [HideInInspector] public C__Character character; // Note : Let it serializable to be dirty.
-    [HideInInspector] public M_Characters characters; // Note : Let it serializable to be dirty.
-    [HideInInspector] public M_Rules rules; // Note : Let it serializable to be dirty.
+    [HideInInspector] public U__Unit unit; // Note : Let it serializable to be dirty.
+    [HideInInspector] public M_Units units; // Note : Let it serializable to be dirty.
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -20,11 +20,11 @@ public class CharacterAutoSnap : BaseAutoSnap
     {
         if (!IsInEditor())
             return; // Not in editor mode
-        if (!characters)
+        if (!units)
             return; // Exit prefab mode
 
-        characters.RemoveUnit(character);
-        EditorUtility.SetDirty(characters);
+        units.RemoveUnit(unit);
+        EditorUtility.SetDirty(units);
     }
 
 #endif
@@ -35,24 +35,24 @@ public class CharacterAutoSnap : BaseAutoSnap
 
     protected override void SetParameters()
     {
-        character = GetComponent<C__Character>();
-        characters = FindAnyObjectByType<M_Characters>();
-        rules = FindAnyObjectByType<M_Rules>();
-        transform.parent = characters.transform;
+        unit = GetComponent<U__Unit>();
+        units = FindAnyObjectByType<M_Units>();
+        transform.parent = units.transform;
     }
+    
     protected override void MoveObject(Coordinates coordinates)
     {
-        character.MoveAt(coordinates.x, coordinates.y);
+        unit.MoveAt(coordinates.x, coordinates.y);
     }
 
     protected override void AddToManager()
     {
-        characters.AddUnit(character);
+        units.AddUnit(unit);
     }
     
     protected override void RemoveFromManager()
     {
-        characters.RemoveUnit(character);
+        units.RemoveUnit(unit);
     }
     
     protected override bool IsOnValidPosition()
@@ -66,11 +66,12 @@ public class CharacterAutoSnap : BaseAutoSnap
 
         return true;
     }
+    
     protected override void SetParametersDirty()
     {
         EditorUtility.SetDirty(this);
         EditorUtility.SetDirty(gameObject);
-        EditorUtility.SetDirty(characters);
+        EditorUtility.SetDirty(units);
     }
 
     // ======================================================================
@@ -82,7 +83,7 @@ public class CharacterAutoSnap : BaseAutoSnap
     // ======================================================================
 
     /// <summary>
-    /// Get the tile under the character, if it can walk on.
+    /// Get the tile under the unit, if it can walk on.
     /// </summary>
     /// <returns></returns>
     private Tile GetWalkableTileUnder()
@@ -95,7 +96,7 @@ public class CharacterAutoSnap : BaseAutoSnap
 
             if (!testedTile)
                 continue; // No tile
-            if (!character.move.CanWalkOn(testedTile.type))
+            if (!unit.move.CanWalkOn(testedTile.type))
                 continue; // Not walkable
 
             return testedTile;
@@ -105,17 +106,17 @@ public class CharacterAutoSnap : BaseAutoSnap
     }
 
     /// <summary>
-    /// Get the character on the tile if it's not itself.
+    /// Get the unit on the tile if it's not itself.
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
-    private C__Character GetOtherCharacterOnTile(Tile tile)
+    private U__Unit GetOtherCharacterOnTile(Tile tile)
     {
         Collider[] colliders = Physics.OverlapSphere(tile.transform.position, .1f);
 
         return colliders
-            .Select(collider => collider.GetComponentInParent<C__Character>())
-            .Where(testedCharacter => testedCharacter)
-            .FirstOrDefault(testedCharacter => testedCharacter != character);
+            .Select(collider => collider.GetComponentInParent<U__Unit>())
+            .Where(testedUnit => testedUnit)
+            .FirstOrDefault(testedUnit => testedUnit != unit);
     }
 }

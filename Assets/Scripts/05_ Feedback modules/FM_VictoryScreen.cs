@@ -48,7 +48,7 @@ public class FM_VictoryScreen : MonoBehaviour
     
     private void Rules_OnVictory(object sender, EventArgs e)
     {
-        DisplayEndScreen(_characters.current.team.team);
+        DisplayEndScreen(_units.current.team.team);
     }
     
 }

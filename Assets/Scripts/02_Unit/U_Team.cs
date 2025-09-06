@@ -2,7 +2,7 @@
 using UnityEditor;
 using static M__Managers;
 
-public class C_Team : MonoBehaviour
+public class U_Team : MonoBehaviour
 {
     public Team team;
 
@@ -19,8 +19,8 @@ public class C_Team : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Sets the team materials to the character.
-    /// Called by CharacterAutoRename.
+    /// Sets the team materials to the unit.
+    /// Called by UnitAutoRename.
     /// </summary>
     public void SetTeamMaterials()
     {
@@ -43,25 +43,25 @@ public class C_Team : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns true if the character is an ally of the given character. Else returns false.
+    /// Returns true if the unit is an ally of the given unit. Else returns false.
     /// </summary>
     /// <param name="testedCharacter"></param>
     /// <returns></returns>
-    public bool IsAllyOf(C__Character testedCharacter) => team == testedCharacter.unitTeam;
+    public bool IsAllyOf(U__Unit testedCharacter) => team == testedCharacter.unitTeam;
 
     /// <summary>
-    /// Returns true if the character is an enemy of the given character. Else returns false.
+    /// Returns true if the unit is an enemy of the given unit. Else returns false.
     /// </summary>
     /// <param name="testedCharacter"></param>
     /// <returns></returns>
-    public bool IsEnemyOf(C__Character testedCharacter) => team != testedCharacter.unitTeam;
+    public bool IsEnemyOf(U__Unit testedCharacter) => team != testedCharacter.unitTeam;
     
     /// <summary>
-    /// Returns true if the character is an ally of the given character. Else returns false.
+    /// Returns true if the unit is in the same team of the given unit. Else returns false.
     /// </summary>
     /// <param name="testedCharacter"></param>
     /// <returns></returns>
-    public bool IsTeammateOf(C__Character testedCharacter) => team == testedCharacter.unitTeam;
+    public bool IsTeammateOf(U__Unit testedCharacter) => team == testedCharacter.unitTeam;
     
     // ======================================================================
     // PRIVATE METHODS

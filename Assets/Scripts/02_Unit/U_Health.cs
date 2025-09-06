@@ -3,9 +3,10 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 using static M__Managers;
 
-public class C_Health : MonoBehaviour
+public class U_Health : MonoBehaviour
 {
     public int health = 5;
 
@@ -24,7 +25,7 @@ public class C_Health : MonoBehaviour
     
     [Header("REFERENCES")]
 
-    [SerializeField] private C__Character c;
+    [SerializeField] private U__Unit unit;
 
      public int currentHealth = 5;
 
@@ -134,7 +135,7 @@ public class C_Health : MonoBehaviour
         }
         else
         {
-            c.anim.StartHitReaction();
+            unit.anim.StartHitReaction();
         }
 
         OnAnyHealthLoss?.Invoke(this, damage);
@@ -156,7 +157,7 @@ public class C_Health : MonoBehaviour
     }
     
     /// <summary>
-    /// Returns true if the character has 0 health or less.
+    /// Returns true if the unit has 0 health or less.
     /// </summary>
     /// <returns></returns>
     public bool IsDead() => currentHealth <= 0;
@@ -170,16 +171,16 @@ public class C_Health : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
-    /// Starts the death anim, informs M_Characters of the death and disables the life bar and the collider after a second.
+    /// Starts the death anim and disables the life bar and the collider after a second.
     /// </summary>
     private void Death()
     {
         OnDeath?.Invoke(this, EventArgs.Empty);
         OnAnyDeath?.Invoke(this, EventArgs.Empty);
-        c.anim.Death();
-        _characters.RemoveUnit(c);
-        c.GetComponentInChildren<Collider>().gameObject.SetActive(false);
+        unit.anim.Death();
+        _units.RemoveUnit(unit);
+        unit.GetComponentInChildren<Collider>().gameObject.SetActive(false);
     }
 }

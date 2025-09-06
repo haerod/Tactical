@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static M__Managers;
 
-public class C_Actions : MonoBehaviour
+public class U_Actions : MonoBehaviour
 {
     [SerializeField] private List<A__Action> actions;
     
     [Header("REFERENCES")]
-    [SerializeField] private C__Character c;
+    [SerializeField] private U__Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOR
@@ -17,8 +18,8 @@ public class C_Actions : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
     
     // ======================================================================
@@ -26,17 +27,17 @@ public class C_Actions : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Character's actions subscribes to Input's events.
+    /// Unit's actions subscribes to Input's events.
     /// </summary>
     private void SubscribeToEvents() => actions.ForEach(action => action.SubscribeToEvents());
 
     /// <summary>
-    /// Character's actions unsubscribes to Input's events.
+    /// Unit's actions unsubscribes to Input's events.
     /// </summary>
     private void UnsubscribeToEvents() => actions.ForEach(action => action.UnsubscribeToEvents());
 
     /// <summary>
-    /// Returns true if the character has Heal action.
+    /// Returns true if the unit has Heal action.
     /// </summary>
     /// <returns></returns>
     public bool HasHealAction() => actions.OfType<A_Heal>().Any();
@@ -49,20 +50,20 @@ public class C_Actions : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter )
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit )
     {
-        if(startingCharacter != c)
-            return; // Is not current character
+        if(startingUnit != unit)
+            return; // Is not current unit
         
-        if(c.behavior.playable)
+        if(unit.behavior.playable)
             SubscribeToEvents();
         else
-            c.behavior.PlayBehavior();
+            unit.behavior.PlayBehavior();
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
-        if(endingCharacter == c)
+        if(endingUnit == unit)
             UnsubscribeToEvents();
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static M__Managers;
 
-public class C_UnitUI : MonoBehaviour
+public class U_UnitUI : MonoBehaviour
 {
     [Header("REFERENCES")]
     
@@ -17,7 +17,7 @@ public class C_UnitUI : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Orients the in-world UI to the camera.
     /// </summary>

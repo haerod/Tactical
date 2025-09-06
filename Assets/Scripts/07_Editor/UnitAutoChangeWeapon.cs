@@ -5,9 +5,9 @@ using UnityEditor;
 using System;
 
 [ExecuteInEditMode]
-public class CharacterAutoChangeWeapon : MonoBehaviour
+public class UnitAutoChangeWeapon : MonoBehaviour
 {
-    private C__Character current;
+    private U__Unit current;
 
     private Weapon previousWeapon;
 
@@ -23,7 +23,7 @@ public class CharacterAutoChangeWeapon : MonoBehaviour
             return;
         }
 
-        current = GetComponent<C__Character>();
+        current = GetComponent<U__Unit>();
 
         previousWeapon = current.weaponHolder.GetCurrentWeapon();
         EditorUtility.SetDirty(this);
@@ -66,7 +66,7 @@ public class CharacterAutoChangeWeapon : MonoBehaviour
     /// </summary>
     private void AutoChangeWeapon()
     {
-        C_WeaponHolder weaponHolder = current.weaponHolder;
+        U_WeaponHolder weaponHolder = current.weaponHolder;
 
         weaponHolder.SetCurrentWeapon(weaponHolder.GetCurrentWeapon());
 

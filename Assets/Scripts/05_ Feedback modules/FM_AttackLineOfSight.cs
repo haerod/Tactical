@@ -15,7 +15,7 @@ public class FM_AttackLineOfSight : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     
     private bool isShowing;
-    private C__Character attacker, target;
+    private U__Unit attacker, target;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -23,8 +23,8 @@ public class FM_AttackLineOfSight : MonoBehaviour
 
     private void Start()
     {
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
 
     private void Update()
@@ -47,7 +47,7 @@ public class FM_AttackLineOfSight : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private void Show(C__Character newAttacker, C__Character newTarget)
+    private void Show(U__Unit newAttacker, U__Unit newTarget)
     {
         isShowing = true;
         attacker = newAttacker;
@@ -64,7 +64,7 @@ public class FM_AttackLineOfSight : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         if(!startingCharacter.behavior.playable)
             return; // NPC
@@ -74,7 +74,7 @@ public class FM_AttackLineOfSight : MonoBehaviour
         startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
     }
 
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         if(!endingCharacter.behavior.playable)
             return; // NPC
@@ -84,9 +84,9 @@ public class FM_AttackLineOfSight : MonoBehaviour
         endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
     }
 
-    private void InputEvents_OnEnemyEnter(object sender, C__Character enteredCharacter)
+    private void InputEvents_OnEnemyEnter(object sender, U__Unit enteredCharacter)
     {
-        C__Character current = _characters.current;
+        U__Unit current = _units.current;
         
         if(!current.CanPlay())
             return; // Can't play

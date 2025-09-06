@@ -784,8 +784,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playable: 1
   behavior: 0
-  target: {fileID: 0}
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
 --- !u!1 &3147986217953576094
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,7 +1165,7 @@ MonoBehaviour:
   currentWeapon: {fileID: 11400000, guid: 415753486e8914643b27ae946ec004ac, type: 2}
   unitWeapons:
   - {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
   weaponGraphicsList:
   - {fileID: 6018845967418091241}
   - {fileID: 3686767253566818313}
@@ -1513,7 +1512,7 @@ MonoBehaviour:
   snapOn: 0
   isLocated: 0
   character: {fileID: 0}
-  characters: {fileID: 0}
+  units: {fileID: 0}
   rules: {fileID: 0}
 --- !u!114 &5963638360950440093
 MonoBehaviour:
@@ -1674,7 +1673,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: be1ccf376613afc4dbd381b2debef538, type: 2}
   - {fileID: 11400000, guid: dcdef628f29c70b4a8ce5e0ff78f96de, type: 2}
   coveringAngle: 180
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
 --- !u!1 &7113676436210586803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1890,7 +1889,7 @@ MonoBehaviour:
   visualObstacles:
   - {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
   visionType: 1
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
 --- !u!1 &7289839843062624809
 GameObject:
   m_ObjectHideFlags: 0
@@ -1990,7 +1989,7 @@ MonoBehaviour:
   - {fileID: 8502731826044868807}
   - {fileID: 2778027339239365094}
   - {fileID: 2979315790688333722}
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
 --- !u!1 &7645191702741040696
 GameObject:
   m_ObjectHideFlags: 0
@@ -2171,7 +2170,7 @@ MonoBehaviour:
   multiplyOrDivideValue: 0
   resistances: []
   weaknesses: []
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
   currentHealth: 5
 --- !u!1 &8796172909343139340
 GameObject:
@@ -2373,7 +2372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2f5962d27e5e4647b5a44ca7ac603b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
   anim: {fileID: 1790941775955150882}
   visuals:
   - {fileID: 2768211447390340978}

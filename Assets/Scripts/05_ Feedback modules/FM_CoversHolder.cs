@@ -22,8 +22,8 @@ public class FM_CoversHolder : MonoBehaviour
     private void Start()
     {
         GenerateCoverFeedbacks();
-        _characters.OnCharacterTurnStart += Characters_OnCharacterTurnStart;
-        _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
     
     // ======================================================================
@@ -85,7 +85,7 @@ public class FM_CoversHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Characters_OnCharacterTurnStart(object sender, C__Character startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         if (!startingCharacter.behavior.playable) 
             return; // NPC
@@ -96,7 +96,7 @@ public class FM_CoversHolder : MonoBehaviour
         InputEvents.OnNoTile += InputEvents_OnNoTile;
     }
     
-    private void Characters_OnCharacterTurnEnd(object sender, C__Character endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
     {
         if (!endingCharacter.behavior.playable) 
             return; // NPC
@@ -111,15 +111,15 @@ public class FM_CoversHolder : MonoBehaviour
     {
         DisplayCoverFeedbacksAround(
             freeTile.coordinates, 
-            _characters.current.cover.GetAllCoverInfosInRangeAt(freeTile.coordinates, coverFeedbackRange));
+            _units.current.cover.GetAllCoverInfosInRangeAt(freeTile.coordinates, coverFeedbackRange));
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, C__Character hoveredCharacter)
+    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredCharacter)
     {
-        if(!_characters.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
+        if(!_units.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character
             
-        DisplayTargetCoverFeedback(hoveredCharacter.cover.GetCoverStateFrom(_characters.current));
+        DisplayTargetCoverFeedback(hoveredCharacter.cover.GetCoverStateFrom(_units.current));
     }
     
     private void InputEvents_OnNoTile(object sender, EventArgs e)

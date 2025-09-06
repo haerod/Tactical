@@ -6,17 +6,17 @@ using UnityEditor;
 using System.Linq;
 using static M__Managers;
 
-public class M_Characters : MonoBehaviour
+public class M_Units : MonoBehaviour
 {
-    [HideInInspector] public C__Character current;
+    [HideInInspector] public U__Unit current;
     [SerializeField] private List<Team> teamPlayOrder;
-    [SerializeField] private List<C__Character> characters;
+    [SerializeField] private List<U__Unit> characters;
     [SerializeField] private TurnBasedSystem turnBasedSystem;
     
-    public event EventHandler<C__Character> OnCharacterTurnStart;
-    public event EventHandler<C__Character> OnCharacterTurnEnd;
+    public event EventHandler<U__Unit> OnUnitTurnStart;
+    public event EventHandler<U__Unit> OnUnitTurnEnd;
     
-    public static M_Characters instance;
+    public static M_Units instance;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -46,14 +46,14 @@ public class M_Characters : MonoBehaviour
     /// Returns the full units list.
     /// </summary>
     /// <returns></returns>
-    public List<C__Character> GetUnitsList() => characters;
+    public List<U__Unit> GetUnitsList() => characters;
     
     /// <summary>
     /// Returns all enemies of the given unit.
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public List<C__Character> GetAlliesOf(C__Character unit) => characters
+    public List<U__Unit> GetAlliesOf(U__Unit unit) => characters
         .Where(testedUnit => testedUnit.team.IsAllyOf(unit))
         .ToList();
     
@@ -62,7 +62,7 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public List<C__Character> GetEnemiesOf(C__Character unit) => characters
+    public List<U__Unit> GetEnemiesOf(U__Unit unit) => characters
         .Where(testedUnit => testedUnit.team.IsEnemyOf(unit))
         .ToList();
     
@@ -71,7 +71,7 @@ public class M_Characters : MonoBehaviour
     /// </summary>
     /// <param name="team"></param>
     /// <returns></returns>
-    public List<C__Character> GetUnitsOf(Team team) => GetUnitsList()
+    public List<U__Unit> GetUnitsOf(Team team) => GetUnitsList()
         .Where(testedUnit => testedUnit.unitTeam == team)
         .ToList();
     
@@ -79,13 +79,13 @@ public class M_Characters : MonoBehaviour
     /// Returns the teams play order.
     /// </summary>
     /// <returns></returns>
-    public List<Team> GetTeamsPlayOrder() => teamPlayOrder;
+    public List<Team> GetTeamPlayOrder() => teamPlayOrder;
     
     /// <summary>
     /// Adds a new unit in the unit's list.
     /// </summary>
     /// <param name="unit"></param>
-    public void AddUnit(C__Character unit)
+    public void AddUnit(U__Unit unit)
     {
         GetUnitsList().Add(unit);
         
@@ -97,7 +97,7 @@ public class M_Characters : MonoBehaviour
     /// Removes a unit from the unit's list.
     /// </summary>
     /// <param name="unit"></param>
-    public void RemoveUnit(C__Character unit)
+    public void RemoveUnit(U__Unit unit)
     {
         GetUnitsList().Remove(unit);
         
@@ -108,29 +108,18 @@ public class M_Characters : MonoBehaviour
     }
     
     /// <summary>
-    /// Starts the turn of a given unit.
-    /// <param name="newCurrentUnit"></param>
-    /// </summary>
-    public void StartUnitTurn(C__Character newCurrentUnit)
-    {
-        current = newCurrentUnit;
-        
-        OnCharacterTurnStart?.Invoke(this, newCurrentUnit);
-    }
-    
-    /// <summary>
     /// Ends the current unit's turn and passes to the next one (depending on the Turn Based System).
     /// If it's an overrideNextUnit, passes to this unit.
     /// <param name="overrideNextUnit"></param>
     /// </summary>
-    public void EndCurrentUnitTurn(C__Character overrideNextUnit = null)
+    public void EndCurrentUnitTurn(U__Unit overrideNextUnit = null)
     {
         if (_rules.IsVictory()) // Victory
             return;
 
-        OnCharacterTurnEnd?.Invoke(this, current);
+        OnUnitTurnEnd?.Invoke(this, current);
         
-        C__Character nextUnit = overrideNextUnit ? overrideNextUnit : turnBasedSystem.GetNextUnit();
+        U__Unit nextUnit = overrideNextUnit ? overrideNextUnit : turnBasedSystem.GetNextUnit();
 
         if (!nextUnit.team.IsTeammateOf(current))
         {
@@ -146,11 +135,22 @@ public class M_Characters : MonoBehaviour
     // ======================================================================
     
     /// <summary>
+    /// Starts the turn of a given unit.
+    /// <param name="newCurrentUnit"></param>
+    /// </summary>
+    private void StartUnitTurn(U__Unit newCurrentUnit)
+    {
+        current = newCurrentUnit;
+        
+        OnUnitTurnStart?.Invoke(this, newCurrentUnit);
+    }
+
+    /// <summary>
     /// Returns true if is another unit in the given unit team. Else returns false.
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private bool IsAnotherUnitOfTheSameTeam(C__Character unit) =>GetUnitsList()
+    private bool IsAnotherUnitOfTheSameTeam(U__Unit unit) =>GetUnitsList()
             .Where(testedUnit => testedUnit != unit)
             .FirstOrDefault(testedUnit => testedUnit.team.IsAllyOf(unit));
 
@@ -168,7 +168,7 @@ public class M_Characters : MonoBehaviour
     
     private void SwitchToNextTeamUnit()
     {
-        C__Character nextTeamUnit = turnBasedSystem.NextTeamUnit();
+        U__Unit nextTeamUnit = turnBasedSystem.NextTeamUnit();
         
         if(!nextTeamUnit)
             return; // No other team unit
