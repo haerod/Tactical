@@ -28,9 +28,6 @@
 - Melee weapons don't have to care about covers
 - When unit hover a enemy and itself is covered, stand up animation
 
-## Unit UI
-- Make Out of sight icon independent of C_UnitUI
-
 ## Tiles
 - Tiles material work with an enum, use a Scriptable object instead
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
