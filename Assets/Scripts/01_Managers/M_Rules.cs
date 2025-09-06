@@ -14,7 +14,7 @@ public class M_Rules : MonoBehaviour
     
     [Header("FOG OF WAR")]
     
-    [SerializeField] private F_FogOfWar fogOfWar;
+    [SerializeField] private FogOfWar fogOfWar;
     public enum VisibleInFogOfWar { InView, Allies, Everybody}
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
     

@@ -15,6 +15,9 @@
 ## Cover system
 - C_Cover works sometimes, need a pass of QA/debug
 
+## Heal action
+- Doesnt work
+
 # REFACTOR
 
 ## M_Rules
@@ -33,7 +36,6 @@
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
 
 ## Others
-- Rename F_... and UI_... modules in Module_... (code and prefab)
 - Rename Character in Unit
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
