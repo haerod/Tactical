@@ -26,6 +26,7 @@ public class UI_SlicedHealthBar : MonoBehaviour
         
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
+        InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         
         health.OnDeath += Health_OnDeath;
         health.HealthChanged += Health_HealthChanged;
@@ -178,6 +179,24 @@ public class UI_SlicedHealthBar : MonoBehaviour
             return; // Is the current character
         
         Hide();
+    }
+    
+    private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
+    {
+        C__Character currentUnit = _characters.current;
+        
+        if(currentUnit.team.IsTeammateOf(unit))
+            return; // Teammate
+        if(!currentUnit.look.CanSee(unit))
+            return; // Not visible
+        if(!currentUnit.behavior.playable)
+            return; // NPC
+        if(!currentUnit.move.movementArea.Contains(enteredTile))
+            return; // Tile not in movement area
+        if(unit.look.visibleTiles.Contains(enteredTile))
+            Hide();
+        else
+            Show();
     }
 
 }

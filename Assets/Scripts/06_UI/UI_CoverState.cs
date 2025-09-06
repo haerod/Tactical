@@ -22,8 +22,9 @@ public class UI_CoverState : MonoBehaviour
         _characters.OnCharacterTurnEnd += Characters_OnCharacterTurnEnd;
         
         InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
-        unit.health.OnDeath += Health_OnDeath;
+        InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
+        unit.health.OnDeath += Health_OnDeath;
     }
 
     // ======================================================================
@@ -37,15 +38,21 @@ public class UI_CoverState : MonoBehaviour
     /// <summary>
     /// Displays the cover state of the unit.
     /// </summary>
-    /// <param name="coverInfo"></param>
-    private void Show(CoverInfo coverInfo)
+    private void Show()
     {
+        CoverInfo coverInfo = unit.cover.GetCoverState();
+
         if (coverInfo == null)
+        {
             Hide();
-        else
-            SetupCoverState(
-                coverInfo.GetCoverType(),
-                coverInfo.GetIsCovered() ? coveredColor.color : uncoveredColor.color);
+            return; // No cover info.
+        }
+        
+        SetupCoverState(
+            coverInfo.GetCoverType(),
+            coverInfo.GetIsCovered() ? coveredColor.color : uncoveredColor.color);
+        
+        coverStateImage.gameObject.SetActive(true);
     }
     
     /// <summary>
@@ -58,7 +65,6 @@ public class UI_CoverState : MonoBehaviour
         Color colorWithAlpha = new Color(color.r, color.g, color.b, 1);
         coverStateImage.color = colorWithAlpha;
         coverStateImage.sprite = coverType.GetCoverFeedbackSprite();
-        coverStateImage.gameObject.SetActive(true);
     }
     
     /// <summary>
@@ -96,7 +102,7 @@ public class UI_CoverState : MonoBehaviour
         if(startingUnit != unit)
             return; // Another unit's turn
 
-        Show(unit.cover.GetCoverState());
+        Show();
     }
     
     private void Characters_OnCharacterTurnEnd(object sender, C__Character endingUnit)
@@ -119,7 +125,7 @@ public class UI_CoverState : MonoBehaviour
         if(!currentUnit.look.CharactersVisibleInFog().Contains(unit))
             return; // Invisible character
         
-        Show(unit.cover.GetCoverState());
+        Show();
     }
     
     private void Health_OnDeath(object sender, EventArgs e)
@@ -127,10 +133,26 @@ public class UI_CoverState : MonoBehaviour
         Wait(1, Hide);
     }
     
+    private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
+    {
+        C__Character currentUnit = _characters.current;
+        
+        if(currentUnit.team.IsTeammateOf(unit))
+            return; // Teammate
+        if(!currentUnit.look.CanSee(unit))
+            return; // Not visible
+        if(!currentUnit.behavior.playable)
+            return; // NPC
+        if(!currentUnit.move.movementArea.Contains(enteredTile))
+            return; // Tile not in movement area
+        if(unit.look.visibleTiles.Contains(enteredTile))
+            Hide();
+        else
+            Show();
+    }
+    
     private void InputEvents_OnTileExit(object sender, Tile exitedTile)
     {
-        //HideOutOfRangeIcon();
-        
         if(exitedTile.character != unit)
             return; // Not this character
         if(_characters.current == unit)

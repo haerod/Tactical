@@ -1,20 +1,22 @@
 using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.Serialization;
+using static M__Managers;
 
 /// <summary>
 /// UI_OutOfRangeIcon : Shows when the current unit is out of range
 /// </summary>
 public class UI_OutOfRangeIcon : MonoBehaviour
 {
-    public GameObject outOfRangeIcon;
-    
+    [SerializeField] private GameObject outOfRangeIcon;
+    [SerializeField] private C__Character unit;
+        
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+    
+    private void Start()
+    {
+        InputEvents.OnTileEnter += InputEvents_OnTileEnter;
+    }
     
     // ======================================================================
     // PUBLIC METHODS
@@ -23,12 +25,12 @@ public class UI_OutOfRangeIcon : MonoBehaviour
     /// <summary>
     /// Shows the icon.
     /// </summary>
-    public void Display() => outOfRangeIcon.SetActive(true);
+    private void Show() => outOfRangeIcon.SetActive(true);
     
     /// <summary>
     /// Hides the icon.
     /// </summary>
-    public void Hide() => outOfRangeIcon.SetActive(false);
+    private void Hide() => outOfRangeIcon.SetActive(false);
     
     // ======================================================================
     // PRIVATE METHODS
@@ -37,4 +39,22 @@ public class UI_OutOfRangeIcon : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
+    
+    private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
+    {
+        C__Character currentUnit = _characters.current;
+        
+        if(currentUnit.team.IsTeammateOf(unit))
+            return; // Teammate
+        if(!currentUnit.look.CanSee(unit))
+            return; // Not visible
+        if(!currentUnit.behavior.playable)
+            return; // NPC
+        if(!currentUnit.move.movementArea.Contains(enteredTile))
+            return; // Tile not in movement area
+        if(unit.look.visibleTiles.Contains(enteredTile))
+            Hide();
+        else
+            Show();
+    }
 }
