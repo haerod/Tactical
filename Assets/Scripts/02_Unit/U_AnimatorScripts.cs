@@ -17,7 +17,6 @@ public class U_AnimatorScripts : MonoBehaviour
     private static readonly int Dodge = Animator.StringToHash("dodge");
     private static readonly int Death1 = Animator.StringToHash("death");
     private static readonly int Crouch = Animator.StringToHash("crouch");
-    private static readonly int IsMelee = Animator.StringToHash("isMelee");
     private static readonly int Aim = Animator.StringToHash("aim");
     private readonly int Speed = Animator.StringToHash("speed");
     
@@ -39,12 +38,9 @@ public class U_AnimatorScripts : MonoBehaviour
     /// Add the good animator controller depending on the given weapon.
     /// </summary>
     /// <param name="weaponGraphics"></param>
-    public void SetWeaponAnimation(WeaponGraphics weaponGraphics)
-    {
+    public void SetWeaponAnimation(WeaponGraphics weaponGraphics) => 
         anim.runtimeAnimatorController = weaponGraphics.GetWeaponAnimatorController();
-        anim.SetBool(IsMelee, weaponGraphics.GetWeapon().IsMeleeWeapon());
-    }
-    
+
     /// <summary>
     /// Sets the Speed animator's parameter.
     /// </summary>

@@ -62,9 +62,9 @@ public class A_Move : A__Action
         if (lookPos != Vector3.zero)
             endRotation = Quaternion.LookRotation(lookPos);
         endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
-        c.transform.rotation = endRotation;
+        unit.transform.rotation = endRotation;
 
-        c.unitUI.OrientToCamera();
+        unit.unitUI.OrientToCamera();
     }
 
     /// <summary>
@@ -93,14 +93,14 @@ public class A_Move : A__Action
     /// <returns></returns>
     public bool CanMoveTo(Tile tile)
     {
-        if (!c.CanPlay()) 
+        if (!unit.CanPlay()) 
             return false; // Can't play
 
-        if (_rules.IsFogOfWar() && !c.look.visibleTiles.Contains(tile)) 
+        if (_rules.IsFogOfWar() && !unit.look.visibleTiles.Contains(tile)) 
             return false; // Tile in fog
 
         List<Tile> path = Pathfinding.GetPath(
-            c.tile,
+            unit.tile,
             tile,
             Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement));
@@ -130,7 +130,7 @@ public class A_Move : A__Action
         List<Tile> tilesToTestNextTurn = new();
         List<Tile> alreadyTested = new();
         
-        tilesToTest.Add(c.tile);
+        tilesToTest.Add(unit.tile);
         
         for (int i = 0; i < movementRange; i++)
         {
@@ -153,7 +153,7 @@ public class A_Move : A__Action
         anythingChangedOnBoard = false;
         
         currentMovementArea = currentMovementArea
-            .Intersect(c.look.visibleTiles)
+            .Intersect(unit.look.visibleTiles)
             .ToList();
 
         return currentMovementArea.ToList();
@@ -168,7 +168,7 @@ public class A_Move : A__Action
         OnMovementStart?.Invoke(this, EventArgs.Empty);
         OnAnyMovementStart?.Invoke(this, EventArgs.Empty);
         
-        c.SetCanPlayValue(false);
+        unit.SetCanPlayValue(false);
 
         currentPath = path.ToList();
 
@@ -176,8 +176,8 @@ public class A_Move : A__Action
         destination = path[index].transform.position;
         OrientTo(path[index].transform.position);
 
-        c.anim.SetSpeed(animSpeed); // Blend tree anim speed
-        c.anim.ExitCrouch();
+        unit.anim.SetSpeed(animSpeed); // Blend tree anim speed
+        unit.anim.ExitCrouch();
 
         _input.SetActivePlayerInput(false);
         
@@ -193,7 +193,7 @@ public class A_Move : A__Action
         List<Tile> toReturn = new List<Tile>();
 
         // Add not walkableTiles
-        toReturn.AddRange(_board.GetTilesAround(c.tile, movementRange, useDiagonalMovement)
+        toReturn.AddRange(_board.GetTilesAround(unit.tile, movementRange, useDiagonalMovement)
             .Where(t => !CanWalkOn(t.type))
             .ToList());
 
@@ -213,15 +213,15 @@ public class A_Move : A__Action
         {
             _camera.ResetPosition();
             
-            if (c.transform.position != destination) // Move
+            if (unit.transform.position != destination) // Move
             {
-                c.transform.position = Vector3.MoveTowards(c.transform.position, destination, speed * Time.deltaTime);
+                unit.transform.position = Vector3.MoveTowards(unit.transform.position, destination, speed * Time.deltaTime);
                 yield return null;
             }
             else // On tile enter
             {
-                c.coordinates.x = currentPath[index].coordinates.x;
-                c.coordinates.y = currentPath[index].coordinates.y;
+                unit.coordinates.x = currentPath[index].coordinates.x;
+                unit.coordinates.y = currentPath[index].coordinates.y;
                 OnUnitEnterTile?.Invoke(this, currentPath[index]);
 
                 if (IsTheLastTile()) 
@@ -258,7 +258,7 @@ public class A_Move : A__Action
             return true; // Last tile
         if(IsBlockingPath(currentPath[index + 1].character))
             return true; // Blocked by a character
-        if(c.movementRange <= 0)
+        if(unit.movementRange <= 0)
             return true; // No movement range
         
         return false;
@@ -269,10 +269,10 @@ public class A_Move : A__Action
     /// </summary>
     private void EndMove()
     {
-        c.anim.SetSpeed(0f);
+        unit.anim.SetSpeed(0f);
         
-        if(c.cover.AreCoversAround())
-            c.anim.EnterCrouch();
+        if(unit.cover.AreCoversAround())
+            unit.anim.EnterCrouch();
         
         Wait(0.2f, () =>
         {
@@ -292,7 +292,7 @@ public class A_Move : A__Action
         if (_rules.IsFogOfWar())
             toReturn.AddRange(_units.GetUnitsList()
                 .Where(chara => IsBlockingPath(chara))
-                .Intersect(c.look.CharactersVisibleInFog())
+                .Intersect(unit.look.CharactersVisibleInFog())
                 .Select(chara => chara.tile)
                 .ToList());
 
@@ -311,14 +311,14 @@ public class A_Move : A__Action
     /// <returns></returns>
     private bool IsBlockingPath(U__Unit character)
     {
-        if(!c.look.CharactersVisibleInFog().Contains(character))
+        if(!unit.look.CharactersVisibleInFog().Contains(character))
             return false; // Invisible character
         
         switch (canPassThrough)
         {
             case PassThrough.Nobody:
                 return true;
-            case PassThrough.AlliesOnly when c.team.IsAllyOf(character):
+            case PassThrough.AlliesOnly when unit.team.IsAllyOf(character):
                 return false;
             case PassThrough.Everybody:
                 return false;
@@ -333,13 +333,13 @@ public class A_Move : A__Action
 
     protected override void OnHoverTile(Tile hoveredTile)
     {
-        if(!c.CanPlay())
+        if(!unit.CanPlay())
             return; // Can't play
         
         OrientTo(hoveredTile.transform.position);
         
         List<Tile> currentPathfinding = Pathfinding.GetPath(
-            c.tile,
+            unit.tile,
             hoveredTile,
             Pathfinding.TileInclusion.WithStartAndEnd,
             new MovementRules(
@@ -359,7 +359,7 @@ public class A_Move : A__Action
             return; // Tile out of movement range
 
         MoveOnPath(Pathfinding.GetPath(
-            c.tile,
+            unit.tile,
             clickedTile,
             Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)));

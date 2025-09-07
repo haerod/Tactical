@@ -1511,9 +1511,8 @@ MonoBehaviour:
   gizmoOffset: {x: 0, y: 0, z: 0}
   snapOn: 0
   isLocated: 0
-  character: {fileID: 0}
+  unit: {fileID: 0}
   units: {fileID: 0}
-  rules: {fileID: 0}
 --- !u!114 &5963638360950440093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1833,7 +1832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99a035fea772a840b0ca1f475c81479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
   movementRange: 4
   useDiagonalMovement: 1
   canPassThrough: 1
@@ -1934,7 +1933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9850b7b8864d34adf42a514c4ffa68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
   healAmount: 1
   healReach: 1
   includeDiagonalsInReach: 1
@@ -2117,7 +2116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e44e4e97e29e5943bb9f70529ceb844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  c: {fileID: 3541061014796538876}
+  unit: {fileID: 3541061014796538876}
   precision: 100
 --- !u!1 &8655900561747131834
 GameObject:
@@ -2413,7 +2412,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3526471905678377913, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4871433213992509702, guid: 67e2d0ffb1000984c8ac6c48509ae84e, type: 3}
       propertyPath: unit

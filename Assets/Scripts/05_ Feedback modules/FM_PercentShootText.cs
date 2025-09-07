@@ -9,9 +9,9 @@ public class FM_PercentShootText : MonoBehaviour
 {
     [SerializeField] private float percentShootOffset = 50f;
     [Space]
-    [SerializeField] private Color zeroColor = Color.grey;
-    [SerializeField] private Color basicColor = Color.white;
-    [SerializeField] private Color criticalColor = Color.yellow;
+    [SerializeField] private GameColor zeroColor;
+    [SerializeField] private GameColor basicColor;
+    [SerializeField] private GameColor criticalColor;
 
     [Header("REFERENCES")]
 
@@ -53,17 +53,17 @@ public class FM_PercentShootText : MonoBehaviour
         {
             // 0
             case <= 0:
-                percentShootText.color = zeroColor;
+                percentShootText.color = zeroColor.color;
                 percentShootText.fontStyle = FontStyles.Normal;
                 break;
             // Regular
             case < 100:
-                percentShootText.color = basicColor;
+                percentShootText.color = basicColor.color;
                 percentShootText.fontStyle = FontStyles.Normal;
                 break;
             // Critical
             default:
-                percentShootText.color = criticalColor;
+                percentShootText.color = criticalColor.color;
                 percentShootText.fontStyle = FontStyles.Bold;
                 break;
         }
@@ -96,6 +96,7 @@ public class FM_PercentShootText : MonoBehaviour
         InputEvents.OnNoTile += InputEvents_OnNoTile;
         InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
+        InputEvents.OnCharacterExit += InputEvents_OnCharacterExit;
         InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
         InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
     }
@@ -109,6 +110,7 @@ public class FM_PercentShootText : MonoBehaviour
         InputEvents.OnNoTile -= InputEvents_OnNoTile;
         InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
+        InputEvents.OnCharacterExit += InputEvents_OnCharacterExit;
         InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
         InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
         
@@ -127,17 +129,15 @@ public class FM_PercentShootText : MonoBehaviour
 
     private void InputEvents_OnEnemyEnter(object sender, U__Unit enemy)
     {
-        U__Unit currentCharacter = _units.current;
+        U__Unit currentUnit = _units.current;
         
-        if(!currentCharacter.CanPlay())
+        if(!currentUnit.CanPlay())
             return; // Unit can't play
         
-        if(!currentCharacter.attack.AttackableTiles().Contains(enemy.tile))
+        if(!currentUnit.attack.AttackableTiles().Contains(enemy.tile))
             return; // Enemy not visible
         
-        SetPercentShootText(currentCharacter.attack.GetChanceToTouch(
-            currentCharacter.look.GetTilesOfLineOfSightOn(enemy.tile.coordinates).Count,
-            enemy.cover.GetCoverProtectionValueFrom(enemy.look)));   
+        SetPercentShootText(currentUnit.attack.GetChanceToTouch(enemy));   
     }
     
     private void InputEvents_OnCurrentUnitEnter(object sender, EventArgs e)
@@ -151,6 +151,11 @@ public class FM_PercentShootText : MonoBehaviour
     }
     
     private void Attack_OnAttackStart(object sender, EventArgs e)
+    {
+        DisablePercentShootText();
+    }
+    
+    private void InputEvents_OnCharacterExit(object sender, U__Unit exitedUnit)
     {
         DisablePercentShootText();
     }

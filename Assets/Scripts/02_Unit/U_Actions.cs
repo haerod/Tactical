@@ -15,7 +15,7 @@ public class U_Actions : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOR
     // ======================================================================
-
+    
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
@@ -25,22 +25,28 @@ public class U_Actions : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Unit's actions subscribes to Input's events.
     /// </summary>
     private void SubscribeToEvents() => actions.ForEach(action => action.SubscribeToEvents());
-
+    
     /// <summary>
     /// Unit's actions unsubscribes to Input's events.
     /// </summary>
     private void UnsubscribeToEvents() => actions.ForEach(action => action.UnsubscribeToEvents());
-
+    
     /// <summary>
     /// Returns true if the unit has Heal action.
     /// </summary>
     /// <returns></returns>
     public bool HasHealAction() => actions.OfType<A_Heal>().Any();
+    
+    /// <summary>
+    /// Returns the heal action.
+    /// </summary>
+    /// <returns></returns>
+    public A_Heal GetHealAction() => actions.OfType<A_Heal>().FirstOrDefault();
 
     // ======================================================================
     // PRIVATE METHODS

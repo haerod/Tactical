@@ -8,7 +8,7 @@ public class Cover : MonoBehaviour
 {
     [SerializeField] private TileType tileType;
     [SerializeField] private Tile tile;
-    [FormerlySerializedAs("edgeElement")] [SerializeField] private Edge edge;
+    [SerializeField] private Edge edge;
     
     // ======================================================================
     // MONOBEHAVIOUR

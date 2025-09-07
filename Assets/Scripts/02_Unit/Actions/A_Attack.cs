@@ -29,7 +29,7 @@ public class A_Attack : A__Action
     /// Returns the attackable tiles, depending on the rules.
     /// </summary>
     /// <returns></returns>
-    public List<Tile> AttackableTiles() => c.look.EnemiesVisibleInFog()
+    public List<Tile> AttackableTiles() => unit.look.EnemiesVisibleInFog()
             .Where(chara => IsTileInRange(chara.tile))
             .Select(chara => chara.tile)
             .ToList();
@@ -41,26 +41,24 @@ public class A_Attack : A__Action
     public void Attack(U__Unit currentTarget)
     {
         
-        c.SetCanPlayValue(false);
+        unit.SetCanPlayValue(false);
         
-        if (!c.look.CanSee(currentTarget)) 
+        if (!unit.look.CanSee(currentTarget)) 
             return; // Enemy not in sight
 
         U__Unit target = currentTarget;
 
-        c.move.OrientTo(target.transform.position);
-        target.move.OrientTo(c.transform.position);
+        unit.move.OrientTo(target.transform.position);
+        target.move.OrientTo(unit.transform.position);
 
-        int damages = c.weaponHolder.GetCurrentWeapon().GetDamages();
+        int damages = unit.weaponHolder.GetCurrentWeapon().GetDamages();
 
         OnAttackStart?.Invoke(this, EventArgs.Empty);
         _input.SetActivePlayerInput(false);
 
-        c.anim.StartAttack();
-
-        int percentOfTouch = GetChanceToTouch(
-            c.look.GetTilesOfLineOfSightOn(currentTarget.coordinates).Count,
-            currentTarget.cover.GetCoverProtectionValueFrom(c.look));
+        unit.anim.StartAttack();
+        
+        int percentOfTouch = GetChanceToTouch(currentTarget);
         
         if (UnityEngine.Random.Range(0, 101) < percentOfTouch) // SUCCESS
             SetOnAttackDone(true, damages, target);
@@ -79,7 +77,7 @@ public class A_Attack : A__Action
 
         // Muzzle flash
 
-        GameObject muzzleFlash = c.weaponHolder.GetCurrentWeaponGraphics().GetMuzzleFlash();
+        GameObject muzzleFlash = unit.weaponHolder.GetCurrentWeaponGraphics().GetMuzzleFlash();
 
         if (!muzzleFlash) 
             return; // No muzzle flash
@@ -91,15 +89,15 @@ public class A_Attack : A__Action
     /// <summary>
     /// Returns the percent of chance to touch the target, including the reduction by distance.
     /// </summary>
-    /// <param name="range"></param>
-    /// <param name="protectionValue"></param>
+    /// <param name="target"></param>
     /// <returns></returns>
-    public int GetChanceToTouch(int range, int protectionValue)
+    public int GetChanceToTouch(U__Unit target)
     {
-        int precisionToReturn = precision - protectionValue;
-
-        for (int i = 0; i < range; i++)
-            precisionToReturn -= c.weaponHolder.GetCurrentWeapon().GetPrecisionMalusByDistance();
+        int precisionToReturn = precision - target.cover.GetCoverProtectionValueFrom(unit.look);
+        Weapon currentWeapon = unit.weaponHolder.GetCurrentWeapon();
+        
+        for (int i = 0; i < currentWeapon.GetRange(); i++)
+            precisionToReturn -= unit.weaponHolder.GetCurrentWeapon().GetPrecisionMalusByDistance();
         
         return precisionToReturn < 0 ? 0 : precisionToReturn;
     }
@@ -120,7 +118,7 @@ public class A_Attack : A__Action
         {
             if (success)
             {
-                target.health.AddDamages(damages, c.weaponHolder.GetCurrentWeapon().GetDamageTypes());
+                target.health.AddDamages(damages, unit.weaponHolder.GetCurrentWeapon().GetDamageTypes());
             }
             else
             {
@@ -143,11 +141,11 @@ public class A_Attack : A__Action
     /// <returns></returns>
     private bool IsTileInRange(Tile tile)
     {
-        Weapon currentWeapon = c.weaponHolder.GetCurrentWeapon();
-        List<Tile> los = c.look.GetTilesOfLineOfSightOn(tile.coordinates);
+        Weapon currentWeapon = unit.weaponHolder.GetCurrentWeapon();
+        List<Tile> los = unit.look.GetTilesOfLineOfSightOn(tile.coordinates);
 
         if (currentWeapon.GetTouchInView())
-            return c.look.CanSee(tile.character);
+            return unit.look.CanSee(tile.character);
         if (currentWeapon.IsMeleeWeapon())
             return los.Count == 0;
         else
@@ -160,31 +158,31 @@ public class A_Attack : A__Action
 
     protected override void OnHoverEnemy(U__Unit hoveredCharacter)
     {
-        c.move.OrientTo(hoveredCharacter.transform.position);
+        unit.move.OrientTo(hoveredCharacter.transform.position);
         
-        if(!c.CanPlay())
+        if(!unit.CanPlay())
             return; // Can't play
         
         if(!IsTileInRange(hoveredCharacter.tile))
             return; // Enemy is not visible or not in range
         
-        c.anim.StartAim();
+        unit.anim.StartAim();
     }
 
     protected override void OnExitCharacter(U__Unit leftCharacter)
     {
-        if(!c.CanPlay())
+        if(!unit.CanPlay())
             return; // Can't play
         
-        c.anim.StopAim();
+        unit.anim.StopAim();
     }
     
     protected override void OnClickAnyCharacter(U__Unit clickedCharacter)
     {
-        if(!c.CanPlay())
+        if(!unit.CanPlay())
             return; // Can't play
         
-        if(c.team.IsAllyOf(clickedCharacter)) 
+        if(unit.team.IsAllyOf(clickedCharacter)) 
             return; // Same team
 
         if(!IsTileInRange(clickedCharacter.tile))

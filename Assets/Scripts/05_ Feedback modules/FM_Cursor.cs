@@ -100,8 +100,8 @@ public class FM_Cursor : MonoBehaviour
         }
         if(!currentCharacter.actions.HasHealAction())
             return; // Character can't heal
-        if (hoveredAlly.health.IsFullLife())
-            return; // Target is full life
+        if(!currentCharacter.actions.GetHealAction().IsHealable(hoveredAlly))
+            return; // Ally can't be healed (too far or full life)
             
         SetCursor(CursorType.Heal);
     }

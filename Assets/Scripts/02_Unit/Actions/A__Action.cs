@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.TextCore.Text;
 using static M__Managers;
 
@@ -9,7 +10,7 @@ public abstract class A__Action : MonoBehaviour
 {
     [Header("REFERENCES")]
     
-    [SerializeField] protected U__Unit c;
+    [SerializeField] protected U__Unit unit;
     
     // ======================================================================
     // PUBLIC METHODS
@@ -166,7 +167,7 @@ public abstract class A__Action : MonoBehaviour
     
     private void InputEvents_OnCharacterEnter(object sender, U__Unit enteredCharacter)
     {
-        if (!c.look.CharactersVisibleInFog().Contains(enteredCharacter))
+        if (!unit.look.CharactersVisibleInFog().Contains(enteredCharacter))
         {
             OnHoverFreeTile(enteredCharacter.tile);
             return; // Invisible character
@@ -174,13 +175,13 @@ public abstract class A__Action : MonoBehaviour
         
         OnHoverAnyCharacter(enteredCharacter);
         
-        if (enteredCharacter == c)
+        if (enteredCharacter == unit)
             OnHoverItself();
         else
         {
             OnHoverAnyOtherCharacter(enteredCharacter);
 
-            if (c.team.IsAllyOf(enteredCharacter))
+            if (unit.team.IsAllyOf(enteredCharacter))
                 OnHoverAlly(enteredCharacter);
             else
                 OnHoverEnemy(enteredCharacter);
@@ -194,7 +195,7 @@ public abstract class A__Action : MonoBehaviour
 
     private void InputEvents_OnCharacterClick(object sender, U__Unit clickedCharacter)
     {
-        if (!c.look.CharactersVisibleInFog().Contains(clickedCharacter))
+        if (!unit.look.CharactersVisibleInFog().Contains(clickedCharacter))
         {
             OnClickTile(clickedCharacter.tile);
             return; // Invisible character
@@ -202,13 +203,13 @@ public abstract class A__Action : MonoBehaviour
         
         OnClickAnyCharacter(clickedCharacter);
         
-        if (clickedCharacter == c)
+        if (clickedCharacter == unit)
             OnClickItself();
         else
         {
             OnClickAnyOtherCharacter(clickedCharacter);
 
-            if (c.team.IsAllyOf(clickedCharacter))
+            if (unit.team.IsAllyOf(clickedCharacter))
                 OnClickAlly(clickedCharacter);
             else
                 OnClickEnemy(clickedCharacter);

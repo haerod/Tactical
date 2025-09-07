@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 47edc6464e07d2242b07768240f69c70
+guid: 31c9b4e587db46d409707be0c44a6aae
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Sword And Shield Attack
+      name: Sword And Shield Prepare
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 20
-      lastFrame: 90
+      firstFrame: 19
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: -90
       level: 0
@@ -56,14 +56,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0.39408866
-        functionName: EndAttack
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

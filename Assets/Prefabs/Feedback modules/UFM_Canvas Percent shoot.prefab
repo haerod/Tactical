@@ -114,10 +114,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c8f673f72a588447b38d593c685601b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  percentShootOffset: 50
-  zeroColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  basicColor: {r: 1, g: 1, b: 1, a: 1}
-  criticalColor: {r: 0.7254902, g: 0.6039216, b: 0, a: 1}
+  percentShootOffset: 75
+  zeroColor: {fileID: 11400000, guid: 506fa7b193a4ee046a88b1ae06fa33ac, type: 2}
+  basicColor: {fileID: 11400000, guid: 06e71aa4e70dc2547a2bf35c8153a8fb, type: 2}
+  criticalColor: {fileID: 11400000, guid: 5eba3dff1805fc249a52af14b962c51c, type: 2}
   percentShootText: {fileID: 6947920657609284913}
 --- !u!1 &6403042987801700345
 GameObject:

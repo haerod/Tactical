@@ -18,7 +18,7 @@ public class U_Cover : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -152,10 +152,11 @@ public class U_Cover : MonoBehaviour
 
         if (adjacentCoversList.Count == 0)
             return 0; // No cover around
-        
-        List<CoverInfo> coverInfos = adjacentCoversList
-            .Select(testedCover => GetCoverInfoFrom(unit.coordinates, testedCover, viewer))
-            .ToList();
+
+        CoverInfo betterCover = GetCoverStateFrom(unit.coordinates, adjacentCoversList, viewer);
+
+        if (!betterCover.GetIsCovered())
+            return 0; // Nothing covers
         
         return GetCoverStateFrom(unit.coordinates, adjacentCoversList, viewer)
             .GetCoverType()
@@ -184,7 +185,9 @@ public class U_Cover : MonoBehaviour
     private CoverInfo GetCoverInfoFrom(Coordinates coveredCoordinates, Cover cover, U_Look viewer) => new(
             cover,
             coveredCoordinates,
-            cover.GetEdgeElement() ? cover.GetEdgeElement().GetOtherSideCoordinates(coveredCoordinates) : cover.GetTile().coordinates,
+            cover.GetEdgeElement()
+                ? cover.GetEdgeElement().GetOtherSideCoordinates(coveredCoordinates)
+                : cover.GetTile().coordinates,
             IsCoverProtectingFrom(coveredCoordinates, cover, viewer),
             GetCoveringTypeOf(cover.GetCoveringTileType()));
 
@@ -195,12 +198,13 @@ public class U_Cover : MonoBehaviour
     /// <param name="coverList"></param>
     /// <param name="viewer"></param>
     /// <returns></returns>
-    private CoverInfo GetCoverStateFrom(Coordinates coveredCoordinates, List<Cover> coverList, U_Look viewer) => coverList
-        .Select(testedCover => GetCoverInfoFrom(coveredCoordinates, testedCover, viewer))
-        .OrderByDescending(testedInfo => testedInfo.GetIsCovered())
-        .ThenBy(testedInfo => testedInfo.GetCoverType().GetCoverProtectionPercent())
-        .FirstOrDefault();
-    
+    private CoverInfo GetCoverStateFrom(Coordinates coveredCoordinates, List<Cover> coverList, U_Look viewer) =>
+        coverList
+            .Select(testedCover => GetCoverInfoFrom(coveredCoordinates, testedCover, viewer))
+            .OrderByDescending(testedInfo => testedInfo.GetIsCovered())
+            .ThenBy(testedInfo => testedInfo.GetCoverType().GetCoverProtectionPercent())
+            .FirstOrDefault();
+
     /// <summary>
     /// Returns true if the cover is protecting from a viewer, else returns false.
     /// </summary>
@@ -213,7 +217,6 @@ public class U_Cover : MonoBehaviour
         Vector2 coverPosition = cover.GetWorldCoordinatesAsVector2();
         Vector2 coveredPosition = coveredCoordinates.ToVector2();
         Vector2 viewerPosition = new Vector2(viewer.transform.position.x, viewer.transform.position.z);
-                
         Vector2 coverForward = -(coverPosition-coveredPosition);
         float angle = Vector2.Angle(coverForward, coverPosition - viewerPosition);
         return angle <= coveringAngle / 2;
@@ -285,5 +288,12 @@ public class CoverInfo
     /// </summary>
     /// <returns></returns>
     public CoverType GetCoverType() => coverType;
+
+    public override string ToString()
+    {
+        return isCovered
+            ? $"Cover {cover.gameObject.name} of type {coverType.name} covers {coveredCoordinates}"
+            : $"Cover {cover.gameObject.name} of type {coverType.name} don't cover {coveredCoordinates}";
+    }
 }
 

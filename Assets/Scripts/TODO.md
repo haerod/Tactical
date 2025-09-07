@@ -12,16 +12,7 @@
 ## UI life bar
 - Enables at start without any reason
 
-## Cover system
-- C_Cover works sometimes, need a pass of QA/debug
-
-## Heal action
-- Doesnt work
-
 # REFACTOR
-
-## Animations
-- Set the animations more instant
 
 ## M_Rules
 - Fog of war vision rules not in M_Rules -> fog of war as a Manager ?
@@ -31,7 +22,6 @@
 - Replace EndTurn by EndAction (if an unit can do multiple actions)
 
 ## Melee weapons
-- Melee weapons don't have to care about covers
 - When unit hover a enemy and itself is covered, stand up animation
 
 ## Tiles
