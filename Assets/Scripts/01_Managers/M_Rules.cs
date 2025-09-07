@@ -54,9 +54,7 @@ public class M_Rules : MonoBehaviour
             return false; // Not victory
         
         OnVictory?.Invoke(null, EventArgs.Empty);
-        _input.SetActivePlayerInput(false);
         return true;
-
     }
 
     // ======================================================================

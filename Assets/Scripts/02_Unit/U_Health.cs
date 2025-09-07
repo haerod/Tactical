@@ -33,7 +33,7 @@ public class U_Health : MonoBehaviour
      public static event EventHandler<int> OnAnyHealthLoss;
      public static event EventHandler<int> OnAnyHealthGain;
      public event EventHandler OnDeath;
-     public static event EventHandler OnAnyDeath;
+     public static event EventHandler<U__Unit> OnAnyDeath;
      
     // ======================================================================
     // MONOBEHAVIOUR
@@ -177,10 +177,10 @@ public class U_Health : MonoBehaviour
     /// </summary>
     private void Death()
     {
-        OnDeath?.Invoke(this, EventArgs.Empty);
-        OnAnyDeath?.Invoke(this, EventArgs.Empty);
         unit.anim.Death();
         _units.RemoveUnit(unit);
         unit.GetComponentInChildren<Collider>().gameObject.SetActive(false);
+        OnDeath?.Invoke(this, EventArgs.Empty);
+        OnAnyDeath?.Invoke(this, unit);
     }
 }

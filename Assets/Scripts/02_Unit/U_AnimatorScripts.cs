@@ -38,8 +38,11 @@ public class U_AnimatorScripts : MonoBehaviour
     /// Add the good animator controller depending on the given weapon.
     /// </summary>
     /// <param name="weaponGraphics"></param>
-    public void SetWeaponAnimation(WeaponGraphics weaponGraphics) => 
-        anim.runtimeAnimatorController = weaponGraphics.GetWeaponAnimatorController();
+    public void SetWeaponAnimation(WeaponGraphics weaponGraphics)
+    {
+        if(anim)
+            anim.runtimeAnimatorController = weaponGraphics.GetWeaponAnimatorController();
+    }
 
     /// <summary>
     /// Sets the Speed animator's parameter.

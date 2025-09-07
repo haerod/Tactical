@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using static M__Managers;
 
 public class M_Input : MonoBehaviour
@@ -11,7 +12,7 @@ public class M_Input : MonoBehaviour
     [Header("GAMEPLAY")]
 
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
-    [SerializeField] private KeyCode changeCharacterKey = KeyCode.Tab;
+    [SerializeField] private KeyCode changeUnitKey = KeyCode.Tab;
     [SerializeField] private KeyCode endTurnKey = KeyCode.Backspace;
 
     [Header("CAMERA")]
@@ -39,11 +40,9 @@ public class M_Input : MonoBehaviour
     
     private bool canUsePlayerInput = true;
     private Tile previousTile;
-    private U__Unit previousCharacter;
-    private Plane floorPlane = new Plane(Vector3.up, Vector3.zero);
+    private U__Unit previousUnit;
+    private Plane floorPlane = new (Vector3.up, Vector3.zero);
     public static M_Input instance;
-    
-    private U__Unit currentCharacter => _units.current;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -61,6 +60,9 @@ public class M_Input : MonoBehaviour
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        _rules.OnVictory += Rules_OnVictory;
+        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
+        A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
     }
     
     private void Update()
@@ -72,7 +74,7 @@ public class M_Input : MonoBehaviour
 
         CheckRaycast();
         CheckClick();
-        CheckChangeCharacterInput();
+        CheckChangeUnitInput();
         CheckEndTurnInput();
         CheckRecenterCameraInput();
         CheckCameraMovementInput();
@@ -83,16 +85,6 @@ public class M_Input : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Sets if players can use inputs or not.
-    /// </summary>
-    /// <param name="value"></param>
-    public void SetActivePlayerInput(bool value = true)
-    {
-        canUsePlayerInput = value;
-        OnChangeClickActivation?.Invoke(this, value);
-    }
     
     /// <summary>
     /// Gets the pointer position on the floor (Plane at y = 0).
@@ -128,35 +120,35 @@ public class M_Input : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Tile tile;
-            U__Unit character;
+            U__Unit unit;
 
-            // On a character's collider, get the character's tile
+            // On a unit's collider, get the unit's tile
             if (hit.transform.CompareTag("Clickable"))
             {
-                character = hit.transform.GetComponentInParent<U__Unit>();
-                tile = character.tile;
+                unit = hit.transform.GetComponentInParent<U__Unit>();
+                tile = unit.tile;
             }
             else
             {
                 tile = hit.transform.GetComponent<Tile>();
-                character = tile.character;
+                unit = tile.character;
             }
 
             if (tile == previousTile)
-                return; // Already on pointed tile / character
+                return; // Already on pointed tile / unit
 
             if(previousTile)
                 InputEvents.TileUnhovered(previousTile);
-            if(previousCharacter)
-                InputEvents.CharacterUnhovered(previousCharacter);
+            if(previousUnit)
+                InputEvents.UnitUnhovered(previousUnit);
             
             previousTile = tile;
-            previousCharacter = character;
+            previousUnit = unit;
 
             if (tile)
                 InputEvents.TileHovered(tile);
-            if(character)
-                InputEvents.CharacterHovered(character);
+            if(unit)
+                InputEvents.UnitHovered(unit);
         }
         else
         {
@@ -166,10 +158,10 @@ public class M_Input : MonoBehaviour
                 previousTile = null;
             }
 
-            if (previousCharacter)
+            if (previousUnit)
             {
-                InputEvents.CharacterUnhovered(previousCharacter);
-                previousCharacter = null;
+                InputEvents.UnitUnhovered(previousUnit);
+                previousUnit = null;
             }
             
             InputEvents.NothingHovered();
@@ -187,17 +179,17 @@ public class M_Input : MonoBehaviour
             return; // Not on a tile
 
         if (previousTile.character)
-            InputEvents.CharacterClick(previousTile.character);
+            InputEvents.UnitClick(previousTile.character);
         else
             InputEvents.TileClick(previousTile);
     }
     
     /// <summary>
-    /// Checks input to change character to another in the same team.
+    /// Checks input to change unit to another in the same team.
     /// </summary>
-    private void CheckChangeCharacterInput()
+    private void CheckChangeUnitInput()
     {
-        if (Input.GetKeyDown(changeCharacterKey))
+        if (Input.GetKeyDown(changeUnitKey))
             OnChangeCharacterInput?.Invoke(this, EventArgs.Empty);
     }
     
@@ -229,7 +221,7 @@ public class M_Input : MonoBehaviour
         bool downInput = mousePosition.y <= 0 || Input.GetKey(downKey);
         bool leftInput = mousePosition.x <= 0 || Input.GetKey(leftKey);
         bool rightInput = mousePosition.x >= Screen.width || Input.GetKey(rightKey);
-        Coordinates direction = new Coordinates(0,0);
+        Coordinates direction = new(0,0);
 
         if (upInput)
             direction += new Coordinates(0,1);
@@ -269,25 +261,46 @@ public class M_Input : MonoBehaviour
             OnRotateLeftInput?.Invoke(this, EventArgs.Empty);
     }
     
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
+    /// <summary>
+    /// Sets if players can use inputs or not.
+    /// </summary>
+    /// <param name="value"></param>
+    private void SetActivePlayerInput(bool value = true)
+    {
+        canUsePlayerInput = value;
+        OnChangeClickActivation?.Invoke(this, value);
+    }
     
     // ======================================================================
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter )
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit )
     {
-        if (startingCharacter.behavior.playable) 
+        if (startingUnit.behavior.playable) 
             _input.SetActivePlayerInput();
         else
             _input.SetActivePlayerInput(false);
 
         previousTile = null;
-        previousCharacter = null;
+        previousUnit = null;
     }
     
+    private void Rules_OnVictory(object sender, EventArgs e)
+    {
+        SetActivePlayerInput(false);
+    }
+    
+    private void Attack_OnAnyAttackStart(object sender, U__Unit attackingUnit)
+    {
+        SetActivePlayerInput(false);
+    }
+    
+    private void Move_OnAnyMovementStart(object sender, U__Unit movingUnit)
+    {
+        SetActivePlayerInput(false);
+    }
+
 }
 
 public static class InputEvents
@@ -298,9 +311,9 @@ public static class InputEvents
     public static event EventHandler<Tile> OnTileClick;
     public static event EventHandler OnNoTile;
     
-    public static event EventHandler<U__Unit> OnCharacterEnter;
-    public static event EventHandler<U__Unit> OnCharacterExit;
-    public static event EventHandler <U__Unit> OnCharacterClick;
+    public static event EventHandler<U__Unit> OnUnitEnter;
+    public static event EventHandler<U__Unit> OnUnitExit;
+    public static event EventHandler <U__Unit> OnUnitClick;
     public static event EventHandler<U__Unit> OnEnemyEnter;
     public static event EventHandler<U__Unit> OnAllyEnter;
     public static event EventHandler OnCurrentUnitEnter;
@@ -312,9 +325,9 @@ public static class InputEvents
     public static void TileHovered(Tile tile) => TileHoveredEvents(tile);
     public static void TileUnhovered(Tile tile) => OnTileExit?.Invoke(null, tile);
     public static void TileClick(Tile tile) => OnTileClick?.Invoke(null, tile);
-    public static void CharacterUnhovered(U__Unit character) => OnCharacterExit?.Invoke(null, character);
-    public static void CharacterHovered(U__Unit character) => CharacterHoveredEvents(character);
-    public static void CharacterClick(U__Unit character)  => OnCharacterClick?.Invoke(null, character);
+    public static void UnitUnhovered(U__Unit unit) => OnUnitExit?.Invoke(null, unit);
+    public static void UnitHovered(U__Unit unit) => CharacterHoveredEvents(unit);
+    public static void UnitClick(U__Unit unit)  => OnUnitClick?.Invoke(null, unit);
     public static void NothingHovered() => OnNoTile?.Invoke(null, EventArgs.Empty);
     
     // ======================================================================
@@ -329,36 +342,36 @@ public static class InputEvents
     {
         OnTileEnter?.Invoke(null, tile);
         
-        U__Unit currentCharacter = _units.current;
+        U__Unit currentUnit = _units.current;
         
-        if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
+        if (!currentUnit.move.CanWalkAt(tile.coordinates) || !currentUnit.CanPlay()) 
             return; // Can't go on this tile or can't play
         
-        bool pointedCharacterIsVisible = !_rules.IsFogOfWar() || currentCharacter.look.visibleTiles.Contains(tile);
+        bool pointedCharacterIsVisible = !_rules.IsFogOfWar() || currentUnit.look.visibleTiles.Contains(tile);
 
         if (tile.IsOccupiedByCharacter() && pointedCharacterIsVisible)
         {
             CharacterHoveredEvents(tile.character);
-            return; // Tile occupied by a character
+            return; // Tile occupied by a unit
         }
         
         OnFreeTileEnter?.Invoke(null, tile);
     }
     
     /// <summary>
-    /// Events happening if the pointer overlaps a occupied by a character.
+    /// Events happening if the pointer overlaps a occupied by a unit.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
     private static void CharacterHoveredEvents(U__Unit hoveredCharacter)
     {
-        U__Unit currentCharacter = _units.current;
+        U__Unit currentUnit = _units.current;
         U__Unit currentTarget = hoveredCharacter;
         
-        OnCharacterEnter?.Invoke(null, currentTarget);
+        OnUnitEnter?.Invoke(null, currentTarget);
         
-        if (currentCharacter.team.IsAllyOf(currentTarget)) // Character or allie
+        if (currentUnit.team.IsAllyOf(currentTarget)) // Unit or allie
         {
-            if (currentCharacter == currentTarget)
+            if (currentUnit == currentTarget)
                 OnCurrentUnitEnter?.Invoke(null, EventArgs.Empty);
             else
                 OnAllyEnter?.Invoke(null, currentTarget);

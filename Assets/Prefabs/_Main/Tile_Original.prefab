@@ -268,7 +268,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4498302366964624391
 RectTransform:
   m_ObjectHideFlags: 0
@@ -649,12 +649,12 @@ GameObject:
   - component: {fileID: 8681993804435651982}
   - component: {fileID: 8019998690640815341}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Debug - Canvas Coordinates text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &442491751639410097
 RectTransform:
   m_ObjectHideFlags: 0
@@ -852,6 +852,7 @@ MonoBehaviour:
   downLine: {fileID: 5051290916272941764}
   leftLine: {fileID: 1044828751644659729}
   rightLine: {fileID: 9214442802075879578}
+  coordinatesTextCanvas: {fileID: 5646704351771881643}
   coordinatesText: {fileID: 5437417856995312198}
   showCoordinates: 0
 --- !u!114 &-5638765507918872196

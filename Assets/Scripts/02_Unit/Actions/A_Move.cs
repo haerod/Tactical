@@ -26,10 +26,10 @@ public class A_Move : A__Action
     private Vector3 destination;
     
     public List<Tile> movementArea => GetMovementArea().ToList();
-    private List<Tile> currentMovementArea = new List<Tile>();
+    private List<Tile> currentMovementArea = new();
     private bool anythingChangedOnBoard = true;
     
-    public static EventHandler OnAnyMovementStart;
+    public static EventHandler<U__Unit> OnAnyMovementStart;
     public event EventHandler OnMovementStart;
     public event EventHandler OnMovementEnd;
     public event EventHandler<Tile> OnUnitEnterTile;
@@ -41,7 +41,7 @@ public class A_Move : A__Action
 
     private void Start()
     {
-        A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
+        OnAnyMovementStart += Move_OnAnyMovementStart;
         U_Health.OnAnyDeath += Health_OnAnyDeath;
     }
     
@@ -166,7 +166,7 @@ public class A_Move : A__Action
     private void MoveOnPath(List<Tile> path)
     {
         OnMovementStart?.Invoke(this, EventArgs.Empty);
-        OnAnyMovementStart?.Invoke(this, EventArgs.Empty);
+        OnAnyMovementStart?.Invoke(this, unit);
         
         unit.SetCanPlayValue(false);
 
@@ -178,8 +178,6 @@ public class A_Move : A__Action
 
         unit.anim.SetSpeed(animSpeed); // Blend tree anim speed
         unit.anim.ExitCrouch();
-
-        _input.SetActivePlayerInput(false);
         
         StartCoroutine(MoveToDestination());
     }
@@ -369,12 +367,12 @@ public class A_Move : A__Action
     // EVENTS
     // ======================================================================
     
-    private void Health_OnAnyDeath(object sender, EventArgs e)
+    private void Health_OnAnyDeath(object sender, U__Unit deadUnit)
     {
         anythingChangedOnBoard = true;
     }
 
-    private void Move_OnAnyMovementStart(object sender, EventArgs e)
+    private void Move_OnAnyMovementStart(object sender, U__Unit movingUnit)
     {
         anythingChangedOnBoard = true;
     }

@@ -14,6 +14,7 @@ public class A_Attack : A__Action
     private Action onAttackDone;
 
     public event EventHandler OnAttackStart;
+    public static event EventHandler<U__Unit> OnAnyAttackStart;
     public event EventHandler OnAttackEnd;
     public event EventHandler<U__Unit> OnAttackMiss;
 
@@ -54,7 +55,7 @@ public class A_Attack : A__Action
         int damages = unit.weaponHolder.GetCurrentWeapon().GetDamages();
 
         OnAttackStart?.Invoke(this, EventArgs.Empty);
-        _input.SetActivePlayerInput(false);
+        OnAnyAttackStart?.Invoke(this, unit);
 
         unit.anim.StartAttack();
         
@@ -93,7 +94,7 @@ public class A_Attack : A__Action
     /// <returns></returns>
     public int GetChanceToTouch(U__Unit target)
     {
-        int precisionToReturn = precision - target.cover.GetCoverProtectionValueFrom(unit.look);
+        int precisionToReturn = precision - target.cover.GetCoverProtectionValueFrom(unit);
         Weapon currentWeapon = unit.weaponHolder.GetCurrentWeapon();
         
         for (int i = 0; i < currentWeapon.GetRange(); i++)

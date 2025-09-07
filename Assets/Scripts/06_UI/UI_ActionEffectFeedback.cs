@@ -28,7 +28,8 @@ public class UI_ActionEffectFeedback : MonoBehaviour
 
     private void Update()
     {
-        transform.position = cam.WorldToScreenPoint(target.position + (Vector3.up * textOffset));
+        if(target)
+            transform.position = cam.WorldToScreenPoint(target.position + (Vector3.up * textOffset));
     }
     
     // ======================================================================

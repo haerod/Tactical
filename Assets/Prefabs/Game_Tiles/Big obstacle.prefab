@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 7602307393910556451}
   - component: {fileID: 420651716921915056}
   - component: {fileID: 7941093368329492706}
-  m_Layer: 0
+  - component: {fileID: 523235464229192619}
+  m_Layer: 2
   m_Name: Big obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,6 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &523235464229192619
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240980138346910097}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &7803463278715008102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -138,6 +152,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 442491751639410097, guid: 31c5acd16725bd64c8be4cc521b899ac, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6860123943097857979, guid: 31c5acd16725bd64c8be4cc521b899ac, type: 3}
       propertyPath: m_Name
       value: Big obstacle
@@ -167,7 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileType: {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
   tile: {fileID: 0}
-  edgeElement: {fileID: 0}
+  edge: {fileID: 0}
 --- !u!4 &7562715667709163734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 342081523400903856, guid: 31c5acd16725bd64c8be4cc521b899ac, type: 3}

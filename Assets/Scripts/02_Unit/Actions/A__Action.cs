@@ -18,9 +18,9 @@ public abstract class A__Action : MonoBehaviour
 
     public void SubscribeToEvents()
     {
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
-        InputEvents.OnCharacterExit += InputEvents_OnCharacterExit;
-        InputEvents.OnCharacterClick += InputEvents_OnCharacterClick;
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
+        InputEvents.OnUnitExit += InputEvents_OnUnitExit;
+        InputEvents.OnUnitClick += InputEvents_OnUnitClick;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         InputEvents.OnTileClick += InputEvents_OnTileClick;
@@ -28,9 +28,9 @@ public abstract class A__Action : MonoBehaviour
 
     public void UnsubscribeToEvents()
     {
-        InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;
-        InputEvents.OnCharacterExit -= InputEvents_OnCharacterExit;
-        InputEvents.OnCharacterClick -= InputEvents_OnCharacterClick;
+        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
+        InputEvents.OnUnitExit -= InputEvents_OnUnitExit;
+        InputEvents.OnUnitClick -= InputEvents_OnUnitClick;
         InputEvents.OnTileEnter -= InputEvents_OnTileEnter;
         InputEvents.OnTileExit -= InputEvents_OnTileExit;
         InputEvents.OnTileClick -= InputEvents_OnTileClick;
@@ -165,7 +165,7 @@ public abstract class A__Action : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputEvents_OnCharacterEnter(object sender, U__Unit enteredCharacter)
+    private void InputEvents_OnUnitEnter(object sender, U__Unit enteredCharacter)
     {
         if (!unit.look.CharactersVisibleInFog().Contains(enteredCharacter))
         {
@@ -188,12 +188,12 @@ public abstract class A__Action : MonoBehaviour
         }
     }
 
-    private void InputEvents_OnCharacterExit(object sender, U__Unit leftCharacter)
+    private void InputEvents_OnUnitExit(object sender, U__Unit leftCharacter)
     {
         OnExitCharacter(leftCharacter);
     }
 
-    private void InputEvents_OnCharacterClick(object sender, U__Unit clickedCharacter)
+    private void InputEvents_OnUnitClick(object sender, U__Unit clickedCharacter)
     {
         if (!unit.look.CharactersVisibleInFog().Contains(clickedCharacter))
         {

@@ -65,7 +65,7 @@ public class FM_SelectionSquare : MonoBehaviour
         startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
         startingCharacter.move.OnMovementStart += Move_OnMovementStart;
         startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
     }
     
     private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
@@ -78,7 +78,7 @@ public class FM_SelectionSquare : MonoBehaviour
         endingCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;       
         endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
         endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
-        InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;
+        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
     }
 
     private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
@@ -105,7 +105,7 @@ public class FM_SelectionSquare : MonoBehaviour
         DisableSquare();
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredCharacter)
+    private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredCharacter)
     {
         if(!_units.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character

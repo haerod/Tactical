@@ -96,7 +96,7 @@ public class FM_PercentShootText : MonoBehaviour
         InputEvents.OnNoTile += InputEvents_OnNoTile;
         InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
-        InputEvents.OnCharacterExit += InputEvents_OnCharacterExit;
+        InputEvents.OnUnitExit += InputEvents_OnUnitExit;
         InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
         InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
     }
@@ -110,7 +110,7 @@ public class FM_PercentShootText : MonoBehaviour
         InputEvents.OnNoTile -= InputEvents_OnNoTile;
         InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
-        InputEvents.OnCharacterExit += InputEvents_OnCharacterExit;
+        InputEvents.OnUnitExit += InputEvents_OnUnitExit;
         InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
         InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
         
@@ -155,7 +155,7 @@ public class FM_PercentShootText : MonoBehaviour
         DisablePercentShootText();
     }
     
-    private void InputEvents_OnCharacterExit(object sender, U__Unit exitedUnit)
+    private void InputEvents_OnUnitExit(object sender, U__Unit exitedUnit)
     {
         DisablePercentShootText();
     }

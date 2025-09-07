@@ -24,7 +24,7 @@ public class UFM_CoverStateUnit : MonoBehaviour
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         unit.health.OnDeath += Health_OnDeath;
@@ -116,7 +116,7 @@ public class UFM_CoverStateUnit : MonoBehaviour
         Hide();
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredUnit)
+    private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredUnit)
     {
         if(hoveredUnit != unit)
             return; // Another character

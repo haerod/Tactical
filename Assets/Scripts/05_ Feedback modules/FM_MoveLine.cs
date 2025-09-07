@@ -96,7 +96,7 @@ public class FM_MoveLine : MonoBehaviour
         startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
         startingCharacter.move.OnMovementStart += Move_OnMovementStart;
         startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;   
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;   
     }
     
     private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
@@ -109,7 +109,7 @@ public class FM_MoveLine : MonoBehaviour
         endingCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
         endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
         endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
-        InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;   
+        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;   
     }
     
     private void Move_OnMovementStart(object sender, EventArgs e)
@@ -132,7 +132,7 @@ public class FM_MoveLine : MonoBehaviour
         DisableLines();
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredCharacter)
+    private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredCharacter)
     {
         if(!_units.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character

@@ -92,7 +92,7 @@ public class FM_CoversHolder : MonoBehaviour
         
         startingCharacter.move.OnMovementStart += Move_OnMovementStart;
         InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
         InputEvents.OnNoTile += InputEvents_OnNoTile;
     }
     
@@ -103,7 +103,7 @@ public class FM_CoversHolder : MonoBehaviour
         
         endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
         InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
-        InputEvents.OnCharacterEnter -= InputEvents_OnCharacterEnter;
+        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
         InputEvents.OnNoTile -= InputEvents_OnNoTile;
     }
     
@@ -114,7 +114,7 @@ public class FM_CoversHolder : MonoBehaviour
             _units.current.cover.GetAllCoverInfosInRangeAt(freeTile.coordinates, coverFeedbackRange));
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredCharacter)
+    private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredCharacter)
     {
         if(!_units.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character

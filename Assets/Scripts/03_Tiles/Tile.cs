@@ -42,6 +42,7 @@ public class Tile : Entity
     [SerializeField] private GameObject downLine;
     [SerializeField] private GameObject leftLine;
     [SerializeField] private GameObject rightLine;
+    [SerializeField] private GameObject coordinatesTextCanvas;
     [SerializeField] private TextMeshProUGUI coordinatesText;
     
     [Header("DEBUG")]
@@ -58,7 +59,7 @@ public class Tile : Entity
         if(!showCoordinates)
             return;
         
-        coordinatesText.gameObject.SetActive(true);
+        coordinatesTextCanvas.gameObject.SetActive(true);
         coordinatesText.text = coordinates.x + "," + coordinates.y;
     }
 

@@ -6,9 +6,6 @@
 ## Restart scene
 - bug on F_Covers, easy repro
 
-## Behavior
-- If NPC target character out of view, it waits indefinitely
-
 ## UI life bar
 - Enables at start without any reason
 
@@ -21,9 +18,6 @@
 ## Actions
 - Replace EndTurn by EndAction (if an unit can do multiple actions)
 
-## Melee weapons
-- When unit hover a enemy and itself is covered, stand up animation
-
 ## Tiles
 - Tiles material work with an enum, use a Scriptable object instead
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
@@ -31,13 +25,16 @@
 ## Team
 - Make a distinction between Ally and Teammate
 
+## Animation
+- Crouch dodge
+- Crouch hit reaction
+
 ## Others
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
 - Try to kill a character during its own turn
     - OnDeath, need to end its turn
 - Create a class/scriptable object template in Rider
-- Input.SetActivePlayInput in events and not in the code
 
 # CONTENT
 
@@ -47,7 +44,7 @@
 
 # OPTIMISATION
 
-- Create a variable "actionHasBeenDone" to calculate only once by turn actions with a big cost (visible enemies, etc.)
+- Look.VisibleUnits/Visible enemies calculated once
 - Algorithm of line of sight checking progressively the tiles around
 
 # FEATURES

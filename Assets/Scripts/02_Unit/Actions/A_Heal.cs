@@ -7,7 +7,7 @@ public class A_Heal : A__Action
     [SerializeField] private int healAmount = 1;
     
     [SerializeField] private int healReach = 1;
-    [FormerlySerializedAs("useDiagonals")] [SerializeField] private bool includeDiagonalsInReach = true;
+    [SerializeField] private bool includeDiagonalsInReach = true;
     
     // ======================================================================
     // MONOBEHAVIOUR

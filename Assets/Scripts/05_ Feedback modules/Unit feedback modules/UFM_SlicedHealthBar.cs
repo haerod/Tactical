@@ -27,7 +27,7 @@ public class UFM_SlicedHealthBar : MonoBehaviour
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         
-        InputEvents.OnCharacterEnter += InputEvents_OnCharacterEnter;
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         
@@ -149,7 +149,7 @@ public class UFM_SlicedHealthBar : MonoBehaviour
         Hide();
     }
     
-    private void InputEvents_OnCharacterEnter(object sender, U__Unit hoveredUnit)
+    private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredUnit)
     {
         if(hoveredUnit != unit)
             return; // Another character
