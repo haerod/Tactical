@@ -21,7 +21,7 @@ public class A_Attack : A__Action
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -34,14 +34,13 @@ public class A_Attack : A__Action
             .Where(chara => IsTileInRange(chara.tile))
             .Select(chara => chara.tile)
             .ToList();
-
+    
     /// <summary>
     /// Attacks the target and starts an action in the end.
     /// </summary>
     /// <param name="currentTarget"></param>
     public void Attack(U__Unit currentTarget)
     {
-        
         unit.SetCanPlayValue(false);
         
         if (!unit.look.CanSee(currentTarget)) 
@@ -66,7 +65,7 @@ public class A_Attack : A__Action
         else // MISS
             SetOnAttackDone(false, 0, target);
     }
-
+    
     /// <summary>
     /// Ends the attack.
     /// Called by C_AnimatorScripts, after the shoot animation.
@@ -86,7 +85,7 @@ public class A_Attack : A__Action
         muzzleFlash.SetActive(true);
         Wait(0.2f, () => muzzleFlash.SetActive(false));
     }
-
+    
     /// <summary>
     /// Returns the percent of chance to touch the target, including the reduction by distance.
     /// </summary>
@@ -94,15 +93,19 @@ public class A_Attack : A__Action
     /// <returns></returns>
     public int GetChanceToTouch(U__Unit target)
     {
-        int precisionToReturn = precision - target.cover.GetCoverProtectionValueFrom(unit);
+        int precisionToReturn = precision;
         Weapon currentWeapon = unit.weaponHolder.GetCurrentWeapon();
+        int targetProtectionValue = target.cover.GetCoverProtectionValueFrom(unit);
+        
+        if(!currentWeapon.IsMeleeWeapon())
+            precisionToReturn -= targetProtectionValue;
         
         for (int i = 0; i < currentWeapon.GetRange(); i++)
             precisionToReturn -= unit.weaponHolder.GetCurrentWeapon().GetPrecisionMalusByDistance();
         
         return precisionToReturn < 0 ? 0 : precisionToReturn;
     }
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -153,43 +156,76 @@ public class A_Attack : A__Action
             return los.Count < currentWeapon.GetRange();
     }
     
+    private void EnterLean(U__Unit targetUnit)
+    {
+        // if(!unit.cover.AreCoversAround())
+        //     return; // No covers around
+        //
+        // List<Coordinates> aroundCoordinates = _board.GetCoordinatesAround(unit.coordinates, 1, false);
+        // List<Tile> tilesToLean = new();
+        //
+        // foreach (Coordinates testedCoordinate in aroundCoordinates)
+        // {
+        //     Tile testedTile = _board.GetTileAtCoordinates(testedCoordinate);
+        //     
+        //     if(!testedTile)
+        //         continue; // No tile
+        //     if(!unit.move.CanWalkOn(testedTile.type))
+        //         continue; // Not walkable
+        //     
+        //     tilesToLean.Add(testedTile);
+        // }
+        //
+        // foreach (Tile testedTile in tilesToLean)
+        // {
+        //     if()
+        // }
+    }
+    
+    private void ExitLean()
+    {
+        // transform.position = unit.coordinates.ToVector3();
+    }
+    
     // ======================================================================
     // ACTION OVERRIDE METHODS
     // ======================================================================
-
-    protected override void OnHoverEnemy(U__Unit hoveredCharacter)
+    
+    protected override void OnHoverEnemy(U__Unit hoveredUnit)
     {
-        unit.move.OrientTo(hoveredCharacter.transform.position);
+        unit.move.OrientTo(hoveredUnit.transform.position);
         
         if(!unit.CanPlay())
             return; // Can't play
         
-        if(!IsTileInRange(hoveredCharacter.tile))
+        if(!IsTileInRange(hoveredUnit.tile))
             return; // Enemy is not visible or not in range
         
+        EnterLean(hoveredUnit);
         unit.anim.StartAim();
     }
-
-    protected override void OnExitCharacter(U__Unit leftCharacter)
+    
+    protected override void OnExitCharacter(U__Unit exitedUnit)
     {
         if(!unit.CanPlay())
             return; // Can't play
         
+        ExitLean();
         unit.anim.StopAim();
     }
     
-    protected override void OnClickAnyCharacter(U__Unit clickedCharacter)
+    protected override void OnClickAnyCharacter(U__Unit clickedUnit)
     {
         if(!unit.CanPlay())
             return; // Can't play
         
-        if(unit.team.IsAllyOf(clickedCharacter)) 
+        if(unit.team.IsAllyOf(clickedUnit)) 
             return; // Same team
 
-        if(!IsTileInRange(clickedCharacter.tile))
+        if(!IsTileInRange(clickedUnit.tile))
             return; // Enemy is not visible or not in range
         
         // Attack
-        Attack(clickedCharacter);
+        Attack(clickedUnit);
     }
 }

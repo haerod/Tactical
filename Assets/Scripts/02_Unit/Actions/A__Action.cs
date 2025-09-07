@@ -85,8 +85,8 @@ public abstract class A__Action : MonoBehaviour
     /// <summary>
     /// Happens when an enemy is hovered.
     /// </summary>
-    /// <param name="hoveredCharacter"></param>
-    protected virtual void OnHoverEnemy(U__Unit hoveredCharacter) { }
+    /// <param name="hoveredUnit"></param>
+    protected virtual void OnHoverEnemy(U__Unit hoveredUnit) { }
     
     /// <summary>
     /// Happens when the character is hovered.
@@ -96,14 +96,14 @@ public abstract class A__Action : MonoBehaviour
     /// <summary>
     /// Happens when the cursor leaves any character.
     /// </summary>
-    /// <param name="leftCharacter"></param>
-    protected virtual void OnExitCharacter(U__Unit leftCharacter) { }
+    /// <param name="exitedUnit"></param>
+    protected virtual void OnExitCharacter(U__Unit exitedUnit) { }
     
     /// <summary>
     /// Happens when any character is hovered, including itself.
     /// </summary>
-    /// <param name="clickedCharacter"></param>
-    protected virtual void OnClickAnyCharacter(U__Unit clickedCharacter) { }
+    /// <param name="clickedUnit"></param>
+    protected virtual void OnClickAnyCharacter(U__Unit clickedUnit) { }
     
     /// <summary>
     /// Happens when any character is clicked, except itself.

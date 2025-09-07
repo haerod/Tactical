@@ -20,7 +20,7 @@ public class U_Look : MonoBehaviour
 
     public List<Tile> visibleTiles => GetVisibleTiles().ToList();
     
-    private List<Tile> currentVisibleTiles = new List<Tile>();
+    private List<Tile> currentVisibleTiles = new();
     private bool anythingChangedOnBoard = true;
     
     // ======================================================================

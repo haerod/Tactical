@@ -54,7 +54,7 @@ public class U_AnimatorScripts : MonoBehaviour
     /// Starts attack animation.
     /// </summary>
     public void StartAttack() => anim.SetBool(Attack, true);
-
+    
     /// <summary>
     /// Starts aim animation.
     /// </summary>

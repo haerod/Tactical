@@ -6,9 +6,6 @@
 ## Restart scene
 - bug on F_Covers, easy repro
 
-## UI life bar
-- Enables at start without any reason
-
 # REFACTOR
 
 ## M_Rules
@@ -34,7 +31,7 @@
 - Maybe use raycasts for Autosnap
 - Try to kill a character during its own turn
     - OnDeath, need to end its turn
-- Create a class/scriptable object template in Rider
+- Create a scriptable object template in Rider
 
 # CONTENT
 
@@ -50,18 +47,19 @@
 # FEATURES
 
 - Display weapons / characters infos on UI
+- Actions systems: possibility between multiple designs
+- Can shoot from a step (lean)
 
+- Obstacle transparency
 - Team alliances (difference between Allie and Teammate)
 - Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
 - Character can throw spells (like fireball)
 - Separate folders between Toy box and Technical box
 - Namespaces
 - Ergonomic of characters (custom editor)
-- Actions systems: possibility between multiple designs
 - Online API like Unity (ask Simon)
 - Add events (FX, sound, etc.) for everything
 - Multiple victory conditions
-- Obstacle transparency
 - Destructible obstacles
 - Better enemy behaviors
 - Large elements (multiple tiles)
@@ -76,8 +74,7 @@
 - Movements with special costs or obligation to stop
 - 3D grid
 - Tiles of different types
-- Can shoot from a step (lean)
 - Armor and shield
 - Notes on elements
-- Ragdoll on death
 - Animator of the characters more usable
+- Ammo system

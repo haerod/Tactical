@@ -44,10 +44,10 @@ public class UFM_UnitRagdoll : MonoBehaviour
         unitRagdoll.team.SetTeamMaterials();
         
         MatchAllChildTransforms(originalRootBone, ragdollRootBone);
-        Vector3 randomDir = new (Random.Range(-1f,1f),0, Random.Range(-1f,1f));
-        ApplyExplosionToRagdoll(ragdollRootBone, 300f, transform.position + randomDir, 10f);
+        ApplyExplosionToRagdoll(ragdollRootBone, 300f, 10f);
+        DropWeaponOnTheFloor(unitRagdoll);
     }
-
+    
     private void MatchAllChildTransforms(Transform original, Transform clone)
     {
         foreach (Transform originalChild in original)
@@ -64,15 +64,29 @@ public class UFM_UnitRagdoll : MonoBehaviour
         }
     }
     
-    private void ApplyExplosionToRagdoll(Transform root, float explosionForce, Vector3 explosionPosition, float explosionRange)
+    private void ApplyExplosionToRagdoll(Transform root, float explosionForce, float explosionRange)
     {
+        Vector3 randomDir = new (Random.Range(-1f,1f),0, Random.Range(-1f,1f));
+        Vector3 explosionPosition = transform.position + randomDir;
+        
         foreach (Transform child in root)
         {
             if(child.TryGetComponent(out Rigidbody rigidbody))
                 rigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRange);
             
-            ApplyExplosionToRagdoll(child, explosionForce, explosionPosition, explosionRange);
+            ApplyExplosionToRagdoll(child, explosionForce, explosionRange);
         }
+    }
+    
+    private void DropWeaponOnTheFloor(U__Unit unitRagdoll)
+    {
+        GameObject dropWeapon = unitRagdoll.weaponHolder.GetCurrentWeaponGraphics().gameObject;
+        Vector3 randomDir = new (Random.Range(-1f,1f),0, Random.Range(-1f,1f));
+        
+        dropWeapon.transform.parent = null;
+        
+        if(dropWeapon.TryGetComponent(out Rigidbody rigidbody))
+            rigidbody.AddExplosionForce(50f, transform.position + randomDir, 10f);
     }
 
     // ======================================================================
