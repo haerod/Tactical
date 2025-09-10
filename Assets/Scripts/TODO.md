@@ -32,16 +32,22 @@
 - Try to kill a character during its own turn
     - OnDeath, need to end its turn
 - Create a scriptable object template in Rider
+- Auto change team materials as a module
+- Cover as an action (removable)
 
 # CONTENT
 
+- Weapons
+  - knife
+  - mace
 - Magical spells
+  - fireball
 - Drone
 - Different turn based system (ex: initiative)
 
 # OPTIMISATION
 
-- Look.VisibleUnits/Visible enemies calculated once
+- Look.VisibleUnits/VisibleEnemies calculated once
 - Algorithm of line of sight checking progressively the tiles around
 
 # FEATURES
