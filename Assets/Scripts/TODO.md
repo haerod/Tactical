@@ -34,6 +34,11 @@
 - Create a scriptable object template in Rider
 - Auto change team materials as a module
 - Cover as an action (removable)
+- Description of the classes
+- Class name nomenclature
+  - Manager
+  - Holder
+  - UFM/FM
 
 # CONTENT
 
@@ -84,3 +89,5 @@
 - Notes on elements
 - Animator of the characters more usable
 - Ammo system
+- UFM Damage preview
+- Critical hit chance
