@@ -1832,6 +1832,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99a035fea772a840b0ca1f475c81479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usableOnTurnStart: 1
+  allowedActionsOnEnd:
+  - {fileID: 2979315790688333722}
   unit: {fileID: 3541061014796538876}
   movementRange: 4
   useDiagonalMovement: 1
@@ -1933,6 +1936,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9850b7b8864d34adf42a514c4ffa68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usableOnTurnStart: 0
+  allowedActionsOnEnd: []
   unit: {fileID: 3541061014796538876}
   healAmount: 1
   healReach: 1
@@ -2116,6 +2121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e44e4e97e29e5943bb9f70529ceb844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usableOnTurnStart: 1
+  allowedActionsOnEnd: []
   unit: {fileID: 3541061014796538876}
   precision: 100
 --- !u!1 &8655900561747131834

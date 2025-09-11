@@ -42,18 +42,18 @@ public class A_Heal : A__Action
     /// Heal the character of heal amount HP.
     /// </summary>
     /// <param name="characterToHeal"></param>
-    private void HealCharacter(U__Unit characterToHeal) => characterToHeal.health.Heal(healAmount);
-    
+    private void HealCharacter(U__Unit characterToHeal)
+    {
+        StartAction();
+        
+        characterToHeal.health.Heal(healAmount);
+        
+        EndAction();
+    }
+
     // ======================================================================
     // ACTION OVERRIDE METHODS
     // ======================================================================
-    
-    protected override void OnHoverAlly(U__Unit hoveredCharacter)
-    {
-        if(!IsHealable(hoveredCharacter))
-            return; // Not healable
-        
-    }
     
     protected override void OnClickAlly(U__Unit clickedCharacter)
     {

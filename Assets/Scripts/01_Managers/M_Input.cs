@@ -34,7 +34,7 @@ public class M_Input : MonoBehaviour
     public event EventHandler<int> OnZoomingCameraInput;
     public event EventHandler OnRecenterCameraInput;
     public event EventHandler OnEndTurnInput;
-    public event EventHandler OnChangeCharacterInput;
+    public event EventHandler OnChangeUnitInput;
     public event EventHandler OnRotateLeftInput;
     public event EventHandler OnRotateRightInput;
     
@@ -61,10 +61,10 @@ public class M_Input : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _rules.OnVictory += Rules_OnVictory;
-        A_Attack.OnAnyAttackStart += Attack_OnAnyAttackStart;
-        A_Move.OnAnyMovementStart += Move_OnAnyMovementStart;
+        A__Action.OnAnyActionStart += Action_OnAnyActionStart;
+        A__Action.OnAnyActionEnd += Action_OnAnyActionEnd;
     }
-    
+
     private void Update()
     {
         if (!canUsePlayerInput) 
@@ -190,7 +190,7 @@ public class M_Input : MonoBehaviour
     private void CheckChangeUnitInput()
     {
         if (Input.GetKeyDown(changeUnitKey))
-            OnChangeCharacterInput?.Invoke(this, EventArgs.Empty);
+            OnChangeUnitInput?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>
@@ -286,21 +286,20 @@ public class M_Input : MonoBehaviour
         previousUnit = null;
     }
     
+    private void Action_OnAnyActionStart(object sender, U__Unit unitInAction)
+    {
+        SetActivePlayerInput(false);
+    }
+    
+    private void Action_OnAnyActionEnd(object sender, U__Unit unitInAction)
+    {
+        SetActivePlayerInput();
+    }
+    
     private void Rules_OnVictory(object sender, EventArgs e)
     {
         SetActivePlayerInput(false);
     }
-    
-    private void Attack_OnAnyAttackStart(object sender, U__Unit attackingUnit)
-    {
-        SetActivePlayerInput(false);
-    }
-    
-    private void Move_OnAnyMovementStart(object sender, U__Unit movingUnit)
-    {
-        SetActivePlayerInput(false);
-    }
-
 }
 
 public static class InputEvents

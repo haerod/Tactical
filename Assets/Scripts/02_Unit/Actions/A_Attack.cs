@@ -41,8 +41,6 @@ public class A_Attack : A__Action
     /// <param name="currentTarget"></param>
     public void Attack(U__Unit currentTarget)
     {
-        unit.SetCanPlayValue(false);
-        
         if (!unit.look.CanSee(currentTarget)) 
             return; // Enemy not in sight
 
@@ -53,6 +51,7 @@ public class A_Attack : A__Action
 
         int damages = unit.weaponHolder.GetCurrentWeapon().GetDamages();
 
+        StartAction();
         OnAttackStart?.Invoke(this, EventArgs.Empty);
         OnAnyAttackStart?.Invoke(this, unit);
 
@@ -133,7 +132,8 @@ public class A_Attack : A__Action
             Wait(0.5f, () =>
             {
                 OnAttackEnd?.Invoke(this, EventArgs.Empty);
-                _units.EndCurrentUnitTurn();
+
+                EndAction();
             });
         };
     }
@@ -197,6 +197,8 @@ public class A_Attack : A__Action
         
         if(!unit.CanPlay())
             return; // Can't play
+        if(!CanUse())
+            return; // Can't do this action
         
         if(!IsTileInRange(hoveredUnit.tile))
             return; // Enemy is not visible or not in range
@@ -209,7 +211,9 @@ public class A_Attack : A__Action
     {
         if(!unit.CanPlay())
             return; // Can't play
-        
+        if(!CanUse())
+            return; // Can't do this action
+
         ExitLean();
         unit.anim.StopAim();
     }
@@ -218,10 +222,10 @@ public class A_Attack : A__Action
     {
         if(!unit.CanPlay())
             return; // Can't play
-        
+        if(!CanUse())
+            return; // Can't do this action
         if(unit.team.IsAllyOf(clickedUnit)) 
             return; // Same team
-
         if(!IsTileInRange(clickedUnit.tile))
             return; // Enemy is not visible or not in range
         

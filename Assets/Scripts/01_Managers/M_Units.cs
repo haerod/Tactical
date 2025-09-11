@@ -15,6 +15,8 @@ public class M_Units : MonoBehaviour
     
     public event EventHandler<U__Unit> OnUnitTurnStart;
     public event EventHandler<U__Unit> OnUnitTurnEnd;
+    public event EventHandler<Team> OnTeamTurnStart;
+    public event EventHandler<Team> OnTeamTurnEnd;
     
     public static M_Units instance;
 
@@ -33,9 +35,12 @@ public class M_Units : MonoBehaviour
     
     private void Start()
     {
-        _input.OnChangeCharacterInput += Input_OnChangeCharacterInput;
+        _input.OnChangeUnitInput += Input_OnChangeUnitInput;
         _input.OnEndTurnInput += Input_OnEndTurnInput;
-        StartUnitTurn(turnBasedSystem.GetFirstCharacter());
+
+        U__Unit firstUnit = turnBasedSystem.GetFirstCharacter();
+        StartNextTeamTurn(firstUnit.unitTeam);
+        StartUnitTurn(firstUnit);
     }
     
     // ======================================================================
@@ -154,16 +159,27 @@ public class M_Units : MonoBehaviour
             .Where(testedUnit => testedUnit != unit)
             .FirstOrDefault(testedUnit => testedUnit.team.IsAllyOf(unit));
 
+    /// <summary>
+    /// Starts the current team's turn.
+    /// </summary>
+    /// <param name="nextTeam"></param>
     private void StartNextTeamTurn(Team nextTeam)
     {
+        OnTeamTurnStart?.Invoke(this, nextTeam);
+        
         GetUnitsOf(nextTeam)
             .ForEach(unit => unit.SetCanPlayValue(true));
     }
     
+    /// <summary>
+    /// Ends the current team's turn.
+    /// </summary>
     private void EndCurrentTeamTurn()
     {
+        OnTeamTurnEnd?.Invoke(this, current.unitTeam);
+        
         GetUnitsOf(current.unitTeam)
-            .ForEach(unit => unit.SetCanPlayValue(true));
+            .ForEach(unit => unit.SetCanPlayValue(false));
     }
     
     private void SwitchToNextTeamUnit()
@@ -186,7 +202,7 @@ public class M_Units : MonoBehaviour
         EndCurrentUnitTurn();
     }
     
-    private void Input_OnChangeCharacterInput(object sender, EventArgs e)
+    private void Input_OnChangeUnitInput(object sender, EventArgs e)
     {
         SwitchToNextTeamUnit();
     }

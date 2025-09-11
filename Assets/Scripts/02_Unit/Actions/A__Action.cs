@@ -8,14 +8,28 @@ using static M__Managers;
 
 public abstract class A__Action : MonoBehaviour
 {
+    
+    [SerializeField] protected bool usableOnTurnStart;
+    [SerializeField] protected List<A__Action> allowedActionsOnEnd;
+    
     [Header("REFERENCES")]
     
     [SerializeField] protected U__Unit unit;
+    
+    public bool isUsableOnStart => usableOnTurnStart;
+    
+    public static event EventHandler<U__Unit> OnAnyActionStart;
+    public static event EventHandler<U__Unit> OnAnyActionEnd;
+    
+    private bool canUseAction;
     
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Subscribes to action's events.
+    /// </summary>
     public void SubscribeToEvents()
     {
         InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
@@ -26,6 +40,9 @@ public abstract class A__Action : MonoBehaviour
         InputEvents.OnTileClick += InputEvents_OnTileClick;
     }
 
+    /// <summary>
+    /// Unsubscribes to action's events.
+    /// </summary>
     public void UnsubscribeToEvents()
     {
         InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
@@ -36,10 +53,46 @@ public abstract class A__Action : MonoBehaviour
         InputEvents.OnTileClick -= InputEvents_OnTileClick;
     }
     
+    /// <summary>
+    /// Returns if the action can be used this turn.
+    /// </summary>
+    /// <returns></returns>
+    public bool CanUse() => canUseAction;
+    
+    /// <summary>
+    /// Set the value of Can use action.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public void SetCanUseAction(bool value) => canUseAction = value;
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Starts the action.
+    /// </summary>
+    protected void StartAction()
+    {
+        OnAnyActionStart?.Invoke(this, unit);
+    }
+    
+    /// <summary>
+    /// Ends the action and set the usability of the next ones.
+    /// </summary>
+    protected void EndAction()
+    {
+        unit.actions.SetActionsUsabilityOf(allowedActionsOnEnd);
+        OnAnyActionEnd?.Invoke(this, unit);
+        
+        if (allowedActionsOnEnd.Count > 0)
+            return; // Other actions to do
+        
+        unit.SetCanPlayValue(false);
+        _units.EndCurrentUnitTurn();
+    }
+    
     /// <summary>
     /// Starts a wait for "time" seconds and executes an action.
     /// </summary>

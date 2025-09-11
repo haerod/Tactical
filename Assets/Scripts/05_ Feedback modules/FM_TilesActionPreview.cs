@@ -17,9 +17,11 @@ public class FM_TilesActionPreview : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        A__Action.OnAnyActionStart += Action_OnAnyActionStart;
+        A__Action.OnAnyActionEnd += Action_OnAnyActionEnd;
         _rules.OnVictory += Rules_OnVictory;
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -31,8 +33,7 @@ public class FM_TilesActionPreview : MonoBehaviour
     /// <summary>
     /// Shows the tiles of the movement area.
     /// </summary>
-    private void ShowMovementArea(List<Tile> tilesToShow) =>
-        tilesToShow
+    private void ShowMovementArea(List<Tile> tilesToShow) => tilesToShow
             .ForEach(t =>
             {
                 t.SetMaterial(Tile.TileMaterial.Blue);
@@ -42,8 +43,7 @@ public class FM_TilesActionPreview : MonoBehaviour
     /// <summary>
     /// Shows the tiles a character can attack.
     /// </summary>
-    private void ShowAttackableTiles(List<Tile> tilesToShow) =>
-        tilesToShow.
+    private void ShowAttackableTiles(List<Tile> tilesToShow) => tilesToShow.
             ForEach(t => {
                 t.SetMaterial(Tile.TileMaterial.Red);
                 attackableTiles.Add(t);
@@ -87,50 +87,38 @@ public class FM_TilesActionPreview : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        if (!startingCharacter.behavior.playable) 
+        if (!startingUnit.behavior.playable) 
             return; // NPC
-        if(!startingCharacter.CanPlay()) 
+        if(!startingUnit.CanPlay())
             return; // Can't play
-        
-        startingCharacter.move.OnMovementStart += Move_OnMovementStart;
-        startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
-        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
-        startingCharacter.weaponHolder.OnWeaponChange += WeaponsHolder_OnWeaponChanged;
-        
-        ShowMovementArea(startingCharacter.move.movementArea);
-        ShowAttackableTiles(startingCharacter.attack.AttackableTiles());
+
+        if (startingUnit.actions.HasMoveAction())
+            ShowMovementArea(startingUnit.move.movementArea);
+
+        if (startingUnit.actions.HasAttackAction())
+        {
+            startingUnit.weaponHolder.OnWeaponChange += WeaponsHolder_OnWeaponChanged;
+            ShowAttackableTiles(startingUnit.attack.AttackableTiles());
+        }
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
-        if (!endingCharacter.behavior.playable) 
+        if (!endingUnit.behavior.playable) 
             return; // NPC
         
-        endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
-        endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
-        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
-        endingCharacter.weaponHolder.OnWeaponChange -= WeaponsHolder_OnWeaponChanged;
+        endingUnit.weaponHolder.OnWeaponChange -= WeaponsHolder_OnWeaponChanged;
         
         HideTilesFeedbacks();
-    }
-    
-    private void Move_OnMovementStart(object sender, EventArgs e)
-    {
-        HideTilesFeedbacks();
-    }
-    
-    private void Move_OnMovementEnd(object sender, EventArgs e)
-    {
-        U__Unit currentCharacter = _units.current;
-        
-        ShowMovementArea(currentCharacter.move.movementArea);
-        ShowAttackableTiles(currentCharacter.attack.AttackableTiles());
     }
     
     private void WeaponsHolder_OnWeaponChanged(object sender, Weapon newWeapon)
     {
+        if (!_units.current.actions.HasAttackAction())
+            return; // Can't attack
+
         HideAttackableTiles();
         ShowAttackableTiles(_units.current.attack.AttackableTiles());
     }
@@ -139,10 +127,24 @@ public class FM_TilesActionPreview : MonoBehaviour
     {
         HideTilesFeedbacks();
     }
-
-    private void Attack_OnAttackStart(object sender, EventArgs e)
+    
+    private void Action_OnAnyActionStart(object sender, U__Unit startingActionUnit)
     {
         HideTilesFeedbacks();
+    }
+    
+    private void Action_OnAnyActionEnd(object sender, U__Unit endingActionUnit)
+    {
+        if (!endingActionUnit.behavior.playable) 
+            return; // NPC
+        if(!endingActionUnit.CanPlay())
+            return; // Can't play
+
+        if (endingActionUnit.actions.HasMoveAction())
+            ShowMovementArea(endingActionUnit.move.movementArea);
+
+        if (endingActionUnit.actions.HasAttackAction())
+            ShowAttackableTiles(endingActionUnit.attack.AttackableTiles());
     }
 
 }

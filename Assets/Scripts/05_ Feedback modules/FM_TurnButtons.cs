@@ -84,7 +84,7 @@ public class FM_TurnButtons : MonoBehaviour
     
     private void Move_OnMovementEnd(object sender, EventArgs e)
     {
-        SetTurnButtonsActive(false);
+        SetTurnButtonsActive(_units.current.behavior.playable);
     }
 
     private void Move_OnMovementStart(object sender, EventArgs e)

@@ -20,10 +20,60 @@ public class U_Actions : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        _units.OnTeamTurnStart += Units_OnTeamTurnStart;
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
+    // ======================================================================
+
+    /// <summary>
+    /// Sets the given actions usable.
+    /// </summary>
+    /// <param name="usableActions"></param>
+    public void SetActionsUsabilityOf(List<A__Action> usableActions) => actions.ForEach(action => action.SetCanUseAction(usableActions.Contains(action)));
+
+    public bool IsUsableAction() => actions.Any(action => action.CanUse());
+    
+    /// <summary>
+    /// Returns true if the unit has Heal action.
+    /// </summary>
+    /// <returns></returns>
+    public bool HasHealAction() => actions.OfType<A_Heal>().Any() && GetHealAction().CanUse();
+    
+    /// <summary>
+    /// Returns the Heal action.
+    /// </summary>
+    /// <returns></returns>
+    public A_Heal GetHealAction() => actions.OfType<A_Heal>().FirstOrDefault();
+    
+    /// <summary>
+    /// Returns true if the unit has Move action.
+    /// </summary>
+    /// <returns></returns>
+    public bool HasMoveAction() => actions.OfType<A_Move>().Any() && GetMoveAction().CanUse();
+    
+    /// <summary>
+    /// Returns the Move action.
+    /// </summary>
+    /// <returns></returns>
+    public A_Move GetMoveAction() => actions.OfType<A_Move>().FirstOrDefault();
+    
+    /// <summary>
+    /// Returns true if the unit has Attack action.
+    /// </summary>
+    /// <returns></returns>
+    public bool HasAttackAction() => actions.OfType<A_Attack>().Any() && GetAttackAction().CanUse();
+    
+    /// <summary>
+    /// Returns the A_Attack action.
+    /// </summary>
+    /// <returns></returns>
+    public A_Attack GetAttackAction() => actions.OfType<A_Attack>().FirstOrDefault();
+    
+    // ======================================================================
+    // PRIVATE METHODS
     // ======================================================================
     
     /// <summary>
@@ -35,23 +85,25 @@ public class U_Actions : MonoBehaviour
     /// Unit's actions unsubscribes to Input's events.
     /// </summary>
     private void UnsubscribeToEvents() => actions.ForEach(action => action.UnsubscribeToEvents());
-    
-    /// <summary>
-    /// Returns true if the unit has Heal action.
-    /// </summary>
-    /// <returns></returns>
-    public bool HasHealAction() => actions.OfType<A_Heal>().Any();
-    
-    /// <summary>
-    /// Returns the heal action.
-    /// </summary>
-    /// <returns></returns>
-    public A_Heal GetHealAction() => actions.OfType<A_Heal>().FirstOrDefault();
 
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-    
+    /// <summary>
+    /// Sets starting actions usable.
+    /// </summary>
+    private void EnableStartingActions()
+    {
+        SetActionsUsabilityOf(actions
+            .Where(action => action.isUsableOnStart)
+            .ToList());
+    }
+
+    /// <summary>
+    /// Disables all the unit's action.
+    /// </summary>
+    private void DisableAllActions()
+    {
+        SetActionsUsabilityOf(new List<A__Action>());
+    }
+
     // ======================================================================
     // EVENTS
     // ======================================================================
@@ -71,5 +123,21 @@ public class U_Actions : MonoBehaviour
     {
         if(endingUnit == unit)
             UnsubscribeToEvents();
+    }
+    
+    private void Units_OnTeamTurnStart(object sender, Team startingTeam)
+    {
+        if(unit.unitTeam != startingTeam)
+            return; // Not the starting team
+        
+        EnableStartingActions();
+    }
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
+        if(unit.unitTeam != endingTeam)
+            return; // Not the starting team
+        
+        DisableAllActions();    
     }
 }

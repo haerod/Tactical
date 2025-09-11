@@ -53,15 +53,13 @@ public class A_Move : A__Action
     /// Orients this object to another position, except on Y axis. Possibility to add an offset (euler angles).
     /// </summary>
     /// <param name="targetPosition"></param>
-    /// <param name="offset"></param>
-    public void OrientTo(Vector3 targetPosition, float offset = 0)
+    public void OrientTo(Vector3 targetPosition)
     {
         Vector3 lookPos = targetPosition - transform.position;
         lookPos.y = 0;
         Quaternion endRotation = Quaternion.Euler(Vector3.zero);
         if (lookPos != Vector3.zero)
             endRotation = Quaternion.LookRotation(lookPos);
-        endRotation *= Quaternion.Euler(new Vector3(0, offset, 0));
         unit.transform.rotation = endRotation;
 
         unit.unitUI.OrientToCamera();
@@ -158,20 +156,19 @@ public class A_Move : A__Action
 
         return currentMovementArea.ToList();
     }
-    
+
     /// <summary>
     /// Starts the movement on a path, with and action on end of this path.
     /// </summary>
     /// <param name="path"></param>
     private void MoveOnPath(List<Tile> path)
     {
+        StartAction();
         OnMovementStart?.Invoke(this, EventArgs.Empty);
         OnAnyMovementStart?.Invoke(this, unit);
         
-        unit.SetCanPlayValue(false);
-
         currentPath = path.ToList();
-
+        
         index = 0;
         destination = path[index].transform.position;
         OrientTo(path[index].transform.position);
@@ -188,7 +185,7 @@ public class A_Move : A__Action
     /// <returns></returns>
     private List<Tile> Blockers()
     {
-        List<Tile> toReturn = new List<Tile>();
+        List<Tile> toReturn = new();
 
         // Add not walkableTiles
         toReturn.AddRange(_board.GetTilesAround(unit.tile, movementRange, useDiagonalMovement)
@@ -227,10 +224,8 @@ public class A_Move : A__Action
                     EndMove();
                     yield break; // EXIT : End path
                 }
-                else
-                {
-                    NextTile();
-                }
+                
+                NextTile();
                 yield return null;
             }
         }
@@ -275,7 +270,8 @@ public class A_Move : A__Action
         Wait(0.2f, () =>
         {
             OnMovementEnd?.Invoke(this, EventArgs.Empty);
-            _units.EndCurrentUnitTurn();
+            
+            EndAction();
         });
     }
     
@@ -333,6 +329,8 @@ public class A_Move : A__Action
     {
         if(!unit.CanPlay())
             return; // Can't play
+        if(!CanUse())
+            return; // Can't do this action
         
         OrientTo(hoveredTile.transform.position);
         
@@ -353,9 +351,11 @@ public class A_Move : A__Action
 
     protected override void OnClickTile(Tile clickedTile)
     {
-        if (!CanMoveTo(clickedTile)) 
+        if(!CanUse())
+            return; // Can't do this action
+        if (!CanMoveTo(clickedTile))
             return; // Tile out of movement range
-
+        
         MoveOnPath(Pathfinding.GetPath(
             unit.tile,
             clickedTile,

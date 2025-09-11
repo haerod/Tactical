@@ -39,6 +39,7 @@
   - Manager
   - Holder
   - UFM/FM
+- -units.EndCurrentUnitTurn as an event (not called in classes)
 
 # CONTENT
 
