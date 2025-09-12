@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6302724986777988487}
-  - component: {fileID: 640094566365641629}
+  - component: {fileID: 8000330038524010316}
   m_Layer: 0
-  m_Name: UFM_Action tiles preview
+  m_Name: UFM_Action tile's preview (Move)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &640094566365641629
+--- !u!114 &8000330038524010316
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,8 +41,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4024261831708315600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08ae2b912ad0bb14ca9dda7ca564ea60, type: 3}
+  m_Script: {fileID: 11500000, guid: fea0c723eade42769e48acbc4393f2af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkableTiles: []
-  attackableTiles: []
+  feedbackTileMaterial: {fileID: 2100000, guid: 051839021d4247e478d57cf4185854b6, type: 2}

@@ -38,7 +38,7 @@ public class M_Units : MonoBehaviour
         _input.OnChangeUnitInput += Input_OnChangeUnitInput;
         _input.OnEndTurnInput += Input_OnEndTurnInput;
 
-        U__Unit firstUnit = turnBasedSystem.GetFirstCharacter();
+        U__Unit firstUnit = turnBasedSystem.GetFirstUnit();
         StartNextTeamTurn(firstUnit.unitTeam);
         StartUnitTurn(firstUnit);
     }

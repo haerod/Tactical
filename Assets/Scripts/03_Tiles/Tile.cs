@@ -206,6 +206,16 @@ public class Tile : Entity
                 break;
         }
     }
+    
+    /// <summary>
+    /// Sets the appearance of a tile with the new material.
+    /// </summary>
+    /// <param name="tileMaterial"></param>
+    public void SetMaterial(Material tileMaterial)
+    {
+        areaObject.SetActive(true);
+        areaRend.material = tileMaterial;
+    }
 
     /// <summary>
     /// Sets the tile skin to "basic".

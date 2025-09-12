@@ -21,10 +21,10 @@ public class TurnBasedSystem : MonoBehaviour
     }
     
     /// <summary>
-    /// Returns the first character of the first team of the play order.
+    /// Returns the first unit of the first team of the play order.
     /// </summary>
     /// <returns></returns>
-    public U__Unit GetFirstCharacter() => _units
+    public U__Unit GetFirstUnit() => _units
         .GetUnitsOf(_units.GetTeamPlayOrder().First())
         .First();
     
@@ -63,15 +63,6 @@ public class TurnBasedSystem : MonoBehaviour
         return _units.GetUnitsOf(GetNextTeam())
             .FirstOrDefault();
     }
-    
-    /// <summary>
-    /// Returns true if is another unit in the given unit team. Else returns false.
-    /// </summary>
-    /// <param name="unit"></param>
-    /// <returns></returns>
-    private bool IsAnotherUnitOfTheSameTeam(U__Unit unit) =>_units.GetUnitsList()
-        .Where(testedUnit => testedUnit != unit)
-        .FirstOrDefault(testedUnit => testedUnit.team.IsAllyOf(unit));
     
     // ======================================================================
     // EVENTS

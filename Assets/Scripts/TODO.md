@@ -12,9 +12,6 @@
 - Fog of war vision rules not in M_Rules -> fog of war as a Manager ?
     - Fog of war view lines as Module
 
-## Actions
-- Replace EndTurn by EndAction (if an unit can do multiple actions)
-
 ## Tiles
 - Tiles material work with an enum, use a Scriptable object instead
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
@@ -39,7 +36,9 @@
   - Manager
   - Holder
   - UFM/FM
-- -units.EndCurrentUnitTurn as an event (not called in classes)
+- units.EndCurrentUnitTurn as an event (not called in classes)
+- set FM_TilesActionPreview abstract
+- be sure, if fog of war is disabled, unit can see everything
 
 # CONTENT
 
@@ -49,7 +48,8 @@
 - Magical spells
   - fireball
 - Drone
-- Different turn based system (ex: initiative)
+- Different turn based system 
+  - initiative
 
 # OPTIMISATION
 
@@ -60,6 +60,9 @@
 
 - Display weapons / characters infos on UI
 - Actions systems: possibility between multiple designs
+  - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)
+  - action points
+  - play again on condition
 - Can shoot from a step (lean)
 
 - Obstacle transparency
