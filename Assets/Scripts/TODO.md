@@ -43,7 +43,7 @@
 # CONTENT
 
 - Weapons
-  - mace
+  - bow
 - Magical spells
   - fireball
 - Drone
