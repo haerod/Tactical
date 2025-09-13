@@ -38,12 +38,11 @@
   - UFM/FM
 - units.EndCurrentUnitTurn as an event (not called in classes)
 - set FM_TilesActionPreview abstract
-- be sure, if fog of war is disabled, unit can see everything
+- be sure, if Fog of war is disabled, unit can see everything
 
 # CONTENT
 
 - Weapons
-  - knife
   - mace
 - Magical spells
   - fireball
