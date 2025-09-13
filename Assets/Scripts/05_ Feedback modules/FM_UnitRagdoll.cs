@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 /// <summary>
 /// Create a unit ragdoll
 /// </summary>
-public class UFM_UnitRagdoll : MonoBehaviour
+public class FM_UnitRagdoll : MonoBehaviour
 {
     [SerializeField] private GameObject unitRagdollPrefab;
     

@@ -57,7 +57,6 @@
 
 # FEATURES
 
-- Display weapons / characters infos on UI
 - Actions systems: possibility between multiple designs
   - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)
   - action points

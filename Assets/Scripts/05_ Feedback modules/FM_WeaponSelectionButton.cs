@@ -2,18 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UIElements;
 using static M__Managers;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
-public class FM_WeaponSelectionButton : MonoBehaviour
+public class FM_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Button button;
     [SerializeField] private Image weaponSprite;
     [SerializeField] private TextMeshProUGUI buttonText;
     
-    private U__Unit character;
+    private U__Unit unit;
     private FM_WeaponButtonsHolder holder;
+    private Weapon weapon;
+    
+    public static event EventHandler<FM_WeaponSelectionButton> OnAnyWeaponSelectionButtonEnter;
+    public static event EventHandler<FM_WeaponSelectionButton> OnAnyWeaponSelectionButtonExit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -31,26 +38,33 @@ public class FM_WeaponSelectionButton : MonoBehaviour
     public void SetParameters(FM_WeaponButtonsHolder linkedHolder, U__Unit linkedCharacter)
     {
         holder = linkedHolder;
-        character = linkedCharacter;
+        unit = linkedCharacter;
     }
 
     /// <summary>
     /// Displays the button with the weapon's infos.
     /// </summary>
-    /// <param name="weapon"></param>
-    public void DisplayButton(Weapon weapon)
+    /// <param name="weaponToDisplay"></param>
+    public void DisplayButton(Weapon weaponToDisplay)
     {
+        weapon = weaponToDisplay;
         weaponSprite.sprite = weapon.GetIcon();
         buttonText.text = weapon.GetName();
         button.onClick.AddListener(delegate
             {
-                character.weaponHolder.SetCurrentWeapon(weapon);
-                holder.CreateWeaponButtons(character);
+                unit.weaponHolder.SetCurrentWeapon(weapon);
+                holder.CreateWeaponButtons(unit);
             });
         
-        if(weapon == character.weaponHolder.GetCurrentWeapon())
+        if(weapon == unit.weaponHolder.GetCurrentWeapon())
             button.interactable = false;
     }
+    
+    /// <summary>
+    /// Returns the displayed weapon.
+    /// </summary>
+    /// <returns></returns>
+    public Weapon GetWeapon() => weapon;
     
     // ======================================================================
     // PRIVATE METHODS
@@ -59,4 +73,14 @@ public class FM_WeaponSelectionButton : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
+    
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        OnAnyWeaponSelectionButtonEnter?.Invoke(this, this);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        OnAnyWeaponSelectionButtonExit?.Invoke(this, this);
+    }
 }
