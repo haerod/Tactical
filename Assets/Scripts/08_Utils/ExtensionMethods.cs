@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 
 public static class ExtensionMethods
@@ -136,6 +137,22 @@ public static class ExtensionMethods
     /// <param name="item"></param>
     public static void AddIfNotNull<T>(this List<T> list, T item) => list.AddIf(item, item != null);
 
+    // ======================================================================
+    // ENUMERABLE
+    // ======================================================================
+    
+    /// <summary>
+    /// Randomize the IEnumerable item's order.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static IEnumerable<T> Randomize<T>(this IEnumerable<T> source)
+    {
+        System.Random rnd = new();
+        return source.OrderBy((item) => rnd.Next());
+    }
+    
     // ======================================================================
     // INT
     // ======================================================================

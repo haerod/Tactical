@@ -5,6 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New damage type", menuName = "Basic Unity Tactical Tool/Damage type", order = 4)]
 public class DamageType : ScriptableObject
 {
+    [SerializeField] private Sprite icon;
+    
+    // ======================================================================
+    // PUBLIC METHODS
+    // ======================================================================
+    
     public override bool Equals(object other)
     {
         if (other is DamageType type)
@@ -18,4 +24,14 @@ public class DamageType : ScriptableObject
     public static bool operator ==(DamageType x, DamageType y) => x.name == y.name;
 
     public static bool operator !=(DamageType x, DamageType y) => x.name != y.name;
+    
+    /// <summary>
+    /// Returns the damage type's icon.
+    /// </summary>
+    /// <returns></returns>
+    public Sprite GetIcon() => icon;
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
 }
