@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using static M__Managers;
 
@@ -17,7 +18,12 @@ public class UFM_OutOfRangeIcon : MonoBehaviour
     {
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
     }
-    
+
+    private void OnDisable()
+    {
+        InputEvents.OnTileEnter -= InputEvents_OnTileEnter;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

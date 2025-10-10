@@ -9,6 +9,8 @@ public class FogOfWar : MonoBehaviour
 {
     private List<Tile> viewArea;
     
+    private U__Unit currentUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -17,6 +19,18 @@ public class FogOfWar : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+    }
+
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+
+        if (!currentUnit) 
+            return;
+        
+        currentUnit.move.OnUnitEnterTile -= Move_OnUnitEnterTile;
+        currentUnit.move.OnMovementEnd -= Move_OnMovementEnd;
     }
 
     // ======================================================================
@@ -131,18 +145,22 @@ public class FogOfWar : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        ShowVisibleElements(startingCharacter.look.visibleTiles);
+        ShowVisibleElements(startingUnit.look.visibleTiles);
         
-        startingCharacter.move.OnUnitEnterTile += Move_OnUnitEnterTile;
-        startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
+        currentUnit = startingUnit;
+        
+        currentUnit.move.OnUnitEnterTile += Move_OnUnitEnterTile;
+        currentUnit.move.OnMovementEnd += Move_OnMovementEnd;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
-        endingCharacter.move.OnUnitEnterTile -= Move_OnUnitEnterTile;
-        endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
+        currentUnit.move.OnUnitEnterTile -= Move_OnUnitEnterTile;
+        currentUnit.move.OnMovementEnd -= Move_OnMovementEnd;
+        
+        currentUnit = null;
     }
     
     private void Move_OnMovementEnd(object sender, EventArgs e)

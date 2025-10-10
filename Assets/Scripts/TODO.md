@@ -60,6 +60,7 @@
   - play again on condition
 - Can shoot from a step (lean)
 
+- Transform the tool in package
 - Obstacle transparency
 - Team alliances (difference between Allie and Teammate)
 - Coordinates of the covers / logic of tiles hold covers -> create a new grid for elements on edges / vertex
