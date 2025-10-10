@@ -67,12 +67,9 @@ public class UnitAutoChangeWeapon : MonoBehaviour
     private void AutoChangeWeapon()
     {
         U_WeaponHolder weaponHolder = current.weaponHolder;
-
         weaponHolder.SetCurrentWeapon(weaponHolder.GetCurrentWeapon());
-
-        foreach (WeaponGraphics testedWeaponGraphics in weaponHolder.GetWeaponGraphicsList())
-        {
-            EditorUtility.SetDirty(testedWeaponGraphics.gameObject); // Save the character modifications
-        }
+        
+        if(weaponHolder.GetCurrentWeapon())
+            EditorUtility.SetDirty(weaponHolder.GetCurrentWeaponGraphics().gameObject); // Save the character modifications
     }
 }

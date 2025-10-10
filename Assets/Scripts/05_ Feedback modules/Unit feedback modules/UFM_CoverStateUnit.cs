@@ -132,6 +132,8 @@ public class UFM_CoverStateUnit : MonoBehaviour
         
         U__Unit currentUnit = _units.current;
         
+        if(!currentUnit)
+            return; // No current unit
         if(currentUnit == unit)
             return; // Current character
         if(!currentUnit.look.CharactersVisibleInFog().Contains(unit))

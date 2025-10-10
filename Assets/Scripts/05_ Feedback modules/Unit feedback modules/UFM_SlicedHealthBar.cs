@@ -169,6 +169,8 @@ public class UFM_SlicedHealthBar : MonoBehaviour
         
         U__Unit currentUnit = _units.current;
         
+        if(!currentUnit)
+            return; // No current unit
         if(currentUnit == unit)
             return; // Current unit
         if(!currentUnit.look.CharactersVisibleInFog().Contains(unit))

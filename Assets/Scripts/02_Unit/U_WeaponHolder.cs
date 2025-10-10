@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -14,6 +16,7 @@ public class U_WeaponHolder : MonoBehaviour
 
     [SerializeField] private U__Unit unit;
     [SerializeField] private List<WeaponGraphics> weaponGraphicsList;
+    [SerializeField] private Transform hand;
 
     private WeaponGraphics currentWeaponGraphics;
 
@@ -25,7 +28,7 @@ public class U_WeaponHolder : MonoBehaviour
     
     private void Start()
     {
-        unit.anim.SetWeaponAnimation(unit.weaponHolder.GetCurrentWeaponGraphics());
+        unit.anim.SetWeaponAnimation(GetCurrentWeaponGraphics());
     }
     
     // ======================================================================
@@ -71,12 +74,15 @@ public class U_WeaponHolder : MonoBehaviour
         if (currentWeaponGraphics)
             return currentWeaponGraphics;
 
-        foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
+        foreach (Transform child in hand)
         {
-            bool isCurrentWeapon = testedWeaponGraphics.GetWeapon() == currentWeapon;
+            WeaponGraphics weaponGraphics = child.GetComponent<WeaponGraphics>();
+            
+            if (!weaponGraphics)
+                continue;
 
-            if (isCurrentWeapon)
-                currentWeaponGraphics = testedWeaponGraphics;
+            currentWeaponGraphics = weaponGraphics;
+            return weaponGraphics;
         }
 
         return currentWeaponGraphics;
@@ -87,21 +93,23 @@ public class U_WeaponHolder : MonoBehaviour
     // ======================================================================
     
     /// <summary>
-    /// Displays the asked weapon, hide the other one.
+    /// Displays the current weapon.
     /// </summary>
     private void DisplayWeapon()
     {
-        foreach (WeaponGraphics testedWeaponGraphics in weaponGraphicsList)
+        if (currentWeaponGraphics)
         {
-            bool isCurrentWeapon = testedWeaponGraphics.GetWeapon() == currentWeapon;
-
-            if (isCurrentWeapon)
-                currentWeaponGraphics = testedWeaponGraphics;
-
-            testedWeaponGraphics.gameObject.SetActive(isCurrentWeapon);
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                Destroy(currentWeaponGraphics.gameObject);
+            else 
+                DestroyImmediate(currentWeaponGraphics.gameObject);
         }
         
+        if(!currentWeapon)
+            return; // No weapon
+        
+        GameObject weaponPrefab = weaponGraphicsList.First(weapon => weapon.GetWeapon() == currentWeapon).gameObject;
+        currentWeaponGraphics = Instantiate(weaponPrefab, hand).GetComponent<WeaponGraphics>();
         unit.anim.SetWeaponAnimation(GetCurrentWeaponGraphics());
     }
-
 }
