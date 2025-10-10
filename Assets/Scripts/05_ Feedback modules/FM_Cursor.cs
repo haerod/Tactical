@@ -15,6 +15,8 @@ public class FM_Cursor : MonoBehaviour
     
     private enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement, Heal } // /!\ If add/remove a cursor, update the SetCursor method
     
+    private U__Unit currentUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -32,7 +34,23 @@ public class FM_Cursor : MonoBehaviour
         
         _input.OnChangeClickActivation += Input_ChangeClickActivation;
     }
-    
+
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        
+        InputEvents.OnTileEnter -= InputEvents_OnTileEnter;
+        InputEvents.OnTileExit -= InputEvents_OnTileExit;
+        InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
+        InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
+        InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
+        
+        _input.OnChangeClickActivation -= Input_ChangeClickActivation;
+        
+        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -148,15 +166,23 @@ public class FM_Cursor : MonoBehaviour
             SetCursor(CursorType.OutMovement);
     }
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        if(startingCharacter.behavior.playable)
-            startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
+        if(!startingUnit.behavior.playable)
+            return; // NPC
+        
+        currentUnit = startingUnit;
+        
+        currentUnit.move.OnMovableTileEnter += Move_OnMovableTileEnter;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingTurnCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
-        if(endingTurnCharacter.behavior.playable)
-            endingTurnCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
+        if(!endingUnit.behavior.playable)
+            return; // NPC
+        
+        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
+        
+        currentUnit = null;
     }
 }

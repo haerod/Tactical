@@ -65,6 +65,14 @@ public class M_Input : MonoBehaviour
         A__Action.OnAnyActionEnd += Action_OnAnyActionEnd;
     }
 
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _rules.OnVictory -= Rules_OnVictory;
+        A__Action.OnAnyActionStart -= Action_OnAnyActionStart;
+        A__Action.OnAnyActionEnd -= Action_OnAnyActionEnd;
+    }
+
     private void Update()
     {
         if (!canUsePlayerInput) 

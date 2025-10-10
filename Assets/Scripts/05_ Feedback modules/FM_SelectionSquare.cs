@@ -12,6 +12,8 @@ public class FM_SelectionSquare : MonoBehaviour
     [SerializeField] private Color inRangeColor = Color.white;
     [SerializeField] private Color outRangeColor = Color.grey;
 
+    private U__Unit currentUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -22,7 +24,19 @@ public class FM_SelectionSquare : MonoBehaviour
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _rules.OnVictory += Rules_OnVictory;
     }
-    
+
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        _rules.OnVictory -= Rules_OnVictory;
+        
+        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;       
+        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
+        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
+        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -57,28 +71,31 @@ public class FM_SelectionSquare : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        if(!startingCharacter.behavior.playable)
+        if(!startingUnit.behavior.playable)
             return; // NPC
         
-        startingCharacter.move.OnMovableTileEnter += Move_OnMovableTileEnter;
-        startingCharacter.move.OnMovementStart += Move_OnMovementStart;
-        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
+        currentUnit = startingUnit;
+        
+        currentUnit.move.OnMovableTileEnter += Move_OnMovableTileEnter;
+        currentUnit.move.OnMovementStart += Move_OnMovementStart;
+        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
         InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
         DisableSquare();
         
-        if(!endingCharacter.behavior.playable)
+        if(!endingUnit.behavior.playable)
             return; // NPC
         
-        endingCharacter.move.OnMovableTileEnter -= Move_OnMovableTileEnter;       
-        endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
-        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
+        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;       
+        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
+        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
         InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
+        currentUnit = null;
     }
 
     private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)

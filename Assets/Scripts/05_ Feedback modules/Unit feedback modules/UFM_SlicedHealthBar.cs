@@ -35,6 +35,19 @@ public class UFM_SlicedHealthBar : MonoBehaviour
         health.HealthChanged += Health_HealthChanged;
     }
 
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        
+        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
+        InputEvents.OnTileExit -= InputEvents_OnTileExit;
+        InputEvents.OnTileEnter -= InputEvents_OnTileEnter;
+        
+        health.OnDeath -= Health_OnDeath;
+        health.HealthChanged -= Health_HealthChanged;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

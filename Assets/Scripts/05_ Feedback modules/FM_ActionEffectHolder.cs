@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ public class FM_ActionEffectHolder : MonoBehaviour
     [Header("REFERENCES")]
     [SerializeField] private GameObject actionEffectFeedbackPrefab;
     
+    private U__Unit currentUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -22,6 +25,16 @@ public class FM_ActionEffectHolder : MonoBehaviour
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         U_Health.OnAnyHealthLoss += Health_OnAnyHealthLoss;
         U_Health.OnAnyHealthGain += Health_OnAnyHealthGain;
+    }
+
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        U_Health.OnAnyHealthLoss -= Health_OnAnyHealthLoss;
+        U_Health.OnAnyHealthGain -= Health_OnAnyHealthGain;
+        
+        currentUnit.attack.OnAttackMiss -= Attack_OnAttackMiss;
     }
 
     // ======================================================================
@@ -49,19 +62,21 @@ public class FM_ActionEffectHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        startingCharacter.attack.OnAttackMiss += Attack_OnAttackMiss;
+        currentUnit = startingUnit;
+        currentUnit.attack.OnAttackMiss += Attack_OnAttackMiss;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
-        endingCharacter.attack.OnAttackMiss -= Attack_OnAttackMiss;
+        currentUnit.attack.OnAttackMiss -= Attack_OnAttackMiss;
+        currentUnit = null;
     }
     
-    private void Attack_OnAttackMiss(object sender, U__Unit missedCharacter)
+    private void Attack_OnAttackMiss(object sender, U__Unit missedUnit)
     {
-        DisplayActionEffectFeedback(missText, missedCharacter.transform);
+        DisplayActionEffectFeedback(missText, missedUnit.transform);
     }
     
     private void Health_OnAnyHealthLoss(object sender, int healthLoss)

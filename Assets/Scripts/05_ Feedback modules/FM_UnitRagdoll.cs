@@ -20,7 +20,12 @@ public class FM_UnitRagdoll : MonoBehaviour
     {
         U_Health.OnAnyDeath += Health_OnAnyDeath;
     }
-    
+
+    private void OnDisable()
+    {
+        U_Health.OnAnyDeath -= Health_OnAnyDeath;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

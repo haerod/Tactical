@@ -35,6 +35,11 @@ public class M_Units : MonoBehaviour
     
     private void Start()
     {
+        StartCoroutine(LateStart_Coroutine());
+    }
+
+    private void LateStart()
+    {
         _input.OnChangeUnitInput += Input_OnChangeUnitInput;
         _input.OnEndTurnInput += Input_OnEndTurnInput;
 
@@ -42,7 +47,13 @@ public class M_Units : MonoBehaviour
         StartNextTeamTurn(firstUnit.unitTeam);
         StartUnitTurn(firstUnit);
     }
-    
+
+    private void OnDisable()
+    {
+        _input.OnChangeUnitInput -= Input_OnChangeUnitInput;
+        _input.OnEndTurnInput -= Input_OnEndTurnInput;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -138,6 +149,12 @@ public class M_Units : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    private IEnumerator LateStart_Coroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        LateStart();
+    }
     
     /// <summary>
     /// Starts the turn of a given unit.

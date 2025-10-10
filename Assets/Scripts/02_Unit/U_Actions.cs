@@ -24,6 +24,14 @@ public class U_Actions : MonoBehaviour
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
     }
 
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        _units.OnTeamTurnStart -= Units_OnTeamTurnStart;
+        _units.OnTeamTurnEnd -= Units_OnTeamTurnEnd;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -33,8 +41,8 @@ public class U_Actions : MonoBehaviour
     /// </summary>
     /// <param name="usableActions"></param>
     public void SetActionsUsabilityOf(List<A__Action> usableActions) => actions
-        .ForEach(action => action.SetCanUseAction(usableActions.Contains(action)));
-    
+            .ForEach(action => action.SetCanUseAction(usableActions.Contains(action)));
+
     /// <summary>
     /// Returns true if the list contains an Action of the given type.
     /// </summary>
@@ -49,8 +57,8 @@ public class U_Actions : MonoBehaviour
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public bool HasUsableAction<T>() where T : A__Action => actions
-        .Any(action => action is T && action.CanUse());
-    
+            .Any(action => action is T && action.CanUse());
+
     /// <summary>
     /// Returns the Action of the given type.
     /// </summary>

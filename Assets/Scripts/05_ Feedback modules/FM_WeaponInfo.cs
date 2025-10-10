@@ -29,6 +29,12 @@ public class FM_WeaponInfo : MonoBehaviour
         FM_WeaponSelectionButton.OnAnyWeaponSelectionButtonExit += WeaponSelectionButton_OnAnyWeaponSelectionButtonExit;
     }
 
+    private void OnDisable()
+    {
+        FM_WeaponSelectionButton.OnAnyWeaponSelectionButtonEnter -= WeaponSelectionButton_OnAnyWeaponSelectionButtonEnter;
+        FM_WeaponSelectionButton.OnAnyWeaponSelectionButtonExit -= WeaponSelectionButton_OnAnyWeaponSelectionButtonExit;        
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

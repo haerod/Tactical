@@ -9,6 +9,8 @@ public class FM_TurnButtons : MonoBehaviour
 {
     [SerializeField] private Button nextTurnButton;
 
+    private U__Unit currentUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -18,6 +20,18 @@ public class FM_TurnButtons : MonoBehaviour
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _rules.OnVictory += Rules_OnVictory;
+    }
+    
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        _rules.OnVictory -= Rules_OnVictory;
+        
+        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
+        currentUnit.move.OnMovementEnd -= Move_OnMovementEnd;
+        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
+        currentUnit.attack.OnAttackEnd -= Attack_OnAttackEnd;
     }
 
     // ======================================================================
@@ -48,10 +62,12 @@ public class FM_TurnButtons : MonoBehaviour
         if(!startingCharacter.behavior.playable)
             return; // NPC
 
-        startingCharacter.move.OnMovementStart += Move_OnMovementStart;
-        startingCharacter.move.OnMovementEnd += Move_OnMovementEnd;
-        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
-        startingCharacter.attack.OnAttackEnd += Attack_OnAttackEnd;
+        currentUnit = startingCharacter;
+        
+        currentUnit.move.OnMovementStart += Move_OnMovementStart;
+        currentUnit.move.OnMovementEnd += Move_OnMovementEnd;
+        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
+        currentUnit.attack.OnAttackEnd += Attack_OnAttackEnd;
         
         SetTurnButtonsActive(true);
     }
@@ -61,10 +77,12 @@ public class FM_TurnButtons : MonoBehaviour
         if(!endingCharacter.behavior.playable)
             return; // NPC
         
-        endingCharacter.move.OnMovementStart -= Move_OnMovementStart;
-        endingCharacter.move.OnMovementEnd -= Move_OnMovementEnd;
-        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
-        endingCharacter.attack.OnAttackEnd -= Attack_OnAttackEnd;
+        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
+        currentUnit.move.OnMovementEnd -= Move_OnMovementEnd;
+        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
+        currentUnit.attack.OnAttackEnd -= Attack_OnAttackEnd;
+        
+        currentUnit = null;
     }
     
     private void Attack_OnAttackStart(object sender, EventArgs e)

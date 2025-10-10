@@ -32,7 +32,13 @@ public class U_Look : MonoBehaviour
         unit.move.OnMovementStart += Move_OnMovementStart;
         unit.move.OnUnitEnterTile += Move_OnUnitEnterTile;
     }
-    
+
+    private void OnDisable()
+    {
+        unit.move.OnMovementStart -= Move_OnMovementStart;
+        unit.move.OnUnitEnterTile -= Move_OnUnitEnterTile;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

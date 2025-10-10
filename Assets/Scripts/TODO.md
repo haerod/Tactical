@@ -3,9 +3,6 @@
 ## Camera
 - recenter camera doesn't work (function is called but does nothing)
 
-## Restart scene
-- bug on F_Covers, easy repro
-
 # REFACTOR
 
 ## M_Rules

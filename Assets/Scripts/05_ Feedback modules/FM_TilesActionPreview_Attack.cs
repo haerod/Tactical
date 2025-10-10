@@ -12,6 +12,8 @@ public class FM_TilesActionPreview_Attack : MonoBehaviour
     [SerializeField] private Material feedbackTileMaterial;
     private List<Tile> tilesWithFeedback = new();
     
+    private U__Unit currentUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -23,6 +25,18 @@ public class FM_TilesActionPreview_Attack : MonoBehaviour
         A__Action.OnAnyActionStart += Action_OnAnyActionStart;
         A__Action.OnAnyActionEnd += Action_OnAnyActionEnd;
         _rules.OnVictory += Rules_OnVictory;
+    }
+
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        A__Action.OnAnyActionStart -= Action_OnAnyActionStart;
+        A__Action.OnAnyActionEnd -= Action_OnAnyActionEnd;
+        _rules.OnVictory -= Rules_OnVictory;
+        
+        if(currentUnit)
+            currentUnit.weaponHolder.OnWeaponChange -= WeaponsHolder_OnWeaponChanged;
     }
 
     // ======================================================================
@@ -64,7 +78,8 @@ public class FM_TilesActionPreview_Attack : MonoBehaviour
         if (!startingUnit.actions.HasUsableAction<A_Attack>()) 
             return; // No attack action
         
-        startingUnit.weaponHolder.OnWeaponChange += WeaponsHolder_OnWeaponChanged;
+        currentUnit = startingUnit;
+        currentUnit.weaponHolder.OnWeaponChange += WeaponsHolder_OnWeaponChanged;
         ShowFeedbacks(startingUnit.attack.AttackableTiles());
     }
     
@@ -75,8 +90,10 @@ public class FM_TilesActionPreview_Attack : MonoBehaviour
         if (!endingUnit.actions.HasUsableAction<A_Attack>()) 
             return; // No attack action
         
-        endingUnit.weaponHolder.OnWeaponChange -= WeaponsHolder_OnWeaponChanged;
+        currentUnit.weaponHolder.OnWeaponChange -= WeaponsHolder_OnWeaponChanged;
         HideFeedbacks();
+        
+        currentUnit = null;
     }
     
     private void Action_OnAnyActionStart(object sender, U__Unit startingActionUnit)

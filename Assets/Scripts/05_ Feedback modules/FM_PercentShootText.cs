@@ -17,6 +17,8 @@ public class FM_PercentShootText : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI percentShootText;
 
+    private U__Unit currentUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -26,7 +28,21 @@ public class FM_PercentShootText : MonoBehaviour
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
-    
+
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        
+        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
+        InputEvents.OnNoTile -= InputEvents_OnNoTile;
+        InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
+        InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
+        InputEvents.OnUnitExit -= InputEvents_OnUnitExit;
+        InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
+        InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
+    }
+
     private void Update()
     {
         SetPercentShootTextPosition();
@@ -87,12 +103,14 @@ public class FM_PercentShootText : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        if(!startingCharacter.behavior.playable)
+        if(!startingUnit.behavior.playable)
             return; // NPC
+
+        currentUnit = startingUnit;
         
-        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
+        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
         InputEvents.OnNoTile += InputEvents_OnNoTile;
         InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
@@ -101,20 +119,22 @@ public class FM_PercentShootText : MonoBehaviour
         InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
     }
 
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
-        if(!endingCharacter.behavior.playable)
+        if(!endingUnit.behavior.playable)
             return; // NPC
         
-        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
+        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
         InputEvents.OnNoTile -= InputEvents_OnNoTile;
         InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
-        InputEvents.OnUnitExit += InputEvents_OnUnitExit;
+        InputEvents.OnUnitExit -= InputEvents_OnUnitExit;
         InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
         InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
         
         DisablePercentShootText();
+        
+        currentUnit = null;
     }
     
     private void InputEvents_OnFreeTileEnter(object sender, Tile tile)
@@ -129,15 +149,15 @@ public class FM_PercentShootText : MonoBehaviour
 
     private void InputEvents_OnEnemyEnter(object sender, U__Unit enemy)
     {
-        U__Unit currentUnit = _units.current;
+        U__Unit current = _units.current;
         
-        if(!currentUnit.CanPlay())
+        if(!current.CanPlay())
             return; // Unit can't play
         
-        if(!currentUnit.attack.AttackableTiles().Contains(enemy.tile))
+        if(!current.attack.AttackableTiles().Contains(enemy.tile))
             return; // Enemy not visible
         
-        SetPercentShootText(currentUnit.attack.GetChanceToTouch(enemy));   
+        SetPercentShootText(current.attack.GetChanceToTouch(enemy));   
     }
     
     private void InputEvents_OnCurrentUnitEnter(object sender, EventArgs e)

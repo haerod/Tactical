@@ -17,6 +17,8 @@ public class FM_AttackLineOfSight : MonoBehaviour
     private bool isShowing;
     private U__Unit attacker, target;
     
+    private U__Unit currentUnit;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -25,6 +27,16 @@ public class FM_AttackLineOfSight : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+    }
+
+    private void OnDisable()
+    {
+        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
+        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
+        
+        InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
+        InputEvents.OnTileExit -= InputEvents_OnTileExit;
+        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
     }
 
     private void Update()
@@ -64,39 +76,43 @@ public class FM_AttackLineOfSight : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        if(!startingCharacter.behavior.playable)
+        if(!startingUnit.behavior.playable)
             return; // NPC
+        
+        currentUnit = startingUnit;
         
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
-        startingCharacter.attack.OnAttackStart += Attack_OnAttackStart;
+        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
     }
 
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
-        if(!endingCharacter.behavior.playable)
+        if(!endingUnit.behavior.playable)
             return; // NPC
         
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
         InputEvents.OnTileExit -= InputEvents_OnTileExit;
-        endingCharacter.attack.OnAttackStart -= Attack_OnAttackStart;
+        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
+        
+        currentUnit = null;
     }
 
-    private void InputEvents_OnEnemyEnter(object sender, U__Unit enteredCharacter)
+    private void InputEvents_OnEnemyEnter(object sender, U__Unit enteredUnit)
     {
         U__Unit current = _units.current;
         
         if(!current.CanPlay())
             return; // Can't play
-        if(!enteredCharacter.team.IsEnemyOf(current))
+        if(!enteredUnit.team.IsEnemyOf(current))
             return; // Not an enemy
-        if(!current.attack.AttackableTiles().Contains(enteredCharacter.tile))
+        if(!current.attack.AttackableTiles().Contains(enteredUnit.tile))
             return; // Can't attack this character
         
         
-        Show(current, enteredCharacter);
+        Show(current, enteredUnit);
     }
     
     private void InputEvents_OnTileExit(object sender, Tile exitedTile)
