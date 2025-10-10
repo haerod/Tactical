@@ -48,7 +48,8 @@ public class FM_Cursor : MonoBehaviour
         
         _input.OnChangeClickActivation -= Input_ChangeClickActivation;
         
-        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
+        if(currentUnit)
+            currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
     }
 
     // ======================================================================
@@ -160,9 +161,11 @@ public class FM_Cursor : MonoBehaviour
     
     private void InputEvents_OnTileEnter(object sender, Tile tile)
     {
-        U__Unit currentCharacter = _units.current;
+        U__Unit current = _units.current;
+        if(!current)
+            return; // No current unit
         
-        if (!currentCharacter.move.CanWalkAt(tile.coordinates) || !currentCharacter.CanPlay()) 
+        if (!current.move.CanWalkAt(tile.coordinates) || !current.CanPlay()) 
             SetCursor(CursorType.OutMovement);
     }
     

@@ -28,6 +28,9 @@ public class FM_TurnButtons : MonoBehaviour
         _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
         _rules.OnVictory -= Rules_OnVictory;
         
+        if(!currentUnit)
+            return;
+        
         currentUnit.move.OnMovementStart -= Move_OnMovementStart;
         currentUnit.move.OnMovementEnd -= Move_OnMovementEnd;
         currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;

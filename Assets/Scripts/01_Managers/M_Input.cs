@@ -350,6 +350,8 @@ public static class InputEvents
         OnTileEnter?.Invoke(null, tile);
         
         U__Unit currentUnit = _units.current;
+        if(!currentUnit)
+            return; // No current unit
         
         if (!currentUnit.move.CanWalkAt(tile.coordinates) || !currentUnit.CanPlay()) 
             return; // Can't go on this tile or can't play
@@ -390,5 +392,4 @@ public static class InputEvents
     // ======================================================================
     // EVENTS
     // ======================================================================
-
 }

@@ -50,6 +50,8 @@ public class UFM_OutOfRangeIcon : MonoBehaviour
     {
         U__Unit currentUnit = _units.current;
         
+        if(!currentUnit)
+            return; // No current unit
         if(currentUnit.team.IsTeammateOf(unit))
             return; // Teammate
         if(!currentUnit.look.CanSee(unit))

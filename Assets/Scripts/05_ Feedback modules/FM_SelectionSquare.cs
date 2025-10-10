@@ -31,10 +31,14 @@ public class FM_SelectionSquare : MonoBehaviour
         _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
         _rules.OnVictory -= Rules_OnVictory;
         
+        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
+        
+        if(!currentUnit)
+            return;
+        
         currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;       
         currentUnit.move.OnMovementStart -= Move_OnMovementStart;
         currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
-        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
     }
 
     // ======================================================================

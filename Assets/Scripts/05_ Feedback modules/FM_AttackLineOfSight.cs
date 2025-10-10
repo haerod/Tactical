@@ -36,7 +36,9 @@ public class FM_AttackLineOfSight : MonoBehaviour
         
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
         InputEvents.OnTileExit -= InputEvents_OnTileExit;
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
+        
+        if(currentUnit)
+            currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
     }
 
     private void Update()
@@ -124,5 +126,4 @@ public class FM_AttackLineOfSight : MonoBehaviour
     {
         Hide();
     }
-
 }
