@@ -45,23 +45,23 @@ public class U_Team : MonoBehaviour
     /// <summary>
     /// Returns true if the unit is an ally of the given unit. Else returns false.
     /// </summary>
-    /// <param name="testedCharacter"></param>
+    /// <param name="testedUnit"></param>
     /// <returns></returns>
-    public bool IsAllyOf(U__Unit testedCharacter) => team == testedCharacter.unitTeam;
+    public bool IsAllyOf(U__Unit testedUnit) => team == testedUnit.unitTeam;
 
     /// <summary>
     /// Returns true if the unit is an enemy of the given unit. Else returns false.
     /// </summary>
-    /// <param name="testedCharacter"></param>
+    /// <param name="testedUnit"></param>
     /// <returns></returns>
-    public bool IsEnemyOf(U__Unit testedCharacter) => team != testedCharacter.unitTeam;
+    public bool IsEnemyOf(U__Unit testedUnit) => team != testedUnit.unitTeam;
     
     /// <summary>
     /// Returns true if the unit is in the same team of the given unit. Else returns false.
     /// </summary>
-    /// <param name="testedCharacter"></param>
+    /// <param name="testedUnit"></param>
     /// <returns></returns>
-    public bool IsTeammateOf(U__Unit testedCharacter) => team == testedCharacter.unitTeam;
+    public bool IsTeammateOf(U__Unit testedUnit) => team == testedUnit.unitTeam;
     
     // ======================================================================
     // PRIVATE METHODS

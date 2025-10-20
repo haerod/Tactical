@@ -3,12 +3,13 @@ using UnityEditor;
 using System;
 using System.Linq;
 using UnityEngine.Serialization;
+using static M__Managers;
 
 [ExecuteInEditMode]
 public class UnitAutoSnap : BaseAutoSnap
 {
-    [HideInInspector] public U__Unit unit; // Note : Let it serializable to be dirty.
-    [HideInInspector] public M_Units units; // Note : Let it serializable to be dirty.
+    private U__Unit unit => _unit ??= GetComponent<U__Unit>();
+    private U__Unit _unit;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -20,11 +21,11 @@ public class UnitAutoSnap : BaseAutoSnap
     {
         if (!IsInEditor())
             return; // Not in editor mode
-        if (!units)
+        if (!_units)
             return; // Exit prefab mode
 
-        units.RemoveUnit(unit);
-        EditorUtility.SetDirty(units);
+        _units.RemoveUnit(unit);
+        SetParametersDirty();
     }
 
 #endif
@@ -33,28 +34,10 @@ public class UnitAutoSnap : BaseAutoSnap
     // INHERITED
     // ======================================================================
 
-    protected override void SetParameters()
-    {
-        unit = GetComponent<U__Unit>();
-        units = FindAnyObjectByType<M_Units>();
-        transform.parent = units.transform;
-    }
-    
-    protected override void MoveObject(Coordinates coordinates)
-    {
-        unit.MoveAt(coordinates.x, coordinates.y);
-    }
+    protected override void SetParameters() => transform.parent = _units.transform;
 
-    protected override void AddToManager()
-    {
-        units.AddUnit(unit);
-    }
-    
-    protected override void RemoveFromManager()
-    {
-        units.RemoveUnit(unit);
-    }
-    
+    protected override void MoveObject(Coordinates coordinates) => unit.MoveAt(coordinates.x, coordinates.y);
+
     protected override bool IsOnValidPosition()
     {
         Tile validTile = GetWalkableTileUnder();
@@ -67,12 +50,7 @@ public class UnitAutoSnap : BaseAutoSnap
         return true;
     }
     
-    protected override void SetParametersDirty()
-    {
-        EditorUtility.SetDirty(this);
-        EditorUtility.SetDirty(gameObject);
-        EditorUtility.SetDirty(units);
-    }
+    protected override void SetParametersDirty() => EditorUtility.SetDirty(unit.gameObject);
 
     // ======================================================================
     // PUBLIC METHODS
@@ -81,7 +59,7 @@ public class UnitAutoSnap : BaseAutoSnap
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Get the tile under the unit, if it can walk on.
     /// </summary>

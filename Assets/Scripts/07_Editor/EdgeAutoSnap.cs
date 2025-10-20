@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Serialization;
+using static M__Managers;
 
 [ExecuteInEditMode]
 public class EdgeAutoSnap : BaseAutoSnap
@@ -14,7 +15,6 @@ public class EdgeAutoSnap : BaseAutoSnap
 
     [SerializeField] private Transform edgeTransform;
 
-    [HideInInspector] public M_Board board; // Note : Let it serializable to be dirty.
     [HideInInspector] public Edge edgeEntity; // Note : Let it serializable to be dirty.
     [HideInInspector] public Tile parentTile; // Note : Let it serializable to be dirty.
 
@@ -31,11 +31,11 @@ public class EdgeAutoSnap : BaseAutoSnap
     {
         if (!IsInEditor())
             return; // Not editor mode
-        if (!board)
+        if (!_board)
             return; // Exit prefab mode
 
         //board.edgeGrid.RemoveEdge(edgeEntity);
-        EditorUtility.SetDirty(board);
+        EditorUtility.SetDirty(_board);
     }
 
 #endif
@@ -48,11 +48,6 @@ public class EdgeAutoSnap : BaseAutoSnap
     {
         positionBeforeMovement = GetPositionBeforeMovement();
         base.CheckGridPosition();
-    }
-
-    protected override void AddToManager()
-    {
-        //board.edgeGrid.AddEdge(edgeEntity);
     }
 
     protected override bool IsOnValidPosition() => IsTileUnder() && !IsOtherEdgeAtPosition();
@@ -69,21 +64,15 @@ public class EdgeAutoSnap : BaseAutoSnap
     {
         base.SetParameters();
         edgeEntity = GetComponent<Edge>();
-        board = FindAnyObjectByType<M_Board>();
-        transform.parent = board.transform;
+        transform.parent = _board.transform;
         transform.hasChanged = true;
-    }
-    
-    protected override void RemoveFromManager()
-    {
-        //board.edgeGrid.RemoveEdge(edgeEntity);
     }
 
     protected override void SetParametersDirty()
     {
         EditorUtility.SetDirty(this);
         EditorUtility.SetDirty(gameObject);
-        EditorUtility.SetDirty(board);
+        EditorUtility.SetDirty(_board);
     }
 
     // ======================================================================

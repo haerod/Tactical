@@ -3,93 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using static M__Managers;
 
 [ExecuteInEditMode]
 public class TileAutoSnap : BaseAutoSnap
 {
-    [HideInInspector] public Tile tile; // Note : Let it serializable to be dirty.
-    [HideInInspector] public M_Board board; // Note : Let it serializable to be dirty.
-
+    private Tile tile => _tile ??= GetComponent<Tile>();
+    private Tile _tile;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
-#if UNITY_EDITOR
-
-    private void Start()
-    {
-        if (!IsInEditor())
-            return; // Not in editor
-
-        if (IsOnValidPosition()) 
-            return; // Not on a valid position
-        
-        isLocated = false;
-
-        Coordinates baseCoordinates = tile.coordinates;
-        Coordinates freeCoordinates = baseCoordinates;
-
-        foreach (Coordinates coordinates in board.GetEmptySquareCoordinatesWithRadius(tile.coordinates.x, tile.coordinates.y, 1))
-        {
-            if (GetOtherTileAtCoordinates(coordinates))
-                continue; // Not empty
-
-            if (tile.coordinates.x == coordinates.x ^ tile.coordinates.y == coordinates.y)
-            {
-                freeCoordinates = coordinates;
-                break; // Not in diagonal, get it first.
-            }
-            
-            freeCoordinates = coordinates;
-        }
-
-        if (freeCoordinates == baseCoordinates)
-            return; // No free coordinates
-
-        MoveObject(freeCoordinates);
-        AddToManager();
-        SetParametersDirty();
-        isLocated = true;
-    }
-
-    private void OnDestroy()
-    {
-        if (!IsInEditor())
-            return; // Not editor mode
-        if (!board)
-            return; // Exit prefab mode
-
-        board.tileGrid.RemoveTile(tile);
-        EditorUtility.SetDirty(board);
-    }
-
-#endif
-
+    
     // ======================================================================
     // INHERITED
     // ======================================================================
 
     protected override bool IsOnValidPosition() => !IsCollidingAnotherTile();
+    
     protected override void MoveObject(Coordinates coordinates)
     {
         tile.Setup(coordinates);
         tile.MoveAtGridPosition(coordinates.x, coordinates.y);
     }
-    protected override void AddToManager() => board.tileGrid.AddTile(tile);
-    protected override void RemoveFromManager() => board.tileGrid.RemoveTile(tile);
-    protected override void SetParametersDirty()
-    {
-        EditorUtility.SetDirty(this);
-        EditorUtility.SetDirty(gameObject);
-        EditorUtility.SetDirty(board);
-    }
+    
+    protected override void SetParametersDirty() => EditorUtility.SetDirty(tile.gameObject);
+
     protected override void SetParameters()
     {
         base.SetParameters();
-        tile = GetComponent<Tile>();
-        board = FindAnyObjectByType<M_Board>();
-        transform.parent = board.transform;
-        transform.hasChanged = true;
+        transform.parent = _board.transform;
     }
 
     // ======================================================================

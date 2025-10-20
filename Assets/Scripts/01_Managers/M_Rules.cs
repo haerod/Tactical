@@ -18,7 +18,8 @@ public class M_Rules : MonoBehaviour
     public enum VisibleInFogOfWar { InView, Allies, Everybody}
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
     
-    public static M_Rules instance;
+    public static M_Rules instance => _instance ??= FindFirstObjectByType<M_Rules>();
+    public static M_Rules _instance;
     
     public event EventHandler OnVictory;
     
@@ -29,10 +30,16 @@ public class M_Rules : MonoBehaviour
     private void Awake()
     {
         // Singleton
-        if (!instance)
-            instance = this;
+        if (!_instance)
+            _instance = this;
         else
             Debug.LogError("There is more than one M_Rules in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+    }
+    
+    private void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
     }
     
     // ======================================================================

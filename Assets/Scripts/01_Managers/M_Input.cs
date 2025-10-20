@@ -42,7 +42,9 @@ public class M_Input : MonoBehaviour
     private Tile previousTile;
     private U__Unit previousUnit;
     private Plane floorPlane = new (Vector3.up, Vector3.zero);
-    public static M_Input instance;
+    
+    public static M_Input instance => _instance ??= FindFirstObjectByType<M_Input>();
+    public static M_Input _instance;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -51,10 +53,16 @@ public class M_Input : MonoBehaviour
     private void Awake()
     {
         // Singleton
-        if (!instance)
-            instance = this;
+        if (!_instance)
+            _instance = this;
         else
             Debug.LogError("There is more than one M_Input in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+    }
+    
+    private void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
     }
     
     private void Start()

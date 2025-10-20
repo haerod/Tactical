@@ -10,7 +10,8 @@ public class M_Board : MonoBehaviour
 
     [Header("DEBUG")]
     public TileGrid tileGrid;
-    public static M_Board instance;
+    public static M_Board _instance;
+    public static M_Board instance => _instance ?? FindFirstObjectByType<M_Board>();
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -19,13 +20,18 @@ public class M_Board : MonoBehaviour
     private void Awake()
     {
         // Singleton
-        if (!instance)
-            instance = this;
+        if (!_instance)
+            _instance = this;
         else
             Debug.LogError("There is more than one M_Board in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-
-        if (Application.isPlaying)
-            tileGrid.Setup();
+        
+        tileGrid.Setup(transform.Cast<Transform>().Select(t => t.GetComponent<Tile>()).ToList());
+    }
+    
+    private void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
     }
     
     // ======================================================================

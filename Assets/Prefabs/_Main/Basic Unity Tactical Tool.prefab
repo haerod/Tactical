@@ -209,7 +209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charactersParent: {fileID: 1958866178224547778}
   tileGrid:
-    tilesToAdd: []
+    tiles: []
 --- !u!1 &1958866178010909300
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 1958866178224547778}
   - component: {fileID: 1958866178224547779}
   m_Layer: 0
-  m_Name: Characters
+  m_Name: Units
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,7 +401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   current: {fileID: 0}
   teamPlayOrder: []
-  characters: []
+  units: []
   turnBasedSystem: {fileID: 8195740186307666334, guid: 980813e3c2eb48f4b9a46ffb97717be0, type: 3}
 --- !u!1 &1958866178297490547
 GameObject:

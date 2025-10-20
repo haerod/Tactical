@@ -18,4 +18,10 @@ public static class Utils
     /// <param name="value"></param>
     /// <returns></returns>
     public static float RoundToHalf(float value) => Mathf.Round(value * 2) / 2;
+	
+    /// <summary>
+    /// Return a random boolean.
+    /// </summary>
+    /// <returns></returns>
+    public static bool RandomBool() => Random.Range(0, 2) == 0;
 }

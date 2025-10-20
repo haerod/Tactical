@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using UnityEngine.Serialization;
 using static M__Managers;
 
 public class M_Units : MonoBehaviour
 {
     [HideInInspector] public U__Unit current;
     [SerializeField] private List<Team> teamPlayOrder;
-    [SerializeField] private List<U__Unit> characters;
+    [SerializeField] private List<U__Unit> units;
     [SerializeField] private TurnBasedSystem turnBasedSystem;
     
     public event EventHandler<U__Unit> OnUnitTurnStart;
@@ -18,26 +19,35 @@ public class M_Units : MonoBehaviour
     public event EventHandler<Team> OnTeamTurnStart;
     public event EventHandler<Team> OnTeamTurnEnd;
     
-    public static M_Units instance;
+    public static M_Units instance => _instance ??= FindFirstObjectByType<M_Units>();
+    public static M_Units _instance;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
         // Singleton
-        if (!instance)
-            instance = this;
+        if (!_instance)
+            _instance = this;
         else
             Debug.LogError("There is more than one M_Characters in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        
+        units = transform.Cast<Transform>().Select(t => t.GetComponent<U__Unit>()).ToList();
+    }
+    
+    private void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
     }
     
     private void Start()
     {
         StartCoroutine(LateStart_Coroutine());
     }
-
+    
     private void LateStart()
     {
         _input.OnChangeUnitInput += Input_OnChangeUnitInput;
@@ -62,14 +72,14 @@ public class M_Units : MonoBehaviour
     /// Returns the full units list.
     /// </summary>
     /// <returns></returns>
-    public List<U__Unit> GetUnitsList() => characters;
+    public List<U__Unit> GetUnitsList() => units;
     
     /// <summary>
     /// Returns all enemies of the given unit.
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public List<U__Unit> GetAlliesOf(U__Unit unit) => characters
+    public List<U__Unit> GetAlliesOf(U__Unit unit) => units
         .Where(testedUnit => testedUnit.team.IsAllyOf(unit))
         .ToList();
     
@@ -78,7 +88,7 @@ public class M_Units : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public List<U__Unit> GetEnemiesOf(U__Unit unit) => characters
+    public List<U__Unit> GetEnemiesOf(U__Unit unit) => units
         .Where(testedUnit => testedUnit.team.IsEnemyOf(unit))
         .ToList();
     
@@ -175,7 +185,7 @@ public class M_Units : MonoBehaviour
     private bool IsAnotherUnitOfTheSameTeam(U__Unit unit) =>GetUnitsList()
             .Where(testedUnit => testedUnit != unit)
             .FirstOrDefault(testedUnit => testedUnit.team.IsAllyOf(unit));
-
+    
     /// <summary>
     /// Starts the current team's turn.
     /// </summary>

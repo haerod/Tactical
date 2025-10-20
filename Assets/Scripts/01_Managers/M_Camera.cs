@@ -28,9 +28,10 @@ public class M_Camera : MonoBehaviour
 
     [Header("REFERENCES")]
 
-    public static M_Camera instance;
-
     [SerializeField] private Camera currentCamera;
+    
+    public static M_Camera instance => _instance ??= FindFirstObjectByType<M_Camera>();
+    public static M_Camera _instance;
 
     private float currentTime;
     private Vector3 positionToReach;
@@ -46,10 +47,16 @@ public class M_Camera : MonoBehaviour
     private void Awake()
     {
         // Singleton
-        if (!instance)
-            instance = this;
+        if (!_instance)
+            _instance = this;
         else
             Debug.LogError("There is more than one M_Camera in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+    }
+    
+    private void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
     }
 
     private void Start()

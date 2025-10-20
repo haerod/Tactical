@@ -43,10 +43,8 @@ public abstract class BaseAutoSnap : MonoBehaviour
 
     protected virtual void OnDrawGizmos()
     {
-        if (EditorApplication.isPlayingOrWillChangePlaymode)
-            return; // Play mode
-        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
-            return; // Prefab mode
+        if (!IsInEditor())
+            return; // In editor
         if (isLocated)
             return; // Is located
 
@@ -92,12 +90,10 @@ public abstract class BaseAutoSnap : MonoBehaviour
                 break;
         }
         
-        RemoveFromManager();
         MoveObject(coordinates);
 
         if (IsOnValidPosition())
         {
-            AddToManager();
             isLocated = true;
         }
         else
@@ -117,16 +113,6 @@ public abstract class BaseAutoSnap : MonoBehaviour
     /// Set the base parameters of the script.
     /// </summary>
     protected virtual void SetParameters() => transform.hasChanged = true;
-
-    /// <summary>
-    /// Add the object to its manager.
-    /// </summary>
-    protected abstract void AddToManager();
-
-    /// <summary>
-    /// Remove the object from its manager.
-    /// </summary>
-    protected abstract void RemoveFromManager();
 
     /// <summary>
     /// Return true if the object is placed at a valid position.

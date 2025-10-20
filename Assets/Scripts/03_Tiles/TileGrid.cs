@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class TileGrid
 {
-    [SerializeField] private List<Tile> tilesToAdd; // Note : Let it serializable to be dirty.
+    [SerializeField] private List<Tile> tiles;
     [SerializeField] private Tile[,] grid; // Note : Let it serializable to be dirty.
 
     public int lowestX { get; private set; }
@@ -14,7 +14,7 @@ public class TileGrid
     public int lowestY { get; private set; }
     public int higherY { get; private set; }
 
-    public void Setup()
+    public void Setup(List<Tile> tilesToAdd)
     {
         if (tilesToAdd.Count == 0)
         {
@@ -58,8 +58,4 @@ public class TileGrid
         }
         private set { }
     }
-
-    // SETTERS
-    public void AddTile(Tile tile) => tilesToAdd.AddIfNew(tile);
-    public void RemoveTile(Tile tile) => tilesToAdd.Remove(tile);
 }
