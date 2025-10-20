@@ -91,3 +91,4 @@
 - Ammo system
 - UFM Damage preview
 - Critical hit chance
+- Projectiles
