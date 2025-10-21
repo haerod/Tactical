@@ -33,8 +33,8 @@ public class M_Input : MonoBehaviour
     public event EventHandler<Coordinates> OnMovingCameraInput;
     public event EventHandler<int> OnZoomingCameraInput;
     public event EventHandler OnRecenterCameraInput;
-    public event EventHandler OnEndTurnInput;
-    public event EventHandler OnChangeUnitInput;
+    public event EventHandler OnEndTeamTurnInput;
+    public event EventHandler OnNextTeammateInput;
     public event EventHandler OnRotateLeftInput;
     public event EventHandler OnRotateRightInput;
     
@@ -206,7 +206,7 @@ public class M_Input : MonoBehaviour
     private void CheckChangeUnitInput()
     {
         if (Input.GetKeyDown(changeUnitKey))
-            OnChangeUnitInput?.Invoke(this, EventArgs.Empty);
+            OnNextTeammateInput?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>
@@ -215,7 +215,7 @@ public class M_Input : MonoBehaviour
     private void CheckEndTurnInput()
     {
         if (Input.GetKeyDown(endTurnKey))
-            OnEndTurnInput?.Invoke(this, EventArgs.Empty);
+            OnEndTeamTurnInput?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>

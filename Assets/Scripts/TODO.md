@@ -3,6 +3,9 @@
 ## Camera
 - recenter camera doesn't work (function is called but does nothing)
 
+## Events
+- Events causes a lot of errors on restart scene (need to play some actions with first team to repro)
+
 # REFACTOR
 
 ## M_Rules
@@ -53,6 +56,10 @@
 - Algorithm of line of sight checking progressively the tiles around
 
 # FEATURES
+
+- Separate Move in multiple parts (moving, orient to, move tiles, etc.), fully encapsuled, with a manager
+- Separate Action Move from Behavior Move
+- Don't need a LateStart in M_Units
 
 - Actions systems: possibility between multiple designs
   - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)

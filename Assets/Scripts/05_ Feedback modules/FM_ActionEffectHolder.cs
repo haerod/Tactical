@@ -34,6 +34,9 @@ public class FM_ActionEffectHolder : MonoBehaviour
         U_Health.OnAnyHealthLoss -= Health_OnAnyHealthLoss;
         U_Health.OnAnyHealthGain -= Health_OnAnyHealthGain;
         
+        if(!currentUnit)
+            return;
+        
         currentUnit.attack.OnAttackMiss -= Attack_OnAttackMiss;
     }
 

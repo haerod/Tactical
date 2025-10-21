@@ -24,7 +24,6 @@ public class UnitAutoSnap : BaseAutoSnap
         if (!_units)
             return; // Exit prefab mode
 
-        _units.RemoveUnit(unit);
         SetParametersDirty();
     }
 

@@ -102,12 +102,6 @@ public class M_Camera : MonoBehaviour
     public Camera GetCurrentCamera() => currentCamera;
     
     /// <summary>
-    /// Sets the camera's target.
-    /// </summary>
-    /// <param name="newTarget"></param>
-    public void SetTarget(Transform newTarget) => target = newTarget;
-    
-    /// <summary>
     /// Resets the camera's position to reach on its target (with the offset).
     /// </summary>
     public void ResetPosition()
@@ -129,11 +123,23 @@ public class M_Camera : MonoBehaviour
     /// <param name="timeBetweenShakes"></param>
     public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f) => 
         StartCoroutine(Shake_Co(duration, intensity, timeBetweenShakes));
-
+    
+    /// <summary>
+    /// Rotates the camera around Y axis.
+    /// </summary>
+    /// <param name="rotationValue"></param>
+    public void RotateCamera(float rotationValue) => transform.Rotate(Vector3.up, rotationValue);
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Sets the camera's target.
+    /// </summary>
+    /// <param name="newTarget"></param>
+    private void SetTarget(Transform newTarget) => target = newTarget;
+    
     /// <summary>
     /// Updates the camera position (clamped). Called by Update().
     /// </summary>
@@ -197,12 +203,6 @@ public class M_Camera : MonoBehaviour
 
         currentCamera.transform.localPosition = Vector3.zero;
     }
-
-    /// <summary>
-    /// Rotates the camera around Y axis.
-    /// </summary>
-    /// <param name="rotationValue"></param>
-    private void RotateCamera(float rotationValue) => transform.Rotate(Vector3.up, rotationValue);
 
     // ======================================================================
     // EVENTS

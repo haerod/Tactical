@@ -50,18 +50,18 @@ public class M_Units : MonoBehaviour
     
     private void LateStart()
     {
-        _input.OnChangeUnitInput += Input_OnChangeUnitInput;
-        _input.OnEndTurnInput += Input_OnEndTurnInput;
+        _input.OnNextTeammateInput += Input_OnNextTeammateInput;
+        _input.OnEndTeamTurnInput += Input_OnEndTeamTurnInput;
 
         U__Unit firstUnit = turnBasedSystem.GetFirstUnit();
-        StartNextTeamTurn(firstUnit.unitTeam);
+        StartTeamTurn(firstUnit.unitTeam);
         StartUnitTurn(firstUnit);
     }
 
     private void OnDisable()
     {
-        _input.OnChangeUnitInput -= Input_OnChangeUnitInput;
-        _input.OnEndTurnInput -= Input_OnEndTurnInput;
+        _input.OnNextTeammateInput -= Input_OnNextTeammateInput;
+        _input.OnEndTeamTurnInput -= Input_OnEndTeamTurnInput;
     }
 
     // ======================================================================
@@ -144,16 +144,52 @@ public class M_Units : MonoBehaviour
             return;
 
         OnUnitTurnEnd?.Invoke(this, current);
-        
-        U__Unit nextUnit = overrideNextUnit ? overrideNextUnit : turnBasedSystem.GetNextUnit();
 
-        if (!nextUnit.team.IsTeammateOf(current))
+        if (overrideNextUnit)
         {
-            EndCurrentTeamTurn();
-            StartNextTeamTurn(nextUnit.unitTeam);
+            StartUnitTurn(overrideNextUnit);
+            return;
         }
         
-        StartUnitTurn(nextUnit);
+        U__Unit nextUnit = turnBasedSystem.GetNextPlayableTeammate();
+
+        if (nextUnit == current)
+            PassToNextTeam();
+        else
+            StartUnitTurn(nextUnit);
+    }
+
+    /// <summary>
+    /// Ends the turn of the current unit's team, and start the next one.
+    /// </summary>
+    public void PassToNextTeam()
+    {
+        Team nextTeam = turnBasedSystem.GetNextTeam();
+        EndCurrentTeamTurn();
+        StartTeamTurn(nextTeam);
+        StartUnitTurn(GetUnitsOf(nextTeam).First());
+    }
+    
+    /// <summary>
+    /// Ends current unit's turn and pass to the next playable one in its team. 
+    /// </summary>
+    public void PassToNextPlayableTeammate()
+    {
+        U__Unit nextUnit = turnBasedSystem.GetNextPlayableTeammate();
+   
+        if(nextUnit)
+            EndCurrentUnitTurn(nextUnit);
+    }
+    
+    /// <summary>
+    /// Ends current unit's turn and pass to the previous playable one in its team. 
+    /// </summary>
+    public void PassToPreviousPlayableTeammate()
+    {
+        U__Unit nextUnit = turnBasedSystem.GetPreviousPlayableTeammate();
+   
+        if(nextUnit)
+            EndCurrentUnitTurn(nextUnit);
     }
     
     // ======================================================================
@@ -187,14 +223,14 @@ public class M_Units : MonoBehaviour
             .FirstOrDefault(testedUnit => testedUnit.team.IsAllyOf(unit));
     
     /// <summary>
-    /// Starts the current team's turn.
+    /// Starts the given team's turn.
     /// </summary>
-    /// <param name="nextTeam"></param>
-    private void StartNextTeamTurn(Team nextTeam)
+    /// <param name="team"></param>
+    private void StartTeamTurn(Team team)
     {
-        OnTeamTurnStart?.Invoke(this, nextTeam);
+        OnTeamTurnStart?.Invoke(this, team);
         
-        GetUnitsOf(nextTeam)
+        GetUnitsOf(team)
             .ForEach(unit => unit.SetCanPlayValue(true));
     }
     
@@ -209,28 +245,17 @@ public class M_Units : MonoBehaviour
             .ForEach(unit => unit.SetCanPlayValue(false));
     }
     
-    private void SwitchToNextTeamUnit()
-    {
-        U__Unit nextTeamUnit = turnBasedSystem.NextTeamUnit();
-        
-        if(!nextTeamUnit)
-            return; // No other team unit
-        
-        EndCurrentUnitTurn(nextTeamUnit);
-    }
-    
     // ======================================================================
     // EVENTS
     // ======================================================================
     
-    private void Input_OnEndTurnInput(object sender, EventArgs e)
+    private void Input_OnEndTeamTurnInput(object sender, EventArgs e)
     {
-        EndCurrentTeamTurn();
-        EndCurrentUnitTurn();
+        PassToNextTeam();
     }
     
-    private void Input_OnChangeUnitInput(object sender, EventArgs e)
+    private void Input_OnNextTeammateInput(object sender, EventArgs e)
     {
-        SwitchToNextTeamUnit();
+        PassToNextPlayableTeammate();
     }
 }

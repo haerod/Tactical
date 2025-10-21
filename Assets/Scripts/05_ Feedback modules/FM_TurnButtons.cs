@@ -7,7 +7,7 @@ using static M__Managers;
 
 public class FM_TurnButtons : MonoBehaviour
 {
-    [SerializeField] private Button nextTurnButton;
+    [SerializeField] private GameObject layoutGroup;
 
     private U__Unit currentUnit;
     
@@ -42,42 +42,62 @@ public class FM_TurnButtons : MonoBehaviour
     // ======================================================================
 
     /// <summary>
-    /// Events call on Next Turn button's click
+    /// Events call on End Turn button's click
     /// </summary>
-    public void ButtonNextTurn() => _units.EndCurrentUnitTurn();
+    public void ButtonEndTurn() => _units.PassToNextTeam();
+
+    /// <summary>
+    /// Events call on Next Unit button's click
+    /// </summary>
+    public void ButtonNextUnit() => _units.PassToNextPlayableTeammate();
+    
+    /// <summary>
+    /// Events call on Previous Unit button's click
+    /// </summary>
+    public void ButtonPreviousUnit() => _units.PassToPreviousPlayableTeammate();
+
+    /// <summary>
+    /// Events call on Rotate Camera Previous button's click
+    /// </summary>
+    public void ButtonRotateCameraPrevious() => _camera.RotateCamera(90f);
+    
+    /// <summary>
+    /// Events call on Rotate Camera Next button's click
+    /// </summary>
+    public void ButtonRotateCameraNext() => _camera.RotateCamera(-90f);
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
     /// <summary>
-    /// Enables / disables player's UI out of its turn.
+    /// Enables / disables player's UI.
     /// </summary>
     /// <param name="value"></param>
-    private void SetTurnButtonsActive(bool value) => nextTurnButton.gameObject.SetActive(value);
+    private void SetUIActive(bool value) => layoutGroup.SetActive(value);
     
     // ======================================================================
     // EVENTS
     // ======================================================================
 
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        if(!startingCharacter.behavior.playable)
+        if(!startingUnit.behavior.playable)
             return; // NPC
 
-        currentUnit = startingCharacter;
+        currentUnit = startingUnit;
         
         currentUnit.move.OnMovementStart += Move_OnMovementStart;
         currentUnit.move.OnMovementEnd += Move_OnMovementEnd;
         currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
         currentUnit.attack.OnAttackEnd += Attack_OnAttackEnd;
         
-        SetTurnButtonsActive(true);
+        SetUIActive(true);
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingCharacter)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
-        if(!endingCharacter.behavior.playable)
+        if(!endingUnit.behavior.playable)
             return; // NPC
         
         currentUnit.move.OnMovementStart -= Move_OnMovementStart;
@@ -90,26 +110,26 @@ public class FM_TurnButtons : MonoBehaviour
     
     private void Attack_OnAttackStart(object sender, EventArgs e)
     {
-        SetTurnButtonsActive(false);
+        SetUIActive(false);
     }
     
     private void Attack_OnAttackEnd(object sender, EventArgs e)
     {
-        SetTurnButtonsActive(_units.current.behavior.playable);
+        SetUIActive(_units.current.behavior.playable);
     }
     
     private void Rules_OnVictory(object sender, EventArgs e)
     {
-        SetTurnButtonsActive(false);
+        SetUIActive(false);
     }
     
     private void Move_OnMovementEnd(object sender, EventArgs e)
     {
-        SetTurnButtonsActive(_units.current.behavior.playable);
+        SetUIActive(_units.current.behavior.playable);
     }
 
     private void Move_OnMovementStart(object sender, EventArgs e)
     {
-        SetTurnButtonsActive(false);
+        SetUIActive(false);
     }
 }
