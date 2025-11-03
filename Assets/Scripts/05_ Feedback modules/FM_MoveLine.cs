@@ -141,7 +141,7 @@ public class FM_MoveLine : MonoBehaviour
     
     private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
     {
-        SetLines(pathfinding, _units.current.move.movementRange);
+        SetLines(pathfinding, _units.current.move.GetMovementRange());
     }
 
     private void Attack_OnAttackStart(object sender, EventArgs e)

@@ -27,7 +27,7 @@ public abstract class A__Action : MonoBehaviour
     // MONOBEHAVIOR
     // ======================================================================
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
         UnsubscribeToEvents();
     }
@@ -90,7 +90,7 @@ public abstract class A__Action : MonoBehaviour
     /// <summary>
     /// Ends the action and set the usability of the next ones.
     /// </summary>
-    protected void EndAction()
+    protected virtual void EndAction()
     {
         unit.actions.SetActionsUsabilityOf(allowedActionsOnEnd);
         OnAnyActionEnd?.Invoke(this, unit);

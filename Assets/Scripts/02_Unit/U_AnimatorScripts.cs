@@ -28,8 +28,10 @@ public class U_AnimatorScripts : MonoBehaviour
     {
         if(unit.cover.AreCoversAround())
             EnterCrouch();
+
+        unit.move.OnMovementStart += Move_OnMovementStart;
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -119,4 +121,10 @@ public class U_AnimatorScripts : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
+    
+    private void Move_OnMovementStart(object sender, EventArgs e)
+    {
+        ExitCrouch();
+        SetSpeed(1);
+    }
 }

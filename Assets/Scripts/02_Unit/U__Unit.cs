@@ -28,7 +28,6 @@ public class U__Unit : Entity
     public U_WeaponHolder weaponHolder;
     
     public Team unitTeam => team.team;
-    public int movementRange => move.movementRange;
     public Tile tile => Tile();
     
     private bool hasPlayed;
@@ -44,13 +43,11 @@ public class U__Unit : Entity
     /// <summary>
     /// Moves the unit at coordinates in world space.
     /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    public void MoveAt(int x, int y)
+    /// <param name="newCoordinates"></param>
+    public void MoveAt(Coordinates newCoordinates)
     {
-        coordinates.x = x;
-        coordinates.y = y;
-        transform.position = new Vector3(x, 0, y);
+        coordinates = newCoordinates;
+        transform.position = coordinates.ToVector3();
         EditorUtility.SetDirty(this);
     }
     

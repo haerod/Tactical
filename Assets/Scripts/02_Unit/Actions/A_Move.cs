@@ -9,23 +9,20 @@ public class A_Move : A__Action
 {
     [Header("PARAMETERS")]
 
-    public int movementRange = 6;
-    public bool useDiagonalMovement = true;
-    public enum PassThrough {Everybody, Nobody, AlliesOnly}
-    public PassThrough canPassThrough = PassThrough.Nobody;
-    public List<TileType> walkableTiles;
-    
-    [Header("ANIMATION")]
+    [SerializeField] private int movementRange = 6;
+    [SerializeField] private bool useDiagonalMovement = true;
+    private enum PassThrough {Everybody, Nobody, AlliesOnly}
+    [SerializeField] private PassThrough canPassThrough = PassThrough.Nobody;
+    [SerializeField] private List<TileType> walkableTiles;
     [Range(0,10f)]
     [SerializeField] private float speed = 6;
-    [Range(0,1f)]
-    [SerializeField] private float animSpeed = .5f;
     
-    private List<Tile> currentPath;
-    private int index;
-    private Vector3 destination;
+    [Header("REFERENCES")]
+    [SerializeField] private MoveOnBoard moveOnBoard;
+    [SerializeField] private Transform rotationTarget;
     
     public List<Tile> movementArea => GetMovementArea().ToList();
+    
     private List<Tile> currentMovementArea = new();
     private bool anythingChangedOnBoard = true;
     
@@ -43,12 +40,31 @@ public class A_Move : A__Action
     {
         OnAnyMovementStart += Move_OnAnyMovementStart;
         U_Health.OnAnyDeath += Health_OnAnyDeath;
+
+        moveOnBoard.OnTileEnter += MoveOnBoard_OnTileEnter;
+        moveOnBoard.OnMovementEnded += MoveOnBoard_OnMovementEnded;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        OnAnyMovementStart -= Move_OnAnyMovementStart;
+        U_Health.OnAnyDeath -= Health_OnAnyDeath;
+
+        moveOnBoard.OnTileEnter -= MoveOnBoard_OnTileEnter;
+        moveOnBoard.OnMovementEnded -= MoveOnBoard_OnMovementEnded;
     }
     
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Returns the movement range of the unit.
+    /// </summary>
+    /// <returns></returns>
+    public int GetMovementRange() => movementRange;
+    
     /// <summary>
     /// Orients this object to another position, except on Y axis. Possibility to add an offset (euler angles).
     /// </summary>
@@ -60,7 +76,7 @@ public class A_Move : A__Action
         Quaternion endRotation = Quaternion.Euler(Vector3.zero);
         if (lookPos != Vector3.zero)
             endRotation = Quaternion.LookRotation(lookPos);
-        unit.transform.rotation = endRotation;
+        rotationTarget.rotation = endRotation;
 
         unit.unitUI.OrientToCamera();
     }
@@ -101,7 +117,7 @@ public class A_Move : A__Action
             unit.tile,
             tile,
             Pathfinding.TileInclusion.WithEnd,
-            new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement));
+            new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement));
         
         if (path.Count == 0) 
             return false; // No path
@@ -136,7 +152,7 @@ public class A_Move : A__Action
             {
                 tilesToTestNextTurn.AddRange(_board
                     .GetTilesAround(testedTile, 1, useDiagonalMovement)
-                    .Where(tile => Pathfinding.IsDirectionWalkable(tile, testedTile, new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)))
+                    .Where(tile => Pathfinding.IsDirectionWalkable(tile, testedTile, new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement)))
                     .Except(alreadyTested)
                     .Except(tilesToTest)
                     .ToList());
@@ -161,22 +177,12 @@ public class A_Move : A__Action
     /// Starts the movement on a path, with and action on end of this path.
     /// </summary>
     /// <param name="path"></param>
-    private void MoveOnPath(List<Tile> path)
+    private void MoveOn(List<Tile> path)
     {
         StartAction();
         OnMovementStart?.Invoke(this, EventArgs.Empty);
         OnAnyMovementStart?.Invoke(this, unit);
-        
-        currentPath = path.ToList();
-        
-        index = 0;
-        destination = path[index].transform.position;
-        OrientTo(path[index].transform.position);
-
-        unit.anim.SetSpeed(animSpeed); // Blend tree anim speed
-        unit.anim.ExitCrouch();
-        
-        StartCoroutine(MoveToDestination());
+        moveOnBoard.Move(path.ToList(), speed);
     }
     
     /// <summary>
@@ -193,68 +199,9 @@ public class A_Move : A__Action
             .ToList());
 
         // Add characters
-        toReturn.AddRange(GetTraversableCharacterTiles());
+        toReturn.AddRange(GetTraversableUnitTiles());
 
         return toReturn;
-    }
-    
-    /// <summary>
-    /// Moves the object to a destination and executes an action in the end.
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator MoveToDestination()
-    {
-        while (true)
-        {
-            _camera.ResetPosition();
-            
-            if (unit.transform.position != destination) // Move
-            {
-                unit.transform.position = Vector3.MoveTowards(unit.transform.position, destination, speed * Time.deltaTime);
-                yield return null;
-            }
-            else // On tile enter
-            {
-                unit.coordinates.x = currentPath[index].coordinates.x;
-                unit.coordinates.y = currentPath[index].coordinates.y;
-                OnUnitEnterTile?.Invoke(this, currentPath[index]);
-
-                if (IsTheLastTile()) 
-                {
-                    EndMove();
-                    yield break; // EXIT : End path
-                }
-                
-                NextTile();
-                yield return null;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Happens when a character move to the next tile.
-    /// </summary>
-    private void NextTile()
-    {
-        index++;
-        destination = currentPath[index].transform.position;
-        OrientTo(currentPath[index].transform.position);
-    }
-
-    /// <summary>
-    /// Returns true if is the last tile of the movement.
-    /// </summary>
-    /// <returns></returns>
-    private bool IsTheLastTile()
-    {
-        if(index + 1 >= currentPath.Count)
-            return true; // Last tile
-        if(IsBlockingPath(currentPath[index + 1].character))
-            return true; // Blocked by a character
-        if(unit.movementRange <= 0)
-            return true; // No movement range
-        
-        return false;
     }
 
     /// <summary>
@@ -276,10 +223,10 @@ public class A_Move : A__Action
     }
     
     /// <summary>
-    /// Returns the characters which block the movement (depending on the rules).
+    /// Returns the units which block the movement (depending on the rules).
     /// </summary>
     /// <returns></returns>
-    private List<Tile> GetTraversableCharacterTiles()
+    private List<Tile> GetTraversableUnitTiles()
     {
         List<Tile> toReturn = new List<Tile>();
 
@@ -340,7 +287,7 @@ public class A_Move : A__Action
             Pathfinding.TileInclusion.WithStartAndEnd,
             new MovementRules(
                 walkableTiles, 
-                GetTraversableCharacterTiles(), 
+                GetTraversableUnitTiles(), 
                 useDiagonalMovement));
         
         if (currentPathfinding.Count == 0)
@@ -355,12 +302,16 @@ public class A_Move : A__Action
             return; // Can't do this action
         if (!CanMoveTo(clickedTile))
             return; // Tile out of movement range
-        
-        MoveOnPath(Pathfinding.GetPath(
+
+        List<Tile> path = Pathfinding.GetPath(
             unit.tile,
             clickedTile,
             Pathfinding.TileInclusion.WithEnd,
-            new MovementRules(walkableTiles, GetTraversableCharacterTiles(), useDiagonalMovement)));
+            new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement))
+            .Take(movementRange)
+            .ToList();
+        
+        MoveOn(path);
     }
     
     // ======================================================================
@@ -371,9 +322,20 @@ public class A_Move : A__Action
     {
         anythingChangedOnBoard = true;
     }
-
+    
     private void Move_OnAnyMovementStart(object sender, U__Unit movingUnit)
     {
         anythingChangedOnBoard = true;
+    }
+    
+    private void MoveOnBoard_OnTileEnter(object sender, Tile enteredTile)
+    {
+        unit.coordinates = enteredTile.coordinates;
+        OnUnitEnterTile?.Invoke(this, enteredTile);
+    }
+    
+    private void MoveOnBoard_OnMovementEnded(object sender, EventArgs e)
+    {
+        EndMove();
     }
 }

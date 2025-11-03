@@ -35,7 +35,7 @@ public class UnitAutoSnap : BaseAutoSnap
 
     protected override void SetParameters() => transform.parent = _units.transform;
 
-    protected override void MoveObject(Coordinates coordinates) => unit.MoveAt(coordinates.x, coordinates.y);
+    protected override void MoveObject(Coordinates coordinates) => unit.MoveAt(coordinates);
 
     protected override bool IsOnValidPosition()
     {

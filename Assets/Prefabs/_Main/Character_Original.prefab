@@ -286,8 +286,6 @@ MonoBehaviour:
   gizmoOffset: {x: 0, y: 0, z: 0}
   snapOn: 0
   isLocated: 0
-  unit: {fileID: 0}
-  units: {fileID: 0}
 --- !u!114 &5963638360950440093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,6 +371,7 @@ GameObject:
   m_Component:
   - component: {fileID: 688627365113704437}
   - component: {fileID: 8502731826044868807}
+  - component: {fileID: 2768678226863474777}
   m_Layer: 0
   m_Name: Move
   m_TagString: Untagged
@@ -416,8 +415,24 @@ MonoBehaviour:
   canPassThrough: 1
   walkableTiles:
   - {fileID: 11400000, guid: 859aa0936407b9943a71c17934cc4d62, type: 2}
+  moveOnBoard: {fileID: 2768678226863474777}
+  rotationTarget: {fileID: 2256318201145831371}
   speed: 6.5
   animSpeed: 1
+--- !u!114 &2768678226863474777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213029344016691193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 692012f3d064402383236682263cdc29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementTarget: {fileID: 1422904897860799220}
+  rotationTarget: {fileID: 2256318201145831371}
 --- !u!1 &7219477851310167239
 GameObject:
   m_ObjectHideFlags: 0
