@@ -91,7 +91,7 @@
 - Armor and shield
 - Notes on elements
 - Animator of the characters more usable
-- Ammo system
+- Ammo system -> import for XDD project
 - UFM Damage preview
 - Critical hit chance
 - Projectiles

@@ -128,7 +128,7 @@ public class FM_SelectionSquare : MonoBehaviour
     
     private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredCharacter)
     {
-        if(!_units.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
+        if(!_units.current.look.UnitsVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character
         
         DisableSquare();

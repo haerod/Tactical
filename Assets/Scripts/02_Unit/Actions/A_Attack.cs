@@ -31,8 +31,8 @@ public class A_Attack : A__Action
     /// </summary>
     /// <returns></returns>
     public List<Tile> AttackableTiles() => unit.look.EnemiesVisibleInFog()
-            .Where(chara => IsTileInRange(chara.tile))
-            .Select(chara => chara.tile)
+            .Where(testedUnit => IsTileInRange(testedUnit.tile))
+            .Select(testedUnit => testedUnit.tile)
             .ToList();
     
     /// <summary>

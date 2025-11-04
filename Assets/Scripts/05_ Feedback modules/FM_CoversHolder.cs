@@ -131,7 +131,7 @@ public class FM_CoversHolder : MonoBehaviour
     
     private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredCharacter)
     {
-        if(!_units.current.look.CharactersVisibleInFog().Contains(hoveredCharacter))
+        if(!_units.current.look.UnitsVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character
             
         DisplayTargetCoverFeedback(hoveredCharacter.cover.GetCoverStateFrom(_units.current));

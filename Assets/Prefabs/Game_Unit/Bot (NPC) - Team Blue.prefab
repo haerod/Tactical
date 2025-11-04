@@ -467,8 +467,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4919814116171440189, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: behavior
-      value: 2
-      objectReference: {fileID: 0}
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a81749001126f946acd362e835bc386, type: 2}
     - target: {fileID: 4919814116171440189, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: playable
       value: 0
@@ -477,6 +477,14 @@ PrefabInstance:
       propertyPath: behaviour
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4919814116171440189, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: unitBehavior
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a81749001126f946acd362e835bc386, type: 2}
+    - target: {fileID: 4919814116171440189, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: attackClosestEnemy
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a81749001126f946acd362e835bc386, type: 2}
     - target: {fileID: 5193888126871477251, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -512,6 +520,10 @@ PrefabInstance:
     - target: {fileID: 8502731826044868807, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: orientation
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8502731826044868807, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: allowedActionsOnEnd.Array.size
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a364957ed3d26364f900081cd6196831, type: 3}

@@ -90,7 +90,7 @@ public abstract class A__Action : MonoBehaviour
     /// <summary>
     /// Ends the action and set the usability of the next ones.
     /// </summary>
-    protected virtual void EndAction()
+    protected void EndAction()
     {
         unit.actions.SetActionsUsabilityOf(allowedActionsOnEnd);
         OnAnyActionEnd?.Invoke(this, unit);
@@ -229,7 +229,7 @@ public abstract class A__Action : MonoBehaviour
     
     private void InputEvents_OnUnitEnter(object sender, U__Unit enteredCharacter)
     {
-        if (!unit.look.CharactersVisibleInFog().Contains(enteredCharacter))
+        if (!unit.look.UnitsVisibleInFog().Contains(enteredCharacter))
         {
             OnHoverFreeTile(enteredCharacter.tile);
             return; // Invisible character
@@ -257,7 +257,7 @@ public abstract class A__Action : MonoBehaviour
 
     private void InputEvents_OnUnitClick(object sender, U__Unit clickedCharacter)
     {
-        if (!unit.look.CharactersVisibleInFog().Contains(clickedCharacter))
+        if (!unit.look.UnitsVisibleInFog().Contains(clickedCharacter))
         {
             OnClickTile(clickedCharacter.tile);
             return; // Invisible character

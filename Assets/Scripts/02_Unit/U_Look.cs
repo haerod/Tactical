@@ -53,7 +53,7 @@ public class U_Look : MonoBehaviour
     /// Returns the units visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<U__Unit> CharactersVisibleInFog() => _units
+    public List<U__Unit> UnitsVisibleInFog() => _units
         .GetUnitsList()
             .Where(chara =>
             {
@@ -75,7 +75,7 @@ public class U_Look : MonoBehaviour
     /// Returns the enemies visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<U__Unit> EnemiesVisibleInFog() => CharactersVisibleInFog()
+    public List<U__Unit> EnemiesVisibleInFog() => UnitsVisibleInFog()
         .Where(testedCharacter => unit.team.IsEnemyOf(testedCharacter))
         .ToList();
     
@@ -84,7 +84,7 @@ public class U_Look : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    public bool CanSee(U__Unit target) => CharactersVisibleInFog().Contains(target);
+    public bool CanSee(U__Unit target) => UnitsVisibleInFog().Contains(target);
     
     /// <summary>
     /// Returns the tiles in the line of sight of the unit on a tile.
@@ -165,7 +165,7 @@ public class U_Look : MonoBehaviour
     private bool HasSightOn(Tile tile)
     {
         List<Coordinates> los = LineOfSight.GetLineOfSight(unit.coordinates, tile.coordinates);
-
+        
         if(los == null)
             return true; // Nothing on LoS
         if (los.Count + 1 > range)

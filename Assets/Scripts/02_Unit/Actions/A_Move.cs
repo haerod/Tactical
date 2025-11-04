@@ -101,7 +101,7 @@ public class A_Move : A__Action
     }
     
     /// <summary>
-    /// Returns true if the character can move to the tile.
+    /// Returns true if the character can move to the tile (including the movement range).
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
@@ -126,10 +126,69 @@ public class A_Move : A__Action
 
         return true; // In range
     }
-    
+
+    /// <summary>
+    /// Returns true if the unit can go to the given position (theoretical, without range or play infos).
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <returns></returns>
+    public bool CanGoTowards(Tile tile) => Pathfinding.GetPath(
+                unit.tile,
+                tile,
+                Pathfinding.TileInclusion.WithEnd,
+                new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement))
+            .Count > 0;
+
+    /// <summary>
+    /// Get the furthest tile on the path to a given tile, depending on movement range.
+    /// </summary>
+    /// <param name="targetTile"></param>
+    /// <returns></returns>
+    public Tile FurthestTileOnPathTo(Tile targetTile)
+    {
+        List<Tile> path = Pathfinding.GetPath(
+            unit.tile,
+            targetTile,
+            Pathfinding.TileInclusion.WithEnd,
+            new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement))
+            .ToList();
+        
+        if (path.Count == 0)
+            return null;
+        
+        if(path.Count > movementRange)
+            return path[movementRange];
+
+        else
+            return path.Last();
+    }
+
+    /// <summary>
+    /// Starts the movement until a tile, with and action on end of this path.
+    /// </summary>
+    /// <param name="tile"></param>
+    public void MoveTo(Tile tile) => MoveOn(Pathfinding.GetPath(
+                unit.tile,
+                tile,
+                Pathfinding.TileInclusion.WithEnd,
+                new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement))
+            .ToList());
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Starts the movement on a path, with and action on end of this path.
+    /// </summary>
+    /// <param name="path"></param>
+    private void MoveOn(List<Tile> path)
+    {
+        StartAction();
+        OnMovementStart?.Invoke(this, EventArgs.Empty);
+        OnAnyMovementStart?.Invoke(this, unit);
+        moveOnBoard.Move(path.ToList(), speed);
+    }
     
     /// <summary>
     /// Returns the move area depending on the rules.
@@ -171,18 +230,6 @@ public class A_Move : A__Action
             .ToList();
 
         return currentMovementArea.ToList();
-    }
-
-    /// <summary>
-    /// Starts the movement on a path, with and action on end of this path.
-    /// </summary>
-    /// <param name="path"></param>
-    private void MoveOn(List<Tile> path)
-    {
-        StartAction();
-        OnMovementStart?.Invoke(this, EventArgs.Empty);
-        OnAnyMovementStart?.Invoke(this, unit);
-        moveOnBoard.Move(path.ToList(), speed);
     }
     
     /// <summary>
@@ -233,7 +280,7 @@ public class A_Move : A__Action
         if (_rules.IsFogOfWar())
             toReturn.AddRange(_units.GetUnitsList()
                 .Where(chara => IsBlockingPath(chara))
-                .Intersect(unit.look.CharactersVisibleInFog())
+                .Intersect(unit.look.UnitsVisibleInFog())
                 .Select(chara => chara.tile)
                 .ToList());
 
@@ -252,7 +299,7 @@ public class A_Move : A__Action
     /// <returns></returns>
     private bool IsBlockingPath(U__Unit character)
     {
-        if(!unit.look.CharactersVisibleInFog().Contains(character))
+        if(!unit.look.UnitsVisibleInFog().Contains(character))
             return false; // Invisible character
         
         switch (canPassThrough)

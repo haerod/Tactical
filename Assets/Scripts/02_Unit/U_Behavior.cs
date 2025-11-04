@@ -9,16 +9,12 @@ using static M__Managers;
 public class U_Behavior : MonoBehaviour
 {
     public bool playable = true;
-
-    // * None : pass turn
-    // * Follower : follow target, if target
-    // * Offensive : find a target and attack it until it doesn't have any action points
-    private enum Behavior { None, Follower, Offensive}
-    [SerializeField] private Behavior behavior = Behavior.None;
+    [SerializeField] private UnitBehavior behavior;
     
     [Header("REFERENCES")]
-
+    
     [SerializeField] private U__Unit unit;
+    [SerializeField] private UnitBehavior attackClosestEnemy;
     
     private U__Unit targetUnit;
     
@@ -35,51 +31,110 @@ public class U_Behavior : MonoBehaviour
     /// </summary>
     public void PlayBehavior()
     {
-        switch (behavior)
+        if (!behavior)
         {
-            case Behavior.None:
-                unit.SetCanPlayValue(false);
-                Wait(1, () => _units.EndCurrentUnitTurn());
-                break;
-            case Behavior.Follower:
-                Wait(1, () => _units.EndCurrentUnitTurn());
-                break;
-            case Behavior.Offensive:
-                Wait(1, AcquireTarget);
-                break;
-            default:
-                break;
+            unit.SetCanPlayValue(false);
+            Wait(1, () => _units.EndCurrentUnitTurn());
+            return;
+        }
+
+        if (behavior == attackClosestEnemy)
+        {
+            Wait(1, AttackClosestEnemy);
+            return;
         }
     }
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
-    /// Choose the closest enemy unit as target.
+    /// Choose the closest enemy unit as target and choose between attack or move towards.
     /// </summary>
-    private void AcquireTarget()
+    private void AttackClosestEnemy()
     {
-        targetUnit = unit.look.ClosestEnemyOnSight();
-
-        if(!targetUnit || targetUnit.health.IsDead() || _rules.IsVictory()) 
+        if(_rules.IsVictory())
         {
-            unit.SetCanPlayValue(false);
-            _units.EndCurrentUnitTurn();
-            return; // Nobody in sight
+            PassTurn();
+            return; // Victory
         }
-
+        
+        targetUnit = behavior.GetPreferredTarget(unit,unit.attack.AttackableTiles()
+            .Select(tile => tile.character)
+            .ToList());
+        
+        if(targetUnit)
+        {
+            Attack();
+            return; // Attack unit
+        }
+        
+        targetUnit = behavior.GetPreferredTarget(unit,unit.look.EnemiesVisibleInFog());
+        
+        if (targetUnit)
+        {
+            Tile closestMeleePosition = ClosestMeleePositionOf(targetUnit);
+            if (!closestMeleePosition)
+            {
+                PassTurn();
+                return; // Can't reach a melee position
+            }
+            
+            Tile closestTileOfMeleePosition = unit.move.FurthestTileOnPathTo(closestMeleePosition);
+            
+            GoTowards(closestTileOfMeleePosition);
+        }
+        
+        PassTurn();
+    }
+    
+    /// <summary>
+    /// Moves the unit in direction of the target position.
+    /// </summary>
+    /// <param name="targetPosition"></param>
+    private void GoTowards(Tile targetPosition)
+    {
+        unit.move.MoveTo(targetPosition);
+    }
+    
+    /// <summary>
+    /// Attacks the target.
+    /// </summary>
+    private void Attack()
+    {
         unit.attack.Attack(targetUnit);
     }
-
+    
+    /// <summary>
+    /// Passes its turn.
+    /// </summary>
+    private void PassTurn()
+    {
+        unit.SetCanPlayValue(false);
+        _units.EndCurrentUnitTurn();
+    }
+    
+    /// <summary>
+    /// Returns the closest tile of a unit in melee.
+    /// </summary>
+    /// <param name="meleeUnit"></param>
+    /// <returns></returns>
+    private Tile ClosestMeleePositionOf(U__Unit meleeUnit)
+    {
+        return _board.GetTilesAround(meleeUnit.tile, 1, true)
+            .Where(tile => unit.move.CanGoTowards(tile))
+            .OrderBy(tile => Vector3.Distance(tile.transform.position, unit.tile.transform.position))
+            .FirstOrDefault(); // Closest tile
+    }
+    
     /// <summary>
     /// Start a wait for "time" seconds and execute an action.
     /// </summary>
     /// <param name="time"></param>
     /// <param name="onEnd"></param>
     private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-
+    
     /// <summary>
     /// Wait for "time" seconds and execute an action.
     /// Called by Wait() method.

@@ -136,7 +136,7 @@ public class UFM_CoverStateUnit : MonoBehaviour
             return; // No current unit
         if(currentUnit == unit)
             return; // Current character
-        if(!currentUnit.look.CharactersVisibleInFog().Contains(unit))
+        if(!currentUnit.look.UnitsVisibleInFog().Contains(unit))
             return; // Invisible character
         
         Show();
