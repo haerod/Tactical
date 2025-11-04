@@ -1,8 +1,6 @@
 # DEBUG
 
 - 0.5d -> Recenter camera doesn't work (function is called but does nothing)
-- 1d -> Events causes a lot of errors on restart scene (need to play some actions with first team to repro)
-- 0.5d -> On skip turn (Canvas Change turn button), units don't ends their turn and call actions multiple times next turn
 
 # REFACTOR
 

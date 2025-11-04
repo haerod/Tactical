@@ -127,6 +127,7 @@ public class U_Actions : MonoBehaviour
         if(unit.unitTeam != endingTeam)
             return; // Not the starting team
         
-        DisableAllActions();    
+        UnsubscribeToEvents();
+        DisableAllActions();
     }
 }
