@@ -26,7 +26,6 @@ public class A_Move : A__Action
     private List<Tile> currentMovementArea = new();
     private bool anythingChangedOnBoard = true;
     
-    public static EventHandler<U__Unit> OnAnyMovementStart;
     public event EventHandler OnMovementStart;
     public event EventHandler OnMovementEnd;
     public event EventHandler<Tile> OnUnitEnterTile;
@@ -38,8 +37,8 @@ public class A_Move : A__Action
     
     private void Start()
     {
-        OnAnyMovementStart += Move_OnAnyMovementStart;
-        U_Health.OnAnyDeath += Health_OnAnyDeath;
+        GameEvents.OnAnyMovementStart += Move_OnAnyMovementStart;
+        GameEvents.OnAnyDeath += Health_OnAnyDeath;
 
         moveOnBoard.OnTileEnter += MoveOnBoard_OnTileEnter;
         moveOnBoard.OnMovementEnded += MoveOnBoard_OnMovementEnded;
@@ -48,9 +47,7 @@ public class A_Move : A__Action
     protected override void OnDisable()
     {
         base.OnDisable();
-        OnAnyMovementStart -= Move_OnAnyMovementStart;
-        U_Health.OnAnyDeath -= Health_OnAnyDeath;
-
+        
         moveOnBoard.OnTileEnter -= MoveOnBoard_OnTileEnter;
         moveOnBoard.OnMovementEnded -= MoveOnBoard_OnMovementEnded;
     }
@@ -186,7 +183,7 @@ public class A_Move : A__Action
     {
         StartAction();
         OnMovementStart?.Invoke(this, EventArgs.Empty);
-        OnAnyMovementStart?.Invoke(this, unit);
+        GameEvents.InvokeOnAnyMovementStart(unit);
         moveOnBoard.Move(path.ToList(), speed);
     }
     

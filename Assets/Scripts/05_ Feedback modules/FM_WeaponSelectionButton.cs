@@ -19,9 +19,6 @@ public class FM_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler, IPo
     private FM_WeaponButtonsHolder holder;
     private Weapon weapon;
     
-    public static event EventHandler<FM_WeaponSelectionButton> OnAnyWeaponSelectionButtonEnter;
-    public static event EventHandler<FM_WeaponSelectionButton> OnAnyWeaponSelectionButtonExit;
-    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -76,11 +73,11 @@ public class FM_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler, IPo
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        OnAnyWeaponSelectionButtonEnter?.Invoke(this, this);
+        GameEvents.InvokeOnAnyWeaponSelectionButtonEnter(this);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        OnAnyWeaponSelectionButtonExit?.Invoke(this, this);
+        GameEvents.InvokeOnAnyWeaponSelectionButtonExit(this);
     }
 }

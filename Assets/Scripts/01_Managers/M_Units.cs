@@ -21,7 +21,7 @@ public class M_Units : MonoBehaviour
     
     public static M_Units instance => _instance ??= FindFirstObjectByType<M_Units>();
     public static M_Units _instance;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -60,8 +60,12 @@ public class M_Units : MonoBehaviour
 
     private void OnDisable()
     {
-        _input.OnNextTeammateInput -= Input_OnNextTeammateInput;
-        _input.OnEndTeamTurnInput -= Input_OnEndTeamTurnInput;
+        OnUnitTurnStart = null;
+        OnUnitTurnEnd = null;
+        OnTeamTurnStart = null;
+        OnTeamTurnEnd = null;
+        
+        GameEvents.ClearAllEvents();
     }
 
     // ======================================================================

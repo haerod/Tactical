@@ -23,17 +23,12 @@ public class FM_ActionEffectHolder : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
-        U_Health.OnAnyHealthLoss += Health_OnAnyHealthLoss;
-        U_Health.OnAnyHealthGain += Health_OnAnyHealthGain;
+        GameEvents.OnAnyHealthLoss += Health_OnAnyHealthLoss;
+        GameEvents.OnAnyHealthGain += Health_OnAnyHealthGain;
     }
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        U_Health.OnAnyHealthLoss -= Health_OnAnyHealthLoss;
-        U_Health.OnAnyHealthGain -= Health_OnAnyHealthGain;
-        
         if(!currentUnit)
             return;
         
@@ -82,19 +77,17 @@ public class FM_ActionEffectHolder : MonoBehaviour
         DisplayActionEffectFeedback(missText, missedUnit.transform);
     }
     
-    private void Health_OnAnyHealthLoss(object sender, int healthLoss)
+    private void Health_OnAnyHealthLoss(object sender, GameEvents.HealthChangedEventArgs args)
     {
-        U_Health health = (U_Health) sender;
-        Transform target = health.transform;
-        
-        DisplayActionEffectFeedback(healthLoss.ToString(), target);
+        DisplayActionEffectFeedback(
+            args.healthChangedAmount.ToString(), 
+            args.health.transform);
     }
     
-    private void Health_OnAnyHealthGain(object sender, int healthGain)
+    private void Health_OnAnyHealthGain(object sender, GameEvents.HealthChangedEventArgs args)
     {
-        U_Health health = (U_Health) sender;
-        Transform target = health.transform;
-        
-        DisplayActionEffectFeedback(healthGain.ToString(), target);
+        DisplayActionEffectFeedback(
+            args.healthChangedAmount.ToString(), 
+            args.health.transform);
     }
 }

@@ -22,18 +22,9 @@ public class FM_TilesActionPreview_Move : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
-        A__Action.OnAnyActionStart += Action_OnAnyActionStart;
-        A__Action.OnAnyActionEnd += Action_OnAnyActionEnd;
+        GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
+        GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
         _rules.OnVictory += Rules_OnVictory;
-    }
-    
-    private void OnDisable()
-    {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        A__Action.OnAnyActionStart -= Action_OnAnyActionStart;
-        A__Action.OnAnyActionEnd -= Action_OnAnyActionEnd;
-        _rules.OnVictory -= Rules_OnVictory;
     }
     
     // ======================================================================

@@ -31,12 +31,6 @@ public class FM_AttackLineOfSight : MonoBehaviour
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        
-        InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
-        InputEvents.OnTileExit -= InputEvents_OnTileExit;
-        
         if(currentUnit)
             currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
     }

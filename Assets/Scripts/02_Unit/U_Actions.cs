@@ -24,14 +24,6 @@ public class U_Actions : MonoBehaviour
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
     }
 
-    private void OnDisable()
-    {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        _units.OnTeamTurnStart -= Units_OnTeamTurnStart;
-        _units.OnTeamTurnEnd -= Units_OnTeamTurnEnd;
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

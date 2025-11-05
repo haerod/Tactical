@@ -41,7 +41,12 @@ public class M_Rules : MonoBehaviour
         if (_instance == this)
             _instance = null;
     }
-    
+
+    private void OnDisable()
+    {
+        OnVictory = null;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

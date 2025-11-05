@@ -27,12 +27,6 @@ public class FM_SelectionSquare : MonoBehaviour
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        _rules.OnVictory -= Rules_OnVictory;
-        
-        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
-        
         if(!currentUnit)
             return;
         

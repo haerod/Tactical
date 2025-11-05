@@ -76,16 +76,6 @@ public class M_Camera : MonoBehaviour
         zMax = boardTileGrid.higherY;
     }
 
-    private void OnDisable()
-    {
-        _input.OnMovingCameraInput -= Input_OnMovingCameraInput;
-        _input.OnZoomingCameraInput -= Input_OnZoomingCameraInput;
-        _input.OnRecenterCameraInput -= Input_OnRecenterCameraInput;
-        _input.OnRotateRightInput -= Input_OnRotateRightCameraInput;
-        _input.OnRotateLeftInput -= Input_OnRotateLeftCameraInput;
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-    }
-
     private void Update()
     {
         if (currentTime < smoothMovingTime)

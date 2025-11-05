@@ -25,14 +25,8 @@ public class FM_WeaponInfo : MonoBehaviour
 
     private void Start()
     {
-        FM_WeaponSelectionButton.OnAnyWeaponSelectionButtonEnter += WeaponSelectionButton_OnAnyWeaponSelectionButtonEnter;
-        FM_WeaponSelectionButton.OnAnyWeaponSelectionButtonExit += WeaponSelectionButton_OnAnyWeaponSelectionButtonExit;
-    }
-
-    private void OnDisable()
-    {
-        FM_WeaponSelectionButton.OnAnyWeaponSelectionButtonEnter -= WeaponSelectionButton_OnAnyWeaponSelectionButtonEnter;
-        FM_WeaponSelectionButton.OnAnyWeaponSelectionButtonExit -= WeaponSelectionButton_OnAnyWeaponSelectionButtonExit;        
+        GameEvents.OnAnyWeaponSelectionButtonEnter += WeaponSelectionButton_OnAnyWeaponSelectionButtonEnter;
+        GameEvents.OnAnyWeaponSelectionButtonExit += WeaponSelectionButton_OnAnyWeaponSelectionButtonExit;
     }
 
     // ======================================================================

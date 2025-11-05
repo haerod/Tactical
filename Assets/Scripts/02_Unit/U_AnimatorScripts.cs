@@ -32,6 +32,11 @@ public class U_AnimatorScripts : MonoBehaviour
         unit.move.OnMovementStart += Move_OnMovementStart;
     }
 
+    private void OnDisable()
+    {
+        unit.move.OnMovementStart -= Move_OnMovementStart;
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

@@ -14,7 +14,6 @@ public class A_Attack : A__Action
     private Action onAttackDone;
 
     public event EventHandler OnAttackStart;
-    public static event EventHandler<U__Unit> OnAnyAttackStart;
     public event EventHandler OnAttackEnd;
     public event EventHandler<U__Unit> OnAttackMiss;
 
@@ -53,7 +52,7 @@ public class A_Attack : A__Action
 
         StartAction();
         OnAttackStart?.Invoke(this, EventArgs.Empty);
-        OnAnyAttackStart?.Invoke(this, unit);
+        GameEvents.InvokeOnAnyAttackStart(unit);
 
         unit.anim.StartAttack();
         

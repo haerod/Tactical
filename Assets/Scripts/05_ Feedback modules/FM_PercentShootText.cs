@@ -31,16 +31,6 @@ public class FM_PercentShootText : MonoBehaviour
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        
-        InputEvents.OnNoTile -= InputEvents_OnNoTile;
-        InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
-        InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
-        InputEvents.OnUnitExit -= InputEvents_OnUnitExit;
-        InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
-        InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
-        
         if(currentUnit)
             currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
     }

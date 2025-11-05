@@ -1,7 +1,7 @@
 # DEBUG
 
 - 0.5d -> Recenter camera doesn't work (function is called but does nothing)
-- 1d Pathfinding is strange, not the more direct as possible
+- 1d -> Pathfinding is strange, not the more direct as possible
 
 # REFACTOR
 

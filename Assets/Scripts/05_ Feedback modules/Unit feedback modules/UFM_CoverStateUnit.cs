@@ -31,11 +31,6 @@ public class UFM_CoverStateUnit : MonoBehaviour
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
-        InputEvents.OnTileEnter -= InputEvents_OnTileEnter;
-        InputEvents.OnTileExit -= InputEvents_OnTileExit;
         unit.health.OnDeath -= Health_OnDeath;
     }
 

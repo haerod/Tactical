@@ -37,17 +37,6 @@ public class FM_Cursor : MonoBehaviour
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        
-        InputEvents.OnTileEnter -= InputEvents_OnTileEnter;
-        InputEvents.OnTileExit -= InputEvents_OnTileExit;
-        InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
-        InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
-        InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
-        
-        _input.OnChangeClickActivation -= Input_ChangeClickActivation;
-        
         if(currentUnit)
             currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
     }

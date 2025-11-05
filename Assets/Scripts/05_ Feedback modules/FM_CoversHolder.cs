@@ -29,16 +29,10 @@ public class FM_CoversHolder : MonoBehaviour
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-        InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
-        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
-        InputEvents.OnNoTile -= InputEvents_OnNoTile;
-        
         if(currentUnit)
             currentUnit.move.OnMovementStart -= Move_OnMovementStart;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

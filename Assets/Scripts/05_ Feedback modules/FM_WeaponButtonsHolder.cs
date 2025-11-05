@@ -22,12 +22,6 @@ public class FM_WeaponButtonsHolder : MonoBehaviour
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
 
-    private void OnDisable()
-    {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

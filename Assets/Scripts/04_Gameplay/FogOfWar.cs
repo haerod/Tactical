@@ -23,9 +23,6 @@ public class FogOfWar : MonoBehaviour
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd -= Units_OnUnitTurnEnd;
-
         if (!currentUnit) 
             return;
         

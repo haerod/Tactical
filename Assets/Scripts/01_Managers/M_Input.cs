@@ -69,16 +69,21 @@ public class M_Input : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _rules.OnVictory += Rules_OnVictory;
-        A__Action.OnAnyActionStart += Action_OnAnyActionStart;
-        A__Action.OnAnyActionEnd += Action_OnAnyActionEnd;
+        GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
+        GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
     }
 
     private void OnDisable()
     {
-        _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
-        _rules.OnVictory -= Rules_OnVictory;
-        A__Action.OnAnyActionStart -= Action_OnAnyActionStart;
-        A__Action.OnAnyActionEnd -= Action_OnAnyActionEnd;
+        OnChangeClickActivation = null;
+        OnEndTeamTurnInput = null;
+        OnNextTeammateInput = null;
+        OnRotateLeftInput = null;
+        OnRotateRightInput = null;
+        OnZoomingCameraInput = null;
+        OnRecenterCameraInput = null;
+        
+        InputEvents.ClearEvents();
     }
 
     private void Update()
@@ -344,6 +349,21 @@ public static class InputEvents
     public static void UnitHovered(U__Unit unit) => CharacterHoveredEvents(unit);
     public static void UnitClick(U__Unit unit)  => OnUnitClick?.Invoke(null, unit);
     public static void NothingHovered() => OnNoTile?.Invoke(null, EventArgs.Empty);
+
+    public static void ClearEvents()
+    {
+        OnTileEnter = null;
+        OnFreeTileEnter = null;
+        OnTileExit = null;
+        OnTileClick = null;
+        OnNoTile = null;
+        OnUnitEnter = null;
+        OnUnitExit = null;
+        OnUnitClick = null;
+        OnEnemyEnter = null;
+        OnAllyEnter = null;
+        OnCurrentUnitEnter = null;
+    }
     
     // ======================================================================
     // PRIVATE METHODS

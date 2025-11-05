@@ -15,17 +15,12 @@ public class FM_UnitRagdoll : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
-        U_Health.OnAnyDeath += Health_OnAnyDeath;
+        GameEvents.OnAnyDeath += Health_OnAnyDeath;
     }
-
-    private void OnDisable()
-    {
-        U_Health.OnAnyDeath -= Health_OnAnyDeath;
-    }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -33,7 +28,7 @@ public class FM_UnitRagdoll : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     private void CreateRagdoll(U__Unit deadUnit)
     {
         U__Unit unitRagdoll = Instantiate(
@@ -93,11 +88,11 @@ public class FM_UnitRagdoll : MonoBehaviour
         if(dropWeapon.TryGetComponent(out Rigidbody rigidbody))
             rigidbody.AddExplosionForce(50f, transform.position + randomDir, 10f);
     }
-
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
-
+    
     private void Health_OnAnyDeath(object sender, U__Unit deadUnit)
     {
         CreateRagdoll(deadUnit);

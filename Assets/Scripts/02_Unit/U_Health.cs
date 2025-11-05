@@ -30,10 +30,7 @@ public class U_Health : MonoBehaviour
      public int currentHealth = 5;
 
      public event EventHandler HealthChanged;
-     public static event EventHandler<int> OnAnyHealthLoss;
-     public static event EventHandler<int> OnAnyHealthGain;
      public event EventHandler OnDeath;
-     public static event EventHandler<U__Unit> OnAnyDeath;
      
     // ======================================================================
     // MONOBEHAVIOUR
@@ -138,7 +135,7 @@ public class U_Health : MonoBehaviour
             unit.anim.StartHitReaction();
         }
 
-        OnAnyHealthLoss?.Invoke(this, damage);
+        GameEvents.InvokeOnAnyHealthLoss(this, damage);
         HealthChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -152,7 +149,7 @@ public class U_Health : MonoBehaviour
         if (currentHealth > health)
             currentHealth = health;
         
-        OnAnyHealthGain?.Invoke(this, healAmount);
+        GameEvents.InvokeOnAnyHealthGain(this, healAmount);
         HealthChanged?.Invoke(this, EventArgs.Empty);
     }
     
@@ -181,6 +178,6 @@ public class U_Health : MonoBehaviour
         _units.RemoveUnit(unit);
         unit.GetComponentInChildren<Collider>().gameObject.SetActive(false);
         OnDeath?.Invoke(this, EventArgs.Empty);
-        OnAnyDeath?.Invoke(this, unit);
+        GameEvents.InvokeOnAnyDeath(unit);
     }
 }

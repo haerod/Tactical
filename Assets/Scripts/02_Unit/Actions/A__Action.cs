@@ -18,9 +18,6 @@ public abstract class A__Action : MonoBehaviour
     
     public bool isUsableOnStart => usableOnTurnStart;
     
-    public static event EventHandler<U__Unit> OnAnyActionStart;
-    public static event EventHandler<U__Unit> OnAnyActionEnd;
-    
     private bool canUseAction;
     
     // ======================================================================
@@ -84,7 +81,7 @@ public abstract class A__Action : MonoBehaviour
     /// </summary>
     protected void StartAction()
     {
-        OnAnyActionStart?.Invoke(this, unit);
+        GameEvents.InvokeOnAnyActionStart(unit);
     }
     
     /// <summary>
@@ -93,7 +90,7 @@ public abstract class A__Action : MonoBehaviour
     protected void EndAction()
     {
         unit.actions.SetActionsUsabilityOf(allowedActionsOnEnd);
-        OnAnyActionEnd?.Invoke(this, unit);
+        GameEvents.InvokeOnAnyActionEnd(unit);
         
         if (allowedActionsOnEnd.Count > 0)
             return; // Other actions to do

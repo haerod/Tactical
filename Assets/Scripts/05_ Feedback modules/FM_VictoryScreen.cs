@@ -18,11 +18,6 @@ public class FM_VictoryScreen : MonoBehaviour
         _rules.OnVictory += Rules_OnVictory;
     }
 
-    private void OnDisable()
-    {
-        _rules.OnVictory -= Rules_OnVictory;
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
