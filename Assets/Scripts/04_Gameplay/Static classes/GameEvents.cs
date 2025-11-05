@@ -9,10 +9,10 @@ using System.Linq;
 /// </summary>
 public static class GameEvents
 {
-    public static event EventHandler<U__Unit> OnAnyAttackStart;
     public static event EventHandler<U__Unit> OnAnyActionStart;
     public static event EventHandler<U__Unit> OnAnyActionEnd;
     public static event EventHandler<U__Unit> OnAnyMovementStart;
+    public static event EventHandler<U__Unit> OnAnyAttackStart;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthLoss;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthGain;
     public static event EventHandler<U__Unit> OnAnyDeath;
@@ -42,10 +42,10 @@ public static class GameEvents
     // PUBLIC METHODS
     // ======================================================================
 
-    public static void InvokeOnAnyAttackStart(U__Unit attackingUnit) => OnAnyAttackStart?.Invoke(null, attackingUnit);
     public static void InvokeOnAnyActionStart(U__Unit startingActionUnit) => OnAnyActionStart?.Invoke(null, startingActionUnit);
     public static void InvokeOnAnyActionEnd(U__Unit endingActionUnit) => OnAnyActionEnd?.Invoke(null, endingActionUnit);
     public static void InvokeOnAnyMovementStart(U__Unit movingUnit) => OnAnyMovementStart?.Invoke(null, movingUnit);
+    public static void InvokeOnAnyAttackStart(U__Unit attackingUnit) => OnAnyAttackStart?.Invoke(null, attackingUnit);
     public static void InvokeOnAnyHealthLoss(U_Health healthDamaged, int healthLoss) => OnAnyHealthLoss?.Invoke(null, new HealthChangedEventArgs {
         health = healthDamaged, 
         healthChangedAmount = healthLoss});
