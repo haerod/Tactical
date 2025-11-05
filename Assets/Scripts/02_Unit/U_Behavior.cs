@@ -14,7 +14,6 @@ public class U_Behavior : MonoBehaviour
     [Header("REFERENCES")]
     
     [SerializeField] private U__Unit unit;
-    [SerializeField] private UnitBehavior attackClosestEnemy;
     
     private U__Unit targetUnit;
     
@@ -38,11 +37,7 @@ public class U_Behavior : MonoBehaviour
             return;
         }
 
-        if (behavior == attackClosestEnemy)
-        {
-            Wait(1, AttackClosestEnemy);
-            return;
-        }
+        Wait(1, TargetEnemy);
     }
     
     // ======================================================================
@@ -50,15 +45,15 @@ public class U_Behavior : MonoBehaviour
     // ======================================================================
     
     /// <summary>
-    /// Choose the closest enemy unit as target and choose between attack or move towards.
+    /// Targets the behavior's preferred enemy and choose between attack or move towards.
     /// </summary>
-    private void AttackClosestEnemy()
+    private void TargetEnemy()
     {
-        if(_rules.IsVictory())
-        {
-            PassTurn();
-            return; // Victory
-        }
+        // if(_rules.IsVictory())
+        // {
+        //     PassTurn();
+        //     return; // Victory
+        // }
         
         targetUnit = behavior.GetPreferredTarget(unit,unit.attack.AttackableTiles()
             .Select(tile => tile.character)
@@ -81,7 +76,7 @@ public class U_Behavior : MonoBehaviour
                 return; // Can't reach a melee position
             }
             
-            Tile closestTileOfMeleePosition = unit.move.FurthestTileOnPathTo(closestMeleePosition);
+            Tile closestTileOfMeleePosition = unit.move.GetFurthestTileTowards(closestMeleePosition);
             
             GoTowards(closestTileOfMeleePosition);
         }
@@ -123,7 +118,7 @@ public class U_Behavior : MonoBehaviour
     private Tile ClosestMeleePositionOf(U__Unit meleeUnit)
     {
         return _board.GetTilesAround(meleeUnit.tile, 1, true)
-            .Where(tile => unit.move.CanGoTowards(tile))
+            .Where(tile => unit.move.CanMoveTowards(tile))
             .OrderBy(tile => Vector3.Distance(tile.transform.position, unit.tile.transform.position))
             .FirstOrDefault(); // Closest tile
     }

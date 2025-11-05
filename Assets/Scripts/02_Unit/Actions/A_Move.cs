@@ -35,7 +35,7 @@ public class A_Move : A__Action
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
         OnAnyMovementStart += Move_OnAnyMovementStart;
@@ -132,7 +132,7 @@ public class A_Move : A__Action
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
-    public bool CanGoTowards(Tile tile) => Pathfinding.GetPath(
+    public bool CanMoveTowards(Tile tile) => Pathfinding.GetPath(
                 unit.tile,
                 tile,
                 Pathfinding.TileInclusion.WithEnd,
@@ -144,7 +144,7 @@ public class A_Move : A__Action
     /// </summary>
     /// <param name="targetTile"></param>
     /// <returns></returns>
-    public Tile FurthestTileOnPathTo(Tile targetTile)
+    public Tile GetFurthestTileTowards(Tile targetTile)
     {
         List<Tile> path = Pathfinding.GetPath(
             unit.tile,

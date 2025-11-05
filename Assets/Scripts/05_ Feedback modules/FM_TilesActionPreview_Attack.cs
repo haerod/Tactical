@@ -26,7 +26,7 @@ public class FM_TilesActionPreview_Attack : MonoBehaviour
         A__Action.OnAnyActionEnd += Action_OnAnyActionEnd;
         _rules.OnVictory += Rules_OnVictory;
     }
-
+    
     private void OnDisable()
     {
         _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
@@ -38,7 +38,7 @@ public class FM_TilesActionPreview_Attack : MonoBehaviour
         if(currentUnit)
             currentUnit.weaponHolder.OnWeaponChange -= WeaponsHolder_OnWeaponChanged;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

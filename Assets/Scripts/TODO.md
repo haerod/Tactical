@@ -1,6 +1,7 @@
 # DEBUG
 
 - 0.5d -> Recenter camera doesn't work (function is called but does nothing)
+- 1d Pathfinding is strange, not the more direct as possible
 
 # REFACTOR
 
@@ -63,6 +64,9 @@
   - play again on condition
 - Can shoot from a step (lean)
 
+- Enemy behavior
+  - Use actions system
+
 - Transform the tool in package
 - Obstacle transparency
 - Team alliances (difference between Allie and Teammate)
@@ -75,7 +79,6 @@
 - Add events (FX, sound, etc.) for everything
 - Multiple victory conditions
 - Destructible obstacles
-- Better enemy behaviors
 - Large elements (multiple tiles)
 - Missing shots can touch another tile
 - Border cover can block the line of sight
