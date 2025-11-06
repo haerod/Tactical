@@ -29,6 +29,7 @@ public class U_WeaponHolder : MonoBehaviour
     private void Start()
     {
         unit.anim.SetWeaponAnimation(GetCurrentWeaponGraphics());
+        currentWeaponGraphics.Setup(unit);
     }
     
     // ======================================================================

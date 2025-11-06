@@ -72,16 +72,6 @@ public class A_Attack : A__Action
     {
         _camera.Shake();
         onAttackDone();
-
-        // Muzzle flash
-
-        GameObject muzzleFlash = unit.weaponHolder.GetCurrentWeaponGraphics().GetMuzzleFlash();
-
-        if (!muzzleFlash) 
-            return; // No muzzle flash
-        
-        muzzleFlash.SetActive(true);
-        Wait(0.2f, () => muzzleFlash.SetActive(false));
     }
     
     /// <summary>
