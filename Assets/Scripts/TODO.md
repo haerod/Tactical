@@ -9,6 +9,9 @@
 - Fog of war vision rules not in M_Rules -> fog of war as a Manager ?
     - Fog of war view lines as Module
 
+## Action tile preview
+- 0.5d -> Logic (and prefab) only in the module (not on the tile)
+
 ## Tiles
 - Tiles material work with an enum, use a Scriptable object instead
 - Tile class does a lot of things: need to fraction it (in Coordinates and a new class like Tile renderer)
@@ -36,7 +39,6 @@
 - Class name nomenclature
   - Manager
   - Holder
-  - UFM/FM
 - units.EndCurrentUnitTurn as an event (not called in classes)
 - set FM_TilesActionPreview abstract
 - be sure, if Fog of war is disabled, unit can see everything

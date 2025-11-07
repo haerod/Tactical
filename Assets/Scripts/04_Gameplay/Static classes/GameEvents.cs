@@ -16,8 +16,8 @@ public static class GameEvents
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthLoss;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthGain;
     public static event EventHandler<U__Unit> OnAnyDeath;
-    public static event EventHandler<FM_WeaponSelectionButton> OnAnyWeaponSelectionButtonEnter;
-    public static event EventHandler<FM_WeaponSelectionButton> OnAnyWeaponSelectionButtonExit;
+    public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonEnter;
+    public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonExit;
     
     public class HealthChangedEventArgs : EventArgs
     {
@@ -53,8 +53,8 @@ public static class GameEvents
         health = healthHealed,
         healthChangedAmount = healthGain });
     public static void InvokeOnAnyDeath(U__Unit deadUnit) => OnAnyDeath?.Invoke(null, deadUnit);
-    public static void InvokeOnAnyWeaponSelectionButtonEnter(FM_WeaponSelectionButton selectedButton) => OnAnyWeaponSelectionButtonEnter?.Invoke(null, selectedButton);
-    public static void InvokeOnAnyWeaponSelectionButtonExit(FM_WeaponSelectionButton unselectedButton) => OnAnyWeaponSelectionButtonExit?.Invoke(null, unselectedButton);
+    public static void InvokeOnAnyWeaponSelectionButtonEnter(Module_WeaponSelectionButton selectedButton) => OnAnyWeaponSelectionButtonEnter?.Invoke(null, selectedButton);
+    public static void InvokeOnAnyWeaponSelectionButtonExit(Module_WeaponSelectionButton unselectedButton) => OnAnyWeaponSelectionButtonExit?.Invoke(null, unselectedButton);
     
     // ======================================================================
     // PRIVATE METHODS
