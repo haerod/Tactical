@@ -8,7 +8,7 @@ using static M__Managers;
 /// <summary>
 /// Shows the cover state of the unit on its interface.
 /// </summary>
-public class UFM_CoverStateUnit : MonoBehaviour
+public class Module_CoverStateUnit : MonoBehaviour
 {
     [SerializeField] private Image coverStateImage;
     [SerializeField] private U__Unit unit;

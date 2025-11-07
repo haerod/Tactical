@@ -5,7 +5,7 @@ using static M__Managers;
 /// <summary>
 /// Shows when the current unit is out of range of this unit on its interface.
 /// </summary>
-public class UFM_OutOfRangeIcon : MonoBehaviour
+public class Module_OutOfRangeIcon : MonoBehaviour
 {
     [SerializeField] private GameObject outOfRangeIcon;
     [SerializeField] private U__Unit unit;
