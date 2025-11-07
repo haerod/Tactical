@@ -1,25 +1,22 @@
-﻿using System;
+using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using static M__Managers;
 
 /// <summary>
-/// Shows and updates the health bar of the unit on its interface.
+/// Class description
 /// </summary>
-public class UFM_SlicedHealthBar : MonoBehaviour
+public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
 {
-    [SerializeField] private float topDownOffset = 1;
-    [SerializeField] private float spacing = 2;
-    [SerializeField] private RectTransform lifeLayoutGroup;
-    [SerializeField] private GameObject lifeImage;
     [SerializeField] private U_Health health;
     [SerializeField] private U__Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
         InitialiseBar();
@@ -40,13 +37,9 @@ public class UFM_SlicedHealthBar : MonoBehaviour
         health.OnDeath -= Health_OnDeath;
         health.HealthChanged -= Health_HealthChanged;
     }
-
-    // ======================================================================
-    // PUBLIC METHODS
-    // ======================================================================
     
     // ======================================================================
-    // PRIVATE METHODS
+    // PUBLIC METHODS
     // ======================================================================
 
     /// <summary>
@@ -54,65 +47,22 @@ public class UFM_SlicedHealthBar : MonoBehaviour
     /// </summary>
     private void InitialiseBar()
     {
-        DisplayMaxHealth();
-        DisplayCurrentHealth();
+        maximumValue = health.health;
     }
     
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+
     /// <summary>
     /// Enables the life bar.
     /// </summary>
-    private void Show () => lifeLayoutGroup.gameObject.SetActive(true);
+    private void Show () => itemParent.gameObject.SetActive(true);
     
     /// <summary>
     /// Disables the life bar.
     /// </summary>
-    private void Hide() => lifeLayoutGroup.gameObject.SetActive(false);
-
-    /// <summary>
-    /// Displays max life on health bar.
-    /// </summary>
-    private void DisplayMaxHealth()
-    {
-        // Destroy ancient objects
-        for (int i = 0; i < lifeLayoutGroup.childCount; i++)
-        {
-            Destroy(lifeLayoutGroup.GetChild(i).gameObject);
-        }
-
-        // Display life
-        for (int i = 0; i < health.health; i++)
-        {
-            RectTransform rt = Instantiate(lifeImage, lifeLayoutGroup).GetComponent<RectTransform>();
-            float parentWidth = lifeLayoutGroup.rect.width;
-            float lifeWidth = 0;
-
-            // Size
-            Vector2 sizeDeltaAdjusted = new Vector2(
-                (parentWidth) / health.health - (spacing * 2),
-                lifeLayoutGroup.rect.height - topDownOffset *2);
-            rt.sizeDelta = sizeDeltaAdjusted;
-
-            lifeWidth = sizeDeltaAdjusted.x;
-
-            // Position
-            Vector2 localPosition = new Vector2(
-                ((parentWidth / health.health) * i) - (parentWidth / 2) + (lifeWidth / 2) + spacing / (health.health) + spacing,
-                0);
-            rt.localPosition = localPosition;
-        }
-    }
-
-    /// <summary>
-    /// Displays the current life on life bar.
-    /// </summary>
-    private void DisplayCurrentHealth()
-    {
-        for (int i = 0; i < health.health; i++)
-        {
-            GameObject currentLifeBar = lifeLayoutGroup.GetChild(i).gameObject;
-            currentLifeBar.SetActive(i < health.currentHealth);
-        }
-    }
+    private void Hide() => itemParent.gameObject.SetActive(false);
     
     /// <summary>
     /// Starts a waits for "time" seconds and executes an action.
@@ -179,7 +129,7 @@ public class UFM_SlicedHealthBar : MonoBehaviour
     
     private void Health_HealthChanged(object sender, EventArgs e)
     {
-        DisplayCurrentHealth();
+        FillGauge(health.currentHealth);
     }
     
     private void InputEvents_OnTileExit(object sender, Tile exitedTile)
@@ -211,4 +161,5 @@ public class UFM_SlicedHealthBar : MonoBehaviour
         else
             Show();
     }
+
 }

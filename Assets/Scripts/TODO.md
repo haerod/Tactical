@@ -20,6 +20,10 @@
 - Crouch dodge
 - Crouch hit reaction
 
+## Unit UI
+- Clean the prefab UI Infos
+- Orient to camera is implemented twice on the prefab
+
 ## Others
 - Can add and remove Actions without bugs
 - Maybe use raycasts for Autosnap
@@ -98,3 +102,19 @@
 - UFM Damage preview
 - Critical hit chance
 - Projectiles
+
+# NOTES
+
+## Actions behaviors
+- An action is defined by **do something**
+- To know if you can do an action, you have to **fulfill the conditions**
+  - an action class needs conditions (cost, triggers, anything)
+  - an action manager haves to manage the costs
+- I see **different implementations**
+  - 1st
+    - the manager is a compilator of the actions, but do not in particular : it asks the Action if its conditions are fulfilled
+    - the Action manages its data (costs), its conditions and its execution script (do something)
+  - 2nd
+    - the manager is a resources manager, it says to the action if it can play or not
+    - the action is only an interface with its execution script (do something)
+  - in the two cases, execution script can be separated from this logic
