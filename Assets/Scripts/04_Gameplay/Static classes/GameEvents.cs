@@ -18,6 +18,8 @@ public static class GameEvents
     public static event EventHandler<U__Unit> OnAnyDeath;
     public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonEnter;
     public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonExit;
+    public static event EventHandler<List<string>> OnAnyTooltipHovered;
+    public static event EventHandler OnAnyTooltipExit;
     
     public class HealthChangedEventArgs : EventArgs
     {
@@ -36,6 +38,8 @@ public static class GameEvents
         OnAnyDeath = null;
         OnAnyWeaponSelectionButtonEnter = null;
         OnAnyWeaponSelectionButtonExit = null;
+        OnAnyTooltipHovered = null;
+        OnAnyTooltipExit = null;
     }
 
     // ======================================================================
@@ -55,6 +59,8 @@ public static class GameEvents
     public static void InvokeOnAnyDeath(U__Unit deadUnit) => OnAnyDeath?.Invoke(null, deadUnit);
     public static void InvokeOnAnyWeaponSelectionButtonEnter(Module_WeaponSelectionButton selectedButton) => OnAnyWeaponSelectionButtonEnter?.Invoke(null, selectedButton);
     public static void InvokeOnAnyWeaponSelectionButtonExit(Module_WeaponSelectionButton unselectedButton) => OnAnyWeaponSelectionButtonExit?.Invoke(null, unselectedButton);
+    public static void InvokeOnAnyTooltipHovered(List<string> tooltips) => OnAnyTooltipHovered?.Invoke(null, tooltips);
+    public static void InvokeOnAnyTooltipExit() => OnAnyTooltipExit?.Invoke(null, EventArgs.Empty);
     
     // ======================================================================
     // PRIVATE METHODS

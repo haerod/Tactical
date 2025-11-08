@@ -1,7 +1,10 @@
 # IMPORTANT
-Currently, needs for XDD project
 ## FEATURE WITH 1h or less
 ### OTHERS
+
+---
+
+---
 
 # CAMERA
 **IMPORTANT**
@@ -14,7 +17,7 @@ Currently, needs for XDD project
 
 # TOOLTIPS
 **IMPORTANT**
-- 0.5d -> Generic tooltip system (with tooltip trigger)
+- 1h -> Debug tooltip on Weapon tooltip
 
 # PROJECT
 **IMPORTANT**
@@ -25,6 +28,9 @@ Currently, needs for XDD project
 - 1d -> Documentation
 - 1w -> Online API like Unity (ask Simon)
 - 0.5d -> Notes in Inspector to make it easier to understand
+
+# HEALTH BAR
+- 1h -> Bug on health bar size on full screen
 
 ## FOG OF WAR
 - 0.5d -> Fog of war as a Manager (not in Rules)
@@ -62,6 +68,11 @@ Currently, needs for XDD project
 - 1h -> units.EndCurrentUnitTurn as an event (not called in classes) -> use it in a lot of Modules
 - 0.5d -> Don't need a LateStart in M_Units
 - 0.5d -> Find tasks to make it more simple
+
+**Note**
+- A lot of complexity come from the turn based system. 
+But turn based is a feature can be added separately.
+"Current unit" is a complex logic, but "controlled unit" is maybe easier to understand.
 
 ## DEATH
 - 1h -> Stability test : Try to kill a character during its own turn and out of its turn

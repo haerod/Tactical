@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 5850439782080544620}
   - component: {fileID: 978419920818419258}
   - component: {fileID: 4293455984753516921}
+  - component: {fileID: 7424665579623549920}
   m_Layer: 5
   m_Name: Button Previous unit
   m_TagString: Untagged
@@ -211,6 +212,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7424665579623549920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2742020499904470138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0916389795c14670a99c028d711c64de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content:
+  - Pass to previous teammate
+  displayDelay: 0.5
 --- !u!1 &2870198490097791802
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,6 +239,7 @@ GameObject:
   - component: {fileID: 669988924177582224}
   - component: {fileID: 2113640058481620217}
   - component: {fileID: 3407268082268100789}
+  - component: {fileID: 5682259084635266298}
   m_Layer: 5
   m_Name: Button Rotate Camera Next
   m_TagString: Untagged
@@ -346,6 +363,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5682259084635266298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2870198490097791802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0916389795c14670a99c028d711c64de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content:
+  - Rotate camera (anticlockwise)
+  displayDelay: 0.5
 --- !u!1 &2916920608327523650
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +549,7 @@ GameObject:
   - component: {fileID: 1729924512941475618}
   - component: {fileID: 3882996354108704692}
   - component: {fileID: 8734352995559639254}
+  - component: {fileID: 6841732587889292427}
   m_Layer: 5
   m_Name: Button Rotate Camera Previous
   m_TagString: Untagged
@@ -640,6 +673,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6841732587889292427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4291467506732807331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0916389795c14670a99c028d711c64de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content:
+  - Rotate camera (clockwise)
+  displayDelay: 0.5
 --- !u!1 &4637404233224594099
 GameObject:
   m_ObjectHideFlags: 0
@@ -1223,6 +1271,7 @@ GameObject:
   - component: {fileID: 6982614529010265952}
   - component: {fileID: 6982614529010265953}
   - component: {fileID: 6982614529010265954}
+  - component: {fileID: 4799974709809881193}
   m_Layer: 5
   m_Name: Button Next unit
   m_TagString: Untagged
@@ -1346,6 +1395,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4799974709809881193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6982614529010265956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0916389795c14670a99c028d711c64de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content:
+  - Pass to next teammate
+  displayDelay: 0.5
 --- !u!1 &7154020647864933645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1510,6 +1574,7 @@ GameObject:
   - component: {fileID: 1816879518464479086}
   - component: {fileID: 4924467044771632522}
   - component: {fileID: 31638121365942443}
+  - component: {fileID: 5797437378592845726}
   m_Layer: 5
   m_Name: Button End turn
   m_TagString: Untagged
@@ -1633,3 +1698,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5797437378592845726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9210683668442683921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0916389795c14670a99c028d711c64de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content:
+  - End turn
+  displayDelay: 0.5
