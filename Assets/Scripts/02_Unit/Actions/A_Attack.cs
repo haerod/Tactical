@@ -16,6 +16,8 @@ public class A_Attack : A__Action
     public event EventHandler OnAttackStart;
     public event EventHandler OnAttackEnd;
     public event EventHandler<U__Unit> OnAttackMiss;
+    public event EventHandler<U__Unit> OnAttackableEnemyHovered;
+    public event EventHandler<U__Unit> OnUnitExit;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -53,8 +55,6 @@ public class A_Attack : A__Action
         StartAction();
         OnAttackStart?.Invoke(this, EventArgs.Empty);
         GameEvents.InvokeOnAnyAttackStart(unit);
-
-        unit.anim.StartAttack();
         
         int percentOfTouch = GetChanceToTouch(currentTarget);
         
@@ -192,8 +192,8 @@ public class A_Attack : A__Action
         if(!IsTileInRange(hoveredUnit.tile))
             return; // Enemy is not visible or not in range
         
+        OnAttackableEnemyHovered?.Invoke(this, hoveredUnit);
         EnterLean(hoveredUnit);
-        unit.anim.StartAim();
     }
     
     protected override void OnExitCharacter(U__Unit exitedUnit)
@@ -203,8 +203,8 @@ public class A_Attack : A__Action
         if(!CanUse())
             return; // Can't do this action
 
+        OnUnitExit?.Invoke(this, exitedUnit);
         ExitLean();
-        unit.anim.StopAim();
     }
     
     protected override void OnClickAnyCharacter(U__Unit clickedUnit)

@@ -253,14 +253,13 @@ public class A_Move : A__Action
     /// </summary>
     private void EndMove()
     {
-        unit.anim.SetSpeed(0f);
+        OnMovementEnd?.Invoke(this, EventArgs.Empty);
         
         if(unit.cover.AreCoversAround())
             unit.anim.EnterCrouch();
         
         Wait(0.2f, () =>
         {
-            OnMovementEnd?.Invoke(this, EventArgs.Empty);
             
             EndAction();
         });

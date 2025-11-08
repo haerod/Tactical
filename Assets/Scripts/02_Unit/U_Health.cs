@@ -174,7 +174,6 @@ public class U_Health : MonoBehaviour
     /// </summary>
     private void Death()
     {
-        unit.anim.Death();
         _units.RemoveUnit(unit);
         unit.GetComponentInChildren<Collider>().gameObject.SetActive(false);
         OnDeath?.Invoke(this, EventArgs.Empty);

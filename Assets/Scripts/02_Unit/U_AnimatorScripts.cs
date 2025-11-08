@@ -30,11 +30,21 @@ public class U_AnimatorScripts : MonoBehaviour
             EnterCrouch();
 
         unit.move.OnMovementStart += Move_OnMovementStart;
+        unit.move.OnMovementEnd += Move_OnMovementEnd;
+        unit.attack.OnAttackStart += Attack_OnAttackStart;
+        unit.attack.OnAttackableEnemyHovered += Attack_OnAttackableEnemyHovered;
+        unit.attack.OnUnitExit += Attack_OnUnitExit;
+        unit.health.OnDeath += Health_OnDeath;
     }
-
+    
     private void OnDisable()
     {
         unit.move.OnMovementStart -= Move_OnMovementStart;
+        unit.move.OnMovementEnd -= Move_OnMovementEnd;
+        unit.attack.OnAttackStart -= Attack_OnAttackStart;
+        unit.attack.OnAttackableEnemyHovered -= Attack_OnAttackableEnemyHovered;
+        unit.attack.OnUnitExit -= Attack_OnUnitExit;
+        unit.health.OnDeath -= Health_OnDeath;
     }
 
     // ======================================================================
@@ -50,27 +60,6 @@ public class U_AnimatorScripts : MonoBehaviour
         if(anim)
             anim.runtimeAnimatorController = weaponGraphics.GetWeaponAnimatorController();
     }
-
-    /// <summary>
-    /// Sets the Speed animator's parameter.
-    /// </summary>
-    /// <param name="speedValue"></param>
-    public void SetSpeed(float speedValue) => anim.SetFloat(Speed, speedValue);
-    
-    /// <summary>
-    /// Starts attack animation.
-    /// </summary>
-    public void StartAttack() => anim.SetBool(Attack, true);
-    
-    /// <summary>
-    /// Starts aim animation.
-    /// </summary>
-    public void StartAim() => anim.SetBool(Aim, true);
-    
-    /// <summary>
-    /// Stops aim animation.
-    /// </summary>
-    public void StopAim() => anim.SetBool(Aim, false);
     
     /// <summary>
     /// Ends shoot animation.
@@ -103,16 +92,6 @@ public class U_AnimatorScripts : MonoBehaviour
     /// Starts the crouch animation.
     /// </summary>
     public void EnterCrouch() => anim.SetBool(Crouch, true);
-    
-    /// <summary>
-    /// Ends the crouch animation.
-    /// </summary>
-    public void ExitCrouch() => anim.SetBool(Crouch, false);
-    
-    /// <summary>
-    /// Starts the death animation.
-    /// </summary>
-    public void Death() => anim.SetBool(Death1, true);
 
     /// <summary>
     /// Enables or disables visuals of the characters.
@@ -123,6 +102,37 @@ public class U_AnimatorScripts : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Sets the Speed animator's parameter.
+    /// </summary>
+    /// <param name="speedValue"></param>
+    private void SetSpeed(float speedValue) => anim.SetFloat(Speed, speedValue);
+    
+    /// <summary>
+    /// Starts attack animation.
+    /// </summary>
+    private void StartAttack() => anim.SetBool(Attack, true);
+    
+    /// <summary>
+    /// Starts aim animation.
+    /// </summary>
+    private void StartAim() => anim.SetBool(Aim, true);
+    
+    /// <summary>
+    /// Stops aim animation.
+    /// </summary>
+    private void StopAim() => anim.SetBool(Aim, false);
+    
+    /// <summary>
+    /// Ends the crouch animation.
+    /// </summary>
+    private void ExitCrouch() => anim.SetBool(Crouch, false);
+    
+    /// <summary>
+    /// Starts the death animation.
+    /// </summary>
+    private void Death() => anim.SetBool(Death1, true);
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
@@ -131,5 +141,31 @@ public class U_AnimatorScripts : MonoBehaviour
     {
         ExitCrouch();
         SetSpeed(1);
+    }
+    
+    private void Move_OnMovementEnd(object sender, EventArgs e)
+    {
+        SetSpeed(0);
+    }
+    
+    private void Attack_OnAttackStart(object sender, EventArgs e)
+    {
+        StartAttack();
+    }
+    
+    private void Attack_OnAttackableEnemyHovered(object sender, U__Unit enemy)
+    {
+        StartAim();
+    }
+
+    private void Attack_OnUnitExit(object sender, U__Unit exitedUnit)
+    {
+        StopAim();
+    }
+
+    
+    private void Health_OnDeath(object sender, EventArgs e)
+    {
+        Death();
     }
 }
