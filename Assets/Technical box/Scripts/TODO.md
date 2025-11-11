@@ -41,6 +41,7 @@
 ## ACTION TILE PREVIEW
 - 0.5d -> Logic (and prefab) only in the module (not on the tile)
 - 1h -> Set FM_TilesActionPreview abstract
+- 1h -> Zone with limits
 
 ## TILES
 - 1h -> Tiles material work with an enum, use a Scriptable object instead
