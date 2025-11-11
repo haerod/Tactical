@@ -19,23 +19,13 @@ public class Tile : Entity
     [HideInInspector] public int heuristic;
     [HideInInspector] public int f;
     [HideInInspector] public Tile parent;
-
-    public enum TileMaterial { Yellow, Grey, Red, Green, Blue }
+    
     public enum Directions { Top, Down, Right, Left }
 
     public U__Unit character => Character();
 
     [Header("REFERENCES")]
-
-    [SerializeField] private MeshRenderer areaRend;
-    [Space]
-    [SerializeField] private Material green;
-    [SerializeField] private Material blue;
-    [SerializeField] private Material red;
-    [SerializeField] private Material yellow;
-    [SerializeField] private Material grey;
-    [Space]
-    [SerializeField] private GameObject areaObject;
+    
     [SerializeField] private GameObject fogMask;
     [Space]
     [SerializeField] private GameObject topLine;
@@ -175,53 +165,6 @@ public class Tile : Entity
     {
         fogMask.SetActive(value);
     }
-
-    /// <summary>
-    /// Sets the appearance of a tile with the new material.
-    /// </summary>
-    /// <param name="tileMaterial"></param>
-    public void SetMaterial(TileMaterial tileMaterial)
-    {
-        areaObject.SetActive(true);
-
-        switch (tileMaterial)
-        {
-            case TileMaterial.Yellow:
-                areaRend.material = yellow;
-                break;
-            case TileMaterial.Grey:
-                areaRend.material = grey;
-                break;
-            case TileMaterial.Blue:
-                areaRend.material = blue;
-                break;
-            case TileMaterial.Green:
-                areaRend.material = green;
-                break;
-            case TileMaterial.Red:
-                areaRend.material = red;
-                break;
-            default:
-                Debug.LogError("Add a material here");
-                break;
-        }
-    }
-    
-    /// <summary>
-    /// Sets the appearance of a tile with the new material.
-    /// </summary>
-    /// <param name="tileMaterial"></param>
-    public void SetMaterial(Material tileMaterial)
-    {
-        areaObject.SetActive(true);
-        areaRend.material = tileMaterial;
-    }
-
-    /// <summary>
-    /// Sets the tile skin to "basic".
-    /// Shortcut of SetMaterial(TileMaterial.Basic).
-    /// </summary>
-    public void ResetTileSkin() => areaObject.SetActive(false);
 
     /// <summary>
     /// Returns true if the tile is occupied by a character.

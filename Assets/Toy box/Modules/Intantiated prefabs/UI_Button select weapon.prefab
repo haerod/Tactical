@@ -224,7 +224,6 @@ GameObject:
   - component: {fileID: 2767875288304561356}
   - component: {fileID: 5430169743051937075}
   - component: {fileID: 5274075259969053395}
-  - component: {fileID: 1643143205637787663}
   m_Layer: 0
   m_Name: UI_Button select weapon
   m_TagString: Untagged
@@ -351,18 +350,3 @@ MonoBehaviour:
   button: {fileID: 5430169743051937075}
   weaponSprite: {fileID: 4266340875377258489}
   buttonText: {fileID: 272751116059124258}
---- !u!114 &1643143205637787663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7006683436699592752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37f74eea38514695aa525f1fb139afe3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: []
-  showDamage: 1
-  showDamageTypes: 1

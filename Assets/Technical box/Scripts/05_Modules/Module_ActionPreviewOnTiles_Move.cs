@@ -8,12 +8,8 @@ using static M__Managers;
 /// <summary>
 /// Preview of the Move action on tiles.
 /// </summary>
-public class Module_TilesActionPreview_Move : MonoBehaviour
+public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
 {
-    [SerializeField] private Material feedbackTileMaterial;
-    
-    private List<Tile> tilesWithFeedback = new();
-    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -34,28 +30,6 @@ public class Module_TilesActionPreview_Move : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Shows the tiles of the movement area.
-    /// </summary>
-    private void ShowFeedbacks(List<Tile> tilesToShow) =>
-        tilesToShow
-            .ForEach(t =>
-            {
-                t.SetMaterial(feedbackTileMaterial);
-                tilesWithFeedback.Add(t);
-            });
-
-    /// <summary>
-    /// Resets the tiles skin and clears the movement area tiles list.
-    /// </summary>
-    private void HideFeedbacks()
-    {
-        tilesWithFeedback
-            .ForEach(t => t.ResetTileSkin());
-
-        tilesWithFeedback.Clear();
-    }
     
     // ======================================================================
     // EVENTS

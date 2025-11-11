@@ -30,18 +30,22 @@
 - 0.5d -> Notes in Inspector to make it easier to understand
 
 # HEALTH BAR
+**IMPORTANT**
 - 1h -> Bug on health bar size on full screen
+
+- 0.5d -> Just display "Undamaged, Barely injured, etc." to replace the health bar
 
 ## FOG OF WAR
 - 0.5d -> Fog of war as a Manager (not in Rules)
 - 1h -> Fog of war view lines as Module (of Fog of war)
 - 1h -> Test : Be sure, if Fog of war is disabled, unit can see everything
 - 1w -> Fog of war behavior : mask things un discovered (difference with discovered and not in line of sight)
+- 1h -> Fog mask on FoW, not on tile
 
 ## ACTION TILE PREVIEW
-- 0.5d -> Logic (and prefab) only in the module (not on the tile)
 - 1h -> Set FM_TilesActionPreview abstract
 - 1h -> Zone with limits
+- 1h -> Use pulling to not instantiate always area prefabs
 
 ## TILES
 - 1h -> Tiles material work with an enum, use a Scriptable object instead

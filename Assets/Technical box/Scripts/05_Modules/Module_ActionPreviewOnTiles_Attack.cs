@@ -7,11 +7,8 @@ using static M__Managers;
 /// <summary>
 /// Preview of the Attack action on tiles.
 /// </summary>
-public class Module_TilesActionPreview_Attack : MonoBehaviour
+public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Base
 {
-    [SerializeField] private Material feedbackTileMaterial;
-    private List<Tile> tilesWithFeedback = new();
-    
     private U__Unit currentUnit;
     
     // ======================================================================
@@ -40,24 +37,6 @@ public class Module_TilesActionPreview_Attack : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Shows the tiles a character can attack.
-    /// </summary>
-    private void ShowFeedbacks(List<Tile> tilesToShow) => tilesToShow.
-            ForEach(t => {
-                t.SetMaterial(feedbackTileMaterial);
-                tilesWithFeedback.Add(t);
-            });
-    
-    /// <summary>
-    /// Resets the tiles skin and clears the attackable tiles list.
-    /// </summary>
-    private void HideFeedbacks()
-    {
-        tilesWithFeedback.ForEach(t => t.ResetTileSkin());
-        tilesWithFeedback.Clear();
-    }
     
     // ======================================================================
     // EVENTS
