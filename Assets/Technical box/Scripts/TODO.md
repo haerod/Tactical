@@ -22,6 +22,7 @@
 # PROJECT
 **IMPORTANT**
 - 1d -> Transform the project in Package (usable with the Package Manager)
+- 1d -> Dependencies with Text Mesh Pro (and Cinemachine when camera will be imported)
 
 - 0.5d -> Namespaces
 - 1d -> Documentation
@@ -143,6 +144,7 @@ But turn based is a feature can be added separately.
 
 ### MOVE UNIT
 - 0.5d -> Separate Move in multiple parts (moving, orient to, move tiles, etc.), fully encapsuled, with a manager
+- 0.5d -> Movement in fog of war
 
 ### UNIT VISUALS
 - 1d -> Make it easy to change model (humanoid) -> /!\ Ragdoll Module is linked
@@ -177,3 +179,6 @@ But turn based is a feature can be added separately.
 
 ### PROGRESSION SYSTEM
 - 1w -> Units can easily progress (ex: unlock skills)
+
+### PREFAB TACTICAL TOOL
+- 1h -> Multiple presets of the tactical tool, depending on the rules
