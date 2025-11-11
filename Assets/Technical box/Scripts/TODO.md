@@ -22,7 +22,6 @@
 # PROJECT
 **IMPORTANT**
 - 1d -> Transform the project in Package (usable with the Package Manager)
-- 1h -> Separate folders between Toy box and Technical box
 
 - 0.5d -> Namespaces
 - 1d -> Documentation
