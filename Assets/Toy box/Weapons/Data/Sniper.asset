@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Sniper
   m_EditorClassIdentifier: 
   weaponName: Sniper
-  icon: {fileID: 21300000, guid: 569b60a88ab57874883bbd275b8aa1ca, type: 3}
+  icon: {fileID: 21300000, guid: 964ead30c71fe6047aafbb13972066c0, type: 3}
   damagesRange: {x: 3, y: 5}
   damageType:
   - {fileID: 11400000, guid: 61d85b9788250e041bb254a1d737f89b, type: 2}
-  touchInView: 1
+  anythingInView: 1
   isMeleeWeapon: 0
   specificRange: 0
+  precisionMalusByDistance: 5

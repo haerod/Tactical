@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Rifle
   m_EditorClassIdentifier: 
   weaponName: Rifle
-  icon: {fileID: 21300000, guid: 896db894bdd9c094182f4da2266f986d, type: 3}
+  icon: {fileID: 21300000, guid: a4355ccd869cb514a80466dbb8118ef0, type: 3}
   damagesRange: {x: 2, y: 3}
   damageType:
   - {fileID: 11400000, guid: 61d85b9788250e041bb254a1d737f89b, type: 2}
-  touchInView: 1
+  anythingInView: 1
   isMeleeWeapon: 0
   specificRange: 0
+  precisionMalusByDistance: 5

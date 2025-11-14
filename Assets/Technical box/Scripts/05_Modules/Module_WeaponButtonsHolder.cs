@@ -29,15 +29,13 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     /// <summary>
     /// Destroys the old buttons, creates new ones and gives them parameters.
     /// </summary>
-    /// <param name="character"></param>
-    public void CreateWeaponButtons(U__Unit character)
+    /// <param name="unit"></param>
+    public void CreateWeaponButtons(U__Unit unit)
     {
         DestroyAllButtons();
+        instantiatedButtons.Clear();
         
-        if(!character.behavior.playable)
-            return; // Not playable character
-        
-        foreach (Weapon weapon in character.weaponHolder.GetWeaponList())
+        foreach (Weapon weapon in unit.weaponHolder.GetWeaponList())
         {
             Module_WeaponSelectionButton instantiateButton = 
                 Instantiate(
@@ -45,7 +43,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
                     buttonsParent)
                     .GetComponent<Module_WeaponSelectionButton>();
             
-            instantiateButton.SetParameters(this, character);
+            instantiateButton.SetParameters(this, unit);
             instantiateButton.DisplayButton(weapon);
             
             instantiatedButtons.Add(instantiateButton.gameObject);
@@ -61,23 +59,27 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     /// </summary>
     private void DestroyAllButtons()
     {
-        instantiatedButtons.ForEach(b => Destroy(b.gameObject));
-        instantiatedButtons.Clear();
+        foreach (Transform child in buttonsParent)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     // ======================================================================
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit character)
+    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
     {
-        if(!character.CanPlay())
+        if(!startingUnit.CanPlay())
             return; // Can't play
-            
-        CreateWeaponButtons(character);
+        if(!startingUnit.behavior.playable)
+            return; // Not playable character
+        
+        CreateWeaponButtons(startingUnit);
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit e)
+    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
     {
         DestroyAllButtons();
     }

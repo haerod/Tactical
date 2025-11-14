@@ -19,6 +19,8 @@ public class WeaponGraphics : MonoBehaviour
 
     private void OnDisable()
     {
+        if(!unit)
+            return;
         if(!unit.attack)
             return;
         
