@@ -48,6 +48,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     private void InitialiseBar()
     {
         maximumValue = health.health;
+        FillGauge(health.currentHealth);
     }
     
     // ======================================================================

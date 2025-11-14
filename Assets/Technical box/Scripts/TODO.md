@@ -19,22 +19,6 @@
 **IMPORTANT**
 - 1h -> Debug tooltip on Weapon tooltip
 
-# PROJECT
-**IMPORTANT**
-- 1d -> Transform the project in Package (usable with the Package Manager)
-- 1d -> Dependencies with Text Mesh Pro (and Cinemachine when camera will be imported)
-
-- 0.5d -> Namespaces
-- 1d -> Documentation
-- 1w -> Online API like Unity (ask Simon)
-- 0.5d -> Notes in Inspector to make it easier to understand
-
-# HEALTH BAR
-**IMPORTANT**
-- 1h -> Bug on health bar size on full screen
-
-- 0.5d -> Just display "Undamaged, Barely injured, etc." to replace the health bar
-
 ## FOG OF WAR
 - 0.5d -> Fog of war as a Manager (not in Rules)
 - 1h -> Fog of war view lines as Module (of Fog of war)
@@ -106,6 +90,21 @@ But turn based is a feature can be added separately.
 - 1w -> Destructible obstacles
 - 1w -> Large elements (multiple tiles)
 - 1h -> In Tactical Course project, export all the comments //BUTT to this project
+
+### PROJECT
+- 1d -> Transform the project in Package (usable with the Package Manager)
+    - I checked and there are two options :
+        - Create a package but everything goes inside (nothing in the project)
+        - Push the project on the asset store (not ready yet)
+    - 1d -> Dependencies with Text Mesh Pro (and Cinemachine when camera will be imported)
+- 0.5d -> Namespaces
+- 1d -> Documentation
+- 1w -> Online API like Unity (ask Simon)
+- 0.5d -> Notes in Inspector to make it easier to understand
+
+### HEALTH BAR
+
+- 0.5d -> Display "Undamaged, Barely injured, etc." to replace the health bar
 
 ### ACTIONS
 - 1d -> Can add and remove Actions without bugs

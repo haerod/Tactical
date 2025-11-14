@@ -24,4 +24,36 @@ public static class Utils
     /// </summary>
     /// <returns></returns>
     public static bool RandomBool() => Random.Range(0, 2) == 0;
+    
+    /// <summary>
+	/// Returns renderer's bounds of an object, with all its children. 
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    public static Bounds GetBounds(GameObject obj)
+    {
+        Bounds bounds = new Bounds();
+        Renderer[ ] renderers = obj.GetComponentsInChildren<Renderer>();
+        if (renderers.Length > 0)
+        {
+            //Find first enabled renderer to start encapsulate from it
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer.enabled)
+                {
+                    bounds = renderer.bounds;
+                    break;
+                }
+            }
+            //Encapsulate for all renderers
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer.enabled)
+                {
+                    bounds.Encapsulate(renderer.bounds);
+                }
+            }
+        }
+        return bounds;
+    }
 }
