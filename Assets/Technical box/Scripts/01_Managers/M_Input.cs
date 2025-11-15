@@ -107,18 +107,6 @@ public class M_Input : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
     
-    /// <summary>
-    /// Gets the pointer position on the floor (Plane at y = 0).
-    /// </summary>
-    /// <returns></returns>
-    public Vector3 GetPointerPosition()
-    {
-        //Create a ray from the Mouse click position
-        Ray ray = _camera.GetCurrentCamera().ScreenPointToRay(Input.mousePosition);
-        floorPlane.Raycast(ray, out float enter); 
-        return ray.GetPoint(enter);
-    }
-    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -403,6 +391,9 @@ public static class InputEvents
     {
         U__Unit currentUnit = _units.current;
         U__Unit currentTarget = hoveredCharacter;
+
+        if (!currentUnit)
+            return;
         
         OnUnitEnter?.Invoke(null, currentTarget);
         

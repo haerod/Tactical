@@ -5,40 +5,23 @@ using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
 using Random = UnityEngine.Random;
+using Cinemachine;
 
 public class M_Camera : MonoBehaviour
 {
-    [Header("MOVEMENT")]
-
-    [SerializeField] private int movingSpeedMultiplier = 2;
-    [Space]
-    [SerializeField] private float smoothMovingTime = .3f;
-    [SerializeField] private AnimationCurve smoothMovingCurve = null;
-
-    [Header("CAMERA OFFSET")]
-
-    public float xOffset = -3;
-    public float yOffset = 5;
-    public float zOffset = -3;
-
-    [Header("ORTHOGRAPHIC ZOOM")]
-
-    public float zoomMin = 1;
-    public float zoomMax = 5;
-
-    [Header("REFERENCES")]
-
-    [SerializeField] private Camera currentCamera;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private Transform cameraTarget;
+    [SerializeField] private float moveSpeed = 30f;
+    [SerializeField] private float rotationSpeed = 200f;
+    [SerializeField] private float zoomSpeed = 5f;
+    [SerializeField] private float minZoom = 0.5f;
+    [SerializeField] private float maxZoom = 4f;
     
     public static M_Camera instance => _instance ??= FindFirstObjectByType<M_Camera>();
     public static M_Camera _instance;
-
-    private float currentTime;
-    private Vector3 positionToReach;
-    private Vector3 startPosition;
+    
     private Transform target;
-
-    private float xMin, xMax, zMin, zMax;
+    private Camera camera;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -67,19 +50,6 @@ public class M_Camera : MonoBehaviour
         _input.OnRotateRightInput += Input_OnRotateRightCameraInput;
         _input.OnRotateLeftInput += Input_OnRotateLeftCameraInput;
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
-        
-        TileGrid boardTileGrid = _board.tileGrid;
-
-        xMin = boardTileGrid.lowestX;
-        xMax = boardTileGrid.higherX;
-        zMin = boardTileGrid.lowestY;
-        zMax = boardTileGrid.higherY;
-    }
-
-    private void Update()
-    {
-        if (currentTime < smoothMovingTime)
-            UpdateCameraPosition();
     }
 
     // ======================================================================
@@ -89,22 +59,28 @@ public class M_Camera : MonoBehaviour
     /// <summary>
     /// Returns the current camera.
     /// </summary>
-    public Camera GetCurrentCamera() => currentCamera;
+    public Camera GetCurrentCamera() => camera ? camera : camera = Camera.main;
     
     /// <summary>
     /// Resets the camera's position to reach on its target (with the offset).
     /// </summary>
     public void ResetPosition()
     {
-        positionToReach = new Vector3(
-            target.position.x + xOffset,
-            target.position.y + yOffset,
-            target.position.z + zOffset);
-
-        currentTime = 0;
-        startPosition = transform.position;
+        cameraTarget.transform.position = new Vector3(
+            target.transform.position.x,
+            0,
+            target.transform.position.z);
     }
 
+    /// <summary>
+    /// Rotates the camera, adding the given angle.
+    /// </summary>
+    /// <param name="angle"></param>
+    public void RotateOnAngle(float angle)
+    {
+        cameraTarget.eulerAngles += new Vector3(0f, angle, 0f);
+    }
+    
     /// <summary>
     /// Camera shaking for more fun.
     /// </summary>
@@ -114,45 +90,36 @@ public class M_Camera : MonoBehaviour
     public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f) => 
         StartCoroutine(Shake_Co(duration, intensity, timeBetweenShakes));
     
-    /// <summary>
-    /// Rotates the camera around Y axis.
-    /// </summary>
-    /// <param name="rotationValue"></param>
-    public void RotateCamera(float rotationValue) => transform.Rotate(Vector3.up, rotationValue);
-    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
+    /// <summary>
+    /// Move the camera in the given direction.
+    /// </summary>
+    /// <param name="direction"></param>
+    private void MoveInDirection(Vector2Int direction)
+    {
+        // Transform the input direction in world direction to follow the angle of the camera
+        Vector3 moveDirection = cameraTarget.forward * direction.y + cameraTarget.right * direction.x;
+        cameraTarget.position += moveDirection * moveSpeed * Time.deltaTime;
+    }
+    
+    /// <summary>
+    /// Zoom with the given amount.
+    /// </summary>
+    /// <param name="zoomAmount"></param>
+    private void Zoom(float zoomAmount)
+    {
+        virtualCamera.m_Lens.OrthographicSize += zoomAmount;
+        virtualCamera.m_Lens.OrthographicSize = Mathf.Clamp(virtualCamera.m_Lens.OrthographicSize, minZoom, maxZoom);
+    }
+    
     /// <summary>
     /// Sets the camera's target.
     /// </summary>
     /// <param name="newTarget"></param>
     private void SetTarget(Transform newTarget) => target = newTarget;
-    
-    /// <summary>
-    /// Updates the camera position (clamped). Called by Update().
-    /// </summary>
-    private void UpdateCameraPosition()
-    {
-        if(!target)
-            return; // No target
-        
-        currentTime += Time.deltaTime;
-
-        Vector3 cameraPosition = Vector3.Lerp(
-            startPosition,
-            positionToReach,
-            smoothMovingCurve.Evaluate(Mathf.Clamp01((currentTime * movingSpeedMultiplier) / smoothMovingTime)));
-
-        transform.position = cameraPosition;
-
-        transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, xMin + xOffset, xMax + xOffset),
-            target.transform.position.y + yOffset,
-            Mathf.Clamp(transform.position.z, zMin + zOffset, zMax + +zOffset)
-            );
-    }
 
     /// <summary>
     /// Gets the center between multiple targets.
@@ -186,12 +153,12 @@ public class M_Camera : MonoBehaviour
 
         while(shakeCurrentTime < duration)
         {
-            currentCamera.transform.localPosition = Random.onUnitSphere * intensity;
+            virtualCamera.transform.localPosition = Random.onUnitSphere * intensity;
             yield return new WaitForSeconds(timeBetweenShakes);
             shakeCurrentTime += timeBetweenShakes;
         }
 
-        currentCamera.transform.localPosition = Vector3.zero;
+        virtualCamera.transform.localPosition = Vector3.zero;
     }
 
     // ======================================================================
@@ -200,25 +167,29 @@ public class M_Camera : MonoBehaviour
 
     private void Input_OnMovingCameraInput(object sender, Coordinates inputMoveDirection)
     {
-        positionToReach = transform.position
-            + transform.forward * inputMoveDirection.y 
-            + transform.right * inputMoveDirection.x;
-        startPosition = transform.position;
-        currentTime = 0f;
+        MoveInDirection(new Vector2Int(inputMoveDirection.x, inputMoveDirection.y));
     }
 
     private void Input_OnZoomingCameraInput(object sender, int zoomAmount)
     {
-        currentCamera.orthographicSize += zoomAmount;
-        currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize, zoomMin, zoomMax);
+        Zoom(zoomAmount);
     }
     
-    private void Input_OnRecenterCameraInput(object sender, EventArgs e) => ResetPosition();
-    
-    private void Input_OnRotateLeftCameraInput(object sender, EventArgs e) => RotateCamera(90f);
+    private void Input_OnRecenterCameraInput(object sender, EventArgs e)
+    {
+        ResetPosition();
+    }
 
-    private void Input_OnRotateRightCameraInput(object sender, EventArgs e) => RotateCamera(-90f);
-    
+    private void Input_OnRotateLeftCameraInput(object sender, EventArgs e)
+    {
+        RotateOnAngle(90f);
+    }
+
+    private void Input_OnRotateRightCameraInput(object sender, EventArgs e)
+    {
+        RotateOnAngle(-90f);
+    }
+
     private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
     {
         _camera.SetTarget(startingCharacter.transform);

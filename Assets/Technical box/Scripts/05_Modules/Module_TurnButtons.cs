@@ -56,12 +56,12 @@ public class Module_TurnButtons : MonoBehaviour
     /// <summary>
     /// Events call on Rotate Camera Previous button's click
     /// </summary>
-    public void ButtonRotateCameraPrevious() => _camera.RotateCamera(90f);
+    public void ButtonRotateCameraPrevious() => _camera.RotateOnAngle(90f);
     
     /// <summary>
     /// Events call on Rotate Camera Next button's click
     /// </summary>
-    public void ButtonRotateCameraNext() => _camera.RotateCamera(-90f);
+    public void ButtonRotateCameraNext() => _camera.RotateOnAngle(-90f);
     
     // ======================================================================
     // PRIVATE METHODS

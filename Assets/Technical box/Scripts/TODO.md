@@ -6,11 +6,6 @@
 
 ---
 
-# CAMERA
-**IMPORTANT**
-- 0.5d -> Import camera from Tactical Course
-- 0.5d -> Recenter camera doesn't work (function is called but does nothing)
-
 # AMMO
 **IMPORTANT**
 - 1d -> Ammo system (import for XDD project), maybe need Inventory logic
@@ -18,6 +13,11 @@
 # TOOLTIPS
 **IMPORTANT**
 - 1h -> Debug tooltip on Weapon tooltip
+
+## CAMERA
+- 1h -> Clamp camera in board bounds
+- 1h -> Camera screen shake (Cinemachine based)
+- 0.5d -> Smooth rotation
 
 ## FOG OF WAR
 - 0.5d -> Fog of war as a Manager (not in Rules)
@@ -57,6 +57,9 @@
 - 1h -> units.EndCurrentUnitTurn as an event (not called in classes) -> use it in a lot of Modules
 - 0.5d -> Don't need a LateStart in M_Units
 - 0.5d -> Find tasks to make it more simple
+
+Note
+- We need a difference between TurnStart (give actions) and TakeControl (dispaly UI and controls)
 
 **Note**
 - A lot of complexity come from the turn based system. 
