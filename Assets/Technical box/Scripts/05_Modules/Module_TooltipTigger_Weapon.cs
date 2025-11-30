@@ -34,7 +34,7 @@ public class Module_TooltipTigger_Weapon : Module_TooltipTriggerBase
         Weapon weapon = GetComponent<Module_WeaponSelectionButton>().GetWeapon();
         
         // Name
-        toReturn = weapon.GetName();
+        toReturn = $"<b>{weapon.GetName()}</b>";
         
         // Damage range
         if(showDamage)

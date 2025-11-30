@@ -10,10 +10,6 @@
 **IMPORTANT**
 - 1d -> Ammo system (import for XDD project), maybe need Inventory logic
 
-# TOOLTIPS
-**IMPORTANT**
-- 1h -> Debug tooltip on Weapon tooltip
-
 ## CAMERA
 - 1h -> Clamp camera in board bounds
 - 1h -> Camera screen shake (Cinemachine based)

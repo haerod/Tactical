@@ -12,8 +12,6 @@ public class M_Camera : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private float moveSpeed = 30f;
-    [SerializeField] private float rotationSpeed = 200f;
-    [SerializeField] private float zoomSpeed = 5f;
     [SerializeField] private float minZoom = 0.5f;
     [SerializeField] private float maxZoom = 4f;
     

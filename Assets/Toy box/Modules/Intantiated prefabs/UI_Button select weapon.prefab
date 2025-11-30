@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 5430169743051937075}
   - component: {fileID: 5274075259969053395}
   - component: {fileID: 8326772202439236984}
+  - component: {fileID: 2893278958890715687}
   m_Layer: 0
   m_Name: UI_Button select weapon
   m_TagString: Untagged
@@ -366,3 +367,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0.52156866, g: 0.68235296, b: 0.68235296, a: 1}
   m_EffectDistance: {x: 3, y: -3}
   m_UseGraphicAlpha: 1
+--- !u!114 &2893278958890715687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7006683436699592752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f74eea38514695aa525f1fb139afe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content: []
+  showDamage: 1
+  showDamageTypes: 1

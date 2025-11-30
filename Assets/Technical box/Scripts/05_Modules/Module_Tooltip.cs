@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 /// <summary>
 /// Displays tooltips on screen.
@@ -11,6 +13,7 @@ using TMPro;
 public class Module_Tooltip : MonoBehaviour
 {
     [SerializeField] private float displayDelay = .5f;
+    [SerializeField] private int characterWrapLimit = 80;
     
     [Header("REFERENCES")]
     
@@ -18,6 +21,7 @@ public class Module_Tooltip : MonoBehaviour
     [SerializeField] private GameObject tooltipTextBoxPrefab;
     [SerializeField] private Transform layoutGroup;
     [SerializeField] private RectTransform tooltipRect;
+    [SerializeField] private LayoutElement layoutElement;
     
     private Coroutine timerCoroutine;
     
@@ -72,12 +76,20 @@ public class Module_Tooltip : MonoBehaviour
             Destroy(child.gameObject);
         }
         
+        bool isCharacterWrapLimitPassed = false;
+        
         foreach (string tooltip in tooltips)
         {
             GameObject newTooltip = Instantiate(tooltipTextBoxPrefab, layoutGroup);
-            newTooltip.GetComponentInChildren<TextMeshProUGUI>().text = tooltip;
+            TextMeshProUGUI text = newTooltip.GetComponentInChildren<TextMeshProUGUI>();
+            text.text = tooltip;
+            
+            if(text.text.Length > characterWrapLimit)
+                isCharacterWrapLimitPassed = true;
         }
         
+        layoutElement.enabled = isCharacterWrapLimitPassed;
+        PositionTooltip();
         panel.SetActive(true);
     }
 
