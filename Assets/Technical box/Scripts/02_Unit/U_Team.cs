@@ -6,10 +6,6 @@ public class U_Team : MonoBehaviour
 {
     public Team team;
 
-    [Header("REFERENCES")]
-    [SerializeField] private Renderer rend1;
-    [SerializeField] private Renderer rend2;
-
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -17,30 +13,6 @@ public class U_Team : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Sets the team materials to the unit.
-    /// Called by UnitAutoRename.
-    /// </summary>
-    public void SetTeamMaterials()
-    {
-        if(!team)
-        {
-            Debug.LogError(transform.parent.name + " doesn't have a team. Please assign a team.", transform.parent.gameObject);
-            return; // No team assigned
-        }
-
-        if (rend1 && team.mainMaterial)
-        {
-            rend1.material = team.mainMaterial;
-            EditorUtility.SetDirty(rend1);
-        }
-        if (rend2 && team.secondaryMaterial)
-        {
-            rend2.material = team.secondaryMaterial;
-            EditorUtility.SetDirty(rend2);
-        }
-    }
 
     /// <summary>
     /// Returns true if the unit is an ally of the given unit. Else returns false.

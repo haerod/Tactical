@@ -8,7 +8,9 @@
 
 # AMMO
 **IMPORTANT**
-- 1d -> Ammo system (import for XDD project), maybe need Inventory logic
+- 0.5d -> Ammo system (import for XDD project)
+
+Note : need an Inventory logic
 
 ## CAMERA
 - 1h -> Clamp camera in board bounds
@@ -27,14 +29,9 @@
 - 1h -> Zone with limits
 - 1h -> Use pulling to not instantiate always area prefabs
 
-## TILES
-- 1h -> Tiles material work with an enum, use a Scriptable object instead
-- 0.5d -> Tile class does a lot of things: fraction it (in Coordinates and a new class like Tile renderer)
-
 ## TEAM
 - 1h -> Make a distinction between Ally and Teammate
 - 0.5d -> Team alliances
-- 1h -> Auto change team materials as a module
 
 ## ANIMATION
 - 1d -> Use animation layers for crouch (crouch dodge, crouch hit reaction)
@@ -66,6 +63,9 @@ But turn based is a feature can be added separately.
 - 1h -> Stability test : Try to kill a character during its own turn and out of its turn
     - OnDeath, need to end its turn
 
+## PREFAB TACTICAL TOOL
+- 1h -> Multiple presets of the tactical tool, depending on the rules
+
 ## RIDER
 - 1/4h -> Create a scriptable object template in Rider
 
@@ -82,15 +82,7 @@ But turn based is a feature can be added separately.
 - 0.5d -> Use action system for the turns
 - 1h -> Bug : Turn of enemy ends at MovementStart
 
-## OBSTACLES
-- 0.5d -> Obstacle transparency
-- 1d -> Shoot across obstacles (maybe clean the cover system first)
-- 1w -> Edges / vertex covers (working with line of sight)
-- 1w -> Destructible obstacles
-- 1w -> Large elements (multiple tiles)
-- 1h -> In Tactical Course project, export all the comments //BUTT to this project
-
-### PROJECT
+## PROJECT
 - 1d -> Transform the project in Package (usable with the Package Manager)
     - I checked and there are two options :
         - Create a package but everything goes inside (nothing in the project)
@@ -100,9 +92,16 @@ But turn based is a feature can be added separately.
 - 1d -> Documentation
 - 1w -> Online API like Unity (ask Simon)
 - 0.5d -> Notes in Inspector to make it easier to understand
+- 1h -> In Tactical Course project, export all the comments //BUTT to this project
+
+### OBSTACLES
+- 0.5d -> Obstacle transparency
+- 1d -> Shoot across obstacles (maybe clean the cover system first)
+- 1w -> Edges / vertex covers (working with line of sight)
+- 1w -> Destructible obstacles
+- 1w -> Large elements (multiple tiles)
 
 ### HEALTH BAR
-
 - 0.5d -> Display "Undamaged, Barely injured, etc." to replace the health bar
 
 ### ACTIONS
@@ -182,5 +181,8 @@ But turn based is a feature can be added separately.
 ### PROGRESSION SYSTEM
 - 1w -> Units can easily progress (ex: unlock skills)
 
-### PREFAB TACTICAL TOOL
-- 1h -> Multiple presets of the tactical tool, depending on the rules
+### ITEM RESISTANCE
+- 0.5d -> items have a resistance, reducing on each use, and are destroyed in the end
+
+### RIPOST
+- 1w -> when you attack an unit, it riposts automatically

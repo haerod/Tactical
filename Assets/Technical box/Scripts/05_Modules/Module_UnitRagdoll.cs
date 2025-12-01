@@ -41,7 +41,7 @@ public class Module_UnitRagdoll : MonoBehaviour
         
         unitRagdoll.weaponHolder.SetCurrentWeapon(deadUnit.weaponHolder.GetCurrentWeapon());
         unitRagdoll.team.team = deadUnit.unitTeam;
-        unitRagdoll.team.SetTeamMaterials();
+        AssignMaterials(unitRagdoll);
         
         MatchAllChildTransforms(originalRootBone, ragdollRootBone);
         ApplyExplosionToRagdoll(ragdollRootBone, 300f, 10f);
@@ -87,6 +87,26 @@ public class Module_UnitRagdoll : MonoBehaviour
         
         if(dropWeapon.TryGetComponent(out Rigidbody rigidbody))
             rigidbody.AddExplosionForce(50f, transform.position + randomDir, 10f);
+    }
+
+    private void AssignMaterials(U__Unit unitRagdoll)
+    {
+        Team team = unitRagdoll.unitTeam;
+        
+        if(!team)
+        {
+            Debug.LogError(transform.parent.name + " doesn't have a team. Please assign a team.", transform.parent.gameObject);
+            return; // No team assigned
+        }
+        
+        List<Renderer> renderers = unitRagdoll.anim.GetComponentsInChildren<Renderer>().ToList();
+        Renderer rend2 = renderers.Count > 0 ? renderers[0] : null;
+        Renderer rend1 = renderers.Count > 1 ? renderers[1] : null;
+
+        if (rend1 && team.mainMaterial)
+            rend1.material = team.mainMaterial;
+        if (rend2 && team.secondaryMaterial)
+            rend2.material = team.secondaryMaterial;
     }
     
     // ======================================================================

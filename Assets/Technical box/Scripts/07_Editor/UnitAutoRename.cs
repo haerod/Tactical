@@ -11,6 +11,10 @@ public class UnitAutoRename : MonoBehaviour
     [SerializeField] private string playableCharacterDesignation = "PC";
     [SerializeField] private string notPlayableCharacterDesignation = "NPC";
     
+    [Header("REFERENCES")]
+    [SerializeField] private Renderer rend1;
+    [SerializeField] private Renderer rend2;
+    
     private U__Unit current;
 
     private bool previousBehavior;
@@ -19,7 +23,7 @@ public class UnitAutoRename : MonoBehaviour
     private string previousTeamName;
     private Material previousMainTeamMaterial;
     private Material previousSecondaryTeamMaterial;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -105,6 +109,23 @@ public class UnitAutoRename : MonoBehaviour
     /// </summary>
     private void AutoAssignMaterials()
     {
-        current.team.SetTeamMaterials();
+        Team team = current.unitTeam;
+        
+        if(!team)
+        {
+            Debug.LogError(transform.parent.name + " doesn't have a team. Please assign a team.", transform.parent.gameObject);
+            return; // No team assigned
+        }
+
+        if (rend1 && team.mainMaterial)
+        {
+            rend1.material = team.mainMaterial;
+            EditorUtility.SetDirty(rend1);
+        }
+        if (rend2 && team.secondaryMaterial)
+        {
+            rend2.material = team.secondaryMaterial;
+            EditorUtility.SetDirty(rend2);
+        }
     }
 }
