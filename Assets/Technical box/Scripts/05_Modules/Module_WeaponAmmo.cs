@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static M__Managers;
 
@@ -11,8 +12,12 @@ using static M__Managers;
 /// </summary>
 public class Module_WeaponAmmo : MonoBehaviour
 {
+    [SerializeField] private bool showMag;
+    
+    [Header("REFERENCES")]
+    
     [SerializeField] private UI_SegmentedGaugeClamped ammo;
-    [SerializeField] private UI_SegmentedGaugeBasic loader;
+    [SerializeField] private UI_SegmentedGaugeBasic mag;
     [SerializeField] private Image weaponImage;
     [SerializeField] private GameObject panel;
     
@@ -39,7 +44,7 @@ public class Module_WeaponAmmo : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -47,7 +52,23 @@ public class Module_WeaponAmmo : MonoBehaviour
     private void Show(Weapon weapon)
     {
         weaponImage.sprite = weapon.GetIcon();
-        ammo.gameObject.SetActive(!weapon.IsMeleeWeapon());
+
+        if (weapon.IsMeleeWeapon())
+        {
+            ammo.gameObject.SetActive(false);
+            mag.gameObject.SetActive(false);
+        }
+        else
+        {
+            ammo.SetMaximumValue(weapon.GetAmmoByLoader());
+            ammo.FillGauge(weapon.GetAmmoByLoader() - 1);
+            ammo.gameObject.SetActive(true);
+            
+            if(showMag)
+                mag.FillGauge(2);
+            mag.gameObject.SetActive(showMag);
+        }
+        
         panel.SetActive(true);
     }
 
@@ -88,6 +109,4 @@ public class Module_WeaponAmmo : MonoBehaviour
     {
         Show(currentUnit.weaponHolder.GetCurrentWeapon());
     }
-
-    
 }

@@ -19,7 +19,7 @@ public class M_Camera : MonoBehaviour
     public static M_Camera _instance;
     
     private Transform target;
-    private Camera camera;
+    private Camera currentCamera;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -57,7 +57,7 @@ public class M_Camera : MonoBehaviour
     /// <summary>
     /// Returns the current camera.
     /// </summary>
-    public Camera GetCurrentCamera() => camera ? camera : camera = Camera.main;
+    public Camera GetCurrentCamera() => currentCamera ? currentCamera : currentCamera = Camera.main;
     
     /// <summary>
     /// Resets the camera's position to reach on its target (with the offset).

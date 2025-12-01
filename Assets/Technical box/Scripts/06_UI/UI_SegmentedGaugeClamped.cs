@@ -21,16 +21,18 @@ public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
     // PUBLIC METHODS
     // ======================================================================
     
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-
+    /// <summary>
+    /// Sets the maximum value to the given one.
+    /// </summary>
+    /// <param name="value"></param>
+    public void SetMaximumValue(int value) => maximumValue = value;
+    
     /// <summary>
     /// Adds Count items to the item parent, clamped to maximum value.
     /// If Count is under Maximum Value, adds empty items to the parent.
     /// /// </summary>
     /// <param name="count"></param>
-    protected override void FillGauge(int count)
+    public override void FillGauge(int count)
     {
         DestroyChildren();
 
@@ -44,7 +46,10 @@ public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
     }
     
     // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
+    // ======================================================================
     // EVENTS
     // ======================================================================
-
 }

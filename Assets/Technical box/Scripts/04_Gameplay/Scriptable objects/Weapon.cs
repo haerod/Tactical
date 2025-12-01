@@ -21,6 +21,9 @@ public class Weapon : ScriptableObject
     [Header("PRECISION")]
     [SerializeField] private int precisionMalusByDistance = 5;
     
+    [Header("AMMO")]
+    [SerializeField] private int ammoByLoader;
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -77,6 +80,12 @@ public class Weapon : ScriptableObject
     /// </summary>
     /// <returns></returns>
     public Sprite GetIcon() => icon;
+    
+    /// <summary>
+    /// Returns the ammo count by loader.
+    /// </summary>
+    /// <returns></returns>
+    public int GetAmmoByLoader() => ammoByLoader;
 
     // ======================================================================
     // PRIVATE METHODS

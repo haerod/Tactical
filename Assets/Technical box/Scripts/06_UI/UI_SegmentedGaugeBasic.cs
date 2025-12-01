@@ -20,15 +20,11 @@ public class UI_SegmentedGaugeBasic : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
     
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-
     /// <summary>
     /// Adds Count items to the item parent.
     /// </summary>
     /// <param name="count"></param>
-    protected virtual void FillGauge(int count)
+    public virtual void FillGauge(int count)
     {
         DestroyChildren();
 
@@ -37,6 +33,10 @@ public class UI_SegmentedGaugeBasic : MonoBehaviour
             Instantiate(itemPrefab, itemParent);
         }
     }
+    
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
     
     /// <summary>
     /// Destroys all items of the item parent.
