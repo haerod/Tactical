@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using UnityEditor.SceneManagement;
 
 [ExecuteInEditMode]
 public class UnitAutoChangeWeapon : MonoBehaviour
 {
     private U__Unit current;
 
-    private Weapon previousWeapon;
+    private WeaponData previousWeaponData;
 
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
 
+#if UNITY_EDITOR
     private void Awake()
     {
         if (Application.isPlaying)
@@ -24,8 +26,6 @@ public class UnitAutoChangeWeapon : MonoBehaviour
         }
 
         current = GetComponent<U__Unit>();
-
-        previousWeapon = current.weaponHolder.GetCurrentWeapon();
         EditorUtility.SetDirty(this);
     }
 
@@ -50,14 +50,15 @@ public class UnitAutoChangeWeapon : MonoBehaviour
     /// Checks for modifications in the current used weapon.
     /// </summary>
     /// <returns></returns>
-    private bool AreModifications() => previousWeapon != current.weaponHolder.GetCurrentWeapon();
+    private bool AreModifications() => previousWeaponData != current.weaponHolder.GetCurrentWeapon() 
+                                       && !PrefabStageUtility.GetCurrentPrefabStage();
 
     /// <summary>
     /// Updates the modification checkers values.
     /// </summary>
     private void UpdateModificationValues()
     {
-        previousWeapon = current.weaponHolder.GetCurrentWeapon();
+        previousWeaponData = current.weaponHolder.GetCurrentWeapon();
         EditorUtility.SetDirty(this);
     }
 
@@ -72,4 +73,5 @@ public class UnitAutoChangeWeapon : MonoBehaviour
         if(weaponHolder.GetCurrentWeapon())
             EditorUtility.SetDirty(weaponHolder.GetCurrentWeaponGraphics().gameObject); // Save the character modifications
     }
+#endif
 }

@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class WeaponGraphics : MonoBehaviour
+public class Weapon : Item
 {
-    [SerializeField] private Weapon weapon;
+    [SerializeField] private WeaponData weaponData;
     [SerializeField] private Transform weaponEnd;
     [SerializeField] private GameObject muzzleFlash;
     [SerializeField] private RuntimeAnimatorController weaponAnimatorController;
@@ -48,7 +49,7 @@ public class WeaponGraphics : MonoBehaviour
     /// Returns the current weapon.
     /// </summary>
     /// <returns></returns>
-    public Weapon GetWeapon() => weapon;
+    public WeaponData GetData() => weaponData;
 
     /// <summary>
     /// Returns the end of the weapon (ex: to add line of sight). 
@@ -60,6 +61,9 @@ public class WeaponGraphics : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Enables the muzzle flash during 0.2 seconds. 
+    /// </summary>
     private void PlayMuzzleFlash()
     {
         if (!muzzleFlash) 

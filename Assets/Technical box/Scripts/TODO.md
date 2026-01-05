@@ -12,6 +12,21 @@
 
 Note : need an Inventory logic
 
+# PROJECT
+**IMPORTANT 
+- 1h -> Test to build (#if UNITY_EDITOR errors to prevent)
+
+- 1d -> Transform the project in Package (usable with the Package Manager)
+    - I checked and there are two options :
+        - Create a package but everything goes inside (nothing in the project)
+        - Push the project on the asset store (not ready yet)
+    - 1d -> Dependencies with Text Mesh Pro (and Cinemachine when camera will be imported)
+- 0.5d -> Namespaces
+- 1d -> Documentation
+- 1w -> Online API like Unity (ask Simon)
+- 0.5d -> Notes in Inspector to make it easier to understand
+- 1h -> In Tactical Course project, export all the comments //BUTT to this project
+
 ## CAMERA
 - 1h -> Clamp camera in board bounds
 - 1h -> Camera screen shake (Cinemachine based)
@@ -82,17 +97,8 @@ But turn based is a feature can be added separately.
 - 0.5d -> Use action system for the turns
 - 1h -> Bug : Turn of enemy ends at MovementStart
 
-## PROJECT
-- 1d -> Transform the project in Package (usable with the Package Manager)
-    - I checked and there are two options :
-        - Create a package but everything goes inside (nothing in the project)
-        - Push the project on the asset store (not ready yet)
-    - 1d -> Dependencies with Text Mesh Pro (and Cinemachine when camera will be imported)
-- 0.5d -> Namespaces
-- 1d -> Documentation
-- 1w -> Online API like Unity (ask Simon)
-- 0.5d -> Notes in Inspector to make it easier to understand
-- 1h -> In Tactical Course project, export all the comments //BUTT to this project
+## AUTO CHANGE WEAPONS
+- 1h -> Remove this script to OnValidate method on U_WeaponHolder
 
 ### OBSTACLES
 - 0.5d -> Obstacle transparency

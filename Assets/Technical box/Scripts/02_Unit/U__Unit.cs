@@ -24,6 +24,7 @@ public class U__Unit : Entity
     public U_Look look;
     public A_Move move;
     public U_Team team;
+    public Unit_Inventory inventory;
     public U_UnitUI unitUI;
     public U_WeaponHolder weaponHolder;
     

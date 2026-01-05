@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87b14aad9eb2e742b9aede3a3edf17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
+  weaponData: {fileID: 0}
   weaponEnd: {fileID: 7928176271669653477}
   muzzleFlash: {fileID: 0}
   weaponAnimatorController: {fileID: 22100000, guid: 2e55f20952e3ae44282fb7c057a2bcf3, type: 2}
@@ -201,6 +201,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5340496248363606861, guid: a364957ed3d26364f900081cd6196831, type: 3}
       propertyPath: currentWeapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
+    - target: {fileID: 5340496248363606861, guid: a364957ed3d26364f900081cd6196831, type: 3}
+      propertyPath: currentWeaponData
       value: 
       objectReference: {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
     - target: {fileID: 5571022486952568945, guid: a364957ed3d26364f900081cd6196831, type: 3}

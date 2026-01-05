@@ -13,7 +13,7 @@ public class Module_TooltipTigger_Weapon : Module_TooltipTriggerBase
     [SerializeField] private bool showDamage = true;
     [SerializeField] private bool showDamageTypes = true;
     
-    private Weapon weapon;
+    private WeaponData weaponData;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -31,15 +31,15 @@ public class Module_TooltipTigger_Weapon : Module_TooltipTriggerBase
     {
         string toReturn = "";
         
-        Weapon weapon = GetComponent<Module_WeaponSelectionButton>().GetWeapon();
+        WeaponData weaponData = GetComponent<Module_WeaponSelectionButton>().GetWeapon();
         
         // Name
-        toReturn = $"<b>{weapon.GetName()}</b>";
+        toReturn = $"<b>{weaponData.GetName()}</b>";
         
         // Damage range
         if(showDamage)
         {
-            Vector2Int weaponDamageRange = weapon.GetDamagesRange();
+            Vector2Int weaponDamageRange = weaponData.GetDamagesRange();
             if (weaponDamageRange.x != weaponDamageRange.y)
                 toReturn += $"\n{weaponDamageRange.x} - {weaponDamageRange.y}";
             else
@@ -49,7 +49,7 @@ public class Module_TooltipTigger_Weapon : Module_TooltipTriggerBase
         // Damage types
         if(showDamageTypes)
         {
-            List<DamageType> damageTypes = weapon.GetDamageTypes();
+            List<DamageType> damageTypes = weaponData.GetDamageTypes();
             if (damageTypes.Count > 1)
             {
                 toReturn += "\n" + string.Join(", ", damageTypes);

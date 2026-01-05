@@ -49,19 +49,19 @@ public class Module_WeaponAmmo : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private void Show(Weapon weapon)
+    private void Show(WeaponData weaponData)
     {
-        weaponImage.sprite = weapon.GetIcon();
+        weaponImage.sprite = weaponData.GetIcon();
 
-        if (weapon.IsMeleeWeapon())
+        if (weaponData.IsMeleeWeapon())
         {
             ammo.gameObject.SetActive(false);
             mag.gameObject.SetActive(false);
         }
         else
         {
-            ammo.SetMaximumValue(weapon.GetAmmoByLoader());
-            ammo.FillGauge(weapon.GetAmmoByLoader() - 1);
+            ammo.SetMaximumValue(weaponData.GetAmmoByLoader());
+            ammo.FillGauge(weaponData.GetAmmoByLoader() - 1);
             ammo.gameObject.SetActive(true);
             
             if(showMag)
@@ -105,7 +105,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         Hide();
     }
     
-    private void WeaponHolder_OnWeaponChange(object sender, Weapon newWeapon)
+    private void WeaponHolder_OnWeaponChange(object sender, WeaponData newWeaponData)
     {
         Show(currentUnit.weaponHolder.GetCurrentWeapon());
     }

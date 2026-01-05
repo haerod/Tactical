@@ -54,11 +54,11 @@ public class U_AnimatorScripts : MonoBehaviour
     /// <summary>
     /// Add the good animator controller depending on the given weapon.
     /// </summary>
-    /// <param name="weaponGraphics"></param>
-    public void SetWeaponAnimation(WeaponGraphics weaponGraphics)
+    /// <param name="weapon"></param>
+    public void SetWeaponAnimation(Weapon weapon)
     {
         if(anim)
-            anim.runtimeAnimatorController = weaponGraphics.GetWeaponAnimatorController();
+            anim.runtimeAnimatorController = weapon.GetWeaponAnimatorController();
     }
     
     /// <summary>

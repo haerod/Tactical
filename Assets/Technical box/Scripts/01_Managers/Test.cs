@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static M__Managers;
 
 public class Test : MonoBehaviour
 {
@@ -16,7 +17,8 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            SceneManager.LoadScene(0);
+            _units.current.inventory.items.Print();
+            Debug.Log("here", gameObject);
         }
     }
 }

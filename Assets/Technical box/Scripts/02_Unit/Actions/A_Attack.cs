@@ -82,13 +82,13 @@ public class A_Attack : A__Action
     public int GetChanceToTouch(U__Unit target)
     {
         int precisionToReturn = precision;
-        Weapon currentWeapon = unit.weaponHolder.GetCurrentWeapon();
+        WeaponData currentWeaponData = unit.weaponHolder.GetCurrentWeapon();
         int targetProtectionValue = target.cover.GetCoverProtectionValueFrom(unit);
         
-        if(!currentWeapon.IsMeleeWeapon())
+        if(!currentWeaponData.IsMeleeWeapon())
             precisionToReturn -= targetProtectionValue;
         
-        for (int i = 0; i < currentWeapon.GetRange(); i++)
+        for (int i = 0; i < currentWeaponData.GetRange(); i++)
             precisionToReturn -= unit.weaponHolder.GetCurrentWeapon().GetPrecisionMalusByDistance();
         
         return precisionToReturn < 0 ? 0 : precisionToReturn;
@@ -134,15 +134,15 @@ public class A_Attack : A__Action
     /// <returns></returns>
     private bool IsTileInRange(Tile tile)
     {
-        Weapon currentWeapon = unit.weaponHolder.GetCurrentWeapon();
+        WeaponData currentWeaponData = unit.weaponHolder.GetCurrentWeapon();
         List<Tile> los = unit.look.GetTilesOfLineOfSightOn(tile.coordinates);
 
-        if (currentWeapon.GetTouchInView())
+        if (currentWeaponData.GetTouchInView())
             return unit.look.CanSee(tile.character);
-        if (currentWeapon.IsMeleeWeapon())
+        if (currentWeaponData.IsMeleeWeapon())
             return los.Count == 0;
         else
-            return los.Count < currentWeapon.GetRange();
+            return los.Count < currentWeaponData.GetRange();
     }
     
     private void EnterLean(U__Unit targetUnit)

@@ -35,7 +35,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
         DestroyAllButtons();
         instantiatedButtons.Clear();
         
-        foreach (Weapon weapon in unit.weaponHolder.GetWeaponList())
+        foreach (Weapon weapon in unit.inventory.GetWeapons())
         {
             Module_WeaponSelectionButton instantiateButton = 
                 Instantiate(
@@ -44,7 +44,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
                     .GetComponent<Module_WeaponSelectionButton>();
             
             instantiateButton.SetParameters(this, unit);
-            instantiateButton.DisplayButton(weapon);
+            instantiateButton.DisplayButton(weapon.GetData());
             
             instantiatedButtons.Add(instantiateButton.gameObject);
         }

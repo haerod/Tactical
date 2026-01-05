@@ -185,6 +185,17 @@ public static class ExtensionMethods
         return value;
     }
 
+    /// <summary>
+    /// Returns a random boolean (true or false).
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool Randomize(this bool value)
+    {
+        int rand = Random.Range(0, 2);
+        return rand == 0;
+    }
+    
     // ======================================================================
     // ARRAY[] (one dimension)
     // ======================================================================

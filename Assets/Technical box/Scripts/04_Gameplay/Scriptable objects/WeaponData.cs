@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "New weapon", menuName = "Basic Unity Tactical Tool/Weapon", order = 3)]
-public class Weapon : ScriptableObject
+[CreateAssetMenu(fileName = "New weapon data", menuName = "Basic Unity Tactical Tool/Weapon data", order = 3)]
+public class WeaponData : ScriptableObject
 {
     [SerializeField] private string weaponName;
     [SerializeField] private Sprite icon;
