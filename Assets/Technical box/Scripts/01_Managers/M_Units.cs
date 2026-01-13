@@ -19,7 +19,7 @@ public class M_Units : MonoBehaviour
     public event EventHandler<Team> OnTeamTurnStart;
     public event EventHandler<Team> OnTeamTurnEnd;
     
-    public static M_Units instance => _instance ??= FindFirstObjectByType<M_Units>();
+    public static M_Units instance => _instance == null ? FindFirstObjectByType<M_Units>() : instance;
     public static M_Units _instance;
     
     // ======================================================================
@@ -35,12 +35,6 @@ public class M_Units : MonoBehaviour
             Debug.LogError("There is more than one M_Characters in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
         
         units = transform.Cast<Transform>().Select(t => t.GetComponent<U__Unit>()).ToList();
-    }
-    
-    private void OnDestroy()
-    {
-        if (_instance == this)
-            _instance = null;
     }
     
     private void Start()

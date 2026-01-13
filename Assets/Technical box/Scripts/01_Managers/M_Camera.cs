@@ -15,7 +15,7 @@ public class M_Camera : MonoBehaviour
     [SerializeField] private float minZoom = 0.5f;
     [SerializeField] private float maxZoom = 4f;
     
-    public static M_Camera instance => _instance ??= FindFirstObjectByType<M_Camera>();
+    public static M_Camera instance => _instance == null ? FindFirstObjectByType<M_Camera>() : _instance;
     public static M_Camera _instance;
     
     private Transform target;
@@ -32,12 +32,6 @@ public class M_Camera : MonoBehaviour
             _instance = this;
         else
             Debug.LogError("There is more than one M_Camera in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-    }
-    
-    private void OnDestroy()
-    {
-        if (_instance == this)
-            _instance = null;
     }
 
     private void Start()

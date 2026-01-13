@@ -8,7 +8,7 @@ using static M__Managers;
 [ExecuteInEditMode]
 public class UnitAutoSnap : BaseAutoSnap
 {
-    private U__Unit unit => _unit ??= GetComponent<U__Unit>();
+    private U__Unit unit => _unit == null ?  GetComponent<U__Unit>() : _unit;
     private U__Unit _unit;
 
     // ======================================================================
