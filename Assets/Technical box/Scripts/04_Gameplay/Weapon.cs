@@ -15,6 +15,7 @@ public class Weapon : Item
     [SerializeField] private int _ammoCount;
     public int ammoCount => _ammoCount;
     public bool hasAvailableAmmoToSpend => !data.usesAmmo || (data.usesAmmo && _ammoCount > 0);
+    public bool isFullOfAmmo => data.usesAmmo && ammoCount >= data.ammoCount;
     
     [Header("GRAPHICS")]
     

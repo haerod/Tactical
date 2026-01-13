@@ -20,6 +20,7 @@ public class Module_WeaponAmmo : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject remainingAmmoPanel;
     [SerializeField] private TextMeshProUGUI remainingAmmoText;
+    [SerializeField] private Button reloadButton;
     
     private U__Unit currentUnit;
     
@@ -31,6 +32,8 @@ public class Module_WeaponAmmo : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
+        GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
     }
 
     private void OnDisable()
@@ -44,7 +47,12 @@ public class Module_WeaponAmmo : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
+
+    /// <summary>
+    /// Used by Reload Weapon Button
+    /// </summary>
+    public void ClickOnReloadWeaponButton() => currentUnit.weaponHolder.ReloadWeapon(currentUnit.weaponHolder.weapon);
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -64,9 +72,20 @@ public class Module_WeaponAmmo : MonoBehaviour
             ammo.FillGauge(weapon.ammoCount);
             ammo.gameObject.SetActive(true);
             remainingAmmoPanel.gameObject.SetActive(weaponData.needAmmoToReload);
-            
+
+            if (weaponData.canReload && !weapon.isFullOfAmmo)
+            {
+                reloadButton.gameObject.SetActive(true);
+                reloadButton.interactable = currentUnit.inventory.GetAmmoCountOfType(weaponData.ammoType) > 0;
+            }
+            else
+            {
+                reloadButton.gameObject.SetActive(false);
+            }
+                
             if (weaponData.needAmmoToReload)
                 remainingAmmoText.text = currentUnit.inventory.GetAmmoCountOfType(weaponData.ammoType).ToString();
+            
         }
         else
         {
@@ -98,7 +117,7 @@ public class Module_WeaponAmmo : MonoBehaviour
 
         currentUnit = startingUnit;
         currentUnit.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
-        currentUnit.weaponHolder.OnReloadWeaponEnd += WeaponHolder_OnReloadWeaponEnd; 
+        currentUnit.weaponHolder.OnReloadWeaponEnd += WeaponHolder_OnReloadWeaponEnd;
         currentUnit.weaponHolder.weapon.OnAmmoCountChanged += Weapon_OnAmmoCountChanged;
         
         Show(currentUnit.weaponHolder.weapon);
@@ -132,5 +151,20 @@ public class Module_WeaponAmmo : MonoBehaviour
     private void WeaponHolder_OnReloadWeaponEnd(object sender, Weapon weapon)
     {
         Show(weapon);
+    }
+    
+    private void Action_OnAnyActionStart(object sender, U__Unit startingActionUnit)
+    {
+        Hide();
+    }
+    
+    private void Action_OnAnyActionEnd(object sender, U__Unit endingActionUnit)
+    {
+        if (!endingActionUnit.behavior.playable) 
+            return; // NPC
+        if(!endingActionUnit.CanPlay())
+            return; // Can't play
+        
+        Show(currentUnit.weaponHolder.weapon);
     }
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponName: Mace
   _icon: {fileID: 21300000, guid: fcbc90b29b1f1d242b815c0b7a44e9d4, type: 3}
-  _damagesRange: {x: 3, y: 5}
+  _damagesRange: {x: 3, y: 4}
   _damageType:
   - {fileID: 11400000, guid: 3ac512b1d2d3f454bb2acf27505ba6a6, type: 2}
   _canAttackAnythingInView: 0
@@ -22,5 +22,6 @@ MonoBehaviour:
   _range: 0
   _precisionMalusByDistance: 5
   _ammoType: {fileID: 0}
+  _canReload: 0
   _needAmmoToReload: 0
   _ammoCount: 0

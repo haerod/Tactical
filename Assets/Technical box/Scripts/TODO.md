@@ -6,12 +6,6 @@
 
 ---
 
-# AMMO
-**IMPORTANT**
-- 0.5d -> Ammo system (import for XDD project)
-
-Note : need an Inventory logic
-
 # PROJECT
 **IMPORTANT 
 - 1h -> Test to build (#if UNITY_EDITOR errors to prevent)
@@ -99,6 +93,10 @@ But turn based is a feature can be added separately.
 
 ## AUTO CHANGE WEAPONS
 - 1h -> Remove this script to OnValidate method on U_WeaponHolder
+
+### RAGDOLL
+- .5d -> Ragdoll is dirty and creates exceptions : fix it
+  - Can be better if it gives to the current unit a ragdoll, not create a new one
 
 ### OBSTACLES
 - 0.5d -> Obstacle transparency

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponName: Sniper
   _icon: {fileID: 21300000, guid: 964ead30c71fe6047aafbb13972066c0, type: 3}
-  _damagesRange: {x: 3, y: 5}
+  _damagesRange: {x: 4, y: 5}
   _damageType:
   - {fileID: 11400000, guid: 61d85b9788250e041bb254a1d737f89b, type: 2}
   _canAttackAnythingInView: 1
@@ -22,5 +22,6 @@ MonoBehaviour:
   _range: 0
   _precisionMalusByDistance: 5
   _ammoType: {fileID: 11400000, guid: 3453df5c35091d24ca15e327f68ccdb3, type: 2}
+  _canReload: 1
   _needAmmoToReload: 1
   _ammoCount: 1

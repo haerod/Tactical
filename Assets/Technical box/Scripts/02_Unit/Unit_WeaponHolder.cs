@@ -45,7 +45,8 @@ public class Unit_WeaponHolder : MonoBehaviour
     
     private void Start()
     {
-        unit.attack.OnAttackStart += Attack_OnAttackStart;
+        if(unit.attack) // Fix for the ragdoll
+            unit.attack.OnAttackStart += Attack_OnAttackStart;
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         
@@ -60,7 +61,8 @@ public class Unit_WeaponHolder : MonoBehaviour
     
     private void OnDisable()
     {
-        unit.attack.OnAttackStart -= Attack_OnAttackStart;
+        if(unit.attack) // Fix for the ragdoll
+            unit.attack.OnAttackStart -= Attack_OnAttackStart;
     }
     
     // ======================================================================

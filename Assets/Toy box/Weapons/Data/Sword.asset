@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponName: Sword
   _icon: {fileID: 21300000, guid: 42455d7222afa724ca3ff229f5b7f9d8, type: 3}
-  _damagesRange: {x: 3, y: 5}
+  _damagesRange: {x: 4, y: 5}
   _damageType:
   - {fileID: 11400000, guid: f01e43ad74db42a4e847595699ff85ce, type: 2}
   _canAttackAnythingInView: 0
@@ -22,5 +22,6 @@ MonoBehaviour:
   _range: 0
   _precisionMalusByDistance: 5
   _ammoType: {fileID: 0}
+  _canReload: 0
   _needAmmoToReload: 0
   _ammoCount: 0
