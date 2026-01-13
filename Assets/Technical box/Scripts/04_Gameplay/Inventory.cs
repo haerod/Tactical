@@ -32,7 +32,7 @@ public class Inventory : MonoBehaviour
     
     public Weapon GetWeapon(WeaponData weaponData) => items
         .OfType<Weapon>()
-        .FirstOrDefault(weapon => weapon.GetData() == weaponData);
+        .FirstOrDefault(weapon => weapon.data == weaponData);
 
     public List<Weapon> GetWeapons() => items
         .OfType<Weapon>()

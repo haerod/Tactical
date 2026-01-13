@@ -35,6 +35,7 @@ public class U_AnimatorScripts : MonoBehaviour
         unit.attack.OnAttackableEnemyHovered += Attack_OnAttackableEnemyHovered;
         unit.attack.OnUnitExit += Attack_OnUnitExit;
         unit.health.OnDeath += Health_OnDeath;
+        unit.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
     }
     
     private void OnDisable()
@@ -45,6 +46,7 @@ public class U_AnimatorScripts : MonoBehaviour
         unit.attack.OnAttackableEnemyHovered -= Attack_OnAttackableEnemyHovered;
         unit.attack.OnUnitExit -= Attack_OnUnitExit;
         unit.health.OnDeath -= Health_OnDeath;
+        unit.weaponHolder.OnWeaponChange -= WeaponHolder_OnWeaponChange;
     }
 
     // ======================================================================
@@ -58,7 +60,7 @@ public class U_AnimatorScripts : MonoBehaviour
     public void SetWeaponAnimation(Weapon weapon)
     {
         if(anim)
-            anim.runtimeAnimatorController = weapon.GetWeaponAnimatorController();
+            anim.runtimeAnimatorController = weapon.animatorController;
     }
     
     /// <summary>
@@ -167,5 +169,10 @@ public class U_AnimatorScripts : MonoBehaviour
     private void Health_OnDeath(object sender, EventArgs e)
     {
         Death();
+    }
+    
+    private void WeaponHolder_OnWeaponChange(object sender, Weapon newWeapon)
+    {
+        SetWeaponAnimation(newWeapon);
     }
 }

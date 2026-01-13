@@ -7,11 +7,16 @@ using UnityEngine.Serialization;
 
 public class Weapon : Item
 {
-    [SerializeField] private WeaponData weaponData;
+    [SerializeField] private WeaponData _data;
+    public WeaponData data => _data;
+    
+    [Header("GRAPHICS")]
+    
     [SerializeField] private Transform weaponEnd;
     [SerializeField] private GameObject muzzleFlash;
     [SerializeField] private RuntimeAnimatorController weaponAnimatorController;
-
+    public RuntimeAnimatorController animatorController => weaponAnimatorController;
+    
     private U__Unit unit;
     
     // ======================================================================
@@ -38,18 +43,6 @@ public class Weapon : Item
         if(unit.attack)
             unit.attack.OnAttackStart += Attack_OnAttackStart;
     }
-
-    /// <summary>
-    /// Returns the animator controller corresponding to the weapon.
-    /// </summary>
-    /// <returns></returns>
-    public RuntimeAnimatorController GetWeaponAnimatorController() => weaponAnimatorController;
-
-    /// <summary>
-    /// Returns the current weapon.
-    /// </summary>
-    /// <returns></returns>
-    public WeaponData GetData() => weaponData;
 
     /// <summary>
     /// Returns the end of the weapon (ex: to add line of sight). 

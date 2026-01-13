@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c4a88a4dd8634ca609a480766e808, type: 3}
   m_Name: Free hands
   m_EditorClassIdentifier: 
-  weaponName: Free hands
-  icon: {fileID: 21300000, guid: 23459e2baf23e5b4ca9a75dfb8a4440a, type: 3}
-  damagesRange: {x: 1, y: 2}
-  damageType:
+  _weaponName: Free hands
+  _icon: {fileID: 21300000, guid: 23459e2baf23e5b4ca9a75dfb8a4440a, type: 3}
+  _damagesRange: {x: 1, y: 2}
+  _damageType:
   - {fileID: 11400000, guid: 3ac512b1d2d3f454bb2acf27505ba6a6, type: 2}
-  anythingInView: 0
-  isMeleeWeapon: 1
-  specificRange: 0
-  precisionMalusByDistance: 0
+  _canAttackAnythingInView: 0
+  _isMeleeWeapon: 1
+  _range: 0
+  _precisionMalusByDistance: 5
+  _ammoType: {fileID: 0}
+  _needAmmoToReload: 0
+  _ammoCount: 0

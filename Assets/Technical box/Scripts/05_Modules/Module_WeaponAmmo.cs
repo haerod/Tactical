@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static M__Managers;
@@ -12,14 +13,13 @@ using static M__Managers;
 /// </summary>
 public class Module_WeaponAmmo : MonoBehaviour
 {
-    [SerializeField] private bool showMag;
-    
     [Header("REFERENCES")]
     
     [SerializeField] private UI_SegmentedGaugeClamped ammo;
-    [SerializeField] private UI_SegmentedGaugeBasic mag;
     [SerializeField] private Image weaponImage;
     [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject remainingAmmoPanel;
+    [SerializeField] private TextMeshProUGUI remainingAmmoText;
     
     private U__Unit currentUnit;
     
@@ -49,24 +49,25 @@ public class Module_WeaponAmmo : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private void Show(WeaponData weaponData)
+    private void Show(Weapon weapon)
     {
-        weaponImage.sprite = weaponData.GetIcon();
+        WeaponData weaponData = weapon.data;
+        weaponImage.sprite = weaponData.icon;
 
-        if (weaponData.IsMeleeWeapon())
+        if (weaponData.isMeleeWeapon)
         {
             ammo.gameObject.SetActive(false);
-            mag.gameObject.SetActive(false);
+            remainingAmmoPanel.SetActive(false);
         }
         else
         {
-            ammo.SetMaximumValue(weaponData.GetAmmoByLoader());
-            ammo.FillGauge(weaponData.GetAmmoByLoader() - 1);
+            ammo.SetMaximumValue(weaponData.ammoCount);
+            ammo.FillGauge(weaponData.ammoCount - 1);
             ammo.gameObject.SetActive(true);
+            remainingAmmoPanel.gameObject.SetActive(weaponData.needAmmoToReload);
             
-            if(showMag)
-                mag.FillGauge(2);
-            mag.gameObject.SetActive(showMag);
+            if (weaponData.needAmmoToReload)
+                remainingAmmoText.text = "8";
         }
         
         panel.SetActive(true);
@@ -91,7 +92,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         currentUnit = startingUnit;
         currentUnit.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
         
-        Show(currentUnit.weaponHolder.GetCurrentWeapon());
+        Show(currentUnit.weaponHolder.weapon);
     }
     
     private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
@@ -105,8 +106,8 @@ public class Module_WeaponAmmo : MonoBehaviour
         Hide();
     }
     
-    private void WeaponHolder_OnWeaponChange(object sender, WeaponData newWeaponData)
+    private void WeaponHolder_OnWeaponChange(object sender, Weapon weapon)
     {
-        Show(currentUnit.weaponHolder.GetCurrentWeapon());
+        Show(weapon);
     }
 }

@@ -9,16 +9,19 @@ using UnityEngine.Serialization;
 
 public class U_WeaponHolder : MonoBehaviour
 {
-    [SerializeField] private WeaponData currentWeaponData;
-
+    
+    [SerializeField] private Weapon _weapon;
+    public WeaponData weaponData => weapon.data;
+    public Weapon weapon => _weapon;
+    public Weapon weaponGraphics => _weaponGraphics;
+    
     [Header("REFERENCES")]
-
+    
     [SerializeField] private U__Unit unit;
     [SerializeField] private Transform hand;
-
-    private Weapon currentWeapon;
-
-    public event EventHandler<WeaponData> OnWeaponChange;
+    [SerializeField] private Weapon _weaponGraphics;
+    
+    public event EventHandler<Weapon> OnWeaponChange;
     
     // ======================================================================
     // MONOBEHAVIOR
@@ -26,53 +29,25 @@ public class U_WeaponHolder : MonoBehaviour
     
     private void Start()
     {
-        unit.anim.SetWeaponAnimation(GetCurrentWeaponGraphics());
-        currentWeapon.Setup(unit);
+        unit.anim.SetWeaponAnimation(weapon);
+        if(weaponGraphics)
+            weaponGraphics.Setup(unit);
     }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Returns the current weapon.
-    /// </summary>
-    /// <returns></returns>
-    public WeaponData GetCurrentWeapon() => currentWeaponData;
 
     /// <summary>
-    /// Changes the current weapon to the asked one.
+    /// Changes the weapon to the given one.
     /// </summary>
-    /// <param name="newWeaponData"></param>
-    public void SetCurrentWeapon(WeaponData newWeaponData)
+    /// <param name="newWeapon"></param>
+    public void EquipWeapon(Weapon newWeapon)
     {
-        currentWeaponData = newWeaponData;
+        _weapon = newWeapon;
         DisplayWeapon();
         
-        OnWeaponChange?.Invoke(this, currentWeaponData);
-    }
-    
-    /// <summary>
-    /// Returns the current weapon graphics.
-    /// </summary>
-    /// <returns></returns>
-    public Weapon GetCurrentWeaponGraphics()
-    {
-        if (currentWeapon)
-            return currentWeapon;
-        
-        foreach (Transform child in hand)
-        {
-            Weapon weapon = child.GetComponent<Weapon>();
-            
-            if (!weapon)
-                continue;
-            
-            currentWeapon = weapon;
-            return weapon;
-        }
-        
-        return currentWeapon;
+        OnWeaponChange?.Invoke(this, weapon);
     }
     
     // ======================================================================
@@ -84,25 +59,19 @@ public class U_WeaponHolder : MonoBehaviour
     /// </summary>
     private void DisplayWeapon()
     {
-        if(!currentWeaponData)
-            return; // No weapon
-        
         Weapon previousWeapon = hand.GetComponentInChildren<Weapon>();
         if (previousWeapon)
             DestroyPreviousWeapon(previousWeapon);
         
-        Weapon weapon = unit.inventory.GetWeapon(currentWeaponData);
-
-        if (!weapon)
-        {
-            currentWeaponData = null;
+        Weapon weaponToDisplay = unit.inventory.GetWeapon(weaponData);
+        if (!weaponToDisplay)
             return; // Weapon not available in inventory
-        }
         
-        GameObject instantiatedWeapon = Instantiate(weapon.gameObject, hand);
+        GameObject instantiatedWeapon = Instantiate(weaponToDisplay.gameObject, hand);
         instantiatedWeapon.gameObject.SetActive(true);
-        
-        unit.anim.SetWeaponAnimation(GetCurrentWeaponGraphics());
+        _weaponGraphics = instantiatedWeapon.GetComponent<Weapon>();
+
+        weaponGraphics.Setup(unit);
     }
 
     /// <summary>

@@ -17,7 +17,7 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     
     private U__Unit unit;
     private Module_WeaponButtonsHolder holder;
-    private WeaponData weaponData;
+    private Weapon weapon;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -41,19 +41,19 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     /// <summary>
     /// Displays the button with the weapon's infos.
     /// </summary>
-    /// <param name="weaponDataToDisplay"></param>
-    public void DisplayButton(WeaponData weaponDataToDisplay)
+    /// <param name="weaponToDisplay"></param>
+    public void DisplayButton(Weapon weaponToDisplay)
     {
-        weaponData = weaponDataToDisplay;
-        weaponSprite.sprite = weaponData.GetIcon();
-        buttonText.text = weaponData.GetName();
+        weapon = weaponToDisplay;
+        weaponSprite.sprite = weapon.data.icon;
+        buttonText.text = weapon.data.weaponName;
         button.onClick.AddListener(delegate
             {
-                unit.weaponHolder.SetCurrentWeapon(weaponData);
+                unit.weaponHolder.EquipWeapon(weapon);
                 holder.CreateWeaponButtons(unit);
             });
         
-        if(weaponData == unit.weaponHolder.GetCurrentWeapon())
+        if(weapon == unit.weaponHolder.weapon)
             button.interactable = false;
     }
     
@@ -61,7 +61,7 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     /// Returns the displayed weapon.
     /// </summary>
     /// <returns></returns>
-    public WeaponData GetWeapon() => weaponData;
+    public WeaponData GetWeapon() => weapon.data;
     
     // ======================================================================
     // PRIVATE METHODS

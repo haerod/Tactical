@@ -10,7 +10,7 @@ public class UnitAutoChangeWeapon : MonoBehaviour
 {
     private U__Unit current;
 
-    private WeaponData previousWeaponData;
+    private Weapon previousWeapon;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -50,7 +50,7 @@ public class UnitAutoChangeWeapon : MonoBehaviour
     /// Checks for modifications in the current used weapon.
     /// </summary>
     /// <returns></returns>
-    private bool AreModifications() => previousWeaponData != current.weaponHolder.GetCurrentWeapon() 
+    private bool AreModifications() => previousWeapon != current.weaponHolder.weapon 
                                        && !PrefabStageUtility.GetCurrentPrefabStage();
 
     /// <summary>
@@ -58,7 +58,7 @@ public class UnitAutoChangeWeapon : MonoBehaviour
     /// </summary>
     private void UpdateModificationValues()
     {
-        previousWeaponData = current.weaponHolder.GetCurrentWeapon();
+        previousWeapon = current.weaponHolder.weapon;
         EditorUtility.SetDirty(this);
     }
 
@@ -68,10 +68,10 @@ public class UnitAutoChangeWeapon : MonoBehaviour
     private void AutoChangeWeapon()
     {
         U_WeaponHolder weaponHolder = current.weaponHolder;
-        weaponHolder.SetCurrentWeapon(weaponHolder.GetCurrentWeapon());
+        weaponHolder.EquipWeapon(weaponHolder.weapon);
         
-        if(weaponHolder.GetCurrentWeapon())
-            EditorUtility.SetDirty(weaponHolder.GetCurrentWeaponGraphics().gameObject); // Save the character modifications
+        if(weaponHolder.weapon)
+            EditorUtility.SetDirty(weaponHolder); // Save the character modifications
     }
 #endif
 }

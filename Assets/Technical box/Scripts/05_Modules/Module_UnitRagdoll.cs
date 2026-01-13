@@ -39,7 +39,7 @@ public class Module_UnitRagdoll : MonoBehaviour
         Transform originalRootBone = deadUnit.anim.transform.GetChild(2);
         Transform ragdollRootBone= unitRagdoll.anim.transform.GetChild(2);
         
-        unitRagdoll.weaponHolder.SetCurrentWeapon(deadUnit.weaponHolder.GetCurrentWeapon());
+        unitRagdoll.weaponHolder.EquipWeapon(deadUnit.weaponHolder.weapon);
         unitRagdoll.team.team = deadUnit.unitTeam;
         AssignMaterials(unitRagdoll);
         
@@ -80,7 +80,7 @@ public class Module_UnitRagdoll : MonoBehaviour
     
     private void DropWeaponOnTheFloor(U__Unit unitRagdoll)
     {
-        GameObject dropWeapon = unitRagdoll.weaponHolder.GetCurrentWeaponGraphics().gameObject;
+        GameObject dropWeapon = unitRagdoll.weaponHolder.weapon.gameObject;
         Vector3 randomDir = new (Random.Range(-1f,1f),0, Random.Range(-1f,1f));
         
         dropWeapon.transform.parent = null;

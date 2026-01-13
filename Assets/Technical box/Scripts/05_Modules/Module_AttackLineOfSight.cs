@@ -40,7 +40,7 @@ public class Module_AttackLineOfSight : MonoBehaviour
         if(!isShowing)
             return; // Not showing
         
-        Vector3 weaponEndTransform = attacker.weaponHolder.GetCurrentWeaponGraphics().GetWeaponEnd().position;
+        Vector3 weaponEndTransform = attacker.weaponHolder.weapon.GetWeaponEnd().position;
         
         lineRenderer.gameObject.SetActive(true);
         lineRenderer.SetPosition(0, weaponEndTransform);

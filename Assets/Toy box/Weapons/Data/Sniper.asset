@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c4a88a4dd8634ca609a480766e808, type: 3}
   m_Name: Sniper
   m_EditorClassIdentifier: 
-  weaponName: Sniper
-  icon: {fileID: 21300000, guid: 964ead30c71fe6047aafbb13972066c0, type: 3}
-  damagesRange: {x: 3, y: 5}
-  damageType:
+  _weaponName: Sniper
+  _icon: {fileID: 21300000, guid: 964ead30c71fe6047aafbb13972066c0, type: 3}
+  _damagesRange: {x: 3, y: 5}
+  _damageType:
   - {fileID: 11400000, guid: 61d85b9788250e041bb254a1d737f89b, type: 2}
-  anythingInView: 1
-  range: 0
-  precisionMalusByDistance: 5
-  ammoByLoader: 1
+  _canAttackAnythingInView: 1
+  _isMeleeWeapon: 0
+  _range: 0
+  _precisionMalusByDistance: 5
+  _ammoType: {fileID: 11400000, guid: 3453df5c35091d24ca15e327f68ccdb3, type: 2}
+  _needAmmoToReload: 1
+  _ammoCount: 1

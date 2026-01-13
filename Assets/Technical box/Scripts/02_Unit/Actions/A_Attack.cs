@@ -50,7 +50,7 @@ public class A_Attack : A__Action
         unit.move.OrientTo(target.transform.position);
         target.move.OrientTo(unit.transform.position);
 
-        int damages = unit.weaponHolder.GetCurrentWeapon().GetDamages();
+        int damages = unit.weaponHolder.weaponData.RandomDamages();
 
         StartAction();
         OnAttackStart?.Invoke(this, EventArgs.Empty);
@@ -82,14 +82,14 @@ public class A_Attack : A__Action
     public int GetChanceToTouch(U__Unit target)
     {
         int precisionToReturn = precision;
-        WeaponData currentWeaponData = unit.weaponHolder.GetCurrentWeapon();
+        WeaponData currentWeaponData = unit.weaponHolder.weaponData;
         int targetProtectionValue = target.cover.GetCoverProtectionValueFrom(unit);
         
-        if(!currentWeaponData.IsMeleeWeapon())
+        if(!currentWeaponData.isMeleeWeapon)
             precisionToReturn -= targetProtectionValue;
         
-        for (int i = 0; i < currentWeaponData.GetRange(); i++)
-            precisionToReturn -= unit.weaponHolder.GetCurrentWeapon().GetPrecisionMalusByDistance();
+        for (int i = 0; i < currentWeaponData.range; i++)
+            precisionToReturn -= unit.weaponHolder.weaponData.precisionMalusByDistance;
         
         return precisionToReturn < 0 ? 0 : precisionToReturn;
     }
@@ -110,7 +110,7 @@ public class A_Attack : A__Action
         {
             if (success)
             {
-                target.health.AddDamages(damages, unit.weaponHolder.GetCurrentWeapon().GetDamageTypes());
+                target.health.AddDamages(damages, unit.weaponHolder.weaponData.damageType);
             }
             else
             {
@@ -134,15 +134,15 @@ public class A_Attack : A__Action
     /// <returns></returns>
     private bool IsTileInRange(Tile tile)
     {
-        WeaponData currentWeaponData = unit.weaponHolder.GetCurrentWeapon();
+        WeaponData currentWeaponData = unit.weaponHolder.weaponData;
         List<Tile> los = unit.look.GetTilesOfLineOfSightOn(tile.coordinates);
 
-        if (currentWeaponData.GetTouchInView())
+        if (currentWeaponData.canAttackAnythingInView)
             return unit.look.CanSee(tile.character);
-        if (currentWeaponData.IsMeleeWeapon())
+        if (currentWeaponData.isMeleeWeapon)
             return los.Count == 0;
         else
-            return los.Count < currentWeaponData.GetRange();
+            return los.Count < currentWeaponData.range;
     }
     
     private void EnterLean(U__Unit targetUnit)

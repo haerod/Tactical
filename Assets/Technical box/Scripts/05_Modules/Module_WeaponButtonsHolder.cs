@@ -44,7 +44,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
                     .GetComponent<Module_WeaponSelectionButton>();
             
             instantiateButton.SetParameters(this, unit);
-            instantiateButton.DisplayButton(weapon.GetData());
+            instantiateButton.DisplayButton(weapon);
             
             instantiatedButtons.Add(instantiateButton.gameObject);
         }

@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c4a88a4dd8634ca609a480766e808, type: 3}
   m_Name: Knife
   m_EditorClassIdentifier: 
-  weaponName: Knife
-  icon: {fileID: 21300000, guid: 8951830994b3fd3429993b4746198796, type: 3}
-  damagesRange: {x: 2, y: 3}
-  damageType:
+  _weaponName: Knife
+  _icon: {fileID: 21300000, guid: 8951830994b3fd3429993b4746198796, type: 3}
+  _damagesRange: {x: 3, y: 5}
+  _damageType:
   - {fileID: 11400000, guid: 61d85b9788250e041bb254a1d737f89b, type: 2}
   - {fileID: 11400000, guid: f01e43ad74db42a4e847595699ff85ce, type: 2}
-  anythingInView: 0
-  isMeleeWeapon: 1
-  specificRange: 0
-  precisionMalusByDistance: 0
+  _canAttackAnythingInView: 0
+  _isMeleeWeapon: 1
+  _range: 0
+  _precisionMalusByDistance: 5
+  _ammoType: {fileID: 0}
+  _needAmmoToReload: 0
+  _ammoCount: 0

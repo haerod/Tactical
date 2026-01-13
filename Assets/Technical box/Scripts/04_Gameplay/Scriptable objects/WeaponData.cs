@@ -6,87 +6,49 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "New weapon data", menuName = "Basic Unity Tactical Tool/Weapon data", order = 3)]
 public class WeaponData : ScriptableObject
 {
-    [SerializeField] private string weaponName;
-    [SerializeField] private Sprite icon;
+    [SerializeField] private string _weaponName;
+    public string weaponName => _weaponName;
+    [SerializeField] private Sprite _icon;
+    public Sprite icon => _icon;
     
     [Header("DAMAGES")]
-    [SerializeField] private Vector2Int damagesRange = new Vector2Int(3, 5);
-    [SerializeField] private List<DamageType> damageType;
+    [SerializeField] private Vector2Int _damagesRange = new Vector2Int(3, 5);
+    public Vector2Int damagesRange => _damagesRange;
+    [SerializeField] private List<DamageType> _damageType;
+    public List<DamageType> damageType => _damageType;
     
     [Header("RANGE")]
-    [SerializeField] private bool anythingInView = true;
-    [SerializeField] private bool isMeleeWeapon;
-    [SerializeField] private int specificRange;
+    [SerializeField] private bool _canAttackAnythingInView = true;
+    public bool canAttackAnythingInView => _canAttackAnythingInView;
+    [SerializeField] private bool _isMeleeWeapon;
+    public bool isMeleeWeapon => _isMeleeWeapon;
+    [SerializeField] private int _range;
+    public int range => _range;
     
     [Header("PRECISION")]
-    [SerializeField] private int precisionMalusByDistance = 5;
+    [SerializeField] private int _precisionMalusByDistance = 5;
+    public int precisionMalusByDistance => _precisionMalusByDistance;
     
     [Header("AMMO")]
-    [SerializeField] private int ammoByLoader;
+    
+    [SerializeField] private AmmoType _ammoType;
+    public AmmoType ammoType => _ammoType;
+    
+    [SerializeField] private bool _needAmmoToReload;
+    public bool needAmmoToReload => _needAmmoToReload;
+    [SerializeField] private int _ammoCount;
+    public int ammoCount => _ammoCount;
     
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Returns the malus of precision by tile of distance with the target.
-    /// </summary>
-    /// <returns></returns>
-    public int GetPrecisionMalusByDistance() => precisionMalusByDistance;
-    
-    /// <summary>
-    /// Returns true if the weapon can touch anything in view (depending on the obstacles).
-    /// </summary>
-    public bool GetTouchInView() => anythingInView;
-
-    /// <summary>
-    /// Returns the range of the weapon.
-    /// </summary>
-    /// <returns></returns>
-    public int GetRange() => specificRange;
-    
-    /// <summary>
-    /// Returns true if the weapon is a melee weapon, else returns false.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsMeleeWeapon() => isMeleeWeapon;
-
-    /// <summary>
-    /// Returns the weapon's name.
-    /// </summary>
-    /// <returns></returns>
-    public string GetName() => weaponName;
-    
-    /// <summary>
-    /// Returns the weapon's damage range.
-    /// </summary>
-    /// <returns></returns>
-    public Vector2Int GetDamagesRange() => damagesRange;
     
     /// <summary>
     /// Returns random damage in the weapon's damage range.
     /// </summary>
     /// <returns></returns>
-    public int GetDamages() => Random.Range(damagesRange.x, damagesRange.y+1);
+    public int RandomDamages() => Random.Range(_damagesRange.x, _damagesRange.y+1);
     
-    /// <summary>
-    /// Returns the weapon's damage types.
-    /// </summary>
-    /// <returns></returns>
-    public List<DamageType> GetDamageTypes() => damageType;
-    
-    /// <summary>
-    /// Returns the weapon's icon.
-    /// </summary>
-    /// <returns></returns>
-    public Sprite GetIcon() => icon;
-    
-    /// <summary>
-    /// Returns the ammo count by loader.
-    /// </summary>
-    /// <returns></returns>
-    public int GetAmmoByLoader() => ammoByLoader;
-
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
