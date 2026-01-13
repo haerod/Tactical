@@ -3,11 +3,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 using static M__Managers;
 
 public class Module_PercentShootText : MonoBehaviour
 {
-    [SerializeField] private float percentShootOffset = 50f;
+    [Range(0,100)]
+    [SerializeField] private float textOffset = 20f;
     [Space]
     [SerializeField] private GameColor zeroColor;
     [SerializeField] private GameColor basicColor;
@@ -15,6 +17,7 @@ public class Module_PercentShootText : MonoBehaviour
 
     [Header("REFERENCES")]
 
+    [SerializeField] private GameObject panel;
     [SerializeField] private TextMeshProUGUI percentShootText;
 
     private U__Unit currentUnit;
@@ -54,7 +57,7 @@ public class Module_PercentShootText : MonoBehaviour
     /// <param name="percent"></param>
     private void SetPercentShootText(int percent)
     {
-        percentShootText.gameObject.SetActive(true);
+        panel.SetActive(true);
         percentShootText.text = percent + "%";
 
         switch (percent)
@@ -80,15 +83,14 @@ public class Module_PercentShootText : MonoBehaviour
     /// <summary>
     /// Disables the percent shoot text.
     /// </summary>
-    private void DisablePercentShootText() => percentShootText.gameObject.SetActive(false);
+    private void DisablePercentShootText() => panel.SetActive(false);
     
     /// <summary>
     /// Sets the text position at mouse position + offset.
     /// </summary>
     private void SetPercentShootTextPosition()
     {
-        percentShootText.transform.position = Input.mousePosition;
-        percentShootText.transform.position += Vector3.right * percentShootOffset;
+        panel.transform.position = Input.mousePosition + Vector3.right * (Screen.width * textOffset/100);
     }
     
     // ======================================================================
