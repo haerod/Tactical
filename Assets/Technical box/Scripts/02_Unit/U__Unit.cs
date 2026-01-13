@@ -26,7 +26,7 @@ public class U__Unit : Entity
     public U_Team team;
     public Unit_Inventory inventory;
     public U_UnitUI unitUI;
-    public U_WeaponHolder weaponHolder;
+    public Unit_WeaponHolder weaponHolder;
     
     public Team unitTeam => team.team;
     public Tile tile => Tile();

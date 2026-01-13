@@ -98,7 +98,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3703862859680714151
 Transform:
   m_ObjectHideFlags: 0
@@ -329,6 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data: {fileID: 11400000, guid: 339ea4f7a238dcd47b50b79757c397c9, type: 2}
-  weaponEnd: {fileID: 3703862859680714151}
+  _ammoCount: 0
+  _weaponEnd: {fileID: 3703862859680714151}
   muzzleFlash: {fileID: 0}
   weaponAnimatorController: {fileID: 22100000, guid: d285c163e0c39fa458724afa4fe2a5c1, type: 2}

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 /// <summary>
-/// Class description
+/// An inventory for the unit, with a limited size.
 /// </summary>
 public class Unit_Inventory : Inventory
 {

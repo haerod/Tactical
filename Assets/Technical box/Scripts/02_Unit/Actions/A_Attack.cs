@@ -145,6 +145,10 @@ public class A_Attack : A__Action
             return los.Count < currentWeaponData.range;
     }
     
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="targetUnit"></param>
     private void EnterLean(U__Unit targetUnit)
     {
         // if(!unit.cover.AreCoversAround())
@@ -171,6 +175,9 @@ public class A_Attack : A__Action
         // }
     }
     
+    /// <summary>
+    /// TODO
+    /// </summary>
     private void ExitLean()
     {
         // transform.position = unit.coordinates.ToVector3();
@@ -188,9 +195,10 @@ public class A_Attack : A__Action
             return; // Can't play
         if(!CanUse())
             return; // Can't do this action
-        
         if(!IsTileInRange(hoveredUnit.tile))
             return; // Enemy is not visible or not in range
+        if(!unit.weaponHolder.weapon.hasAvailableAmmoToSpend)
+            return; // Out of ammo
         
         OnAttackableEnemyHovered?.Invoke(this, hoveredUnit);
         EnterLean(hoveredUnit);
@@ -217,6 +225,8 @@ public class A_Attack : A__Action
             return; // Same team
         if(!IsTileInRange(clickedUnit.tile))
             return; // Enemy is not visible or not in range
+        if(!unit.weaponHolder.weapon.hasAvailableAmmoToSpend)
+            return; // Out of ammo
         
         // Attack
         Attack(clickedUnit);

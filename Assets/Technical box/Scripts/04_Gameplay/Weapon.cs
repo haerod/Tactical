@@ -10,14 +10,24 @@ public class Weapon : Item
     [SerializeField] private WeaponData _data;
     public WeaponData data => _data;
     
+    [Header("CURRENT AMMO")]
+    
+    [SerializeField] private int _ammoCount;
+    public int ammoCount => _ammoCount;
+    public bool hasAvailableAmmoToSpend => !data.usesAmmo || (data.usesAmmo && _ammoCount > 0);
+    
     [Header("GRAPHICS")]
     
-    [SerializeField] private Transform weaponEnd;
+    [SerializeField] private Transform _weaponEnd;
+
+    public Transform weaponEnd => _weaponEnd;
     [SerializeField] private GameObject muzzleFlash;
     [SerializeField] private RuntimeAnimatorController weaponAnimatorController;
     public RuntimeAnimatorController animatorController => weaponAnimatorController;
     
     private U__Unit unit;
+    
+    public event EventHandler<Weapon> OnAmmoCountChanged;
     
     // ======================================================================
     // MONOBEHAVIOR
@@ -36,24 +46,58 @@ public class Weapon : Item
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
+    /// <summary>
+    /// Setup the parameters of the weapon.
+    /// </summary>
+    /// <param name="currentUnit"></param>
     public void Setup(U__Unit currentUnit)
     {
         unit = currentUnit;
         if(unit.attack)
             unit.attack.OnAttackStart += Attack_OnAttackStart;
     }
-
+    
     /// <summary>
-    /// Returns the end of the weapon (ex: to add line of sight). 
+    /// Reloads the weapon of a given count of ammo.
+    /// Returns the count of ammo used to reload.
+    /// </summary>
+    /// <param name="givenAmmo"></param>
+    /// <returns></returns>
+    public int ReloadWeaponOf(int givenAmmo)
+    {
+        if(!data.usesAmmo)
+            return 0; // Don't use ammo
+        
+        int usedAmmo = AmmoCountToFullyReload();
+        if(AmmoCountToFullyReload() > givenAmmo)
+            usedAmmo = givenAmmo;
+        
+        _ammoCount += usedAmmo;
+        OnAmmoCountChanged?.Invoke(this, this);
+        
+        return usedAmmo;
+    }
+    
+    /// <summary>
+    /// Returns how much ammo are needed to fully reload the weapon.
     /// </summary>
     /// <returns></returns>
-    public Transform GetWeaponEnd() => weaponEnd;
+    public int AmmoCountToFullyReload() => data.ammoCount - _ammoCount;
     
+    /// <summary>
+    /// Reduces ammo count by 1.
+    /// </summary>
+    public void SpendAmmo()
+    {
+        _ammoCount--;
+        OnAmmoCountChanged?.Invoke(this, this);
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Enables the muzzle flash during 0.2 seconds. 
     /// </summary>

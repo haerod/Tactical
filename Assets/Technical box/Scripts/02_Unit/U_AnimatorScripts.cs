@@ -171,8 +171,8 @@ public class U_AnimatorScripts : MonoBehaviour
         Death();
     }
     
-    private void WeaponHolder_OnWeaponChange(object sender, Weapon newWeapon)
+    private void WeaponHolder_OnWeaponChange(object sender, Unit_WeaponHolder.WeaponChangeEventArgs args)
     {
-        SetWeaponAnimation(newWeapon);
+        SetWeaponAnimation(args.newWeapon);
     }
 }

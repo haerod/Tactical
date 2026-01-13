@@ -14,6 +14,7 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
     [SerializeField] private KeyCode changeUnitKey = KeyCode.Tab;
     [SerializeField] private KeyCode endTurnKey = KeyCode.Backspace;
+    [SerializeField] private KeyCode reloadWeaponKey = KeyCode.R;
 
     [Header("CAMERA")]
 
@@ -35,6 +36,7 @@ public class M_Input : MonoBehaviour
     public event EventHandler OnRecenterCameraInput;
     public event EventHandler OnEndTeamTurnInput;
     public event EventHandler OnNextTeammateInput;
+    public event EventHandler OnReloadWeaponInput;
     public event EventHandler OnRotateLeftInput;
     public event EventHandler OnRotateRightInput;
     
@@ -78,6 +80,7 @@ public class M_Input : MonoBehaviour
         OnChangeClickActivation = null;
         OnEndTeamTurnInput = null;
         OnNextTeammateInput = null;
+        OnReloadWeaponInput = null;
         OnRotateLeftInput = null;
         OnRotateRightInput = null;
         OnZoomingCameraInput = null;
@@ -97,6 +100,7 @@ public class M_Input : MonoBehaviour
         CheckClick();
         CheckChangeUnitInput();
         CheckEndTurnInput();
+        CheckReloadWeaponInput();
         CheckRecenterCameraInput();
         CheckCameraMovementInput();
         CheckCameraZoomInput();
@@ -209,6 +213,15 @@ public class M_Input : MonoBehaviour
     {
         if (Input.GetKeyDown(endTurnKey))
             OnEndTeamTurnInput?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Checks input to reload current unit's weapon.
+    /// </summary>
+    private void CheckReloadWeaponInput()
+    {
+        if (Input.GetKeyDown(reloadWeaponKey))
+            OnReloadWeaponInput?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>

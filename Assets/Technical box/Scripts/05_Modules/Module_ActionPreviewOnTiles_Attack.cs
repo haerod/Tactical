@@ -86,7 +86,7 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
         ShowFeedbacks(endingActionUnit.attack.AttackableTiles());
     }
     
-    private void WeaponsHolder_OnWeaponChanged(object sender, Weapon weapon)
+    private void WeaponsHolder_OnWeaponChanged(object sender, Unit_WeaponHolder.WeaponChangeEventArgs args)
     {
         HideFeedbacks();
         ShowFeedbacks(_units.current.attack.AttackableTiles());

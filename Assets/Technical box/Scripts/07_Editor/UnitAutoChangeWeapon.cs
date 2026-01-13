@@ -67,7 +67,7 @@ public class UnitAutoChangeWeapon : MonoBehaviour
     /// </summary>
     private void AutoChangeWeapon()
     {
-        U_WeaponHolder weaponHolder = current.weaponHolder;
+        Unit_WeaponHolder weaponHolder = current.weaponHolder;
         weaponHolder.EquipWeapon(weaponHolder.weapon);
         
         if(weaponHolder.weapon)

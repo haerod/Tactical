@@ -34,10 +34,13 @@ public class WeaponData : ScriptableObject
     [SerializeField] private AmmoType _ammoType;
     public AmmoType ammoType => _ammoType;
     
+    [SerializeField] private bool _canReload;
+    public bool canReload => _canReload;
     [SerializeField] private bool _needAmmoToReload;
     public bool needAmmoToReload => _needAmmoToReload;
     [SerializeField] private int _ammoCount;
     public int ammoCount => _ammoCount;
+    public bool usesAmmo => ammoType != null;
     
     // ======================================================================
     // PUBLIC METHODS

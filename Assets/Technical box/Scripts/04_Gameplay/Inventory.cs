@@ -11,6 +11,7 @@ using UnityEditor;
 public class Inventory : MonoBehaviour
 {
     public List<Item> items => GetItems();
+    public List<Weapon> weapons => GetWeapons();
     
     [SerializeField] protected Transform content;
 
@@ -33,20 +34,33 @@ public class Inventory : MonoBehaviour
     public Weapon GetWeapon(WeaponData weaponData) => items
         .OfType<Weapon>()
         .FirstOrDefault(weapon => weapon.data == weaponData);
-
-    public List<Weapon> GetWeapons() => items
-        .OfType<Weapon>()
-        .ToList();
     
-    // public List<Item> GetWeaponMagazines (WeaponData weaponData) => items
-    //     .Where(item => GetWeapon(weaponData).ammo.itemName == item.itemName)
-    //     .ToList();
+    public List<Ammo> GetAmmoOfType(AmmoType ammoType) => items
+        .OfType<Ammo>()
+        .Where(ammo => ammoType == ammo.ammoType)
+        .ToList();
+
+    public int GetAmmoCountOfType(AmmoType ammoType) => GetAmmoOfType(ammoType).Count;
+    
+    public void RemoveAmmoOfType(AmmoType ammoType, int ammoCountToRemove)
+    {
+        List<Item> ammoToRemove = GetAmmoOfType(ammoType)
+            .Select(ammo => ammo as Item)
+            .ToList();
+
+        for (int i = 0; i < ammoCountToRemove; i++)
+            DestroyItem(ammoToRemove[i]);
+    }
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
     private List<Item> GetItems() => (from Transform child in content select child.GetComponent<Item>()).ToList();
+    
+    private List<Weapon> GetWeapons() => items
+        .OfType<Weapon>()
+        .ToList();
     
     // ======================================================================
     // EVENTS

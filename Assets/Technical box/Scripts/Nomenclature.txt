@@ -45,7 +45,14 @@ else
 /// <returns></returns>
 
 ------------------------------------------------------------------------------------------------------
-#
+# VARIABLES NAMES
+
+// Private variable with _ before
+// Can be a SerializedField
+private int _variable
+
+// Public variable without _ before
+public int variable
 
 ------------------------------------------------------------------------------------------------------
 #
