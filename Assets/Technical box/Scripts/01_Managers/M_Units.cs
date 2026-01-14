@@ -19,7 +19,7 @@ public class M_Units : MonoBehaviour
     public event EventHandler<Team> OnTeamTurnStart;
     public event EventHandler<Team> OnTeamTurnEnd;
     
-    public static M_Units instance => _instance == null ? FindFirstObjectByType<M_Units>() : instance;
+    public static M_Units instance => _instance == null ? FindFirstObjectByType<M_Units>() : _instance;
     public static M_Units _instance;
     
     // ======================================================================
