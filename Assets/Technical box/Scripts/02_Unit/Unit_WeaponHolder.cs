@@ -127,6 +127,7 @@ public class Unit_WeaponHolder : MonoBehaviour
         instantiatedWeapon.gameObject.SetActive(true);
         _weaponGraphics = instantiatedWeapon.GetComponent<Weapon>();
 
+        weaponGraphics.ShowGraphics();
         weaponGraphics.Setup(unit);
     }
 

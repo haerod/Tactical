@@ -25,8 +25,10 @@ public class Unit_Inventory : Inventory
     
     public bool TryAddItem(Item item)
     {
-        if(items.Count >= maxSize)
-            return false;
+        int itemsSize = items.Select(testedItem => testedItem.sizeInInventory).Sum();
+        
+        if(itemsSize + item.sizeInInventory > maxSize)
+            return false; // No place for this item
         
         item.transform.SetParent(content);
 

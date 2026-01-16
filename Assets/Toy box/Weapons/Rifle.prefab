@@ -165,7 +165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4847132785797274725
 Transform:
   m_ObjectHideFlags: 0
@@ -362,8 +362,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87b14aad9eb2e742b9aede3a3edf17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data: {fileID: 11400000, guid: 415753486e8914643b27ae946ec004ac, type: 2}
+  <sizeInInventory>k__BackingField: 1
+  <data>k__BackingField: {fileID: 11400000, guid: 415753486e8914643b27ae946ec004ac, type: 2}
   _ammoCount: 4
+  _graphics:
+  - {fileID: 5020440574602810175}
   _weaponEnd: {fileID: 635774443493308452}
   muzzleFlash: {fileID: 3035256680947515368}
   weaponAnimatorController: {fileID: 9100000, guid: 09b66b290f85b8b489b72e6f4b860ade, type: 2}

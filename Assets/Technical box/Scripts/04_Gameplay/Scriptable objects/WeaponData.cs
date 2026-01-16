@@ -28,6 +28,8 @@ public class WeaponData : ScriptableObject
     [Header("PRECISION")]
     [SerializeField] private int _precisionMalusByDistance = 5;
     public int precisionMalusByDistance => _precisionMalusByDistance;
+    [SerializeField] private int _precisionModifier;
+    public int precisionModifier => _precisionModifier;
     
     [Header("AMMO")]
     

@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Weapon : Item
 {
-    [SerializeField] private WeaponData _data;
-    public WeaponData data => _data;
+    [field:Header("WEAPON")]
+    [field:SerializeField] public WeaponData data {get; private set;}
     
     [Header("CURRENT AMMO")]
     
@@ -14,11 +14,11 @@ public class Weapon : Item
     public int ammoCount => _ammoCount;
     public bool hasAvailableAmmoToSpend => !data.usesAmmo || (data.usesAmmo && _ammoCount > 0);
     public bool isFullOfAmmo => data.usesAmmo && ammoCount >= data.ammoCount;
-    
-    [Header("GRAPHICS")]
-    
-    [SerializeField] private Transform _weaponEnd;
 
+    [Header("GRAPHICS")] 
+    [SerializeField] private List<GameObject> _graphics;
+    public List<GameObject> graphics => _graphics;
+    [SerializeField] private Transform _weaponEnd;
     public Transform weaponEnd => _weaponEnd;
     [SerializeField] private GameObject muzzleFlash;
     [SerializeField] private RuntimeAnimatorController weaponAnimatorController;
@@ -93,6 +93,11 @@ public class Weapon : Item
         OnAmmoCountChanged?.Invoke(this, this);
     }
 
+    /// <summary>
+    /// Shows the weapon's graphics.
+    /// </summary>
+    public void ShowGraphics() => graphics.ForEach(graphic => graphic.SetActive(true));
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

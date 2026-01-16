@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4288627096696100346
 Transform:
   m_ObjectHideFlags: 0
@@ -299,7 +299,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4679497912983384594
 Transform:
   m_ObjectHideFlags: 0
@@ -413,8 +413,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87b14aad9eb2e742b9aede3a3edf17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data: {fileID: 11400000, guid: 750e76deb0678ee45948176160a19a8d, type: 2}
+  <sizeInInventory>k__BackingField: 1
+  <data>k__BackingField: {fileID: 11400000, guid: 750e76deb0678ee45948176160a19a8d, type: 2}
   _ammoCount: 1
+  _graphics:
+  - {fileID: 2078238249550020763}
+  - {fileID: 5578498464921297417}
   _weaponEnd: {fileID: 8409216978134173284}
   muzzleFlash: {fileID: 8985303929946252349}
   weaponAnimatorController: {fileID: 9100000, guid: 09b66b290f85b8b489b72e6f4b860ade, type: 2}

@@ -88,10 +88,13 @@ public class A_Attack : A__Action
         if(!currentWeaponData.isMeleeWeapon)
             precisionToReturn -= targetProtectionValue;
         
-        for (int i = 0; i < currentWeaponData.range; i++)
-            precisionToReturn -= unit.weaponHolder.weaponData.precisionMalusByDistance;
+        for (int i = 0; i < unit.look.GetTilesOfLineOfSightOn(target.coordinates).Count; i++)
+            precisionToReturn -= currentWeaponData.precisionMalusByDistance;
+
+        if(targetProtectionValue < 100)
+            precisionToReturn += currentWeaponData.precisionModifier;
         
-        return precisionToReturn < 0 ? 0 : precisionToReturn;
+        return Mathf.Clamp(precisionToReturn, 0, 100);
     }
     
     // ======================================================================

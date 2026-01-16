@@ -76,8 +76,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87b14aad9eb2e742b9aede3a3edf17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data: {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
+  <sizeInInventory>k__BackingField: 0
+  <data>k__BackingField: {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
   _ammoCount: 0
+  _graphics: []
   _weaponEnd: {fileID: 2779056909906909448}
   muzzleFlash: {fileID: 0}
   weaponAnimatorController: {fileID: 22100000, guid: 2e55f20952e3ae44282fb7c057a2bcf3, type: 2}
