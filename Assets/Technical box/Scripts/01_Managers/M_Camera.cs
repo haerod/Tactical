@@ -9,17 +9,32 @@ using Cinemachine;
 
 public class M_Camera : MonoBehaviour
 {
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
-    [SerializeField] private Transform cameraTarget;
+    [Header("BOUNDS")] 
+    [SerializeField] private bool blockCameraAtBoardBoundaries = true;
+    
+    [Header("CAMERA")]
+    
     [SerializeField] private float moveSpeed = 30f;
+    [Space]
     [SerializeField] private float minZoom = 0.5f;
     [SerializeField] private float maxZoom = 4f;
+    [Space]
+    [SerializeField] private bool useScreenShake = true;
+    [SerializeField] private float screenShakeForce = .1f;
+    
+    [Header("REFERENCES")]
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private Transform cameraTarget;
     
     public static M_Camera instance => _instance == null ? FindFirstObjectByType<M_Camera>() : _instance;
     public static M_Camera _instance;
     
+    public Camera currentCamera => _currentCamera ? _currentCamera : _currentCamera = Camera.main;
+    private Camera _currentCamera;
+    
     private Transform target;
-    private Camera currentCamera;
+    private BoardBounds boardBounds;
+    private CinemachineImpulseSource impulseSource;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -42,16 +57,14 @@ public class M_Camera : MonoBehaviour
         _input.OnRotateRightInput += Input_OnRotateRightCameraInput;
         _input.OnRotateLeftInput += Input_OnRotateLeftCameraInput;
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+
+        boardBounds = _board.bounds;
+        impulseSource = virtualCamera.GetComponent<CinemachineImpulseSource>();
     }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Returns the current camera.
-    /// </summary>
-    public Camera GetCurrentCamera() => currentCamera ? currentCamera : currentCamera = Camera.main;
     
     /// <summary>
     /// Resets the camera's position to reach on its target (with the offset).
@@ -79,9 +92,14 @@ public class M_Camera : MonoBehaviour
     /// <param name="duration"></param>
     /// <param name="intensity"></param>
     /// <param name="timeBetweenShakes"></param>
-    public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f) => 
-        StartCoroutine(Shake_Co(duration, intensity, timeBetweenShakes));
-    
+    public void Shake(float duration = .02f, float intensity = .2f, float timeBetweenShakes = .02f)
+    {
+        if(!useScreenShake)
+            return; // Don't use screen shake
+        
+        impulseSource.GenerateImpulseWithForce(screenShakeForce);
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -94,7 +112,10 @@ public class M_Camera : MonoBehaviour
     {
         // Transform the input direction in world direction to follow the angle of the camera
         Vector3 moveDirection = cameraTarget.forward * direction.y + cameraTarget.right * direction.x;
-        cameraTarget.position += moveDirection * moveSpeed * Time.deltaTime;
+        Vector3 targetPosition = cameraTarget.position + moveDirection * moveSpeed * Time.deltaTime;
+        if(blockCameraAtBoardBoundaries)
+            targetPosition = targetPosition.Clamp(boardBounds.bottomLeftCornerPosition, boardBounds.topRightCornerPosition);
+        cameraTarget.position = targetPosition;
     }
     
     /// <summary>
@@ -132,27 +153,6 @@ public class M_Camera : MonoBehaviour
         return targetsBounds.center;
     }
     
-    /// <summary>
-    /// Coroutine of Shake() method. Only called by Shake().
-    /// </summary>
-    /// <param name="duration"></param>
-    /// <param name="intensity"></param>
-    /// <param name="timeBetweenShakes"></param>
-    /// <returns></returns>
-    private IEnumerator Shake_Co(float duration, float intensity, float timeBetweenShakes)
-    {
-        float shakeCurrentTime = 0;
-
-        while(shakeCurrentTime < duration)
-        {
-            virtualCamera.transform.localPosition = Random.onUnitSphere * intensity;
-            yield return new WaitForSeconds(timeBetweenShakes);
-            shakeCurrentTime += timeBetweenShakes;
-        }
-
-        virtualCamera.transform.localPosition = Vector3.zero;
-    }
-
     // ======================================================================
     // EVENTS
     // ======================================================================

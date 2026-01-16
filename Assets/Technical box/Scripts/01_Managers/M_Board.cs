@@ -5,33 +5,36 @@ using static M__Managers;
 
 public class M_Board : MonoBehaviour
 {
-    [Header("REFERENCES")]
-    [SerializeField] private Transform charactersParent;
+    [Header("REFERENCES")] [SerializeField]
+    private Transform charactersParent;
 
-    [Header("DEBUG")]
-    public TileGrid tileGrid;
+    [Header("DEBUG")] public TileGrid tileGrid;
     public static M_Board instance => _instance == null ? FindFirstObjectByType<M_Board>() : _instance;
     public static M_Board _instance;
-    
+
+    public BoardBounds bounds => GetBoardBounds();
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-    
+
     private void Awake()
     {
         // Singleton
         if (!_instance)
             _instance = this;
         else
-            Debug.LogError("There is more than one M_Board in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
-        
+            Debug.LogError(
+                "There is more than one M_Board in the scene, kill this one.\n(error by Basic Unity Tactical Tool)",
+                gameObject);
+
         tileGrid.Setup(transform.Cast<Transform>().Select(t => t.GetComponent<Tile>()).ToList());
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
+
     /// <summary>
     /// Returns the tile at (x,y) coordinates.
     /// </summary>
@@ -39,14 +42,14 @@ public class M_Board : MonoBehaviour
     /// <param name="y"></param>
     /// <returns></returns>
     public Tile GetTileAtCoordinates(int x, int y) => tileGrid[x, y];
-    
+
     /// <summary>
     /// Returns the tile at given coordinates.
     /// </summary>
     /// <param name="coordinates"></param>
     /// <returns></returns>
     public Tile GetTileAtCoordinates(Coordinates coordinates) => tileGrid[coordinates.x, coordinates.y];
-    
+
     /// <summary>
     /// Returns a tile with an offset if it exists, otherwise returns null.
     /// </summary>
@@ -54,7 +57,8 @@ public class M_Board : MonoBehaviour
     /// <param name="yOffset"></param>
     /// <param name="tile"></param>
     /// <returns></returns>
-    public Tile GetTileWithOffset(int xOffset, int yOffset, Tile tile) => GetTileAtCoordinates(tile.coordinates.x + xOffset, tile.coordinates.y + yOffset);
+    public Tile GetTileWithOffset(int xOffset, int yOffset, Tile tile) =>
+        GetTileAtCoordinates(tile.coordinates.x + xOffset, tile.coordinates.y + yOffset);
 
     /// <summary>
     /// Returns the tiles around a tile, with a radius.
@@ -129,7 +133,7 @@ public class M_Board : MonoBehaviour
                 coordinatesToReturn.Add(currentCoordinates);
             }
         }
-        
+
         return coordinatesToReturn;
     }
 
@@ -192,7 +196,7 @@ public class M_Board : MonoBehaviour
         {
             for (int j = -radius; j <= radius; j++)
             {
-                toReturn.Add(new Coordinates(centerCoordinates.x+i, centerCoordinates.y+j));
+                toReturn.Add(new Coordinates(centerCoordinates.x + i, centerCoordinates.y + j));
             }
         }
 
@@ -206,19 +210,19 @@ public class M_Board : MonoBehaviour
     /// <param name="yCenter"></param>
     /// <param name="edgeLength"></param>
     /// <returns></returns>
-    public List<Coordinates>  GetFullSquareCoordinatesWithEdge(int xCenter, int yCenter, int edgeLength)
+    public List<Coordinates> GetFullSquareCoordinatesWithEdge(int xCenter, int yCenter, int edgeLength)
     {
         List<Coordinates> toReturn = new List<Coordinates>();
-        Coordinates botLeftCoordinates = new Coordinates(xCenter-(edgeLength-2), yCenter-(edgeLength-2));
+        Coordinates botLeftCoordinates = new Coordinates(xCenter - (edgeLength - 2), yCenter - (edgeLength - 2));
 
-        for (int i = 0 ; i < edgeLength; i++)
+        for (int i = 0; i < edgeLength; i++)
         {
             for (int j = 0; j < edgeLength; j++)
             {
                 toReturn.Add(new Coordinates(botLeftCoordinates.x + i, botLeftCoordinates.y + j));
             }
         }
-        
+
         return toReturn;
     }
 
@@ -239,20 +243,22 @@ public class M_Board : MonoBehaviour
 
         while (!founded)
         {
-            List<Coordinates> aroundCoordinates = GetEmptySquareCoordinatesWithRadius(coordinates.x, coordinates.y, distance);
+            List<Coordinates> aroundCoordinates =
+                GetEmptySquareCoordinatesWithRadius(coordinates.x, coordinates.y, distance);
 
             foreach (Coordinates testedCoordinate in aroundCoordinates)
             {
                 Tile testedTile = GetTileAtCoordinates(testedCoordinate.x, testedCoordinate.y);
 
-                if (testedTile && testedTile != senderTile) 
+                if (testedTile && testedTile != senderTile)
                     continue;
 
                 founded = true;
                 toReturn.x = testedCoordinate.x;
                 toReturn.y = testedCoordinate.y;
-                
-                if (Vector3.Distance(new Vector3(testedCoordinate.x, 0, testedCoordinate.y), selectionPosition) < bestDistance)
+
+                if (Vector3.Distance(new Vector3(testedCoordinate.x, 0, testedCoordinate.y), selectionPosition) <
+                    bestDistance)
                 {
                     toReturn.x = testedCoordinate.x;
                     toReturn.y = testedCoordinate.y;
@@ -264,7 +270,7 @@ public class M_Board : MonoBehaviour
 
         return toReturn;
     }
-    
+
     /// <summary>
     /// With two tiles in diagonal, returns the two other tiles to make a square.
     /// </summary>
@@ -280,7 +286,7 @@ public class M_Board : MonoBehaviour
         Tile tile2 = GetTileWithLowestX(tileFrom, tileTo);
         Tile tile3, tile4;
 
-        if(tile1.coordinates.y > tile2.coordinates.y)
+        if (tile1.coordinates.y > tile2.coordinates.y)
         {
             tile3 = GetTileAtCoordinates(tile1.coordinates.x, tile2.coordinates.y);
             tile4 = GetTileAtCoordinates(tile2.coordinates.x, tile1.coordinates.y);
@@ -293,7 +299,7 @@ public class M_Board : MonoBehaviour
 
         return new List<Tile> { tile3, tile4 };
     }
-    
+
     /// <summary>
     /// Returns the covers adjacent (without diagonals) at coordinates.
     /// </summary>
@@ -308,8 +314,8 @@ public class M_Board : MonoBehaviour
         foreach (Coordinates aroundCoordinates in aroundCoordinatesList)
         {
             Tile tileWithCover = GetTileAtCoordinates(aroundCoordinates);
-            
-            if(tileWithCover)
+
+            if (tileWithCover)
             {
                 Cover tileCover = tileWithCover.GetComponent<Cover>();
 
@@ -317,10 +323,10 @@ public class M_Board : MonoBehaviour
                     coversToReturn.Add(tileCover);
             }
         }
-        
+
         return coversToReturn;
     }
-    
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -333,17 +339,17 @@ public class M_Board : MonoBehaviour
     /// <returns></returns>
     private Tile GetTileWithBiggestX(Tile tile1, Tile tile2)
     {
-        if(tile1.coordinates.x == tile2.coordinates.x)
+        if (tile1.coordinates.x == tile2.coordinates.x)
             return null;
 
-        if(tile1.coordinates.x > tile2.coordinates.x)
+        if (tile1.coordinates.x > tile2.coordinates.x)
             return tile1;
 
         return tile2;
     }
 
     /// <summary>
-    /// Return the tile with the lowest x coordinate, or null if two x are equal.
+    /// Returns the tile with the lowest x coordinate, or null if two x are equal.
     /// </summary>
     /// <param name="tile1"></param>
     /// <param name="tile2"></param>
@@ -354,5 +360,55 @@ public class M_Board : MonoBehaviour
             return null;
 
         return tile1.coordinates.x < tile2.coordinates.x ? tile1 : tile2;
+    }
+
+    /// <summary>
+    /// Returns the board bounds.
+    /// </summary>
+    /// <returns></returns>
+    private BoardBounds GetBoardBounds() =>
+        new(tileGrid.highestX, tileGrid.highestY, tileGrid.lowestX, tileGrid.lowestY);
+}
+
+public class BoardBounds
+{
+    public int highestX;
+    public int highestY;
+    public int lowestX;
+    public int lowestY;
+    
+    public Coordinates topRightCornerCoordinates;
+    public Coordinates topLeftCornerCoordinates;
+    public Coordinates bottomLeftCornerCoordinates;
+    public Coordinates bottomRightCornerCoordinates;
+    
+    public Vector3 topRightCornerPosition;
+    public Vector3 topLeftCornerPosition;
+    public Vector3 bottomLeftCornerPosition;
+    public Vector3 bottomRightCornerPosition;
+    
+    public BoardBounds(int highestX, int highestY, int lowestX, int lowestY)
+    {
+        this.highestX = highestX;
+        this.highestY = highestY;
+        this.lowestX = lowestX;
+        this.lowestY = lowestY;
+        
+        topRightCornerCoordinates = new Coordinates(highestX, highestY);
+        topLeftCornerCoordinates = new Coordinates(lowestX, highestY);
+        bottomLeftCornerCoordinates = new Coordinates(lowestX, lowestY);
+        bottomRightCornerCoordinates = new Coordinates(highestX, lowestY);
+
+        topRightCornerPosition = topRightCornerCoordinates.ToVector3();
+        topLeftCornerPosition = topLeftCornerCoordinates.ToVector3();
+        bottomLeftCornerPosition = bottomLeftCornerCoordinates.ToVector3();
+        bottomRightCornerPosition = bottomRightCornerCoordinates.ToVector3();
+    }
+
+    public override string ToString()
+    {
+        return $"Highest X: {highestX}, Highest Y: {highestY}, Lowest X: {lowestX}, Lowest Y: {lowestY}\n" +
+               $"Top Right Corner Coordinates: {topRightCornerCoordinates}, Top Left Corner Coordinates: {topLeftCornerCoordinates}, Bottom Right Corner Coordinates: {bottomRightCornerCoordinates}, Bottom Left Corner Coordinates: {bottomLeftCornerCoordinates}\n" +
+               $"Top Right Corner Position: {topRightCornerPosition}, Top Left Corner Position {topLeftCornerPosition}, Bottom Right Corner Position: {bottomRightCornerPosition}, Bottom Left Corner Position: {bottomLeftCornerPosition}";
     }
 }

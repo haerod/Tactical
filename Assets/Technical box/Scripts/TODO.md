@@ -7,8 +7,6 @@
 ---
 
 ## CAMERA
-- 1h -> Clamp camera in board bounds
-- 1h -> Camera screen shake (Cinemachine based)
 - 0.5d -> Smooth rotation
 
 ## FOG OF WAR

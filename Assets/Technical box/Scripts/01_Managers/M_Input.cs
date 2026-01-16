@@ -121,7 +121,7 @@ public class M_Input : MonoBehaviour
     private void CheckRaycast()
     {
         Ray ray = _camera
-            .GetCurrentCamera()
+            .currentCamera
             .ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))

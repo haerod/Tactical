@@ -10,9 +10,9 @@ public class TileGrid
     [SerializeField] private Tile[,] grid; // Note : Let it serializable to be dirty.
 
     public int lowestX { get; private set; }
-    public int higherX { get; private set; }
+    public int highestX { get; private set; }
     public int lowestY { get; private set; }
-    public int higherY { get; private set; }
+    public int highestY { get; private set; }
 
     public void Setup(List<Tile> tilesToAdd)
     {
@@ -29,14 +29,14 @@ public class TileGrid
                 lowestX = tile.coordinates.x;
             if (tile.coordinates.y < lowestY)
                 lowestY = tile.coordinates.y;
-            if (tile.coordinates.x > higherX)
-                higherX = tile.coordinates.x;
-            if (tile.coordinates.y > higherY)
-                higherY = tile.coordinates.y;
+            if (tile.coordinates.x > highestX)
+                highestX = tile.coordinates.x;
+            if (tile.coordinates.y > highestY)
+                highestY = tile.coordinates.y;
         }
 
-        int width = Mathf.Abs(lowestX - higherX) + 1;
-        int height = Mathf.Abs(lowestY - higherY) + 1;
+        int width = Mathf.Abs(lowestX - highestX) + 1;
+        int height = Mathf.Abs(lowestY - highestY) + 1;
 
         grid = new Tile[width, height];
 

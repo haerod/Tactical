@@ -10,9 +10,9 @@ public static class ExtensionMethods
     // ======================================================================
 
     /// <summary>
-    /// Return the next element of the list; after the index.
-    /// Return the first one if the index is the last one.
-    /// Return default if the list count equals .
+    /// Returns the next element of the list; after the index.
+    /// Returns the first one if the index is the last one.
+    /// Returns default if the list count equals 0.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -26,9 +26,9 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Return the next element of the list; after the element.
-    /// Return the first one if the index is the last one.
-    /// Return default if the list count equals .
+    /// Returns the next element of the list, after the element.
+    /// Returns the first one if the index is the last one.
+    /// Returns default if the list count equals 0.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -43,9 +43,9 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Return the previous element of the list; before the index.
-    /// Return the last one if the index is the last one.
-    /// Return default if the list count equals .
+    /// Returns the previous element of the list, before the index.
+    /// Returns the last one if the index is the last one.
+    /// Returns default if the list count equals 0.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -59,9 +59,9 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Return the previous element of the list; before the element.
-    /// Return the last one if the index is the last one.
-    /// Return default if the list count equals .
+    /// Returns the previous element of the list, before the element.
+    /// Returns the last one if the index is the last one.
+    /// Returns default if the list count equals 0.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -76,8 +76,8 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Return a random element of a list.
-    /// Return default if the list is empty.
+    /// Returns a random element of a list.
+    /// Returns default if the list is empty.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -92,7 +92,7 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Print all the elements of a list in the console.
+    /// Prints all the elements of a list in the console.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -105,7 +105,7 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Add only if it doesn't exist in the list.
+    /// Adds the item only if it doesn't exist in the list.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -117,7 +117,7 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Add if the condition is true.
+    /// Adds the item if the condition is true.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -130,7 +130,7 @@ public static class ExtensionMethods
     }
     
     /// <summary>
-    /// Add if the condition is true.
+    /// Adds the item if it's not null the condition is true.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list"></param>
@@ -142,7 +142,7 @@ public static class ExtensionMethods
     // ======================================================================
     
     /// <summary>
-    /// Randomize the IEnumerable item's order.
+    /// Randomizes the IEnumerable item's order.
     /// </summary>
     /// <param name="source"></param>
     /// <typeparam name="T"></typeparam>
@@ -158,8 +158,8 @@ public static class ExtensionMethods
     // ======================================================================
 
     /// <summary>
-    /// Return incremented int until the maximum value (inclusive).
-    /// If int is more than it maximum, return 0.
+    /// Returns incremented int until the maximum value (inclusive).
+    /// If int is more than it maximum, returns 0.
     /// </summary>
     /// <param name="value"></param>
     /// <param name="maximumInclusive"></param>
@@ -172,8 +172,8 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Return decremented int from the maximum value (inclusive) to 0.
-    /// If int is less than 0, return maximum.
+    /// Returns decremented int from the maximum value (inclusive) to 0.
+    /// If int is less than 0, returns maximum.
     /// </summary>
     /// <param name="value"></param>
     /// <param name="maximumInclusive"></param>
@@ -201,7 +201,7 @@ public static class ExtensionMethods
     // ======================================================================
 
     /// <summary>
-    /// Print all the elements of a two-dimensional array in the console.
+    /// Prints all the elements of a two-dimensional array in the console.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
@@ -218,7 +218,7 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Return true if the item [index0] is out of the array bounds.
+    /// Returns true if the item [index0] is out of the array bounds.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
@@ -235,7 +235,7 @@ public static class ExtensionMethods
     // ======================================================================
 
     /// <summary>
-    /// Print all the elements of a two-dimensional array in the console.
+    /// Prints all the elements of a two-dimensional array in the console.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
@@ -255,14 +255,14 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Print the first and second length of a two-dimensional array in the console.
+    /// Prints the first and second length of a two-dimensional array in the console.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
     public static void PrintLength<T>(this T[,] array) => Debug.Log($"{array}: {array.GetLength(0)},{array.GetLength(1)}");
 
     /// <summary>
-    /// Return true if the item [index0, index1] is out of the array bounds.
+    /// Returns true if the item [index0, index1] is out of the array bounds.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
@@ -276,5 +276,25 @@ public static class ExtensionMethods
         if (index0 >= array.GetLength(0)) return false;
         if (index1 >= array.GetLength(1)) return false;
         return true;
+    }
+    
+    // ======================================================================
+    // VECTOR3
+    // ======================================================================
+
+    /// <summary>
+    /// Returns the Vector3, clamped between two Vector3.
+    /// </summary>
+    /// <param name="vector"></param>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    /// <returns></returns>
+    public static Vector3 Clamp(this Vector3 vector, Vector3 min, Vector3 max)
+    {
+        Vector3 toReturn = vector;
+        toReturn.x = Mathf.Clamp(vector.x, min.x, max.x);
+        toReturn.y = Mathf.Clamp(vector.y, min.y, max.y);
+        toReturn.z = Mathf.Clamp(vector.z, min.z, max.z);
+        return toReturn;
     }
 }
