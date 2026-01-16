@@ -6,32 +6,17 @@
 
 ---
 
-# PROJECT
-**IMPORTANT 
-- 1h -> Test to build (#if UNITY_EDITOR errors to prevent)
-
-- 1d -> Transform the project in Package (usable with the Package Manager)
-    - I checked and there are two options :
-        - Create a package but everything goes inside (nothing in the project)
-        - Push the project on the asset store (not ready yet)
-    - 1d -> Dependencies with Text Mesh Pro (and Cinemachine when camera will be imported)
-- 0.5d -> Namespaces
-- 1d -> Documentation
-- 1w -> Online API like Unity (ask Simon)
-- 0.5d -> Notes in Inspector to make it easier to understand
-- 1h -> In Tactical Course project, export all the comments //BUTT to this project
-
 ## CAMERA
 - 1h -> Clamp camera in board bounds
 - 1h -> Camera screen shake (Cinemachine based)
 - 0.5d -> Smooth rotation
 
 ## FOG OF WAR
+- 1h -> Fog mask on FoW, not on tile
 - 0.5d -> Fog of war as a Manager (not in Rules)
 - 1h -> Fog of war view lines as Module (of Fog of war)
 - 1h -> Test : Be sure, if Fog of war is disabled, unit can see everything
 - 1w -> Fog of war behavior : mask things undiscovered (difference with discovered and not in line of sight)
-- 1h -> Fog mask on FoW, not on tile
 
 ## ACTION TILE PREVIEW
 - 1h -> Set FM_TilesActionPreview abstract
@@ -43,12 +28,12 @@
 - 0.5d -> Team alliances
 
 ## ANIMATION
-- 1d -> Use animation layers for crouch (crouch dodge, crouch hit reaction)
 - 1h -> Anim class work on events (easy features already done, check the other ones)
+- 1d -> Use animation layers for crouch (crouch dodge, crouch hit reaction)
 
 ## UNIT UI
-- 0.5d -> Clean the prefab UI Infos (maybe ask for help -> Henri)
 - 1h -> Orient to camera is implemented twice on the prefab
+- 0.5d -> Clean the prefab UI Infos (maybe ask for help -> Henri)
 - 0.5d -> Module Health bar : Damage preview
 
 ## NOMENCLATURE
@@ -88,11 +73,23 @@ But turn based is a feature can be added separately.
 - 1d -> Can shoot from a step (lean)
 
 ## ENEMY BEHAVIOR
-- 0.5d -> Use action system for the turns
 - 1h -> Bug : Turn of enemy ends at MovementStart
+- 0.5d -> Use action system for the turns
 
 ## AUTO CHANGE WEAPONS
 - 1h -> Remove this script to OnValidate method on U_WeaponHolder
+
+## PROJECT
+- 1h -> In Tactical Course project, export all the comments //BUTT to this project
+- 1d -> Transform the project in Package (usable with the Package Manager)
+    - I checked and there are two options :
+        - Create a package but everything goes inside (nothing in the project)
+        - Push the project on the asset store (not ready yet)
+    - 1d -> Dependencies with Text Mesh Pro (and Cinemachine when camera will be imported)
+- 0.5d -> Namespaces
+- 1d -> Documentation
+- 1w -> Online API like Unity (ask Simon)
+- 0.5d -> Notes in Inspector to make it easier to understand
 
 ### RAGDOLL
 - .5d -> Ragdoll is dirty and creates exceptions : fix it
