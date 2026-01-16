@@ -85,12 +85,12 @@ public class Module_WeaponAmmo : MonoBehaviour
                 
             if (weaponData.needAmmoToReload)
                 remainingAmmoText.text = currentUnit.inventory.GetAmmoCountOfType(weaponData.ammoType).ToString();
-            
         }
         else
         {
             ammo.gameObject.SetActive(false);
             remainingAmmoPanel.SetActive(false);
+            reloadButton.gameObject.SetActive(false);
         }
         
         panel.SetActive(true);

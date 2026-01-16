@@ -120,8 +120,11 @@ public class Module_Tooltip : MonoBehaviour
     
     private void GameEvents_OnOnAnyTooltipExit(object sender, EventArgs e)
     {
-        StopCoroutine(timerCoroutine);
-        timerCoroutine = null;
+        if (timerCoroutine != null)
+        {
+            StopCoroutine(timerCoroutine);
+            timerCoroutine = null;
+        }
         
         HideTooltip();
     }

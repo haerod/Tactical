@@ -17,6 +17,11 @@ public class Module_TooltipTriggerBase : MonoBehaviour, IPointerEnterHandler, IP
     // MONOBEHAVIOUR
     // ======================================================================
 
+    private void OnDisable()
+    {
+        GameEvents.InvokeOnAnyTooltipExit();
+    }
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
