@@ -49,7 +49,9 @@ public class U__Unit : Entity
     {
         coordinates = newCoordinates;
         transform.position = coordinates.ToVector3();
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
     }
     
     /// <summary>

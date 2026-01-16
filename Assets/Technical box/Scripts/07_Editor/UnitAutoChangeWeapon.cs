@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+
+#if UNITY_EDITOR
 using UnityEditor.SceneManagement;
+#endif
 
 [ExecuteInEditMode]
 public class UnitAutoChangeWeapon : MonoBehaviour

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using static M__Managers;
 
@@ -15,10 +17,5 @@ public class Test : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            _units.current.inventory.items.Print();
-            Debug.Log("here", gameObject);
-        }
     }
 }

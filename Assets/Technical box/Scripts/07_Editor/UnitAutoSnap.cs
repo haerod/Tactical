@@ -26,9 +26,7 @@ public class UnitAutoSnap : BaseAutoSnap
 
         SetParametersDirty();
     }
-
-#endif
-
+    
     // ======================================================================
     // INHERITED
     // ======================================================================
@@ -96,4 +94,5 @@ public class UnitAutoSnap : BaseAutoSnap
             .Where(testedUnit => testedUnit)
             .FirstOrDefault(testedUnit => testedUnit != unit);
     }
+#endif
 }

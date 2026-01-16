@@ -73,8 +73,11 @@ public class Tile : Entity
 
         gameObject.name = newName;
 
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
         EditorUtility.SetDirty(gameObject);
+#endif
+
     }
 
     /// <summary>

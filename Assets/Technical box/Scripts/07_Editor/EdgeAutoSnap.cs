@@ -38,8 +38,6 @@ public class EdgeAutoSnap : BaseAutoSnap
         EditorUtility.SetDirty(_board);
     }
 
-#endif
-
     // ======================================================================
     // INHERITED
     // ======================================================================
@@ -142,5 +140,5 @@ public class EdgeAutoSnap : BaseAutoSnap
         if (flipVisuals)
             edgeTransform.eulerAngles += Vector3.up * 180f;
     }
-
+#endif
 }

@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+#if UNITY_EDITOR
 using UnityEditor.SceneManagement;
-using System;
+#endif
 
 [ExecuteInEditMode]
 public abstract class BaseAutoSnap : MonoBehaviour
@@ -20,7 +19,6 @@ public abstract class BaseAutoSnap : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
 #if UNITY_EDITOR
     protected void Awake()
     {
@@ -51,7 +49,6 @@ public abstract class BaseAutoSnap : MonoBehaviour
         Gizmos.color = gizmoColor;
         Gizmos.DrawCube(transform.position + gizmoOffset, gizmoSize);
     }
-#endif
 
     // ======================================================================
     // PUBLIC METHODS
@@ -143,4 +140,5 @@ public abstract class BaseAutoSnap : MonoBehaviour
     /// Get the object position before the movement
     /// </summary>
     protected Vector3 GetPositionBeforeMovement() => transform.position;
+#endif
 }

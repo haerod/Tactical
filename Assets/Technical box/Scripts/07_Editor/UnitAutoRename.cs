@@ -28,6 +28,8 @@ public class UnitAutoRename : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
+#if UNITY_EDITOR
+    
     private void Awake()
     {
         if (Application.isPlaying)
@@ -41,6 +43,7 @@ public class UnitAutoRename : MonoBehaviour
         previousBehavior = current.behavior.playable;
         previousTeam = current.unitTeam;
         previousName = current.unitName;
+
         EditorUtility.SetDirty(this);
     }
 
@@ -85,6 +88,7 @@ public class UnitAutoRename : MonoBehaviour
         previousSecondaryTeamMaterial = current.unitTeam.secondaryMaterial;
         previousTeamName = current.unitTeam.name;
         EditorUtility.SetDirty(this);
+
     }
 
     /// <summary>
@@ -99,7 +103,6 @@ public class UnitAutoRename : MonoBehaviour
                 current.unitTeam.name,
                 current.behavior.playable ? playableCharacterDesignation : notPlayableCharacterDesignation);
         }
-
         EditorUtility.SetDirty(current.gameObject); // Save the unit's modifications
         EditorUtility.SetDirty(current.move); // Save the unit's modifications
     }
@@ -128,4 +131,5 @@ public class UnitAutoRename : MonoBehaviour
             EditorUtility.SetDirty(rend2);
         }
     }
+#endif
 }

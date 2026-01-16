@@ -2,7 +2,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using static M__Managers;
 
 [ExecuteInEditMode]
@@ -11,6 +10,7 @@ public class TileAutoSnap : BaseAutoSnap
     private Tile tile => _tile ??= GetComponent<Tile>();
     private Tile _tile;
     
+#if UNITY_EDITOR
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -72,4 +72,5 @@ public class TileAutoSnap : BaseAutoSnap
 
         return null;
     }
+#endif
 }

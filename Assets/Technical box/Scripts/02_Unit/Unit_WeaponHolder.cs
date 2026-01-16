@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Serialization;
 using static M__Managers;
+#if UNITY_EDITOR
+using UnityEditor.SceneManagement;
+#endif
 
 public class Unit_WeaponHolder : MonoBehaviour
 {
