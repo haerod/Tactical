@@ -70,7 +70,7 @@ public class Module_PercentShootText : MonoBehaviour
             // Regular
             case < 100:
                 percentShootText.color = basicColor.color;
-                percentShootText.fontStyle = FontStyles.Normal;
+                percentShootText.fontStyle = FontStyles.Bold;
                 break;
             // Critical
             default:
