@@ -6,14 +6,11 @@
 
 ---
 
-## CAMERA
-- 0.5d -> Smooth rotation
-
 ## FOG OF WAR
 - 1h -> Fog mask on FoW, not on tile
-- 0.5d -> Fog of war as a Manager (not in Rules)
 - 1h -> Fog of war view lines as Module (of Fog of war)
 - 1h -> Test : Be sure, if Fog of war is disabled, unit can see everything
+- 0.5d -> Fog of war as a Manager (not in Rules)
 - 1w -> Fog of war behavior : mask things undiscovered (difference with discovered and not in line of sight)
 
 ## ACTION TILE PREVIEW

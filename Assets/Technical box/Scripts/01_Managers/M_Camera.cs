@@ -16,6 +16,9 @@ public class M_Camera : MonoBehaviour
     
     [SerializeField] private float moveSpeed = 30f;
     [Space]
+    [SerializeField] private float rotationTime = .5f;
+    [SerializeField] private AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0,0,1,1);
+    [Space]
     [SerializeField] private float minZoom = 0.5f;
     [SerializeField] private float maxZoom = 4f;
     [Space]
@@ -35,6 +38,8 @@ public class M_Camera : MonoBehaviour
     private Transform target;
     private BoardBounds boardBounds;
     private CinemachineImpulseSource impulseSource;
+    private Quaternion cameraTargetRotation;
+    private float rotationCurrentTime;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -59,7 +64,13 @@ public class M_Camera : MonoBehaviour
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
 
         boardBounds = _board.bounds;
+        cameraTargetRotation = cameraTarget.rotation;
         impulseSource = virtualCamera.GetComponent<CinemachineImpulseSource>();
+    }
+
+    private void Update()
+    {
+        UpdateCameraRotation();
     }
 
     // ======================================================================
@@ -83,7 +94,8 @@ public class M_Camera : MonoBehaviour
     /// <param name="angle"></param>
     public void RotateOnAngle(float angle)
     {
-        cameraTarget.eulerAngles += new Vector3(0f, angle, 0f);
+        rotationCurrentTime = 0;
+        cameraTargetRotation = Quaternion.Euler(cameraTarget.eulerAngles + new Vector3(0f, angle, 0f));
     }
     
     /// <summary>
@@ -151,6 +163,25 @@ public class M_Camera : MonoBehaviour
             targetsBounds.Encapsulate(position);
         }
         return targetsBounds.center;
+    }
+    
+    /// <summary>
+    /// Updates the camera target rotation.
+    /// </summary>
+    private void UpdateCameraRotation()
+    {
+        if(rotationCurrentTime >= rotationTime)
+        {
+            cameraTarget.rotation = cameraTargetRotation;
+            return; // Rotation ended
+        }
+        
+        rotationCurrentTime += Time.deltaTime;
+        cameraTarget.rotation = Quaternion.Slerp(
+            cameraTarget.rotation, 
+            cameraTargetRotation,
+            rotationCurve.Evaluate(rotationCurrentTime / rotationTime));
+
     }
     
     // ======================================================================
