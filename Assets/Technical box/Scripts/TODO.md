@@ -34,6 +34,7 @@
 ## NOMENCLATURE
 - 1h -> Description of the classes
 - 1h -> Class name nomenclature (Manager, Holder)
+- 1h -> Use _ for private serializable variables, with a public accessor (look at Nomenclature doc)
 
 ## UNITS MANAGER
 - 1h -> units.EndCurrentUnitTurn as an event (not called in classes) -> use it in a lot of Modules
