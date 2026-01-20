@@ -38,7 +38,6 @@
 
 ## UNITS MANAGER
 - 1h -> units.EndCurrentUnitTurn as an event (not called in classes) -> use it in a lot of Modules
-- 0.5d -> Don't need a LateStart in M_Units
 - 0.5d -> Find tasks to make it more simple
 
 Note

@@ -404,9 +404,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   current: {fileID: 0}
-  teamPlayOrder: []
-  units: []
+  _teamPlayOrder: []
   turnBasedSystem: {fileID: 8195740186307666334, guid: 980813e3c2eb48f4b9a46ffb97717be0, type: 3}
+  _units: []
 --- !u!1 &1958866178297490547
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,7 +1174,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7159592069208103848}
-  m_LocalRotation: {x: 0.30143258, y: 0.36174193, z: -0.124857455, w: 0.8733223}
+  m_LocalRotation: {x: 0.30143258, y: 0.36174196, z: -0.12485745, w: 0.8733223}
   m_LocalPosition: {x: -14.524116, y: 19.2, z: -16.534115}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1709,11 +1709,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5430387359514834164, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5430387359514834164, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5430387359514834164, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1725,15 +1725,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5430387359514834164, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -156.01299
       objectReference: {fileID: 0}
     - target: {fileID: 5510606291477366285, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5510606291477366285, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5510606291477366285, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1745,7 +1745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5510606291477366285, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -128.24533
       objectReference: {fileID: 0}
     - target: {fileID: 5510606291528356772, guid: fa023798b629a584fa9942c600b11b84, type: 3}
       propertyPath: m_Name

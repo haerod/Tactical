@@ -43,7 +43,7 @@ public class TurnBasedSystem : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public U__Unit GetFirstUnit() => _units
-        .GetUnitsOf(_units.GetTeamPlayOrder().First())
+        .GetUnitsOf(_units.teamPlayOrder.First())
         .First();
     
     /// <summary>
@@ -61,7 +61,7 @@ public class TurnBasedSystem : MonoBehaviour
     /// <summary>
     /// Returns the next team playing.
     /// </summary>
-    public Team GetNextTeam() => _units.GetTeamPlayOrder()
+    public Team GetNextTeam() => _units.teamPlayOrder
         .Next(_units.current.unitTeam);
     
     // ======================================================================

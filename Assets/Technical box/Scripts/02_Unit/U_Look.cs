@@ -54,7 +54,7 @@ public class U_Look : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public List<U__Unit> UnitsVisibleInFog() => _units
-        .GetUnitsList()
+        .units
             .Where(chara =>
             {
                 switch (_rules.visibleInFogOfWar)
@@ -100,7 +100,7 @@ public class U_Look : MonoBehaviour
     /// Returns the closest enemy on sight.
     /// </summary>
     /// <returns></returns>
-    public U__Unit ClosestEnemyOnSight() => _units.GetUnitsList()
+    public U__Unit ClosestEnemyOnSight() => _units.units
             .Where(o => o != unit) // remove emitter
             .Where(o => o.team.IsEnemyOf(unit)) // get only enemies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight

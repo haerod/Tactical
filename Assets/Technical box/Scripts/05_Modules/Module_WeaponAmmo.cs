@@ -28,6 +28,11 @@ public class Module_WeaponAmmo : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
+    private void Awake()
+    {
+        Hide();
+    }
+
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;

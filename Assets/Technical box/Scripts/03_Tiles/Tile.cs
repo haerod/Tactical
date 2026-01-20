@@ -22,7 +22,7 @@ public class Tile : Entity
     
     public enum Directions { Top, Down, Right, Left }
 
-    public U__Unit character => Character();
+    public U__Unit character => Unit();
 
     [Header("REFERENCES")]
     
@@ -170,19 +170,19 @@ public class Tile : Entity
     }
 
     /// <summary>
-    /// Returns true if the tile is occupied by a character.
+    /// Returns true if the tile is occupied by a unit.
     /// </summary>
     /// <returns></returns>
-    public bool IsOccupiedByCharacter() => Character();
+    public bool IsOccupiedByUnit() => Unit();
 
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
     /// <summary>
-    /// Returns the character on this tile.
+    /// Returns the unit on this tile.
     /// Returns null if is nobody on this tile.
     /// </summary>
     /// <returns></returns>
-    private U__Unit Character() => _units.GetUnitsList().FirstOrDefault(c => c.tile == this);
+    private U__Unit Unit() => _units.units.FirstOrDefault(c => c.tile == this);
 }

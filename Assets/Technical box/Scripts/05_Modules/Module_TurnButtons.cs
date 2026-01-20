@@ -15,6 +15,11 @@ public class Module_TurnButtons : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
+    private void Awake()
+    {
+        SetUIActive(false);
+    }
+
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;

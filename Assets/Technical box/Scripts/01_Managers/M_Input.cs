@@ -381,7 +381,7 @@ public static class InputEvents
         
         bool pointedCharacterIsVisible = !_rules.IsFogOfWar() || currentUnit.look.visibleTiles.Contains(tile);
 
-        if (tile.IsOccupiedByCharacter() && pointedCharacterIsVisible)
+        if (tile.IsOccupiedByUnit() && pointedCharacterIsVisible)
         {
             CharacterHoveredEvents(tile.character);
             return; // Tile occupied by a unit

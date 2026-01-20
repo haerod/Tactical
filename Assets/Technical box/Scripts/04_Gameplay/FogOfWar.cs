@@ -54,7 +54,7 @@ public class FogOfWar : MonoBehaviour
     /// <param name="visibleTiles"></param>
     private void DisplayCharacters(List<Tile> visibleTiles)
     {
-        List<U__Unit> visibleCharacters = _units.GetUnitsList()
+        List<U__Unit> visibleCharacters = _units.units
             .Where(c =>
             {
                 switch (_rules.visibleInFogOfWar)
@@ -76,7 +76,7 @@ public class FogOfWar : MonoBehaviour
             .ForEach(c => c.anim.SetVisualActives(true));
 
         // Hides invisible characters
-        _units.GetUnitsList()
+        _units.units
             .Except(visibleCharacters)
             .ToList()
             .ForEach(c => c.anim.SetVisualActives(false));

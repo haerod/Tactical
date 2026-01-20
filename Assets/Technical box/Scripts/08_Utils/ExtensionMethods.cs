@@ -137,6 +137,22 @@ public static class ExtensionMethods
     /// <param name="item"></param>
     public static void AddIfNotNull<T>(this List<T> list, T item) => list.AddIf(item, item != null);
 
+    /// <summary>
+    /// Adds the item at the first position.
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="item"></param>
+    /// <typeparam name="T"></typeparam>
+    public static void AddFirst<T>(this List<T> list, T item) => list.Insert(0, item);
+    
+    /// <summary>
+    /// Adds item at the last position (identical as Add()).
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="item"></param>
+    /// <typeparam name="T"></typeparam>
+    public static void AddLast<T>(this List<T> list, T item) => list.Add(item);
+    
     // ======================================================================
     // ENUMERABLE
     // ======================================================================

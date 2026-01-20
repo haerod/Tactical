@@ -16,6 +16,11 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
+    private void Awake()
+    {
+        DestroyAllButtons();
+    }
+
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
