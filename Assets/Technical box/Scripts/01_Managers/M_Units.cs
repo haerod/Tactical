@@ -45,7 +45,7 @@ public class M_Units : MonoBehaviour
         _input.OnNextTeammateInput += Input_OnNextTeammateInput;
         _input.OnEndTeamTurnInput += Input_OnEndTeamTurnInput;
         
-        //StartGame();
+        StartGame();
     }
 
     private void OnDisable()
