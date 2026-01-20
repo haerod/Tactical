@@ -9,8 +9,12 @@ using System.Linq;
 /// </summary>
 public class Item : MonoBehaviour
 {
-    [field: Header("ITEM")]
-    [field: SerializeField] public int sizeInInventory { get; private set; } = 1;
+    [Header("ITEM")]
+    
+    [SerializeField] private int _sizeInInventory = 1;
+    public int sizeInInventory => _sizeInInventory;
+    [SerializeField] private string _itemName = "Item name";
+    public string itemName => _itemName;
     
     // ======================================================================
     // MONOBEHAVIOUR

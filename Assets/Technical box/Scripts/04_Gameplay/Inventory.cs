@@ -10,6 +10,9 @@ using UnityEditor;
 /// </summary>
 public class Inventory : MonoBehaviour
 {
+    [SerializeField] private int _maxSize = 6;
+    public int maxSize => _maxSize;
+    
     public List<Item> items => GetItems();
     public List<Weapon> weapons => GetWeapons();
     
@@ -23,7 +26,17 @@ public class Inventory : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
     
-    public void AddItem(Item item) => item.transform.SetParent(content);
+    public bool TryAddItem(Item item)
+    {
+        int itemsSize = items.Select(testedItem => testedItem.sizeInInventory).Sum();
+        
+        if(itemsSize + item.sizeInInventory > maxSize)
+            return false; // No place for this item
+        
+        AddItem(item);
+
+        return true;
+    }
     
     public void DestroyItem(Item item)
     {
@@ -55,6 +68,8 @@ public class Inventory : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    private void AddItem(Item item) => item.transform.SetParent(content);
     
     private List<Item> GetItems() => (from Transform child in content select child.GetComponent<Item>()).ToList();
     

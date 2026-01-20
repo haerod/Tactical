@@ -160,6 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f83021e387e5b549bf8c011db6e945d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerTeam: {fileID: 11400000, guid: ca99a341737608f4898402b1657e9567, type: 2}
   victoryCondition: 0
   fogOfWar: {fileID: 4462275972712810537}
   visibleInFogOfWar: 0
@@ -1173,7 +1174,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7159592069208103848}
-  m_LocalRotation: {x: 0.30143258, y: 0.36174196, z: -0.12485745, w: 0.8733223}
+  m_LocalRotation: {x: 0.30143258, y: 0.36174193, z: -0.124857455, w: 0.8733223}
   m_LocalPosition: {x: -14.524116, y: 19.2, z: -16.534115}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

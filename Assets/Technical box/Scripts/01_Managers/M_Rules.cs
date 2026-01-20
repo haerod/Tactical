@@ -7,6 +7,9 @@ using static M__Managers;
 
 public class M_Rules : MonoBehaviour
 {
+    [SerializeField] private Team _playerTeam;
+    public Team playerTeam => _playerTeam;
+    
     [Header("VICTORY RULES")]
     
     public VictoryCondition victoryCondition = VictoryCondition.Deathmatch;
