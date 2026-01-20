@@ -15,8 +15,6 @@ public class Module_TooltipTigger_Weapon : Module_TooltipTriggerBase
     [SerializeField] private bool showDamageTypes = true;
     [SerializeField] private bool showPrecisionModifier = true;
     
-    private WeaponData weaponData;
-    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -32,11 +30,12 @@ public class Module_TooltipTigger_Weapon : Module_TooltipTriggerBase
     private string GetWeaponDescription()
     {
         string toReturn = "";
-        
-        WeaponData weaponData = GetComponent<Module_WeaponSelectionButton>().GetWeapon();
+
+        Weapon weapon = GetComponent<Module_WeaponSelectionButton>().weapon;
+        WeaponData weaponData = weapon.data;
         
         // Name
-        toReturn = $"<b>{weaponData.weaponName}</b>";
+        toReturn = $"<b>{weapon.itemName}</b>";
         
         // Damage range
         if(showDamage)
@@ -45,7 +44,7 @@ public class Module_TooltipTigger_Weapon : Module_TooltipTriggerBase
             if (weaponDamageRange.x != weaponDamageRange.y)
                 toReturn += $"\n{weaponDamageRange.x} - {weaponDamageRange.y}";
             else
-                toReturn += "\n" + weaponDamageRange.x.ToString();
+                toReturn += "\n" + weaponDamageRange.x;
         }
         
         // Damage types

@@ -413,10 +413,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87b14aad9eb2e742b9aede3a3edf17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sizeInInventory: 1
   _itemName: Sniper
-  <data>k__BackingField: {fileID: 11400000, guid: 750e76deb0678ee45948176160a19a8d, type: 2}
-  _ammoCount: 1
+  _icon: {fileID: 21300000, guid: 964ead30c71fe6047aafbb13972066c0, type: 3}
+  _sizeInInventory: 1
+  _data: {fileID: 11400000, guid: 750e76deb0678ee45948176160a19a8d, type: 2}
+  _currentLoadedAmmo: 1
   _graphics:
   - {fileID: 2078238249550020763}
   - {fileID: 5578498464921297417}

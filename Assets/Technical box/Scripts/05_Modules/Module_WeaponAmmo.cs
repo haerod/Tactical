@@ -69,12 +69,12 @@ public class Module_WeaponAmmo : MonoBehaviour
     private void Show(Weapon weapon)
     {
         WeaponData weaponData = weapon.data;
-        weaponImage.sprite = weaponData.icon;
+        weaponImage.sprite = weapon.icon;
 
         if (weaponData.usesAmmo)
         {
             ammo.SetMaximumValue(weaponData.ammoCount);
-            ammo.FillGauge(weapon.ammoCount);
+            ammo.FillGauge(weapon.currentLoadedAmmo);
             ammo.gameObject.SetActive(true);
             remainingAmmoPanel.gameObject.SetActive(weaponData.needAmmoToReload);
 

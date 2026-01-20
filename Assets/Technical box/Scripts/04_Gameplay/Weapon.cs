@@ -2,18 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Weapon : Item
 {
-    [field:Header("WEAPON")]
-    [field:SerializeField] public WeaponData data {get; private set;}
+    [Header("WEAPON")] 
+    [SerializeField] private WeaponData _data;
+    public WeaponData data => _data;
     
     [Header("CURRENT AMMO")]
     
-    [SerializeField] private int _ammoCount;
-    public int ammoCount => _ammoCount;
-    public bool hasAvailableAmmoToSpend => !data.usesAmmo || (data.usesAmmo && _ammoCount > 0);
-    public bool isFullOfAmmo => data.usesAmmo && ammoCount >= data.ammoCount;
+    [SerializeField] private int _currentLoadedAmmo;
+    public int currentLoadedAmmo => _currentLoadedAmmo;
+    public bool hasAvailableAmmoToSpend => !data.usesAmmo || (data.usesAmmo && _currentLoadedAmmo > 0);
+    public bool isFullOfAmmo => data.usesAmmo && currentLoadedAmmo >= data.ammoCount;
 
     [Header("GRAPHICS")] 
     [SerializeField] private List<GameObject> _graphics;
@@ -31,7 +33,7 @@ public class Weapon : Item
     // ======================================================================
     // MONOBEHAVIOR
     // ======================================================================
-    
+
     private void OnDisable()
     {
         if(!unit)
@@ -72,7 +74,7 @@ public class Weapon : Item
         if(AmmoCountToFullyReload() > givenAmmo)
             usedAmmo = givenAmmo;
         
-        _ammoCount += usedAmmo;
+        _currentLoadedAmmo += usedAmmo;
         OnAmmoCountChanged?.Invoke(this, this);
         
         return usedAmmo;
@@ -82,14 +84,14 @@ public class Weapon : Item
     /// Returns how much ammo are needed to fully reload the weapon.
     /// </summary>
     /// <returns></returns>
-    public int AmmoCountToFullyReload() => data.ammoCount - _ammoCount;
+    public int AmmoCountToFullyReload() => data.ammoCount - _currentLoadedAmmo;
     
     /// <summary>
     /// Reduces ammo count by 1.
     /// </summary>
     public void SpendAmmo()
     {
-        _ammoCount--;
+        _currentLoadedAmmo--;
         OnAmmoCountChanged?.Invoke(this, this);
     }
 
