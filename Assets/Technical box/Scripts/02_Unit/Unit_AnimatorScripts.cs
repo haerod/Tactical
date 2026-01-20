@@ -18,7 +18,10 @@ public class Unit_AnimatorScripts : MonoBehaviour
     private static readonly int Death1 = Animator.StringToHash("death");
     private static readonly int Crouch = Animator.StringToHash("crouch");
     private static readonly int Aim = Animator.StringToHash("aim");
+    private static readonly int Reload1 = Animator.StringToHash("reload");
     private readonly int Speed = Animator.StringToHash("speed");
+
+    private A_Reload reload;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -36,6 +39,10 @@ public class Unit_AnimatorScripts : MonoBehaviour
         unit.attack.OnUnitExit += Attack_OnUnitExit;
         unit.health.OnDeath += Health_OnDeath;
         unit.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
+        
+        reload = unit.actionsHolder.GetActionOfType<A_Reload>();
+        if (reload)
+            reload.OnReloadStart += Reload_OnReloadStart;
     }
     
     private void OnDisable()
@@ -47,6 +54,9 @@ public class Unit_AnimatorScripts : MonoBehaviour
         unit.attack.OnUnitExit -= Attack_OnUnitExit;
         unit.health.OnDeath -= Health_OnDeath;
         unit.weaponHolder.OnWeaponChange -= WeaponHolder_OnWeaponChange;
+        
+        if(reload)
+            reload.OnReloadStart -= Reload_OnReloadStart;
     }
 
     // ======================================================================
@@ -100,6 +110,16 @@ public class Unit_AnimatorScripts : MonoBehaviour
     /// </summary>
     public void SetVisualActives(bool value) => visuals.ForEach(o => o.SetActive(value));
 
+    /// <summary>
+    /// Ends reloading.
+    /// Called by animation.
+    /// </summary>
+    public void EndReload()
+    {
+        anim.SetBool(Reload1, false);
+        unit.actionsHolder.GetActionOfType<A_Reload>().EndReload();
+    }
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -134,6 +154,8 @@ public class Unit_AnimatorScripts : MonoBehaviour
     /// Starts the death animation.
     /// </summary>
     private void Death() => anim.SetBool(Death1, true);
+
+    private void Reload() => anim.SetBool(Reload1, true);
     
     // ======================================================================
     // EVENTS
@@ -174,5 +196,10 @@ public class Unit_AnimatorScripts : MonoBehaviour
     private void WeaponHolder_OnWeaponChange(object sender, Unit_WeaponHolder.WeaponChangeEventArgs args)
     {
         SetWeaponAnimation(args.newWeapon);
+    }
+    
+    private void Reload_OnReloadStart(object sender, EventArgs e)
+    {
+        Reload();
     }
 }

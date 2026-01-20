@@ -18,18 +18,18 @@ public class A_Heal : A__Action
     // ======================================================================
     
     /// <summary>
-    /// Returns true if the character can be healed.
+    /// Returns true if the unit can be healed.
     /// </summary>
-    /// <param name="characterToHeal"></param>
+    /// <param name="unitToHeal"></param>
     /// <returns></returns>
-    public bool IsHealable(Unit characterToHeal)
+    public bool IsHealable(Unit unitToHeal)
     {
-        if(characterToHeal.health.IsFullLife())
+        if(unitToHeal.health.IsFullLife())
             return false; // Already full life
         
         bool isOnHealReach = _board
             .GetCoordinatesAround(unit.coordinates, healReach, includeDiagonalsInReach)
-            .Contains(characterToHeal.coordinates);
+            .Contains(unitToHeal.coordinates);
         
         return isOnHealReach;
     }

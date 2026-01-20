@@ -15,6 +15,9 @@ public class UI_ActionEffectFeedback : MonoBehaviour
 
     private Camera cam;
     private Transform target;
+
+    private float currentTime;
+    private bool alphaFade;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -28,8 +31,16 @@ public class UI_ActionEffectFeedback : MonoBehaviour
 
     private void Update()
     {
+        currentTime += Time.deltaTime;
+        
         if(target)
             transform.position = cam.WorldToScreenPoint(target.position + (Vector3.up * textOffset));
+
+        if (currentTime >= destructionDelay / 2 && !alphaFade)
+        {
+            alphaFade = true;
+            textValue.CrossFadeAlpha(0, destructionDelay/2, true);
+        }
     }
     
     // ======================================================================

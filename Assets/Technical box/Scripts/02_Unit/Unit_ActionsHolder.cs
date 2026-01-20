@@ -21,16 +21,19 @@ public class Unit_ActionsHolder : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOR
     // ======================================================================
-    
+
+    private void Awake()
+    {
+        foreach (Transform child in transform)
+            AddAction(child.GetComponent<A__Action>());
+    }
+
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnStart += Units_OnTeamTurnStart;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
-
-        foreach (Transform child in transform)
-            AddAction(child.GetComponent<A__Action>());
     }
 
     private void OnDisable()
@@ -82,7 +85,12 @@ public class Unit_ActionsHolder : MonoBehaviour
             currentActionPoints = 0;
     }
 
-    public bool CanUse(A__Action action) => CanSpend(action);
+    /// <summary>
+    /// Returns true if the action can be spent and is available.
+    /// </summary>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    public bool CanUse(A__Action action) => CanSpend(action) && action.isAvailable;
     
     // ======================================================================
     // PRIVATE METHODS

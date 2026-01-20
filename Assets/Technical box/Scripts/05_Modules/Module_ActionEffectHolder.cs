@@ -9,12 +9,13 @@ using static M__Managers;
 public class Module_ActionEffectHolder : MonoBehaviour
 {
     [SerializeField] private string missText = "MISS";
+    [SerializeField] private string reloadText = "RELOAD";
     
     [Header("REFERENCES")]
     [SerializeField] private GameObject actionEffectFeedbackPrefab;
     
     private Unit currentUnit;
-    
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -64,17 +65,29 @@ public class Module_ActionEffectHolder : MonoBehaviour
     {
         currentUnit = startingUnit;
         currentUnit.attack.OnAttackMiss += Attack_OnAttackMiss;
+        A_Reload reload = currentUnit.actionsHolder.GetActionOfType<A_Reload>();
+        if (reload)
+            reload.OnReloadEnd += Reload_OnReloadEnd;
     }
     
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         currentUnit.attack.OnAttackMiss -= Attack_OnAttackMiss;
+
+        A_Reload reload = currentUnit.actionsHolder.GetActionOfType<A_Reload>();
+        if (reload)
+            reload.OnReloadEnd -= Reload_OnReloadEnd;
         currentUnit = null;
     }
     
     private void Attack_OnAttackMiss(object sender, Unit missedUnit)
     {
         DisplayActionEffectFeedback(missText, missedUnit.transform);
+    }
+    
+    private void Reload_OnReloadEnd(object sender, Unit reloadedUnit)
+    {
+        DisplayActionEffectFeedback(reloadText, reloadedUnit.transform);
     }
     
     private void Health_OnAnyHealthLoss(object sender, GameEvents.HealthChangedEventArgs args)

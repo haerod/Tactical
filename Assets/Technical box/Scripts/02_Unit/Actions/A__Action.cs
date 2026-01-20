@@ -20,6 +20,8 @@ public abstract class A__Action : MonoBehaviour
     [Header("REFERENCES")]
     
     [SerializeField] protected Unit unit;
+
+    public bool isAvailable => IsAvailable();
     
     public event EventHandler<A__Action> OnActionStart;
     public event EventHandler<A__Action> OnActionEnd;
@@ -66,7 +68,7 @@ public abstract class A__Action : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Starts the action.
     /// </summary>
@@ -90,6 +92,12 @@ public abstract class A__Action : MonoBehaviour
         unit.SetCanPlayValue(false);
         _units.EndCurrentUnitTurn();
     }
+
+    /// <summary>
+    /// Returns true if is available.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual bool IsAvailable() => true;
     
     /// <summary>
     /// Starts a wait for "time" seconds and executes an action.
@@ -97,7 +105,7 @@ public abstract class A__Action : MonoBehaviour
     /// <param name="time"></param>
     /// <param name="onEnd"></param>
     protected void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-
+    
     /// <summary>
     /// Waits coroutine.
     /// Called by Wait() method.

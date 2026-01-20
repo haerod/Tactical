@@ -56,7 +56,7 @@ public class Module_WeaponAmmo : MonoBehaviour
     /// <summary>
     /// Used by Reload Weapon Button
     /// </summary>
-    public void ClickOnReloadWeaponButton() => currentUnit.actionsHolder.GetActionOfType<A_Reload>().Reload();
+    public void ClickOnReloadWeaponButton() => currentUnit.actionsHolder.GetActionOfType<A_Reload>().StartReload();
 
     // ======================================================================
     // PRIVATE METHODS
@@ -81,9 +81,7 @@ public class Module_WeaponAmmo : MonoBehaviour
             if (currentUnit.actionsHolder.HasAction<A_Reload>() && weaponData.canReload && !weapon.isFullOfAmmo)
             {
                 reloadButton.gameObject.SetActive(true);
-                bool canReload = currentUnit.inventory.GetAmmoCountOfType(weaponData.ammoType) > 0
-                    && currentUnit.actionsHolder.HasAvailableAction<A_Reload>();
-                reloadButton.interactable = canReload;
+                reloadButton.interactable = currentUnit.actionsHolder.HasAvailableAction<A_Reload>();
             }
             else
             {
