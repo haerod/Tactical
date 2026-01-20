@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c4a88a4dd8634ca609a480766e808, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
-  _weaponName: Pistol
-  _icon: {fileID: 21300000, guid: f6f5c18b36a5ef043a582e5423d9addb, type: 3}
   _damagesRange: {x: 2, y: 3}
   _damageType:
   - {fileID: 11400000, guid: 61d85b9788250e041bb254a1d737f89b, type: 2}
@@ -21,7 +19,9 @@ MonoBehaviour:
   _isMeleeWeapon: 0
   _range: 0
   _precisionMalusByDistance: 5
+  _precisionModifier: 0
   _ammoType: {fileID: 11400000, guid: ae2e9e66b81f9804b92048ac1a91ae24, type: 2}
   _canReload: 1
   _needAmmoToReload: 1
   _ammoCount: 6
+  _actionPointCost: 1

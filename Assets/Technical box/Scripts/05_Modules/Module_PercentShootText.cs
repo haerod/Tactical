@@ -147,7 +147,8 @@ public class Module_PercentShootText : MonoBehaviour
         
         if(!current.CanPlay())
             return; // Unit can't play
-        
+        if(!current.actionsHolder.HasAvailableAction<A_Attack>())
+            return; // No usable attack action
         if(!current.attack.AttackableTiles().Contains(enemy.tile))
             return; // Enemy not visible
         

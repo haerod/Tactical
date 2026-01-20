@@ -297,7 +297,7 @@ MonoBehaviour:
     x: 0
     y: 0
   unitName: Name
-  actions: {fileID: 2793588244010223534}
+  actionsHolder: {fileID: 2793588244010223534}
   anim: {fileID: 368585628365455985}
   behavior: {fileID: 4919814116171440189}
   attack: {fileID: 2979315790688333722}
@@ -448,9 +448,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99a035fea772a840b0ca1f475c81479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usableOnTurnStart: 1
-  allowedActionsOnEnd:
-  - {fileID: 2979315790688333722}
+  _costDependsOnWeapon: 0
+  _spendAllActionPoints: 0
+  _actionPointCost: 1
   unit: {fileID: 3541061014796538876}
   movementRange: 4
   useDiagonalMovement: 1
@@ -524,56 +524,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 126e19859b9998e4ea2896f7379cfeb0, type: 2}
   visionType: 1
   unit: {fileID: 3541061014796538876}
---- !u!1 &7289839843062624809
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3014631847850735570}
-  - component: {fileID: 2778027339239365094}
-  m_Layer: 0
-  m_Name: Heal
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3014631847850735570
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7289839843062624809}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1131350593802018199}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2778027339239365094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7289839843062624809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed9850b7b8864d34adf42a514c4ffa68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  usableOnTurnStart: 0
-  allowedActionsOnEnd: []
-  unit: {fileID: 3541061014796538876}
-  healAmount: 1
-  healReach: 1
-  includeDiagonalsInReach: 1
 --- !u!1 &7446949285225605548
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,7 +555,6 @@ Transform:
   m_Children:
   - {fileID: 688627365113704437}
   - {fileID: 922653575245694789}
-  - {fileID: 3014631847850735570}
   m_Father: {fileID: 1422904897860799220}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -621,10 +570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f8f58b12df94c6f8996372c0c48b6c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actions:
-  - {fileID: 8502731826044868807}
-  - {fileID: 2778027339239365094}
-  - {fileID: 2979315790688333722}
+  _actionPoints: 2
   unit: {fileID: 3541061014796538876}
 --- !u!1 &7861959537881807382
 GameObject:
@@ -670,8 +616,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e44e4e97e29e5943bb9f70529ceb844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usableOnTurnStart: 1
-  allowedActionsOnEnd: []
+  _costDependsOnWeapon: 1
+  _spendAllActionPoints: 1
+  _actionPointCost: 0
   unit: {fileID: 3541061014796538876}
   precision: 100
 --- !u!1 &8655900561747131834

@@ -15,7 +15,7 @@ public class Unit : Entity
 
     [Header("REFERENCES")]
     
-    public Unit_Actions actions;
+    public Unit_ActionsHolder actionsHolder;
     public Unit_AnimatorScripts anim; // With animator / skinned mesh renderer
     public Unit_Behavior behavior;
     public A_Attack attack;

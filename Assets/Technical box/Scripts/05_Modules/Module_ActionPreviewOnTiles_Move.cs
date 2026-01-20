@@ -41,7 +41,7 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
             return; // NPC
         if(!startingUnit.CanPlay())
             return; // Can't play
-        if (!startingUnit.actions.HasUsableAction<A_Move>())
+        if (!startingUnit.actionsHolder.HasAvailableAction<A_Move>())
             return; // No move action
         
         ShowFeedbacks(startingUnit.move.movementArea);
@@ -66,7 +66,7 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
             return; // NPC
         if(!endingActionUnit.CanPlay())
             return; // Can't play
-        if (!endingActionUnit.actions.HasUsableAction<A_Move>())
+        if (!endingActionUnit.actionsHolder.HasAvailableAction<A_Move>())
             return; // No move action
         
         ShowFeedbacks(endingActionUnit.move.movementArea);

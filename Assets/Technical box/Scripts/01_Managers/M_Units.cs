@@ -45,7 +45,7 @@ public class M_Units : MonoBehaviour
         _input.OnNextTeammateInput += Input_OnNextTeammateInput;
         _input.OnEndTeamTurnInput += Input_OnEndTeamTurnInput;
         
-        StartGame();
+        Wait(0.5f, StartGame);
     }
 
     private void OnDisable()
@@ -182,6 +182,9 @@ public class M_Units : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Starts the turn of the first unit.
+    /// </summary>
     private void StartGame()
     {
         Unit firstUnit = turnBasedSystem.GetFirstUnit();
@@ -230,6 +233,27 @@ public class M_Units : MonoBehaviour
         
         GetUnitsOf(current.unitTeam)
             .ForEach(unit => unit.SetCanPlayValue(false));
+    }
+    
+    /// <summary>
+    /// Starts a wait for "time" seconds and executes an action.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="onEnd"></param>
+    protected void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
+
+    /// <summary>
+    /// Waits coroutine.
+    /// Called by Wait() method.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="onEnd"></param>
+    /// <returns></returns>
+    private IEnumerator Wait_Co(float time, Action onEnd)
+    {
+        yield return new WaitForSeconds(time);
+
+        onEnd();
     }
     
     // ======================================================================

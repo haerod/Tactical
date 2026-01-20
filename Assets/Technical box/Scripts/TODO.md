@@ -6,6 +6,44 @@
 
 ---
 
+# ACTIONS
+
+**IMPORTANT**
+- 1d -> Action point system 
+
+- 1d -> Can add and remove Actions without bugs
+- 0.5d -> Make an action toolbar
+- 1w -> Actions systems: possibility between multiple designs
+    - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)
+    - action points
+    - play again on condition
+
+**NOTE**
+- An action is defined by **do something**
+- To know if you can do an action, you have to **fulfill the conditions**
+    - an action class needs conditions (cost, triggers, anything)
+    - an action manager haves to manage the costs
+- I see **different implementations**
+    - 1st
+        - the manager is a compilator of the actions, but do not in particular : it asks the Action if its conditions are fulfilled
+        - the Action manages its data (costs), its conditions and its execution script (do something)
+    - 2nd
+        - the manager is a resources manager, it says to the action if it can play or not
+        - the action is only an interface with its execution script (do something)
+    - in the two cases, execution script can be separated from this logic
+
+# PATHFINDING SYSTEM
+
+**IMPORTANT**
+- 1d -> Change pathfinding AStar by Pathfind in Area
+
+- 1d -> Bug : Pathfinding is strange, not the more direct as possible
+- 1w -> Vault over little covers (pathfinding and animation)
+- 1w -> Movements with special costs or obligation to stop
+
+# UNIT VISUALS
+- 1d -> Make it easy to change model (humanoid) -> /!\ Ragdoll Module is linked
+
 ## FOG OF WAR
 - 1h -> Fog mask on FoW, not on tile
 - 1h -> Fog of war view lines as Module (of Fog of war)
@@ -99,33 +137,6 @@ But turn based is a feature can be added separately.
 ### HEALTH BAR
 - 0.5d -> Display "Undamaged, Barely injured, etc." to replace the health bar
 
-### ACTIONS
-- 1d -> Can add and remove Actions without bugs
-- 0.5d -> Make an action toolbar
-- 1w -> Actions systems: possibility between multiple designs
-    - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)
-    - action points
-    - play again on condition
-
-**NOTE**
-- An action is defined by **do something**
-- To know if you can do an action, you have to **fulfill the conditions**
-    - an action class needs conditions (cost, triggers, anything)
-    - an action manager haves to manage the costs
-- I see **different implementations**
-    - 1st
-        - the manager is a compilator of the actions, but do not in particular : it asks the Action if its conditions are fulfilled
-        - the Action manages its data (costs), its conditions and its execution script (do something)
-    - 2nd
-        - the manager is a resources manager, it says to the action if it can play or not
-        - the action is only an interface with its execution script (do something)
-    - in the two cases, execution script can be separated from this logic
-
-### PATHFINDING SYSTEM
-- 1d -> Bug : Pathfinding is strange, not the more direct as possible
-- 1w -> Vault over little covers (pathfinding and animation)
-- 1w -> Movements with special costs or obligation to stop
-
 ### TURN BASED SYSTEM
 - 0.5d -> Initiative system (or priority)
   - 1d -> UI Module turn by turn initiative
@@ -141,9 +152,6 @@ But turn based is a feature can be added separately.
 ### MOVE UNIT
 - 0.5d -> Separate Move in multiple parts (moving, orient to, move tiles, etc.), fully encapsuled, with a manager
 - 0.5d -> Movement in fog of war
-
-### UNIT VISUALS
-- 1d -> Make it easy to change model (humanoid) -> /!\ Ragdoll Module is linked
 
 ### ERGONOMIC
 - 1w -> Ergonomic of units (custom editor)

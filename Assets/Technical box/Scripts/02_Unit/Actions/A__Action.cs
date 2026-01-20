@@ -8,17 +8,21 @@ using static M__Managers;
 
 public abstract class A__Action : MonoBehaviour
 {
+    [Header("ACTION POINTS")] 
     
-    [SerializeField] protected bool usableOnTurnStart;
-    [SerializeField] protected List<A__Action> allowedActionsOnEnd;
+    [SerializeField] protected bool _costDependsOnWeapon;
+    [SerializeField] protected bool _spendAllActionPoints;
+    [SerializeField] protected int _actionPointCost = 1;
+    public bool costDependsOnTheWeapon => _costDependsOnWeapon;
+    public int actionPointCost => costDependsOnTheWeapon ? unit.weaponHolder.weaponData.actionPointCost : _actionPointCost;
+    public bool spendAllActionPoints => _spendAllActionPoints;
     
     [Header("REFERENCES")]
     
     [SerializeField] protected Unit unit;
     
-    public bool isUsableOnStart => usableOnTurnStart;
-    
-    private bool canUseAction;
+    public event EventHandler<A__Action> OnActionStart;
+    public event EventHandler<A__Action> OnActionEnd;
     
     // ======================================================================
     // MONOBEHAVIOR
@@ -59,19 +63,6 @@ public abstract class A__Action : MonoBehaviour
         InputEvents.OnTileClick -= InputEvents_OnTileClick;
     }
     
-    /// <summary>
-    /// Returns if the action can be used this turn.
-    /// </summary>
-    /// <returns></returns>
-    public bool CanUse() => canUseAction;
-    
-    /// <summary>
-    /// Set the value of Can use action.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    public void SetCanUseAction(bool value) => canUseAction = value;
-    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -82,6 +73,7 @@ public abstract class A__Action : MonoBehaviour
     protected void StartAction()
     {
         GameEvents.InvokeOnAnyActionStart(unit);
+        OnActionStart?.Invoke(this, this);
     }
     
     /// <summary>
@@ -89,10 +81,10 @@ public abstract class A__Action : MonoBehaviour
     /// </summary>
     protected void EndAction()
     {
-        unit.actions.SetActionsUsabilityOf(allowedActionsOnEnd);
         GameEvents.InvokeOnAnyActionEnd(unit);
+        OnActionEnd?.Invoke(this, this);
         
-        if (allowedActionsOnEnd.Count > 0)
+        if (unit.actionsHolder.areAvailableActions)
             return; // Other actions to do
         
         unit.SetCanPlayValue(false);

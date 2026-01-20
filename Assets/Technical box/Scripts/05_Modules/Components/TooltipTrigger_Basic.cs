@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// Trigger to a tooltip's displayer.
 /// </summary>
-public class Module_TooltipTriggerBase : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class TooltipTrigger_Basic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [TextArea]
     [SerializeField] private List<string> content;

@@ -5,12 +5,18 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using static M__Managers;
 
-public class Unit_Actions : MonoBehaviour
+public class Unit_ActionsHolder : MonoBehaviour
 {
-    [SerializeField] private List<A__Action> actions;
+    [SerializeField] private int _actionPoints = 3;
+    public int actionPoints => _actionPoints;
     
     [Header("REFERENCES")]
     [SerializeField] private Unit unit;
+
+    public int currentActionPoints { get;  private set; }
+    public List<A__Action> actions { get; private set; } = new();
+    public bool areAvailableActions => AreAvailableActions();
+    public List<A__Action> availableActions => GetAvailableActions();
     
     // ======================================================================
     // MONOBEHAVIOR
@@ -22,18 +28,19 @@ public class Unit_Actions : MonoBehaviour
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnStart += Units_OnTeamTurnStart;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
+
+        foreach (Transform child in transform)
+            AddAction(child.GetComponent<A__Action>());
+    }
+
+    private void OnDisable()
+    {
+        actions.ToList().ForEach(RemoveAction);
     }
 
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Sets the given actions usable.
-    /// </summary>
-    /// <param name="usableActions"></param>
-    public void SetActionsUsabilityOf(List<A__Action> usableActions) => actions
-            .ForEach(action => action.SetCanUseAction(usableActions.Contains(action)));
 
     /// <summary>
     /// Returns true if the list contains an Action of the given type.
@@ -48,8 +55,8 @@ public class Unit_Actions : MonoBehaviour
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public bool HasUsableAction<T>() where T : A__Action => actions
-            .Any(action => action is T && action.CanUse());
+    public bool HasAvailableAction<T>() where T : A__Action => actions
+            .Any(action => action is T && CanUse(action));
 
     /// <summary>
     /// Returns the Action of the given type.
@@ -58,6 +65,24 @@ public class Unit_Actions : MonoBehaviour
     /// <returns></returns>
     public T GetActionOfType<T>() where T : A__Action => actions
         .OfType<T>().FirstOrDefault();
+    
+    /// <summary>
+    ///  Refills the current action points to maximum value.
+    /// </summary>
+    public void RefillActionPoints() => currentActionPoints = actionPoints;
+    
+    /// <summary>
+    /// Removes the action points of the action.
+    /// </summary>
+    public void SpendActionPoints(A__Action action)
+    {
+        currentActionPoints -= action.actionPointCost;
+        
+        if (action.spendAllActionPoints)
+            currentActionPoints = 0;
+    }
+
+    public bool CanUse(A__Action action) => CanSpend(action);
     
     // ======================================================================
     // PRIVATE METHODS
@@ -74,16 +99,47 @@ public class Unit_Actions : MonoBehaviour
     private void UnsubscribeToEvents() => actions.ForEach(action => action.UnsubscribeToEvents());
     
     /// <summary>
-    /// Sets starting actions usable.
+    /// Add the action to actions list.
     /// </summary>
-    private void EnableStartingActions() => SetActionsUsabilityOf(actions
-            .Where(action => action.isUsableOnStart)
-            .ToList());
+    /// <param name="actionToAdd"></param>
+    private void AddAction(A__Action actionToAdd)
+    {
+        actions.Add(actionToAdd);
+        actionToAdd.OnActionStart += Action_OnActionStart;
+        actionToAdd.OnActionEnd += Action_OnActionEnd;
+    }
+
+    /// <summary>
+    /// Remove an action from action list.
+    /// </summary>
+    /// <param name="actionToRemove"></param>
+    private void RemoveAction(A__Action actionToRemove)
+    {
+        actions.Remove(actionToRemove);
+        actionToRemove.OnActionStart -= Action_OnActionStart;
+        actionToRemove.OnActionEnd -= Action_OnActionEnd;
+    }
     
     /// <summary>
-    /// Disables all the unit's action.
+    /// Returns true if an action can be used.
     /// </summary>
-    private void DisableAllActions() => SetActionsUsabilityOf(new List<A__Action>());
+    /// <returns></returns>
+    private bool AreAvailableActions() => actions.Any(CanUse);
+
+    /// <summary>
+    /// Returns unit's usable actions.
+    /// </summary>
+    /// <returns></returns>
+    private List<A__Action> GetAvailableActions() => actions
+        .Where(CanUse)
+        .ToList();
+    
+    /// <summary>
+    /// Returns true if it's enough action points to start action.
+    /// </summary>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    private bool CanSpend(A__Action action) => action.actionPointCost <= currentActionPoints;
     
     // ======================================================================
     // EVENTS
@@ -111,7 +167,7 @@ public class Unit_Actions : MonoBehaviour
         if(unit.unitTeam != startingTeam)
             return; // Not the starting team
         
-        EnableStartingActions();
+        RefillActionPoints();
     }
     
     private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
@@ -120,6 +176,16 @@ public class Unit_Actions : MonoBehaviour
             return; // Not the starting team
         
         UnsubscribeToEvents();
-        DisableAllActions();
     }
+    
+    private void Action_OnActionStart(object sender, A__Action startingAction)
+    {
+        SpendActionPoints(startingAction);
+    }
+
+    private void Action_OnActionEnd(object sender, A__Action endingAction)
+    {
+        
+    }
+
 }

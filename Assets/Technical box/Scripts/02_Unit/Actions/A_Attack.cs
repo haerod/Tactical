@@ -196,7 +196,7 @@ public class A_Attack : A__Action
         
         if(!unit.CanPlay())
             return; // Can't play
-        if(!CanUse())
+        if(!unit.actionsHolder.CanUse(this))
             return; // Can't do this action
         if(!IsTileInRange(hoveredUnit.tile))
             return; // Enemy is not visible or not in range
@@ -211,7 +211,7 @@ public class A_Attack : A__Action
     {
         if(!unit.CanPlay())
             return; // Can't play
-        if(!CanUse())
+        if(!unit.actionsHolder.CanUse(this))
             return; // Can't do this action
 
         OnUnitExit?.Invoke(this, exitedUnit);
@@ -222,7 +222,7 @@ public class A_Attack : A__Action
     {
         if(!unit.CanPlay())
             return; // Can't play
-        if(!CanUse())
+        if(!unit.actionsHolder.CanUse(this))
             return; // Can't do this action
         if(unit.team.IsAllyOf(clickedUnit)) 
             return; // Same team

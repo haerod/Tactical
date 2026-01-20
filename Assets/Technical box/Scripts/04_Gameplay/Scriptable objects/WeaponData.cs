@@ -42,6 +42,11 @@ public class WeaponData : ScriptableObject
     public int ammoCount => _ammoCount;
     public bool usesAmmo => ammoType != null;
     
+    [Header("ACTION POINTS")]
+    
+    [SerializeField] private int _actionPointCost = 1;
+    public int actionPointCost => _actionPointCost;
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

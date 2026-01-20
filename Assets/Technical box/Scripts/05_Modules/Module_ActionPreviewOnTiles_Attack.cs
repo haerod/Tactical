@@ -48,8 +48,8 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
             return; // NPC
         if(!startingUnit.CanPlay())
             return; // Can't play
-        if (!startingUnit.actions.HasUsableAction<A_Attack>()) 
-            return; // No attack action
+        if (!startingUnit.actionsHolder.HasAvailableAction<A_Attack>()) 
+            return; // No usable attack action
         
         currentUnit = startingUnit;
         currentUnit.weaponHolder.OnWeaponChange += WeaponsHolder_OnWeaponChanged;
@@ -60,8 +60,8 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
     {
         if (!endingUnit.behavior.playable) 
             return; // NPC
-        if (!endingUnit.actions.HasUsableAction<A_Attack>()) 
-            return; // No attack action
+        if (!endingUnit.actionsHolder.HasAvailableAction<A_Attack>()) 
+            return; // No usable attack action
         
         currentUnit.weaponHolder.OnWeaponChange -= WeaponsHolder_OnWeaponChanged;
         HideFeedbacks();
@@ -80,7 +80,7 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
             return; // NPC
         if(!endingActionUnit.CanPlay())
             return; // Can't play
-        if (!endingActionUnit.actions.HasUsableAction<A_Attack>()) 
+        if (!endingActionUnit.actionsHolder.HasAvailableAction<A_Attack>()) 
             return; // No attack action
         
         ShowFeedbacks(endingActionUnit.attack.AttackableTiles());

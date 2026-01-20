@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 /// <summary>
 /// Trigger to a tooltip's displayer for weapon's images.
 /// /// </summary>
-public class Module_TooltipTigger_Weapon : Module_TooltipTriggerBase
+public class TooltipTigger_Weapon : TooltipTrigger_Basic
 {
     [SerializeField] private bool showDamage = true;
     [SerializeField] private bool showDamageTypes = true;

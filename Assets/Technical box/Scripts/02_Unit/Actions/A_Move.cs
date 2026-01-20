@@ -43,7 +43,7 @@ public class A_Move : A__Action
         moveOnBoard.OnTileEnter += MoveOnBoard_OnTileEnter;
         moveOnBoard.OnMovementEnded += MoveOnBoard_OnMovementEnded;
     }
-
+    
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -55,7 +55,7 @@ public class A_Move : A__Action
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Returns the movement range of the unit.
     /// </summary>
@@ -319,7 +319,7 @@ public class A_Move : A__Action
     {
         if(!unit.CanPlay())
             return; // Can't play
-        if(!CanUse())
+        if(!unit.actionsHolder.CanUse(this))
             return; // Can't do this action
         
         OrientTo(hoveredTile.transform.position);
@@ -341,7 +341,7 @@ public class A_Move : A__Action
 
     protected override void OnClickTile(Tile clickedTile)
     {
-        if(!CanUse())
+        if(!unit.actionsHolder.CanUse(this))
             return; // Can't do this action
         if (!CanMoveTo(clickedTile))
             return; // Tile out of movement range

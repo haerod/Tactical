@@ -104,9 +104,10 @@ public class Module_AttackLineOfSight : MonoBehaviour
             return; // Can't play
         if(!enteredUnit.team.IsEnemyOf(current))
             return; // Not an enemy
+        if(!current.actionsHolder.HasAvailableAction<A_Attack>())
+            return; // No available attack action
         if(!current.attack.AttackableTiles().Contains(enteredUnit.tile))
             return; // Can't attack this character
-        
         
         Show(current, enteredUnit);
     }
