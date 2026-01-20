@@ -8,7 +8,7 @@ using static M__Managers;
 public class Module_OutOfRangeIcon : MonoBehaviour
 {
     [SerializeField] private GameObject outOfRangeIcon;
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -43,7 +43,7 @@ public class Module_OutOfRangeIcon : MonoBehaviour
     
     private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
-        U__Unit currentUnit = _units.current;
+        Unit currentUnit = _units.current;
         
         if(!currentUnit)
             return; // No current unit

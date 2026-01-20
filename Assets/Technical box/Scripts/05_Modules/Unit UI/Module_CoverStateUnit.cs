@@ -11,7 +11,7 @@ using static M__Managers;
 public class Module_CoverStateUnit : MonoBehaviour
 {
     [SerializeField] private Image coverStateImage;
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
     [SerializeField] private GameColor coveredColor;
     [SerializeField] private GameColor uncoveredColor;
     
@@ -104,7 +104,7 @@ public class Module_CoverStateUnit : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(startingUnit != unit)
             return; // Another unit's turn
@@ -112,7 +112,7 @@ public class Module_CoverStateUnit : MonoBehaviour
         Show();
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if(endingUnit != unit)
             return; // Another unit's turn
@@ -120,12 +120,12 @@ public class Module_CoverStateUnit : MonoBehaviour
         Hide();
     }
     
-    private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredUnit)
+    private void InputEvents_OnUnitEnter(object sender, Unit hoveredUnit)
     {
         if(hoveredUnit != unit)
             return; // Another character
         
-        U__Unit currentUnit = _units.current;
+        Unit currentUnit = _units.current;
         
         if(!currentUnit)
             return; // No current unit
@@ -144,7 +144,7 @@ public class Module_CoverStateUnit : MonoBehaviour
     
     private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
-        U__Unit currentUnit = _units.current;
+        Unit currentUnit = _units.current;
         
         if(!currentUnit)
             return; // No current unit

@@ -8,8 +8,8 @@ using static M__Managers;
 [ExecuteInEditMode]
 public class UnitAutoSnap : BaseAutoSnap
 {
-    private U__Unit unit => _unit == null ?  GetComponent<U__Unit>() : _unit;
-    private U__Unit _unit;
+    private Unit unit => _unit == null ?  GetComponent<Unit>() : _unit;
+    private Unit _unit;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -85,12 +85,12 @@ public class UnitAutoSnap : BaseAutoSnap
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
-    private U__Unit GetOtherCharacterOnTile(Tile tile)
+    private Unit GetOtherCharacterOnTile(Tile tile)
     {
         Collider[] colliders = Physics.OverlapSphere(tile.transform.position, .1f);
 
         return colliders
-            .Select(collider => collider.GetComponentInParent<U__Unit>())
+            .Select(collider => collider.GetComponentInParent<Unit>())
             .Where(testedUnit => testedUnit)
             .FirstOrDefault(testedUnit => testedUnit != unit);
     }

@@ -29,12 +29,12 @@ public class Module_UnitRagdoll : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
     
-    private void CreateRagdoll(U__Unit deadUnit)
+    private void CreateRagdoll(Unit deadUnit)
     {
-        U__Unit unitRagdoll = Instantiate(
+        Unit unitRagdoll = Instantiate(
             unitRagdollPrefab,
             deadUnit.transform.position,
-            deadUnit.transform.rotation).GetComponent<U__Unit>();
+            deadUnit.transform.rotation).GetComponent<Unit>();
         
         Transform originalRootBone = deadUnit.anim.transform.GetChild(2);
         Transform ragdollRootBone= unitRagdoll.anim.transform.GetChild(2);
@@ -78,7 +78,7 @@ public class Module_UnitRagdoll : MonoBehaviour
         }
     }
     
-    private void DropWeaponOnTheFloor(U__Unit unitRagdoll)
+    private void DropWeaponOnTheFloor(Unit unitRagdoll)
     {
         GameObject dropWeapon = unitRagdoll.weaponHolder.weapon.gameObject;
         Vector3 randomDir = new (Random.Range(-1f,1f),0, Random.Range(-1f,1f));
@@ -89,7 +89,7 @@ public class Module_UnitRagdoll : MonoBehaviour
             rigidbody.AddExplosionForce(50f, transform.position + randomDir, 10f);
     }
 
-    private void AssignMaterials(U__Unit unitRagdoll)
+    private void AssignMaterials(Unit unitRagdoll)
     {
         Team team = unitRagdoll.unitTeam;
         
@@ -113,7 +113,7 @@ public class Module_UnitRagdoll : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Health_OnAnyDeath(object sender, U__Unit deadUnit)
+    private void Health_OnAnyDeath(object sender, Unit deadUnit)
     {
         CreateRagdoll(deadUnit);
         deadUnit.gameObject.SetActive(false);

@@ -9,7 +9,7 @@ public class FogOfWar : MonoBehaviour
 {
     private List<Tile> viewArea;
     
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -54,7 +54,7 @@ public class FogOfWar : MonoBehaviour
     /// <param name="visibleTiles"></param>
     private void DisplayCharacters(List<Tile> visibleTiles)
     {
-        List<U__Unit> visibleCharacters = _units.units
+        List<Unit> visibleCharacters = _units.units
             .Where(c =>
             {
                 switch (_rules.visibleInFogOfWar)
@@ -142,7 +142,7 @@ public class FogOfWar : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         ShowVisibleElements(startingUnit.look.visibleTiles);
         
@@ -152,7 +152,7 @@ public class FogOfWar : MonoBehaviour
         currentUnit.move.OnMovementEnd += Move_OnMovementEnd;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         currentUnit.move.OnUnitEnterTile -= Move_OnUnitEnterTile;
         currentUnit.move.OnMovementEnd -= Move_OnMovementEnd;

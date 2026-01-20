@@ -35,7 +35,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     /// Destroys the old buttons, creates new ones and gives them parameters.
     /// </summary>
     /// <param name="unit"></param>
-    public void CreateWeaponButtons(U__Unit unit)
+    public void CreateWeaponButtons(Unit unit)
     {
         DestroyAllButtons();
         instantiatedButtons.Clear();
@@ -74,7 +74,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(!startingUnit.CanPlay())
             return; // Can't play
@@ -84,7 +84,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
         CreateWeaponButtons(startingUnit);
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         DestroyAllButtons();
     }

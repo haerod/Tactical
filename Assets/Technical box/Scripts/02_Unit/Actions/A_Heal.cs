@@ -22,7 +22,7 @@ public class A_Heal : A__Action
     /// </summary>
     /// <param name="characterToHeal"></param>
     /// <returns></returns>
-    public bool IsHealable(U__Unit characterToHeal)
+    public bool IsHealable(Unit characterToHeal)
     {
         if(characterToHeal.health.IsFullLife())
             return false; // Already full life
@@ -42,7 +42,7 @@ public class A_Heal : A__Action
     /// Heal the character of heal amount HP.
     /// </summary>
     /// <param name="characterToHeal"></param>
-    private void HealCharacter(U__Unit characterToHeal)
+    private void HealCharacter(Unit characterToHeal)
     {
         StartAction();
         
@@ -55,7 +55,7 @@ public class A_Heal : A__Action
     // ACTION OVERRIDE METHODS
     // ======================================================================
     
-    protected override void OnClickAlly(U__Unit clickedCharacter)
+    protected override void OnClickAlly(Unit clickedCharacter)
     {
         if(!IsHealable(clickedCharacter))
             return; // Not healable

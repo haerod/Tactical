@@ -15,9 +15,9 @@ public class A_Attack : A__Action
 
     public event EventHandler OnAttackStart;
     public event EventHandler OnAttackEnd;
-    public event EventHandler<U__Unit> OnAttackMiss;
-    public event EventHandler<U__Unit> OnAttackableEnemyHovered;
-    public event EventHandler<U__Unit> OnUnitExit;
+    public event EventHandler<Unit> OnAttackMiss;
+    public event EventHandler<Unit> OnAttackableEnemyHovered;
+    public event EventHandler<Unit> OnUnitExit;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -40,12 +40,12 @@ public class A_Attack : A__Action
     /// Attacks the target and starts an action in the end.
     /// </summary>
     /// <param name="currentTarget"></param>
-    public void Attack(U__Unit currentTarget)
+    public void Attack(Unit currentTarget)
     {
         if (!unit.look.CanSee(currentTarget)) 
             return; // Enemy not in sight
 
-        U__Unit target = currentTarget;
+        Unit target = currentTarget;
 
         unit.move.OrientTo(target.transform.position);
         target.move.OrientTo(unit.transform.position);
@@ -79,7 +79,7 @@ public class A_Attack : A__Action
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    public int GetChanceToTouch(U__Unit target)
+    public int GetChanceToTouch(Unit target)
     {
         int precisionToReturn = precision;
         WeaponData currentWeaponData = unit.weaponHolder.weaponData;
@@ -107,7 +107,7 @@ public class A_Attack : A__Action
     /// <param name="success"></param>
     /// <param name="damages"></param>
     /// <param name="target"></param>
-    private void SetOnAttackDone(bool success, int damages, U__Unit target)
+    private void SetOnAttackDone(bool success, int damages, Unit target)
     {
         onAttackDone = () =>
         {
@@ -152,7 +152,7 @@ public class A_Attack : A__Action
     /// TODO
     /// </summary>
     /// <param name="targetUnit"></param>
-    private void EnterLean(U__Unit targetUnit)
+    private void EnterLean(Unit targetUnit)
     {
         // if(!unit.cover.AreCoversAround())
         //     return; // No covers around
@@ -190,7 +190,7 @@ public class A_Attack : A__Action
     // ACTION OVERRIDE METHODS
     // ======================================================================
     
-    protected override void OnHoverEnemy(U__Unit hoveredUnit)
+    protected override void OnHoverEnemy(Unit hoveredUnit)
     {
         unit.move.OrientTo(hoveredUnit.transform.position);
         
@@ -207,7 +207,7 @@ public class A_Attack : A__Action
         EnterLean(hoveredUnit);
     }
     
-    protected override void OnExitCharacter(U__Unit exitedUnit)
+    protected override void OnExitCharacter(Unit exitedUnit)
     {
         if(!unit.CanPlay())
             return; // Can't play
@@ -218,7 +218,7 @@ public class A_Attack : A__Action
         ExitLean();
     }
     
-    protected override void OnClickAnyCharacter(U__Unit clickedUnit)
+    protected override void OnClickAnyCharacter(Unit clickedUnit)
     {
         if(!unit.CanPlay())
             return; // Can't play

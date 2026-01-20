@@ -7,13 +7,13 @@ using System.Runtime.CompilerServices;
 using UnityEngine.Serialization;
 using static M__Managers;
 
-public class U_Cover : MonoBehaviour
+public class Unit_Cover : MonoBehaviour
 {
     [SerializeField] private List<CoverType> coverTypes;
     [SerializeField] private float coveringAngle = 180;
     
     [Header("REFERENCES")]
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -38,7 +38,7 @@ public class U_Cover : MonoBehaviour
     public List<CoverInfo> GetAllCoverInfosInRangeAt(Coordinates coordinates, int range)
     {
         List<CoverInfo> infosToReturn = new();
-        List<U__Unit> enemiesInView = unit.look
+        List<Unit> enemiesInView = unit.look
             .EnemiesVisibleInFog()
             .ToList();
 
@@ -67,7 +67,7 @@ public class U_Cover : MonoBehaviour
             {
                 CoverInfo betterInfo = null;
                 
-                foreach (U__Unit testedEnemy in enemiesInView)
+                foreach (Unit testedEnemy in enemiesInView)
                 {
                     if (betterInfo == null)
                     {
@@ -105,7 +105,7 @@ public class U_Cover : MonoBehaviour
         if (coversAround.Count == 0)
             return null; // No cover around
         
-        List<U__Unit> enemiesInView = unit.look.EnemiesVisibleInFog()
+        List<Unit> enemiesInView = unit.look.EnemiesVisibleInFog()
             .Where(testedUnit => testedUnit.look.CanSee(unit))
             .ToList();
 
@@ -115,7 +115,7 @@ public class U_Cover : MonoBehaviour
         
         List<CoverInfo> coverInfos = new();
 
-        foreach (U__Unit testedUnit in enemiesInView)
+        foreach (Unit testedUnit in enemiesInView)
             coverInfos.Add(GetCoverStateFrom(unit.coordinates, coversAround, testedUnit));
 
         if(coverInfos.Any(testedInfo => !testedInfo.GetIsCovered()))
@@ -133,7 +133,7 @@ public class U_Cover : MonoBehaviour
     /// </summary>
     /// <param name="aimingUnit"></param>
     /// <returns></returns>
-    public CoverInfo GetCoverStateFrom(U__Unit aimingUnit)
+    public CoverInfo GetCoverStateFrom(Unit aimingUnit)
     {
         List<Cover> coversAround = _board.GetAdjacentCoversAt(unit.coordinates, GetCoveringTileTypes());
         return GetCoverStateFrom(unit.coordinates, coversAround, aimingUnit);
@@ -144,7 +144,7 @@ public class U_Cover : MonoBehaviour
     /// </summary>
     /// <param name="aimingUnit"></param>
     /// <returns></returns>
-    public int GetCoverProtectionValueFrom(U__Unit aimingUnit)
+    public int GetCoverProtectionValueFrom(Unit aimingUnit)
     {
         List<Cover> adjacentCoversList = _board.GetAdjacentCoversAt(unit.coordinates, GetCoveringTileTypes());
 
@@ -180,7 +180,7 @@ public class U_Cover : MonoBehaviour
     /// <param name="cover"></param>
     /// <param name="aimingUnit"></param>
     /// <returns></returns>
-    private CoverInfo GetCoverInfoFrom(Coordinates coveredCoordinates, Cover cover, U__Unit aimingUnit) => new(
+    private CoverInfo GetCoverInfoFrom(Coordinates coveredCoordinates, Cover cover, Unit aimingUnit) => new(
             cover,
             coveredCoordinates,
             cover.GetEdgeElement()
@@ -196,7 +196,7 @@ public class U_Cover : MonoBehaviour
     /// <param name="coverList"></param>
     /// <param name="aimingUnit"></param>
     /// <returns></returns>
-    private CoverInfo GetCoverStateFrom(Coordinates coveredCoordinates, List<Cover> coverList, U__Unit aimingUnit) =>
+    private CoverInfo GetCoverStateFrom(Coordinates coveredCoordinates, List<Cover> coverList, Unit aimingUnit) =>
         coverList
             .Select(testedCover => GetCoverInfoFrom(coveredCoordinates, testedCover, aimingUnit))
             .OrderByDescending(testedInfo => testedInfo.GetIsCovered())
@@ -210,7 +210,7 @@ public class U_Cover : MonoBehaviour
     /// <param name="cover"></param>
     /// <param name="aimingUnit"></param>
     /// <returns></returns>
-    private bool IsCoverProtectingFrom(Coordinates coveredCoordinates, Cover cover, U__Unit aimingUnit)
+    private bool IsCoverProtectingFrom(Coordinates coveredCoordinates, Cover cover, Unit aimingUnit)
     {
         Vector2 coverPosition = cover.GetWorldCoordinatesAsVector2();
         Vector2 coveredPosition = coveredCoordinates.ToVector2();

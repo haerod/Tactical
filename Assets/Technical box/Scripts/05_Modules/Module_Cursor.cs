@@ -15,7 +15,7 @@ public class Module_Cursor : MonoBehaviour
     
     private enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement, Heal } // /!\ If add/remove a cursor, update the SetCursor method
     
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -97,9 +97,9 @@ public class Module_Cursor : MonoBehaviour
         SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
     }
     
-    private void InputEvents_OnAllyEnter(object sender, U__Unit hoveredAlly)
+    private void InputEvents_OnAllyEnter(object sender, Unit hoveredAlly)
     {
-        U__Unit currentCharacter = _units.current;
+        Unit currentCharacter = _units.current;
         
         if (!currentCharacter.look.CanSee(hoveredAlly))
         {
@@ -114,9 +114,9 @@ public class Module_Cursor : MonoBehaviour
         SetCursor(CursorType.Heal);
     }
     
-    private void InputEvents_OnEnemyEnter(object sender, U__Unit hoveredEnemy)
+    private void InputEvents_OnEnemyEnter(object sender, Unit hoveredEnemy)
     {
-        U__Unit currentCharacter = _units.current;
+        Unit currentCharacter = _units.current;
         
         if(!currentCharacter.CanPlay())
             return; // Unit can't play
@@ -150,7 +150,7 @@ public class Module_Cursor : MonoBehaviour
     
     private void InputEvents_OnTileEnter(object sender, Tile tile)
     {
-        U__Unit current = _units.current;
+        Unit current = _units.current;
         if(!current)
             return; // No current unit
         
@@ -158,7 +158,7 @@ public class Module_Cursor : MonoBehaviour
             SetCursor(CursorType.OutMovement);
     }
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(!startingUnit.behavior.playable)
             return; // NPC
@@ -168,7 +168,7 @@ public class Module_Cursor : MonoBehaviour
         currentUnit.move.OnMovableTileEnter += Move_OnMovableTileEnter;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if(!endingUnit.behavior.playable)
             return; // NPC

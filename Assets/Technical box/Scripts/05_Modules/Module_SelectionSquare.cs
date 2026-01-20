@@ -12,7 +12,7 @@ public class Module_SelectionSquare : MonoBehaviour
     [SerializeField] private Color inRangeColor = Color.white;
     [SerializeField] private Color outRangeColor = Color.grey;
 
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -69,7 +69,7 @@ public class Module_SelectionSquare : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(!startingUnit.behavior.playable)
             return; // NPC
@@ -82,7 +82,7 @@ public class Module_SelectionSquare : MonoBehaviour
         InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         DisableSquare();
         
@@ -120,7 +120,7 @@ public class Module_SelectionSquare : MonoBehaviour
         DisableSquare();
     }
     
-    private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredCharacter)
+    private void InputEvents_OnUnitEnter(object sender, Unit hoveredCharacter)
     {
         if(!_units.current.look.UnitsVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character

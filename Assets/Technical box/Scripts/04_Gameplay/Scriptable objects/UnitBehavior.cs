@@ -37,7 +37,7 @@ public class UnitBehavior : ScriptableObject
     /// <param name="askingUnit"></param>
     /// <param name="units"></param>
     /// <returns></returns>
-    public U__Unit GetPreferredTarget(U__Unit askingUnit, List<U__Unit> units)
+    public Unit GetPreferredTarget(Unit askingUnit, List<Unit> units)
     {
         if (units.Count == 0)
             return null; // No unit

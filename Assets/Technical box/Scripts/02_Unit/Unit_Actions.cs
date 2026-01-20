@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using static M__Managers;
 
-public class U_Actions : MonoBehaviour
+public class Unit_Actions : MonoBehaviour
 {
     [SerializeField] private List<A__Action> actions;
     
     [Header("REFERENCES")]
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOR
@@ -89,7 +89,7 @@ public class U_Actions : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit )
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit )
     {
         if(startingUnit != unit)
             return; // Is not current unit
@@ -100,7 +100,7 @@ public class U_Actions : MonoBehaviour
             unit.behavior.PlayBehavior();
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if(endingUnit == unit)
             UnsubscribeToEvents();

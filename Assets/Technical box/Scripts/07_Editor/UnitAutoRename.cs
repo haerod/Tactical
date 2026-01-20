@@ -15,7 +15,7 @@ public class UnitAutoRename : MonoBehaviour
     [SerializeField] private Renderer rend1;
     [SerializeField] private Renderer rend2;
     
-    private U__Unit current;
+    private Unit current;
 
     private bool previousBehavior;
     private Team previousTeam;
@@ -38,7 +38,7 @@ public class UnitAutoRename : MonoBehaviour
             return;
         }
 
-        current = GetComponent<U__Unit>();
+        current = GetComponent<Unit>();
 
         previousBehavior = current.behavior.playable;
         previousTeam = current.unitTeam;

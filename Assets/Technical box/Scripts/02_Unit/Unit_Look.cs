@@ -7,7 +7,7 @@ using System;
 using UnityEngine.Serialization;
 using UnityEngine.TextCore.Text;
 
-public class U_Look : MonoBehaviour
+public class Unit_Look : MonoBehaviour
 {
     [SerializeField] private int range = 5;
     [SerializeField] private List<TileType> visualObstacles;
@@ -16,7 +16,7 @@ public class U_Look : MonoBehaviour
     
     [Header("REFERENCES")]
     
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
 
     public List<Tile> visibleTiles => GetVisibleTiles().ToList();
     
@@ -53,7 +53,7 @@ public class U_Look : MonoBehaviour
     /// Returns the units visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<U__Unit> UnitsVisibleInFog() => _units
+    public List<Unit> UnitsVisibleInFog() => _units
         .units
             .Where(chara =>
             {
@@ -75,7 +75,7 @@ public class U_Look : MonoBehaviour
     /// Returns the enemies visible in fog of war.
     /// </summary>
     /// <returns></returns>
-    public List<U__Unit> EnemiesVisibleInFog() => UnitsVisibleInFog()
+    public List<Unit> EnemiesVisibleInFog() => UnitsVisibleInFog()
         .Where(testedCharacter => unit.team.IsEnemyOf(testedCharacter))
         .ToList();
     
@@ -84,7 +84,7 @@ public class U_Look : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    public bool CanSee(U__Unit target) => UnitsVisibleInFog().Contains(target);
+    public bool CanSee(Unit target) => UnitsVisibleInFog().Contains(target);
     
     /// <summary>
     /// Returns the tiles in the line of sight of the unit on a tile.
@@ -100,7 +100,7 @@ public class U_Look : MonoBehaviour
     /// Returns the closest enemy on sight.
     /// </summary>
     /// <returns></returns>
-    public U__Unit ClosestEnemyOnSight() => _units.units
+    public Unit ClosestEnemyOnSight() => _units.units
             .Where(o => o != unit) // remove emitter
             .Where(o => o.team.IsEnemyOf(unit)) // get only enemies
             .Where(o => HasSightOn(o.tile)) // get all enemies on sight

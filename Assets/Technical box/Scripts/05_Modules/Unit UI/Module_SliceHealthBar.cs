@@ -10,8 +10,8 @@ using static M__Managers;
 /// </summary>
 public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
 {
-    [SerializeField] private U_Health health;
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit_Health health;
+    [SerializeField] private Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -90,7 +90,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(startingUnit != unit)
             return; // Another character
@@ -98,7 +98,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         Show();
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if(endingUnit != unit)
             return; // Another character
@@ -106,12 +106,12 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         Hide();
     }
     
-    private void InputEvents_OnUnitEnter(object sender, U__Unit hoveredUnit)
+    private void InputEvents_OnUnitEnter(object sender, Unit hoveredUnit)
     {
         if(hoveredUnit != unit)
             return; // Another character
         
-        U__Unit currentUnit = _units.current;
+        Unit currentUnit = _units.current;
         
         if(!currentUnit)
             return; // No current unit
@@ -145,7 +145,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     
     private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
-        U__Unit currentUnit = _units.current;
+        Unit currentUnit = _units.current;
         
         if(!currentUnit)
             return; // No current unit

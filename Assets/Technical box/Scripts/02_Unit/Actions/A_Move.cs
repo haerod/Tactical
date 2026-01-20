@@ -75,7 +75,7 @@ public class A_Move : A__Action
             endRotation = Quaternion.LookRotation(lookPos);
         rotationTarget.rotation = endRotation;
 
-        unit.unitUI.OrientToCamera();
+        unit.ui.OrientToCamera();
     }
 
     /// <summary>
@@ -293,7 +293,7 @@ public class A_Move : A__Action
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
-    private bool IsBlockingPath(U__Unit character)
+    private bool IsBlockingPath(Unit character)
     {
         if(!unit.look.UnitsVisibleInFog().Contains(character))
             return false; // Invisible character
@@ -361,12 +361,12 @@ public class A_Move : A__Action
     // EVENTS
     // ======================================================================
     
-    private void Health_OnAnyDeath(object sender, U__Unit deadUnit)
+    private void Health_OnAnyDeath(object sender, Unit deadUnit)
     {
         anythingChangedOnBoard = true;
     }
     
-    private void Move_OnAnyMovementStart(object sender, U__Unit movingUnit)
+    private void Move_OnAnyMovementStart(object sender, Unit movingUnit)
     {
         anythingChangedOnBoard = true;
     }

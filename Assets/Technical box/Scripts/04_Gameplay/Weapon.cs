@@ -26,7 +26,7 @@ public class Weapon : Item
     [SerializeField] private RuntimeAnimatorController weaponAnimatorController;
     public RuntimeAnimatorController animatorController => weaponAnimatorController;
     
-    private U__Unit unit;
+    private Unit unit;
     
     public event EventHandler<Weapon> OnAmmoCountChanged;
     
@@ -52,7 +52,7 @@ public class Weapon : Item
     /// Setup the parameters of the weapon.
     /// </summary>
     /// <param name="currentUnit"></param>
-    public void Setup(U__Unit currentUnit)
+    public void Setup(Unit currentUnit)
     {
         unit = currentUnit;
         if(unit.attack)

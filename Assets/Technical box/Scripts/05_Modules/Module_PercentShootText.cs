@@ -20,7 +20,7 @@ public class Module_PercentShootText : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private TextMeshProUGUI percentShootText;
 
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -97,7 +97,7 @@ public class Module_PercentShootText : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(!startingUnit.behavior.playable)
             return; // NPC
@@ -113,7 +113,7 @@ public class Module_PercentShootText : MonoBehaviour
         InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
     }
 
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if(!endingUnit.behavior.playable)
             return; // NPC
@@ -141,9 +141,9 @@ public class Module_PercentShootText : MonoBehaviour
         DisablePercentShootText();
     }
 
-    private void InputEvents_OnEnemyEnter(object sender, U__Unit enemy)
+    private void InputEvents_OnEnemyEnter(object sender, Unit enemy)
     {
-        U__Unit current = _units.current;
+        Unit current = _units.current;
         
         if(!current.CanPlay())
             return; // Unit can't play
@@ -159,7 +159,7 @@ public class Module_PercentShootText : MonoBehaviour
         DisablePercentShootText();
     }
 
-    private void InputEvents_OnAllyEnter(object sender, U__Unit ally)
+    private void InputEvents_OnAllyEnter(object sender, Unit ally)
     {
         DisablePercentShootText();
     }
@@ -169,7 +169,7 @@ public class Module_PercentShootText : MonoBehaviour
         DisablePercentShootText();
     }
     
-    private void InputEvents_OnUnitExit(object sender, U__Unit exitedUnit)
+    private void InputEvents_OnUnitExit(object sender, Unit exitedUnit)
     {
         DisablePercentShootText();
     }

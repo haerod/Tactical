@@ -26,7 +26,7 @@ public class Unit_WeaponHolder : MonoBehaviour
 
     [Header("REFERENCES")]
     
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
     [SerializeField] private Transform hand;
     [SerializeField] private Weapon _weaponGraphics;
     public Weapon weaponGraphics => _weaponGraphics;
@@ -157,7 +157,7 @@ public class Unit_WeaponHolder : MonoBehaviour
             weapon.SpendAmmo();
     }
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(startingUnit != unit)
             return; // Not current unit
@@ -165,7 +165,7 @@ public class Unit_WeaponHolder : MonoBehaviour
         _input.OnReloadWeaponInput += Input_OnReloadWeaponInput;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if(endingUnit != unit)
             return; // Not current unit

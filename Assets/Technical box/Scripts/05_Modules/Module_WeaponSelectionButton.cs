@@ -15,7 +15,7 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     [SerializeField] private Image weaponSprite;
     [SerializeField] private TextMeshProUGUI buttonText;
     
-    private U__Unit unit;
+    private Unit unit;
     private Module_WeaponButtonsHolder holder;
     private Weapon _weapon;
     public Weapon weapon;
@@ -33,7 +33,7 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     /// </summary>
     /// <param name="linkedHolder"></param>
     /// <param name="linkedCharacter"></param>
-    public void SetParameters(Module_WeaponButtonsHolder linkedHolder, U__Unit linkedCharacter)
+    public void SetParameters(Module_WeaponButtonsHolder linkedHolder, Unit linkedCharacter)
     {
         holder = linkedHolder;
         unit = linkedCharacter;

@@ -14,7 +14,6 @@
 - 1w -> Fog of war behavior : mask things undiscovered (difference with discovered and not in line of sight)
 
 ## ACTION TILE PREVIEW
-- 1h -> Set FM_TilesActionPreview abstract
 - 1h -> Zone with limits
 - 1h -> Use pulling to not instantiate always area prefabs
 

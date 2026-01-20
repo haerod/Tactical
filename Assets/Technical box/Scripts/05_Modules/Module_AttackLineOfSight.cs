@@ -15,9 +15,9 @@ public class Module_AttackLineOfSight : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     
     private bool isShowing;
-    private U__Unit attacker, target;
+    private Unit attacker, target;
     
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -55,7 +55,7 @@ public class Module_AttackLineOfSight : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
-    private void Show(U__Unit newAttacker, U__Unit newTarget)
+    private void Show(Unit newAttacker, Unit newTarget)
     {
         isShowing = true;
         attacker = newAttacker;
@@ -72,7 +72,7 @@ public class Module_AttackLineOfSight : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(!startingUnit.behavior.playable)
             return; // NPC
@@ -84,7 +84,7 @@ public class Module_AttackLineOfSight : MonoBehaviour
         currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
     }
 
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if(!endingUnit.behavior.playable)
             return; // NPC
@@ -96,9 +96,9 @@ public class Module_AttackLineOfSight : MonoBehaviour
         currentUnit = null;
     }
 
-    private void InputEvents_OnEnemyEnter(object sender, U__Unit enteredUnit)
+    private void InputEvents_OnEnemyEnter(object sender, Unit enteredUnit)
     {
-        U__Unit current = _units.current;
+        Unit current = _units.current;
         
         if(!current.CanPlay())
             return; // Can't play

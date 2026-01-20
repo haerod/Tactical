@@ -9,16 +9,16 @@ using static M__Managers;
 
 public class M_Units : MonoBehaviour
 {
-    [HideInInspector] public U__Unit current;
+    [HideInInspector] public Unit current;
     [SerializeField] private List<Team> _teamPlayOrder;
     public List<Team> teamPlayOrder => _teamPlayOrder;
     [SerializeField] private TurnBasedSystem turnBasedSystem;
 
-    [SerializeField] private List<U__Unit> _units;
-    public List<U__Unit> units => _units;
+    [SerializeField] private List<Unit> _units;
+    public List<Unit> units => _units;
     
-    public event EventHandler<U__Unit> OnUnitTurnStart;
-    public event EventHandler<U__Unit> OnUnitTurnEnd;
+    public event EventHandler<Unit> OnUnitTurnStart;
+    public event EventHandler<Unit> OnUnitTurnEnd;
     public event EventHandler<Team> OnTeamTurnStart;
     public event EventHandler<Team> OnTeamTurnEnd;
     
@@ -37,7 +37,7 @@ public class M_Units : MonoBehaviour
         else
             Debug.LogError("There is more than one M_Characters in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
         
-        _units = transform.Cast<Transform>().Select(t => t.GetComponent<U__Unit>()).ToList();
+        _units = transform.Cast<Transform>().Select(t => t.GetComponent<Unit>()).ToList();
     }
     
     private void Start()
@@ -67,7 +67,7 @@ public class M_Units : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public List<U__Unit> GetAlliesOf(U__Unit unit) => _units
+    public List<Unit> GetAlliesOf(Unit unit) => _units
         .Where(testedUnit => testedUnit.team.IsAllyOf(unit))
         .ToList();
     
@@ -76,7 +76,7 @@ public class M_Units : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public List<U__Unit> GetEnemiesOf(U__Unit unit) => _units
+    public List<Unit> GetEnemiesOf(Unit unit) => _units
         .Where(testedUnit => testedUnit.team.IsEnemyOf(unit))
         .ToList();
     
@@ -85,7 +85,7 @@ public class M_Units : MonoBehaviour
     /// </summary>
     /// <param name="team"></param>
     /// <returns></returns>
-    public List<U__Unit> GetUnitsOf(Team team) => units
+    public List<Unit> GetUnitsOf(Team team) => units
         .Where(testedUnit => testedUnit.unitTeam == team)
         .ToList();
     
@@ -93,11 +93,11 @@ public class M_Units : MonoBehaviour
     /// Adds a new unit in the unit's list.
     /// </summary>
     /// <param name="unit"></param>
-    public void AddUnit(U__Unit unit)
+    public void AddUnit(Unit unit)
     {
         units.Add(unit);
         unit.transform.SetParent(transform);
-        _units = transform.Cast<Transform>().Select(t => t.GetComponent<U__Unit>()).ToList();
+        _units = transform.Cast<Transform>().Select(t => t.GetComponent<Unit>()).ToList();
 
         if(!_teamPlayOrder.Contains(unit.unitTeam))
             _teamPlayOrder.Add(unit.unitTeam);
@@ -107,11 +107,11 @@ public class M_Units : MonoBehaviour
     /// Removes a unit from the unit's list.
     /// </summary>
     /// <param name="unit"></param>
-    public void RemoveUnit(U__Unit unit)
+    public void RemoveUnit(Unit unit)
     {
         units.Remove(unit);
         unit.transform.SetParent(null);
-        _units = transform.Cast<Transform>().Select(t => t.GetComponent<U__Unit>()).ToList();
+        _units = transform.Cast<Transform>().Select(t => t.GetComponent<Unit>()).ToList();
         
         // if(IsAnotherUnitOfTheSameTeam(unit))
         //     return; // Is another unit of the same team
@@ -124,7 +124,7 @@ public class M_Units : MonoBehaviour
     /// If it's an overrideNextUnit, passes to this unit.
     /// <param name="overrideNextUnit"></param>
     /// </summary>
-    public void EndCurrentUnitTurn(U__Unit overrideNextUnit = null)
+    public void EndCurrentUnitTurn(Unit overrideNextUnit = null)
     {
         if (_rules.IsVictory()) // Victory
             return;
@@ -137,7 +137,7 @@ public class M_Units : MonoBehaviour
             return;
         }
         
-        U__Unit nextUnit = turnBasedSystem.GetNextPlayableTeammate();
+        Unit nextUnit = turnBasedSystem.GetNextPlayableTeammate();
 
         if (nextUnit == current)
             PassToNextTeam();
@@ -161,7 +161,7 @@ public class M_Units : MonoBehaviour
     /// </summary>
     public void PassToNextPlayableTeammate()
     {
-        U__Unit nextUnit = turnBasedSystem.GetNextPlayableTeammate();
+        Unit nextUnit = turnBasedSystem.GetNextPlayableTeammate();
    
         if(nextUnit)
             EndCurrentUnitTurn(nextUnit);
@@ -172,7 +172,7 @@ public class M_Units : MonoBehaviour
     /// </summary>
     public void PassToPreviousPlayableTeammate()
     {
-        U__Unit nextUnit = turnBasedSystem.GetPreviousPlayableTeammate();
+        Unit nextUnit = turnBasedSystem.GetPreviousPlayableTeammate();
    
         if(nextUnit)
             EndCurrentUnitTurn(nextUnit);
@@ -184,7 +184,7 @@ public class M_Units : MonoBehaviour
 
     private void StartGame()
     {
-        U__Unit firstUnit = turnBasedSystem.GetFirstUnit();
+        Unit firstUnit = turnBasedSystem.GetFirstUnit();
         StartTeamTurn(firstUnit.unitTeam);
         StartUnitTurn(firstUnit);
     }
@@ -193,7 +193,7 @@ public class M_Units : MonoBehaviour
     /// Starts the turn of a given unit.
     /// <param name="newCurrentUnit"></param>
     /// </summary>
-    private void StartUnitTurn(U__Unit newCurrentUnit)
+    private void StartUnitTurn(Unit newCurrentUnit)
     {
         current = newCurrentUnit;
         
@@ -205,7 +205,7 @@ public class M_Units : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    private bool IsAnotherUnitOfTheSameTeam(U__Unit unit) =>units
+    private bool IsAnotherUnitOfTheSameTeam(Unit unit) =>units
             .Where(testedUnit => testedUnit != unit)
             .FirstOrDefault(testedUnit => testedUnit.team.IsAllyOf(unit));
     

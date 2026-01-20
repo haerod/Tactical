@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.Serialization;
 using static M__Managers;
 
-public class U_Health : MonoBehaviour
+public class Unit_Health : MonoBehaviour
 {
     public int health = 5;
 
@@ -25,7 +25,7 @@ public class U_Health : MonoBehaviour
     
     [Header("REFERENCES")]
 
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
 
      public int currentHealth = 5;
 

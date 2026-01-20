@@ -89,8 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ace1a180eda44c48b10b4c1f564bf13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hasMaxSize: 1
+  _maxSize: 6
   content: {fileID: 5967830870881707097}
-  maxSize: 6
   unit: {fileID: 3541061014796538876}
 --- !u!1 &2089087891139880543
 GameObject:
@@ -229,19 +230,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca20e7c83efdd849b7533831d44a18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWeaponData: {fileID: 0}
-  unitWeapons:
-  - {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
+  _weapon: {fileID: 0}
+  _loadWeaponsOnStart: 1
   unit: {fileID: 3541061014796538876}
-  weaponGraphicsList:
-  - {fileID: 3311734570975132761, guid: a1f531d548d6444479c80684068c0a57, type: 3}
-  - {fileID: 8964273004052931746, guid: db3480eb9819d50428ce04ac9cff015f, type: 3}
-  - {fileID: 5195712545123794316, guid: 276de13f8ba474248ba85d01ea60b3cc, type: 3}
-  - {fileID: 5654976511943828445, guid: 213b6d6e43934e04887be59971907401, type: 3}
-  - {fileID: 3329967634082738185, guid: d67ea4f909567c041bdd76c614f539e5, type: 3}
-  - {fileID: 311453353435024396, guid: 8043269bdf60de64a91692fb65d73cc0, type: 3}
-  - {fileID: 6628710643366229785, guid: 8ae60e5ca5534ba4898ee386648da9c1, type: 3}
   hand: {fileID: 103328547491100648}
+  _weaponGraphics: {fileID: 0}
 --- !u!1 &5711617042610792679
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,7 +307,7 @@ MonoBehaviour:
   move: {fileID: 8502731826044868807}
   team: {fileID: 5571022486952568945}
   inventory: {fileID: 3084281157466325437}
-  unitUI: {fileID: 6375618182437013659}
+  ui: {fileID: 6375618182437013659}
   weaponHolder: {fileID: 5340496248363606861}
 --- !u!114 &2371686734661026428
 MonoBehaviour:

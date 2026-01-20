@@ -11,7 +11,7 @@ using UnityEditor.SceneManagement;
 [ExecuteInEditMode]
 public class UnitAutoChangeWeapon : MonoBehaviour
 {
-    private U__Unit current;
+    private Unit current;
 
     private Weapon previousWeapon;
 
@@ -28,7 +28,7 @@ public class UnitAutoChangeWeapon : MonoBehaviour
             return;
         }
 
-        current = GetComponent<U__Unit>();
+        current = GetComponent<Unit>();
         EditorUtility.SetDirty(this);
     }
 

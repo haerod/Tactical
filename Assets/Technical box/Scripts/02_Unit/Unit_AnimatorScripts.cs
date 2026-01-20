@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 
-public class U_AnimatorScripts : MonoBehaviour
+public class Unit_AnimatorScripts : MonoBehaviour
 {
     [Header("REFERENCES")]
 
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
     [SerializeField] private Animator anim;
     [SerializeField] private List<GameObject> visuals;
 
@@ -155,12 +155,12 @@ public class U_AnimatorScripts : MonoBehaviour
         StartAttack();
     }
     
-    private void Attack_OnAttackableEnemyHovered(object sender, U__Unit enemy)
+    private void Attack_OnAttackableEnemyHovered(object sender, Unit enemy)
     {
         StartAim();
     }
 
-    private void Attack_OnUnitExit(object sender, U__Unit exitedUnit)
+    private void Attack_OnUnitExit(object sender, Unit exitedUnit)
     {
         StopAim();
     }

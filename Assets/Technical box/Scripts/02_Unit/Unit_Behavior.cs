@@ -6,16 +6,16 @@ using System.Collections.Generic;
 using UnityEngine.Serialization;
 using static M__Managers;
 
-public class U_Behavior : MonoBehaviour
+public class Unit_Behavior : MonoBehaviour
 {
     public bool playable = true;
     [SerializeField] private UnitBehavior behavior;
     
     [Header("REFERENCES")]
     
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
     
-    private U__Unit targetUnit;
+    private Unit targetUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -115,7 +115,7 @@ public class U_Behavior : MonoBehaviour
     /// </summary>
     /// <param name="meleeUnit"></param>
     /// <returns></returns>
-    private Tile ClosestMeleePositionOf(U__Unit meleeUnit)
+    private Tile ClosestMeleePositionOf(Unit meleeUnit)
     {
         return _board.GetTilesAround(meleeUnit.tile, 1, true)
             .Where(tile => unit.move.CanMoveTowards(tile))

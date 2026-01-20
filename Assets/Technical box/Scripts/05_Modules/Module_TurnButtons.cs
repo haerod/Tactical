@@ -9,7 +9,7 @@ public class Module_TurnButtons : MonoBehaviour
 {
     [SerializeField] private GameObject layoutGroup;
 
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -82,7 +82,7 @@ public class Module_TurnButtons : MonoBehaviour
     // EVENTS
     // ======================================================================
 
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(!startingUnit.behavior.playable)
             return; // NPC
@@ -97,7 +97,7 @@ public class Module_TurnButtons : MonoBehaviour
         SetUIActive(true);
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         SetUIActive(false);
         

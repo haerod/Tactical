@@ -42,7 +42,7 @@ public class M_Input : MonoBehaviour
     
     private bool canUsePlayerInput = true;
     private Tile previousTile;
-    private U__Unit previousUnit;
+    private Unit previousUnit;
     private Plane floorPlane = new (Vector3.up, Vector3.zero);
     
     public static M_Input instance => _instance == null ? FindFirstObjectByType<M_Input>() : _instance;
@@ -127,12 +127,12 @@ public class M_Input : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Tile tile;
-            U__Unit unit;
+            Unit unit;
 
             // On a unit's collider, get the unit's tile
             if (hit.transform.CompareTag("Clickable"))
             {
-                unit = hit.transform.GetComponentInParent<U__Unit>();
+                unit = hit.transform.GetComponentInParent<Unit>();
                 tile = unit.tile;
             }
             else
@@ -291,7 +291,7 @@ public class M_Input : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit )
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit )
     {
         if (startingUnit.behavior.playable) 
             _input.SetActivePlayerInput();
@@ -302,12 +302,12 @@ public class M_Input : MonoBehaviour
         previousUnit = null;
     }
     
-    private void Action_OnAnyActionStart(object sender, U__Unit unitInAction)
+    private void Action_OnAnyActionStart(object sender, Unit unitInAction)
     {
         SetActivePlayerInput(false);
     }
     
-    private void Action_OnAnyActionEnd(object sender, U__Unit unitInAction)
+    private void Action_OnAnyActionEnd(object sender, Unit unitInAction)
     {
         SetActivePlayerInput();
     }
@@ -326,11 +326,11 @@ public static class InputEvents
     public static event EventHandler<Tile> OnTileClick;
     public static event EventHandler OnNoTile;
     
-    public static event EventHandler<U__Unit> OnUnitEnter;
-    public static event EventHandler<U__Unit> OnUnitExit;
-    public static event EventHandler <U__Unit> OnUnitClick;
-    public static event EventHandler<U__Unit> OnEnemyEnter;
-    public static event EventHandler<U__Unit> OnAllyEnter;
+    public static event EventHandler<Unit> OnUnitEnter;
+    public static event EventHandler<Unit> OnUnitExit;
+    public static event EventHandler <Unit> OnUnitClick;
+    public static event EventHandler<Unit> OnEnemyEnter;
+    public static event EventHandler<Unit> OnAllyEnter;
     public static event EventHandler OnCurrentUnitEnter;
     
     // ======================================================================
@@ -340,9 +340,9 @@ public static class InputEvents
     public static void TileHovered(Tile tile) => TileHoveredEvents(tile);
     public static void TileUnhovered(Tile tile) => OnTileExit?.Invoke(null, tile);
     public static void TileClick(Tile tile) => OnTileClick?.Invoke(null, tile);
-    public static void UnitUnhovered(U__Unit unit) => OnUnitExit?.Invoke(null, unit);
-    public static void UnitHovered(U__Unit unit) => CharacterHoveredEvents(unit);
-    public static void UnitClick(U__Unit unit)  => OnUnitClick?.Invoke(null, unit);
+    public static void UnitUnhovered(Unit unit) => OnUnitExit?.Invoke(null, unit);
+    public static void UnitHovered(Unit unit) => CharacterHoveredEvents(unit);
+    public static void UnitClick(Unit unit)  => OnUnitClick?.Invoke(null, unit);
     public static void NothingHovered() => OnNoTile?.Invoke(null, EventArgs.Empty);
 
     public static void ClearEvents()
@@ -372,7 +372,7 @@ public static class InputEvents
     {
         OnTileEnter?.Invoke(null, tile);
         
-        U__Unit currentUnit = _units.current;
+        Unit currentUnit = _units.current;
         if(!currentUnit)
             return; // No current unit
         
@@ -394,10 +394,10 @@ public static class InputEvents
     /// Events happening if the pointer overlaps a occupied by a unit.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    private static void CharacterHoveredEvents(U__Unit hoveredCharacter)
+    private static void CharacterHoveredEvents(Unit hoveredCharacter)
     {
-        U__Unit currentUnit = _units.current;
-        U__Unit currentTarget = hoveredCharacter;
+        Unit currentUnit = _units.current;
+        Unit currentTarget = hoveredCharacter;
 
         if (!currentUnit)
             return;

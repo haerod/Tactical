@@ -16,9 +16,9 @@ public class TurnBasedSystem : MonoBehaviour
     /// Returns the next playable teammate, or itself if nobody can.
     /// </summary>
     /// <returns></returns>
-    public U__Unit GetNextPlayableTeammate()
+    public Unit GetNextPlayableTeammate()
     {
-        U__Unit currentUnit = _units.current;
+        Unit currentUnit = _units.current;
         return _units.GetUnitsOf(currentUnit.unitTeam)
             .Where(unit => unit == currentUnit || unit.CanPlay())
             .ToList()
@@ -29,9 +29,9 @@ public class TurnBasedSystem : MonoBehaviour
     /// Returns the previous playable teammate, or itself if nobody can.
     /// </summary>
     /// <returns></returns>
-    public U__Unit GetPreviousPlayableTeammate()
+    public Unit GetPreviousPlayableTeammate()
     {
-        U__Unit currentUnit = _units.current;
+        Unit currentUnit = _units.current;
         return _units.GetUnitsOf(currentUnit.unitTeam)
             .Where(unit => unit == currentUnit || unit.CanPlay())
             .ToList()
@@ -42,7 +42,7 @@ public class TurnBasedSystem : MonoBehaviour
     /// Returns the first unit of the first team of the play order.
     /// </summary>
     /// <returns></returns>
-    public U__Unit GetFirstUnit() => _units
+    public Unit GetFirstUnit() => _units
         .GetUnitsOf(_units.teamPlayOrder.First())
         .First();
     
@@ -50,9 +50,9 @@ public class TurnBasedSystem : MonoBehaviour
     /// Returns the next unit in the team.
     /// </summary>
     /// <returns></returns>
-    public U__Unit GetNextTeamUnit()
+    public Unit GetNextTeamUnit()
     {
-        U__Unit nextTeamUnit = _units.GetAlliesOf(_units.current)
+        Unit nextTeamUnit = _units.GetAlliesOf(_units.current)
             .Next(_units.current);
         
         return nextTeamUnit != _units.current ? nextTeamUnit : null;

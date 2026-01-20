@@ -213,7 +213,7 @@ public class M_Camera : MonoBehaviour
         RotateOnAngle(-90f);
     }
 
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingCharacter)
+    private void Units_OnUnitTurnStart(object sender, Unit startingCharacter)
     {
         _camera.SetTarget(startingCharacter.transform);
         _camera.ResetPosition();

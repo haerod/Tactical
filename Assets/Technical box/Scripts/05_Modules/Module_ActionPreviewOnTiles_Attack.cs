@@ -9,7 +9,7 @@ using static M__Managers;
 /// </summary>
 public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Base
 {
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -42,7 +42,7 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if (!startingUnit.behavior.playable) 
             return; // NPC
@@ -56,7 +56,7 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
         ShowFeedbacks(startingUnit.attack.AttackableTiles());
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if (!endingUnit.behavior.playable) 
             return; // NPC
@@ -69,12 +69,12 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
         currentUnit = null;
     }
     
-    private void Action_OnAnyActionStart(object sender, U__Unit startingActionUnit)
+    private void Action_OnAnyActionStart(object sender, Unit startingActionUnit)
     {
         HideFeedbacks();
     }
     
-    private void Action_OnAnyActionEnd(object sender, U__Unit endingActionUnit)
+    private void Action_OnAnyActionEnd(object sender, Unit endingActionUnit)
     {
         if (!endingActionUnit.behavior.playable) 
             return; // NPC

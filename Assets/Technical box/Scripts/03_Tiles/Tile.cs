@@ -22,7 +22,7 @@ public class Tile : Entity
     
     public enum Directions { Top, Down, Right, Left }
 
-    public U__Unit character => Unit();
+    public Unit character => Unit();
 
     [Header("REFERENCES")]
     
@@ -184,5 +184,5 @@ public class Tile : Entity
     /// Returns null if is nobody on this tile.
     /// </summary>
     /// <returns></returns>
-    private U__Unit Unit() => _units.units.FirstOrDefault(c => c.tile == this);
+    private Unit Unit() => _units.units.FirstOrDefault(c => c.tile == this);
 }

@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static M__Managers;
 
-public class U__Unit : Entity
+public class Unit : Entity
 {
     [Header("NAME")]
     
@@ -15,17 +15,17 @@ public class U__Unit : Entity
 
     [Header("REFERENCES")]
     
-    public U_Actions actions;
-    public U_AnimatorScripts anim; // With animator / skinned mesh renderer
-    public U_Behavior behavior;
+    public Unit_Actions actions;
+    public Unit_AnimatorScripts anim; // With animator / skinned mesh renderer
+    public Unit_Behavior behavior;
     public A_Attack attack;
-    public U_Cover cover;
-    public U_Health health;
-    public U_Look look;
+    public Unit_Cover cover;
+    public Unit_Health health;
+    public Unit_Look look;
     public A_Move move;
-    public U_Team team;
+    public Unit_Team team;
     public Unit_Inventory inventory;
-    public U_UnitUI unitUI;
+    public Unit_WorldUI ui;
     public Unit_WeaponHolder weaponHolder;
     
     public Team unitTeam => team.team;

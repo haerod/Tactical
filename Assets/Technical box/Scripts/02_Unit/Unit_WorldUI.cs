@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static M__Managers;
 
-public class U_UnitUI : MonoBehaviour
+public class Unit_WorldUI : MonoBehaviour
 {
     [Header("REFERENCES")]
     

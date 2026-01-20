@@ -11,7 +11,7 @@ public class Unit_Inventory : Inventory
 {
     [Header("REFERENCES")]
     
-    [SerializeField] private U__Unit unit;
+    [SerializeField] private Unit unit;
     
     // ======================================================================
     // MONOBEHAVIOUR

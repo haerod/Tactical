@@ -13,7 +13,7 @@ public class Module_ActionEffectHolder : MonoBehaviour
     [Header("REFERENCES")]
     [SerializeField] private GameObject actionEffectFeedbackPrefab;
     
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -60,19 +60,19 @@ public class Module_ActionEffectHolder : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         currentUnit = startingUnit;
         currentUnit.attack.OnAttackMiss += Attack_OnAttackMiss;
     }
     
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         currentUnit.attack.OnAttackMiss -= Attack_OnAttackMiss;
         currentUnit = null;
     }
     
-    private void Attack_OnAttackMiss(object sender, U__Unit missedUnit)
+    private void Attack_OnAttackMiss(object sender, Unit missedUnit)
     {
         DisplayActionEffectFeedback(missText, missedUnit.transform);
     }

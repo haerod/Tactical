@@ -14,7 +14,7 @@ public abstract class A__Action : MonoBehaviour
     
     [Header("REFERENCES")]
     
-    [SerializeField] protected U__Unit unit;
+    [SerializeField] protected Unit unit;
     
     public bool isUsableOnStart => usableOnTurnStart;
     
@@ -127,25 +127,25 @@ public abstract class A__Action : MonoBehaviour
     /// Happens when any character is hovered, including itself.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    protected virtual void OnHoverAnyCharacter(U__Unit hoveredCharacter) { }
+    protected virtual void OnHoverAnyCharacter(Unit hoveredCharacter) { }
 
     /// <summary>
     /// Happens when any character is hovered, except itself.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    protected virtual void OnHoverAnyOtherCharacter(U__Unit hoveredCharacter) { }
+    protected virtual void OnHoverAnyOtherCharacter(Unit hoveredCharacter) { }
     
     /// <summary>
     /// Happens when an ally is hovered.
     /// </summary>
     /// <param name="hoveredCharacter"></param>
-    protected virtual void OnHoverAlly(U__Unit hoveredCharacter) { }
+    protected virtual void OnHoverAlly(Unit hoveredCharacter) { }
 
     /// <summary>
     /// Happens when an enemy is hovered.
     /// </summary>
     /// <param name="hoveredUnit"></param>
-    protected virtual void OnHoverEnemy(U__Unit hoveredUnit) { }
+    protected virtual void OnHoverEnemy(Unit hoveredUnit) { }
     
     /// <summary>
     /// Happens when the character is hovered.
@@ -156,31 +156,31 @@ public abstract class A__Action : MonoBehaviour
     /// Happens when the cursor leaves any character.
     /// </summary>
     /// <param name="exitedUnit"></param>
-    protected virtual void OnExitCharacter(U__Unit exitedUnit) { }
+    protected virtual void OnExitCharacter(Unit exitedUnit) { }
     
     /// <summary>
     /// Happens when any character is hovered, including itself.
     /// </summary>
     /// <param name="clickedUnit"></param>
-    protected virtual void OnClickAnyCharacter(U__Unit clickedUnit) { }
+    protected virtual void OnClickAnyCharacter(Unit clickedUnit) { }
     
     /// <summary>
     /// Happens when any character is clicked, except itself.
     /// </summary>
     /// <param name="clickedCharacter"></param>
-    protected virtual void OnClickAnyOtherCharacter(U__Unit clickedCharacter) { }
+    protected virtual void OnClickAnyOtherCharacter(Unit clickedCharacter) { }
     
     /// <summary>
     /// Happens when an ally is clicked.
     /// </summary>
     /// <param name="clickedCharacter"></param>
-    protected virtual void OnClickAlly(U__Unit clickedCharacter) { }
+    protected virtual void OnClickAlly(Unit clickedCharacter) { }
     
     /// <summary>
     /// Happens when an enemy is clicked.
     /// </summary>
     /// <param name="clickedCharacter"></param>
-    protected virtual void OnClickEnemy(U__Unit clickedCharacter) { }
+    protected virtual void OnClickEnemy(Unit clickedCharacter) { }
     
     /// <summary>
     /// Happens when the character is clicked.
@@ -224,7 +224,7 @@ public abstract class A__Action : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void InputEvents_OnUnitEnter(object sender, U__Unit enteredCharacter)
+    private void InputEvents_OnUnitEnter(object sender, Unit enteredCharacter)
     {
         if (!unit.look.UnitsVisibleInFog().Contains(enteredCharacter))
         {
@@ -247,12 +247,12 @@ public abstract class A__Action : MonoBehaviour
         }
     }
 
-    private void InputEvents_OnUnitExit(object sender, U__Unit leftCharacter)
+    private void InputEvents_OnUnitExit(object sender, Unit leftCharacter)
     {
         OnExitCharacter(leftCharacter);
     }
 
-    private void InputEvents_OnUnitClick(object sender, U__Unit clickedCharacter)
+    private void InputEvents_OnUnitClick(object sender, Unit clickedCharacter)
     {
         if (!unit.look.UnitsVisibleInFog().Contains(clickedCharacter))
         {

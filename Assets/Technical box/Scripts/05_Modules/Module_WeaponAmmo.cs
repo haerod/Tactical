@@ -22,7 +22,7 @@ public class Module_WeaponAmmo : MonoBehaviour
     [SerializeField] private TextMeshProUGUI remainingAmmoText;
     [SerializeField] private Button reloadButton;
     
-    private U__Unit currentUnit;
+    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -113,7 +113,7 @@ public class Module_WeaponAmmo : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, U__Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
         if(!startingUnit.CanPlay())
             return; // Can't play
@@ -128,7 +128,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         Show(currentUnit.weaponHolder.weapon);
     }
 
-    private void Units_OnUnitTurnEnd(object sender, U__Unit endingUnit)
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if (currentUnit)
         {
@@ -158,12 +158,12 @@ public class Module_WeaponAmmo : MonoBehaviour
         Show(weapon);
     }
     
-    private void Action_OnAnyActionStart(object sender, U__Unit startingActionUnit)
+    private void Action_OnAnyActionStart(object sender, Unit startingActionUnit)
     {
         Hide();
     }
     
-    private void Action_OnAnyActionEnd(object sender, U__Unit endingActionUnit)
+    private void Action_OnAnyActionEnd(object sender, Unit endingActionUnit)
     {
         if (!endingActionUnit.behavior.playable) 
             return; // NPC
