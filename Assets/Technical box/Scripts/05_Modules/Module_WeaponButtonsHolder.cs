@@ -7,11 +7,15 @@ using static M__Managers;
 
 public class Module_WeaponButtonsHolder : MonoBehaviour
 {
+    [SerializeField] private bool _showText = true;
+    
+    [Header("REFERENCES")]
+    
     [SerializeField] private GameObject buttonSelectWeaponPrefab;
     [SerializeField] private Transform buttonsParent;
     
-    private List<GameObject> instantiatedButtons = new List<GameObject>();
-    
+    private List<GameObject> instantiatedButtons = new();
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -51,7 +55,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
                     .GetComponent<Module_WeaponSelectionButton>();
             
             instantiateButton.SetParameters(this, unit);
-            instantiateButton.DisplayButton(weapon);
+            instantiateButton.DisplayButton(weapon, _showText);
             
             instantiatedButtons.Add(instantiateButton.gameObject);
         }

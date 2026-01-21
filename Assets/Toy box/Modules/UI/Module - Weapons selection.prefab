@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f32c8cbb41b04774cb9a7eb5197fe6df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonSelectWeaponPrefab: {fileID: 7006683436699592752, guid: 80b304dc7204cfc4fbd9aed6e575e62a, type: 3}
+  buttonSelectWeaponPrefab: {fileID: 7006683436699592752, guid: f4bf9355e00023d40bcdffa85f633dd1, type: 3}
   buttonsParent: {fileID: 6326451696783516813}
 --- !u!1 &7852655071007145914
 GameObject:
@@ -153,7 +153,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 30}
-  m_SizeDelta: {x: 1500, y: 115.2872}
+  m_SizeDelta: {x: 1500, y: 150}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &5116626913070827098
 CanvasRenderer:
@@ -211,7 +211,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 7
-  m_Spacing: 30
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0

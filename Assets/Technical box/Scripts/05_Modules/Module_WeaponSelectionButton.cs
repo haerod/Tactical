@@ -43,11 +43,15 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     /// Displays the button with the weapon's infos.
     /// </summary>
     /// <param name="weaponToDisplay"></param>
-    public void DisplayButton(Weapon weaponToDisplay)
+    public void DisplayButton(Weapon weaponToDisplay, bool showText)
     {
         weapon = weaponToDisplay;
         weaponSprite.sprite = weapon.icon;
-        buttonText.text = weapon.itemName;
+        
+        if(showText)
+            buttonText.text = weapon.itemName;
+        else
+            buttonText.transform.parent.gameObject.SetActive(false);
         button.onClick.AddListener(delegate
             {
                 unit.weaponHolder.EquipWeapon(weapon);

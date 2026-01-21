@@ -32,7 +32,7 @@ public class TooltipTigger_Weapon : TooltipTrigger_Basic
     {
         string toReturn = "";
 
-        Weapon weapon = GetComponent<Module_WeaponSelectionButton>().weapon;
+        Weapon weapon = GetComponentInParent<Module_WeaponSelectionButton>().weapon;
         WeaponData weaponData = weapon.data;
         
         // Name
