@@ -11,6 +11,7 @@ using UnityEngine.Serialization;
 /// /// </summary>
 public class TooltipTigger_Weapon : TooltipTrigger_Basic
 {
+    [SerializeField] private bool showActionPoints = false;
     [SerializeField] private bool showDamage = true;
     [SerializeField] private bool showDamageTypes = true;
     [SerializeField] private bool showPrecisionModifier = true;
@@ -36,6 +37,9 @@ public class TooltipTigger_Weapon : TooltipTrigger_Basic
         
         // Name
         toReturn = $"<b>{weapon.itemName}</b>";
+        // Action points
+        if (showActionPoints)
+            toReturn += $" ({weaponData.actionPointCost} AP)";
         
         // Damage range
         if(showDamage)

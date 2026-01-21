@@ -9,10 +9,9 @@
 # ACTIONS
 
 **IMPORTANT**
-- 1d -> Action point system 
+- 0.5d -> Make an action toolbar
 
 - 1d -> Can add and remove Actions without bugs
-- 0.5d -> Make an action toolbar
 - 1w -> Actions systems: possibility between multiple designs
     - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)
     - action points
