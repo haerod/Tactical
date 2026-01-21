@@ -8,6 +8,13 @@ using static M__Managers;
 
 public abstract class A__Action : MonoBehaviour
 {
+    [SerializeField] private string _actionName;
+    public string actionName => _actionName;
+    [SerializeField] private Sprite _icon;
+    public Sprite icon => _icon;
+    [TextArea][SerializeField] private string _actionDescription;
+    public string actionDescription => _actionDescription;
+    
     [Header("ACTION POINTS")] 
     
     [SerializeField] protected bool _costDependsOnWeapon;

@@ -13,7 +13,10 @@ public class M_Rules : MonoBehaviour
     [Header("VICTORY RULES")]
     
     public VictoryCondition victoryCondition = VictoryCondition.Deathmatch;
-    public enum VictoryCondition { Deathmatch,}
+    public enum VictoryCondition { Deathmatch, ReachZone}
+
+    [SerializeField] private List<Tile> _tilesToReach;
+    public List<Tile> tilesToReach => _tilesToReach;
     
     [Header("FOG OF WAR")]
     
@@ -23,6 +26,9 @@ public class M_Rules : MonoBehaviour
     
     public static M_Rules instance => _instance == null ? FindFirstObjectByType<M_Rules>() : _instance;
     public static M_Rules _instance;
+    
+    public bool isFogOfWar => fogOfWar && fogOfWar.gameObject.activeInHierarchy;
+    public bool isVictory => IsVictory();
     
     public event EventHandler OnVictory;
     
@@ -39,38 +45,48 @@ public class M_Rules : MonoBehaviour
             Debug.LogError("There is more than one M_Rules in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
     }
 
+    private void Start()
+    {
+        if (victoryCondition == VictoryCondition.ReachZone)
+            GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
+    }
+    
     private void OnDisable()
     {
         OnVictory = null;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
     
-    /// <summary>
-    /// Returns true if there is an enabled fog of war.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsFogOfWar() => fogOfWar && fogOfWar.gameObject.activeInHierarchy;
-
-    /// <summary>
-    /// Checks if it's currently victory.
-    /// </summary>
-    public bool IsVictory()
-    {
-        if (_units.GetEnemiesOf(_units.current).Count > 0)
-            return false; // Not victory
-        
-        OnVictory?.Invoke(null, EventArgs.Empty);
-        return true;
-    }
-
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Checks if it's currently victory.
+    /// </summary>
+    private bool IsVictory()
+    {
+        if(victoryCondition ==  VictoryCondition.Deathmatch)
+            if (_units.GetEnemiesOf(_units.current).Count > 0)
+                return false; // No victory
+        
+        if (victoryCondition ==  VictoryCondition.ReachZone)
+            if(!_units.GetUnitsOf(playerTeam).Any(unit => _tilesToReach.Contains(unit.tile)))
+                return false; // No victory
+        
+        OnVictory?.Invoke(null, EventArgs.Empty);
+        return true;
+    }
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
+
+    private void GameEvents_OnAnyActionEnd(object sender, Unit endingUnit)
+    {
+        IsVictory();
+    }
 }

@@ -158,9 +158,6 @@ But turn based is a feature can be added separately.
 ### UNITY EVENTS
 - 1d -> Add events for FX, sound, etc.
 
-### RULES MANAGER
-- 1d -> Multiple victory conditions
-
 ### ATTACK
 - 1w -> Missing shots can touch another tile
 
@@ -188,3 +185,13 @@ But turn based is a feature can be added separately.
 
 ### RIPOST
 - 1w -> when you attack an unit, it riposts automatically
+
+### VICTORY CONDITION
+- 1h -> Module showing victory conditions
+- .5d -> Multiple objective to win
+- .5d -> Survive X turns
+  - 1h -> Module giving the feedback
+
+### HACKING ACTION
+- .5d -> Hacking action on dedicated tiles
+  - .5d -> Make it a victory condition
