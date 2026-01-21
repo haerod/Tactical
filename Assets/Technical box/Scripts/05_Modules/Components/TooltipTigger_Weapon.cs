@@ -65,6 +65,7 @@ public class TooltipTigger_Weapon : TooltipTrigger_Basic
             }
         }
 
+        // Precision modifier
         if (showPrecisionModifier)
         {
             int precisionModifier = weaponData.precisionModifier;
