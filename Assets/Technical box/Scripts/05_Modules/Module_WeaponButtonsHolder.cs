@@ -25,8 +25,10 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
+        GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -69,7 +71,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
@@ -87,5 +89,20 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         DestroyAllButtons();
+    }
+    
+    private void GameEvents_OnAnyActionStart(object sender, Unit actingUnit)
+    {
+        DestroyAllButtons();
+    }
+    
+    private void GameEvents_OnAnyActionEnd(object sender, Unit endingActionUnit)
+    {
+        if(!endingActionUnit.CanPlay())
+            return; // Can't play
+        if(!endingActionUnit.behavior.playable)
+            return; // Not playable character
+        
+        CreateWeaponButtons(endingActionUnit);
     }
 }

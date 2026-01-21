@@ -14,7 +14,7 @@ public class Module_TurnButtons : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
         SetUIActive(false);
@@ -26,8 +26,10 @@ public class Module_TurnButtons : MonoBehaviour
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _rules.OnVictory += Rules_OnVictory;
+        GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
+        GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
     }
-
+    
     private void OnDisable()
     {
         if(!currentUnit)
@@ -140,5 +142,20 @@ public class Module_TurnButtons : MonoBehaviour
     private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
     {
         SetUIActive(false);
+    }
+    
+    private void GameEvents_OnAnyActionStart(object sender, Unit actingUnit)
+    {
+        SetUIActive(false);
+    }
+    
+    private void GameEvents_OnAnyActionEnd(object sender, Unit endingActionUnit)
+    {
+        if(!endingActionUnit.CanPlay())
+            return; // Can't play
+        if(!endingActionUnit.behavior.playable)
+            return; // Not playable character
+        
+        SetUIActive(true);
     }
 }

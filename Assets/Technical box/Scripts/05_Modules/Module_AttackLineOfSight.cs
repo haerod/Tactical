@@ -12,12 +12,11 @@ using static M__Managers;
 public class Module_AttackLineOfSight : MonoBehaviour
 {
     [Header("REFERENCES")]
+    
     [SerializeField] private LineRenderer lineRenderer;
     
     private bool isShowing;
     private Unit attacker, target;
-    
-    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -27,14 +26,9 @@ public class Module_AttackLineOfSight : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
     }
-
-    private void OnDisable()
-    {
-        if(currentUnit)
-            currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
-    }
-
+    
     private void Update()
     {
         if(!isShowing)
@@ -55,6 +49,11 @@ public class Module_AttackLineOfSight : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
 
+    /// <summary>
+    /// Displays the line feedback.
+    /// </summary>
+    /// <param name="newAttacker"></param>
+    /// <param name="newTarget"></param>
     private void Show(Unit newAttacker, Unit newTarget)
     {
         isShowing = true;
@@ -62,6 +61,9 @@ public class Module_AttackLineOfSight : MonoBehaviour
         target = newTarget;
     }
 
+    /// <summary>
+    /// Hides the line feedback.
+    /// </summary>
     private void Hide()
     {
         isShowing = false;
@@ -77,11 +79,8 @@ public class Module_AttackLineOfSight : MonoBehaviour
         if(!startingUnit.behavior.playable)
             return; // NPC
         
-        currentUnit = startingUnit;
-        
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
-        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
     }
 
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
@@ -91,9 +90,6 @@ public class Module_AttackLineOfSight : MonoBehaviour
         
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
         InputEvents.OnTileExit -= InputEvents_OnTileExit;
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
-        
-        currentUnit = null;
     }
 
     private void InputEvents_OnEnemyEnter(object sender, Unit enteredUnit)
@@ -117,7 +113,7 @@ public class Module_AttackLineOfSight : MonoBehaviour
         Hide();
     }
     
-    private void Attack_OnAttackStart(object sender, EventArgs e)
+    private void GameEvents_OnAnyActionStart(object sender, Unit actingUnit)
     {
         Hide();
     }

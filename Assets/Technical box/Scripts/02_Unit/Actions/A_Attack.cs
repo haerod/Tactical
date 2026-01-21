@@ -190,6 +190,17 @@ public class A_Attack : A__Action
     // ACTION OVERRIDE METHODS
     // ======================================================================
     
+    protected override bool IsAvailable()
+    {
+        Weapon weapon = unit.weaponHolder.weapon;
+        
+        if (weapon.data.usesAmmo)
+            if(!weapon.hasAvailableAmmoToSpend)
+                return false; // Not enough ammo
+        
+        return base.IsAvailable();
+    }
+    
     protected override void OnHoverEnemy(Unit hoveredUnit)
     {
         unit.move.OrientTo(hoveredUnit.transform.position);
