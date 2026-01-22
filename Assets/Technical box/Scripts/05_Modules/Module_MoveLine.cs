@@ -25,7 +25,7 @@ public class Module_MoveLine : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
-        _rules.OnVictory += Rules_OnVictory;
+        _Level.OnVictory += Level_OnVictory;
     }
 
     private void OnDisable()
@@ -143,7 +143,7 @@ public class Module_MoveLine : MonoBehaviour
         DisableLines();
     }
     
-    private void Rules_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
         DisableLines();
     }

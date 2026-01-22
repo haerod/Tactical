@@ -57,13 +57,13 @@ public class Unit_Look : MonoBehaviour
         .units
             .Where(chara =>
             {
-                switch (_rules.visibleInFogOfWar)
+                switch (_Level.visibleInFogOfWar)
                 {
-                    case M_Rules.VisibleInFogOfWar.Everybody:
+                    case M_Level.VisibleInFogOfWar.Everybody:
                         return true;
-                    case M_Rules.VisibleInFogOfWar.Allies:
+                    case M_Level.VisibleInFogOfWar.Allies:
                         return visibleTiles.Contains(chara.tile) || unit.team.IsAllyOf(_units.current);
-                    case M_Rules.VisibleInFogOfWar.InView:
+                    case M_Level.VisibleInFogOfWar.InView:
                         return visibleTiles.Contains(chara.tile);
                     default:
                         return false;

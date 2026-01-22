@@ -126,7 +126,7 @@ public class M_Units : MonoBehaviour
     /// </summary>
     public void EndCurrentUnitTurn(Unit overrideNextUnit = null)
     {
-        if (_rules.isVictory) // Victory
+        if (_Level.isVictory) // Victory
             return;
 
         OnUnitTurnEnd?.Invoke(this, current);

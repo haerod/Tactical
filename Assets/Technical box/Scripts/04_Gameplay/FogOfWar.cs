@@ -57,13 +57,13 @@ public class FogOfWar : MonoBehaviour
         List<Unit> visibleCharacters = _units.units
             .Where(c =>
             {
-                switch (_rules.visibleInFogOfWar)
+                switch (_Level.visibleInFogOfWar)
                 {
-                    case M_Rules.VisibleInFogOfWar.Everybody:
+                    case M_Level.VisibleInFogOfWar.Everybody:
                         return true;
-                    case M_Rules.VisibleInFogOfWar.Allies:
+                    case M_Level.VisibleInFogOfWar.Allies:
                         return visibleTiles.Contains(c.tile) || c.team.IsAllyOf(_units.current);
-                    case M_Rules.VisibleInFogOfWar.InView:
+                    case M_Level.VisibleInFogOfWar.InView:
                         return visibleTiles.Contains(c.tile);
                     default:
                         return false;

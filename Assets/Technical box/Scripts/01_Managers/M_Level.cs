@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using static M__Managers;
 
-public class M_Rules : MonoBehaviour
+public class M_Level : MonoBehaviour
 {
     [SerializeField] private Team _playerTeam;
     public Team playerTeam => _playerTeam;
@@ -24,8 +24,8 @@ public class M_Rules : MonoBehaviour
     public enum VisibleInFogOfWar { InView, Allies, Everybody}
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
     
-    public static M_Rules instance => _instance == null ? FindFirstObjectByType<M_Rules>() : _instance;
-    public static M_Rules _instance;
+    public static M_Level instance => _instance == null ? FindFirstObjectByType<M_Level>() : _instance;
+    public static M_Level _instance;
     
     public bool isFogOfWar => fogOfWar && fogOfWar.gameObject.activeInHierarchy;
     public bool isVictory => IsVictory();
@@ -50,7 +50,7 @@ public class M_Rules : MonoBehaviour
         if (victoryCondition == VictoryCondition.ReachZone)
             GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
     }
-    
+
     private void OnDisable()
     {
         OnVictory = null;

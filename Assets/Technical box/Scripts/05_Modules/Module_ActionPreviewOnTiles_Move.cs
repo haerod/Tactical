@@ -20,7 +20,7 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
-        _rules.OnVictory += Rules_OnVictory;
+        _Level.OnVictory += Level_OnVictory;
     }
     
     // ======================================================================
@@ -72,7 +72,7 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
         ShowFeedbacks(endingActionUnit.move.movementArea);
     }
     
-    private void Rules_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
         HideFeedbacks();
     }

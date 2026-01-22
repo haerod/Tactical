@@ -64,7 +64,7 @@ public class M_Input : MonoBehaviour
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
-        _rules.OnVictory += Rules_OnVictory;
+        _Level.OnVictory += Level_OnVictory;
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
     }
@@ -312,7 +312,7 @@ public class M_Input : MonoBehaviour
         SetActivePlayerInput();
     }
     
-    private void Rules_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
         SetActivePlayerInput(false);
     }
@@ -379,7 +379,7 @@ public static class InputEvents
         if (!currentUnit.move.CanWalkAt(tile.coordinates) || !currentUnit.CanPlay()) 
             return; // Can't go on this tile or can't play
         
-        bool pointedCharacterIsVisible = !_rules.isFogOfWar || currentUnit.look.visibleTiles.Contains(tile);
+        bool pointedCharacterIsVisible = !_Level.isFogOfWar || currentUnit.look.visibleTiles.Contains(tile);
 
         if (tile.IsOccupiedByUnit() && pointedCharacterIsVisible)
         {

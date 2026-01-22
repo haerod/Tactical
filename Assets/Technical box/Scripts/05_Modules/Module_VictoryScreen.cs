@@ -15,7 +15,7 @@ public class Module_VictoryScreen : MonoBehaviour
     
     private void Start()
     {
-        _rules.OnVictory += Rules_OnVictory;
+        _Level.OnVictory += Level_OnVictory;
     }
 
     // ======================================================================
@@ -46,7 +46,7 @@ public class Module_VictoryScreen : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Rules_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
         DisplayEndScreen(_units.current.team.team);
     }

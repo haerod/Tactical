@@ -14,7 +14,7 @@ public class Module_TileToReachFeedback : MonoBehaviour
     [SerializeField] private Color gizmoColor = Color.yellow;
     
     private List<GameObject> tileToReachFeedbacks = new();
-    private M_Rules rules;
+    private M_Level level;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -22,7 +22,7 @@ public class Module_TileToReachFeedback : MonoBehaviour
     
     private void Start()
     {
-        if(_rules.victoryCondition != M_Rules.VictoryCondition.ReachZone)
+        if(_Level.victoryCondition != M_Level.VictoryCondition.ReachZone)
             return; // Not the good victory condition
         
         Show();
@@ -30,15 +30,15 @@ public class Module_TileToReachFeedback : MonoBehaviour
     
     private void OnDrawGizmos()
     {
-        if(_rules.victoryCondition != M_Rules.VictoryCondition.ReachZone)
+        if(_Level.victoryCondition != M_Level.VictoryCondition.ReachZone)
             return; // Not the good victory condition
         
         Gizmos.color = gizmoColor;
         
-        if (!rules)
-            rules = _rules;
+        if (!level)
+            level = _Level;
 
-        rules.tilesToReach.ForEach(tile => Gizmos.DrawCube(tile.transform.position + Vector3.up * .05f, new Vector3(1f, .1f, 1f)));
+        level.tilesToReach.ForEach(tile => Gizmos.DrawCube(tile.transform.position + Vector3.up * .05f, new Vector3(1f, .1f, 1f)));
     }
     
     // ======================================================================
@@ -56,12 +56,12 @@ public class Module_TileToReachFeedback : MonoBehaviour
     {
         Hide();
         
-        for (int i = 0; i < _rules.tilesToReach.Count; i++)
+        for (int i = 0; i < _Level.tilesToReach.Count; i++)
         {
             if(tileToReachFeedbacks.Count > i)
-                SetupTileToReachFeedback(tileToReachFeedbacks[i], _rules.tilesToReach[i]);
+                SetupTileToReachFeedback(tileToReachFeedbacks[i], _Level.tilesToReach[i]);
             else
-                AddNewFeedback(_rules.tilesToReach[i]);
+                AddNewFeedback(_Level.tilesToReach[i]);
         }
     }
     

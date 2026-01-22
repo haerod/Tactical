@@ -107,7 +107,7 @@ public class A_Move : A__Action
         if (!unit.CanPlay()) 
             return false; // Can't play
 
-        if (_rules.isFogOfWar && !unit.look.visibleTiles.Contains(tile)) 
+        if (_Level.isFogOfWar && !unit.look.visibleTiles.Contains(tile)) 
             return false; // Tile in fog
 
         List<Tile> path = Pathfinding.GetPath(
@@ -273,7 +273,7 @@ public class A_Move : A__Action
     {
         List<Tile> toReturn = new List<Tile>();
 
-        if (_rules.isFogOfWar)
+        if (_Level.isFogOfWar)
             toReturn.AddRange(_units.units
                 .Where(chara => IsBlockingPath(chara))
                 .Intersect(unit.look.UnitsVisibleInFog())
