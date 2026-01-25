@@ -21,7 +21,7 @@ public class Module_Cursor : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
@@ -35,13 +35,13 @@ public class Module_Cursor : MonoBehaviour
         
         _input.OnChangeClickActivation += Input_ChangeClickActivation;
     }
-
+    
     private void OnDisable()
     {
         if(currentUnit)
             currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

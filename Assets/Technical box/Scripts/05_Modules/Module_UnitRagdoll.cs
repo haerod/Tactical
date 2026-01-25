@@ -39,7 +39,8 @@ public class Module_UnitRagdoll : MonoBehaviour
         GameObject unitRagdoll = Instantiate(
             unitRagdollPrefab,
             deadUnit.transform.position,
-            deadUnit.transform.rotation);
+            deadUnit.transform.rotation,
+            transform);
         
         Transform originalRootBone = deadUnit.graphics.rootBone;
         Unit_Graphics ragdollGraphics = unitRagdoll.GetComponent<Unit_Graphics>();
@@ -109,7 +110,8 @@ public class Module_UnitRagdoll : MonoBehaviour
         GameObject instantiatedWeapon = Instantiate(
             originalWeapon, 
             originalWeapon.transform.position,
-            originalWeapon.transform.rotation);
+            originalWeapon.transform.rotation,
+            transform);
         GameObject instantiatedPhysics = instantiatedWeapon.GetComponent<Weapon>().physics;
         instantiatedPhysics.SetActive(true);
         Rigidbody rb = instantiatedWeapon.AddComponent<Rigidbody>();

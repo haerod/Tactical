@@ -43,6 +43,9 @@
 # UNIT VISUALS
 - 1d -> Make it easy to change model (humanoid) -> /!\ Ragdoll Module is linked
 
+# INVENTORY
+- .5d -> Stack of items (ex : ammo of the same type can be stacked together)
+
 ## FOG OF WAR
 - 1h -> Fog mask on FoW, not on tile
 - 1h -> Fog of war view lines as Module (of Fog of war)
