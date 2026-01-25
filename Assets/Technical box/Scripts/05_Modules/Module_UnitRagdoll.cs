@@ -30,6 +30,10 @@ public class Module_UnitRagdoll : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Creates a ragdoll and match it with the other parts.
+    /// </summary>
+    /// <param name="deadUnit"></param>
     private void CreateRagdoll(Unit deadUnit)
     {
         GameObject unitRagdoll = Instantiate(
@@ -49,6 +53,11 @@ public class Module_UnitRagdoll : MonoBehaviour
             DropWeaponOnTheFloor(deadUnit);
     }
     
+    /// <summary>
+    /// Changes the transforms of the ragdoll to match with the original.
+    /// </summary>
+    /// <param name="original"></param>
+    /// <param name="clone"></param>
     private void MatchAllChildTransforms(Transform original, Transform clone)
     {
         foreach (Transform originalChild in original)
@@ -65,6 +74,12 @@ public class Module_UnitRagdoll : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Adds an explosion force to the ragdoll's bones.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="explosionForce"></param>
+    /// <param name="explosionRange"></param>
     private void ApplyExplosionToRagdoll(Transform root, float explosionForce, float explosionRange)
     {
         Vector3 randomDir = new (Random.Range(-1f,1f),0, Random.Range(-1f,1f));
@@ -79,6 +94,10 @@ public class Module_UnitRagdoll : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Creates a coby of the dead unit's weapon and drop it on the floor.
+    /// </summary>
+    /// <param name="originalUnit"></param>
     private void DropWeaponOnTheFloor(Unit originalUnit)
     {
         GameObject originalPhysics = originalUnit.weaponHolder.weaponGraphics.GetComponent<Weapon>().physics;
@@ -99,6 +118,11 @@ public class Module_UnitRagdoll : MonoBehaviour
         rb.AddExplosionForce(50f, instantiatedWeapon.transform.position + randomDir, 10f);
     }
     
+    /// <summary>
+    /// Copies original unit's materials to the ragdoll.
+    /// </summary>
+    /// <param name="original"></param>
+    /// <param name="ragdoll"></param>
     private void AssignMaterials(Unit_Graphics original, Unit_Graphics ragdoll)
     {
         for (int i = 0; i < original.skinnedMeshRenderers.Count; i++)
