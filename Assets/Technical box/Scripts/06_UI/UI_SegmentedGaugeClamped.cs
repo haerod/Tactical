@@ -30,6 +30,10 @@ public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
     /// <param name="value"></param>
     public void SetMaximumValue(int value) => maximumValue = value;
     
+    /// <summary>
+    /// Changes the printed icon.
+    /// </summary>
+    /// <param name="sprite"></param>
     public void SetIcon(Sprite sprite) => icon = sprite;
     
     /// <summary>
