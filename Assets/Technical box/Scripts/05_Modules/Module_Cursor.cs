@@ -12,8 +12,9 @@ public class Module_Cursor : MonoBehaviour
     [SerializeField] private Texture2D outSightCursor;
     [SerializeField] private Texture2D cantGoCursor;
     [SerializeField] private Texture2D healCursor;
+    [SerializeField] private Texture2D outOfAmmoCursor;
     
-    private enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement, Heal } // /!\ If add/remove a cursor, update the SetCursor method
+    private enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement, Heal, OutOfAmmo } // /!\ If add/remove a cursor, update the SetCursor method
     
     private Unit currentUnit;
     
@@ -72,6 +73,9 @@ public class Module_Cursor : MonoBehaviour
             case CursorType.Heal:
                 Cursor.SetCursor(healCursor, new Vector2(16, 16), CursorMode.Auto);
                 break;
+            case CursorType.OutOfAmmo:
+                Cursor.SetCursor(outOfAmmoCursor, new Vector2(16, 16), CursorMode.Auto);
+                break;
             default:
                 break;
         }
@@ -116,19 +120,25 @@ public class Module_Cursor : MonoBehaviour
     
     private void InputEvents_OnEnemyEnter(object sender, Unit hoveredEnemy)
     {
-        Unit currentCharacter = _units.current;
+        Unit unit = _units.current;
         
-        if(!currentCharacter.CanPlay())
+        if(!unit.CanPlay())
             return; // Unit can't play
         
-        if (!currentCharacter.look.CanSee(hoveredEnemy))
+        if (!unit.look.CanSee(hoveredEnemy))
         {
             SetCursor(CursorType.OutAimOrSight);
             return; // Unit not in sight
         }
-        if(!currentCharacter.attack.AttackableTiles().Contains(hoveredEnemy.tile))
+        if(!unit.attack.AttackableTiles().Contains(hoveredEnemy.tile))
             return; // Not attackable
-
+        
+        if (unit.weaponHolder.weaponData.usesAmmo && unit.weaponHolder.weapon.currentLoadedAmmo == 0)
+        {
+            SetCursor(CursorType.OutOfAmmo);
+            return; // Out of ammo
+        }
+            
         SetCursor(CursorType.AimAndInSight);
     }
     
