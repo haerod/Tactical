@@ -23,6 +23,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
 
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         
         InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
@@ -103,6 +104,11 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         if(endingUnit != unit)
             return; // Another character
         
+        Hide();
+    }
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
         Hide();
     }
     

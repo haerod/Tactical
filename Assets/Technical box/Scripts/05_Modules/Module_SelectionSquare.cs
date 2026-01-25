@@ -17,14 +17,15 @@ public class Module_SelectionSquare : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _Level.OnVictory += Level_OnVictory;
     }
-
+    
     private void OnDisable()
     {
         if(!currentUnit)
@@ -34,7 +35,7 @@ public class Module_SelectionSquare : MonoBehaviour
         currentUnit.move.OnMovementStart -= Move_OnMovementStart;
         currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -96,6 +97,11 @@ public class Module_SelectionSquare : MonoBehaviour
         currentUnit = null;
     }
 
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
+        DisableSquare();
+    }
+    
     private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
     {
         Tile lastTile = pathfinding.Last();

@@ -23,6 +23,7 @@ public class Module_CoverStateUnit : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
@@ -117,6 +118,11 @@ public class Module_CoverStateUnit : MonoBehaviour
         if(endingUnit != unit)
             return; // Another unit's turn
         
+        Hide();
+    }
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
         Hide();
     }
     

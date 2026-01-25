@@ -4,21 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using static M__Managers;
 using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
 
-public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class Module_ActionSelectionButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Button button;
-    [SerializeField] private Image weaponSprite;
+    [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI buttonText;
     
     private Unit unit;
     private Module_WeaponButtonsHolder holder;
-
-    public Weapon weapon { get; private set; }
+    
+    public A__Action action { get; private set; }
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -27,7 +28,7 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Sets the parameters to the button.
     /// </summary>
@@ -42,21 +43,17 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     /// <summary>
     /// Displays the button with the weapon's infos.
     /// </summary>
-    /// <param name="weaponToDisplay"></param>
-    public void DisplayButton(Weapon weaponToDisplay, bool showText)
+    /// <param name="actionToDisplay"></param>
+    public void DisplayButton(A__Action actionToDisplay, Action OnClick, bool showText)
     {
-        weapon = weaponToDisplay;
-        weaponSprite.sprite = weapon.icon;
+        action = actionToDisplay;
+        icon.sprite = actionToDisplay.icon;
         
         if(showText)
-            buttonText.text = weapon.itemName;
+            buttonText.text = actionToDisplay.actionName;
         else
             buttonText.transform.parent.gameObject.SetActive(false);
-        button.onClick.AddListener(delegate
-            {
-                unit.weaponHolder.EquipWeapon(weapon);
-                holder.CreateWeaponButtons(unit);
-            });
+        button.onClick.AddListener(delegate {OnClick();});
     }
     
     // ======================================================================
@@ -69,11 +66,11 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        GameEvents.InvokeOnAnyWeaponSelectionButtonEnter(this);
+        //GameEvents.InvokeOnAnyWeaponSelectionButtonEnter(this);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        GameEvents.InvokeOnAnyWeaponSelectionButtonExit(this);
+        //GameEvents.InvokeOnAnyWeaponSelectionButtonExit(this);
     }
 }

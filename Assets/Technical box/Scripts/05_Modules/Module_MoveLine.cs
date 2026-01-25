@@ -25,6 +25,7 @@ public class Module_MoveLine : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _Level.OnVictory += Level_OnVictory;
     }
 
@@ -126,6 +127,11 @@ public class Module_MoveLine : MonoBehaviour
         InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
         
         currentUnit = null;
+    }
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
+        DisableLines();
     }
     
     private void Move_OnMovementStart(object sender, EventArgs e)

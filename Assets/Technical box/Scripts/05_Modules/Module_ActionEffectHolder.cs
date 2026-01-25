@@ -25,10 +25,11 @@ public class Module_ActionEffectHolder : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        GameEvents.OnAnyAttackEnd += GameEvents_OnAnyAttackEnd;
         GameEvents.OnAnyHealthLoss += Health_OnAnyHealthLoss;
         GameEvents.OnAnyHealthGain += Health_OnAnyHealthGain;
     }
-
+    
     private void OnDisable()
     {
         if(!currentUnit)
@@ -69,10 +70,6 @@ public class Module_ActionEffectHolder : MonoBehaviour
         A_Reload reload = currentUnit.actionsHolder.GetActionOfType<A_Reload>();
         if (reload)
             reload.OnReloadEnd += Reload_OnReloadEnd;
-        
-        Weapon currentWeapon = startingUnit.weaponHolder.weapon;
-        if(currentWeapon.data.usesAmmo && currentWeapon.currentLoadedAmmo == 0)
-            DisplayActionEffectFeedback(outOfAmmoText, startingUnit.transform);
     }
     
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
@@ -83,6 +80,16 @@ public class Module_ActionEffectHolder : MonoBehaviour
         if (reload)
             reload.OnReloadEnd -= Reload_OnReloadEnd;
         currentUnit = null;
+    }
+    
+    private void GameEvents_OnAnyAttackEnd(object sender, Unit endingUnit)
+    {
+        if (!endingUnit.behavior.playable)
+            return; // NPC
+        
+        Weapon currentWeapon = endingUnit.weaponHolder.weapon;
+        if(currentWeapon.data.usesAmmo && currentWeapon.currentLoadedAmmo == 0)
+            DisplayActionEffectFeedback(outOfAmmoText, endingUnit.transform);    
     }
     
     private void Attack_OnAttackMiss(object sender, Unit missedUnit)

@@ -20,7 +20,6 @@ public class Module_WeaponAmmo : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject remainingAmmoPanel;
     [SerializeField] private TextMeshProUGUI remainingAmmoText;
-    [SerializeField] private Button reloadButton;
     
     private Unit currentUnit;
     
@@ -79,9 +78,6 @@ public class Module_WeaponAmmo : MonoBehaviour
             ammoGauge.gameObject.SetActive(true);
             remainingAmmoPanel.gameObject.SetActive(weaponData.needAmmoToReload);
             
-            bool canReload = currentUnit.actionsHolder.HasAvailableAction<A_Reload>() && weaponData.canReload && !weapon.isFullOfAmmo;
-            reloadButton.gameObject.SetActive(canReload);
-            
             if (weaponData.needAmmoToReload)
                 remainingAmmoText.text = currentUnit.inventory.GetAmmoCountOfType(weaponData.ammoType).ToString();
         }
@@ -89,7 +85,6 @@ public class Module_WeaponAmmo : MonoBehaviour
         {
             ammoGauge.gameObject.SetActive(false);
             remainingAmmoPanel.SetActive(false);
-            reloadButton.gameObject.SetActive(false);
         }
         
         panel.SetActive(true);

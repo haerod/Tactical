@@ -17,6 +17,7 @@ public class Module_OutOfRangeIcon : MonoBehaviour
     private void Start()
     {
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
     }
 
     // ======================================================================
@@ -59,5 +60,10 @@ public class Module_OutOfRangeIcon : MonoBehaviour
             Hide();
         else
             Show();
+    }
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
+        Hide();
     }
 }

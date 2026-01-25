@@ -18,6 +18,7 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
         _Level.OnVictory += Level_OnVictory;
@@ -52,6 +53,11 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
         if (!endingUnit.behavior.playable) 
             return; // NPC
         
+        HideFeedbacks();
+    }
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
         HideFeedbacks();
     }
     

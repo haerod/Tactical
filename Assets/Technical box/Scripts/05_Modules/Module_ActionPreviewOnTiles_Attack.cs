@@ -14,11 +14,12 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
         _Level.OnVictory += Level_OnVictory;
@@ -67,6 +68,11 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
         HideFeedbacks();
         
         currentUnit = null;
+    }
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
+        HideFeedbacks();
     }
     
     private void Action_OnAnyActionStart(object sender, Unit startingActionUnit)

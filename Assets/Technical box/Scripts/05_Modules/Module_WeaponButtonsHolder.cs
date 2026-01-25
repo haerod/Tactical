@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using static M__Managers;
 
 public class Module_WeaponButtonsHolder : MonoBehaviour
@@ -12,10 +13,11 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     [Header("REFERENCES")]
     
     [SerializeField] private GameObject buttonSelectWeaponPrefab;
+    [SerializeField] private GameObject buttonSelectActionPrefab;
     [SerializeField] private Transform buttonsParent;
     
     private List<GameObject> instantiatedButtons = new();
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -46,8 +48,13 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
         DestroyAllButtons();
         instantiatedButtons.Clear();
         
+        Weapon currentWeapon = unit.weaponHolder.weapon;
+        
         foreach (Weapon weapon in unit.inventory.weapons)
         {
+            if(weapon == currentWeapon)
+                continue; // Current weapon
+            
             Module_WeaponSelectionButton instantiateButton = 
                 Instantiate(
                     buttonSelectWeaponPrefab,  
@@ -58,6 +65,20 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
             instantiateButton.DisplayButton(weapon, _showText);
             
             instantiatedButtons.Add(instantiateButton.gameObject);
+        }
+
+        if (unit.actionsHolder.HasAvailableAction<A_Reload>())
+        {
+            Module_ActionSelectionButton instantiatedButton = Instantiate(
+                buttonSelectActionPrefab,
+                buttonsParent)
+                .GetComponent<Module_ActionSelectionButton>();
+            
+            instantiatedButton.SetParameters(this,unit);
+            instantiatedButton.DisplayButton(
+                unit.actionsHolder.GetActionOfType<A_Reload>(),
+                delegate { unit.actionsHolder.GetActionOfType<A_Reload>().StartReload(); },
+                _showText);
         }
     }
     

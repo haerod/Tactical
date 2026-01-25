@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5699193745772663947}
   - component: {fileID: 5929105858888037067}
   - component: {fileID: 1144574596021628514}
-  - component: {fileID: 6969353374553947489}
+  - component: {fileID: 21270735558313347}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0.52156866, g: 0.68235296, b: 0.68235296, a: 1}
   m_EffectDistance: {x: 3, y: -3}
   m_UseGraphicAlpha: 1
---- !u!114 &6969353374553947489
+--- !u!114 &21270735558313347
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,13 +148,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 177500030528262939}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37f74eea38514695aa525f1fb139afe3, type: 3}
+  m_Script: {fileID: 11500000, guid: f6f4257cfc35404ea1a0410cb18c9b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   content: []
   showActionPoints: 0
   showDamage: 1
-  showDamageTypes: 0
+  showDamageTypes: 1
   showPrecisionModifier: 1
 --- !u!1 &455943098495066263
 GameObject:
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7e457d13028ac2d449caba96416d122e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a7d79d58fc28644d9ce92f91ac0af10, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -518,7 +518,7 @@ GameObject:
   - component: {fileID: 775980589122673917}
   - component: {fileID: 6378409501907091725}
   - component: {fileID: 9185929226253514253}
-  - component: {fileID: 7031677415059904511}
+  - component: {fileID: 7355995758054266821}
   m_Layer: 0
   m_Name: UI_Button select action
   m_TagString: Untagged
@@ -582,7 +582,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &7031677415059904511
+--- !u!114 &7355995758054266821
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -591,9 +591,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7006683436699592752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2363ebfa1fd229749a2f39735e763d11, type: 3}
+  m_Script: {fileID: 11500000, guid: 247d160a5c54481b82f0be03739ca94f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 5929105858888037067}
-  weaponSprite: {fileID: 4266340875377258489}
+  icon: {fileID: 4266340875377258489}
   buttonText: {fileID: 272751116059124258}

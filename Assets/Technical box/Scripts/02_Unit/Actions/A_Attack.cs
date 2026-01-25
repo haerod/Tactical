@@ -55,8 +55,8 @@ public class A_Attack : A__Action
         int damages = unit.weaponHolder.weaponData.RandomDamages();
 
         StartAction();
-        OnAttackStart?.Invoke(this, EventArgs.Empty);
         GameEvents.InvokeOnAnyAttackStart(unit);
+        OnAttackStart?.Invoke(this, EventArgs.Empty);
         if (weapon.data.useProjectile)
         {
             //Attack attack = new Attack(target, damages, weapon.data.damageType);
@@ -144,8 +144,9 @@ public class A_Attack : A__Action
             
             Wait(0.5f, () =>
             {
+                GameEvents.InvokeOnAnyAttackEnd(unit);
                 OnAttackEnd?.Invoke(this, EventArgs.Empty);
-
+                
                 EndAction();
             });
             

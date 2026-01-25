@@ -13,6 +13,7 @@ public static class GameEvents
     public static event EventHandler<Unit> OnAnyActionEnd;
     public static event EventHandler<Unit> OnAnyMovementStart;
     public static event EventHandler<Unit> OnAnyAttackStart;
+    public static event EventHandler<Unit> OnAnyAttackEnd;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthLoss;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthGain;
     public static event EventHandler<Unit> OnAnyDeath;
@@ -30,6 +31,7 @@ public static class GameEvents
     public static void ClearAllEvents()
     {
         OnAnyAttackStart = null;
+        OnAnyAttackEnd = null;
         OnAnyActionStart = null;
         OnAnyActionEnd = null;
         OnAnyMovementStart = null;
@@ -50,6 +52,7 @@ public static class GameEvents
     public static void InvokeOnAnyActionEnd(Unit endingActionUnit) => OnAnyActionEnd?.Invoke(null, endingActionUnit);
     public static void InvokeOnAnyMovementStart(Unit movingUnit) => OnAnyMovementStart?.Invoke(null, movingUnit);
     public static void InvokeOnAnyAttackStart(Unit attackingUnit) => OnAnyAttackStart?.Invoke(null, attackingUnit);
+    public static void InvokeOnAnyAttackEnd(Unit attackingUnit) => OnAnyAttackEnd?.Invoke(null, attackingUnit);
     public static void InvokeOnAnyHealthLoss(Unit_Health healthDamaged, int healthLoss) => OnAnyHealthLoss?.Invoke(null, new HealthChangedEventArgs {
         health = healthDamaged, 
         healthChangedAmount = healthLoss});
