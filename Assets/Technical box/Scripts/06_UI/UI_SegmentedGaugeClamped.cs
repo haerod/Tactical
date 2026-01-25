@@ -10,6 +10,8 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
 {
+    [SerializeField] protected Sprite icon;
+    [SerializeField] protected Color baseItemColor = Color.white;
     [SerializeField] protected Color emptyItemColor = Color.gray;
     
     protected int maximumValue;
@@ -17,7 +19,7 @@ public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -27,6 +29,8 @@ public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
     /// </summary>
     /// <param name="value"></param>
     public void SetMaximumValue(int value) => maximumValue = value;
+    
+    public void SetIcon(Sprite sprite) => icon = sprite;
     
     /// <summary>
     /// Adds Count items to the item parent, clamped to maximum value.
@@ -40,11 +44,14 @@ public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
         for (int i = 0; i < maximumValue; i++)
         {
             GameObject instantiatedItem = Instantiate(itemPrefab, itemParent);
+            Image image = instantiatedItem.GetComponent<Image>();
+            image.color = baseItemColor;
+            image.sprite = icon;
             
             if(i < count)
                 continue; // Not the last
             
-            instantiatedItem.GetComponent<Image>().color = emptyItemColor;
+            image.color = emptyItemColor;
         }
     }
     

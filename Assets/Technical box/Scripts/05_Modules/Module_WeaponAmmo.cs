@@ -15,7 +15,7 @@ public class Module_WeaponAmmo : MonoBehaviour
 {
     [Header("REFERENCES")]
     
-    [SerializeField] private UI_SegmentedAmmoGauge ammo;
+    [SerializeField] private UI_SegmentedGaugeClamped ammoGauge;
     [SerializeField] private Image weaponImage;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject remainingAmmoPanel;
@@ -73,9 +73,10 @@ public class Module_WeaponAmmo : MonoBehaviour
 
         if (weaponData.usesAmmo)
         {
-            ammo.SetMaximumValue(weaponData.ammoCount);
-            ammo.FillGauge(weapon.currentLoadedAmmo, weaponData.ammo.icon);
-            ammo.gameObject.SetActive(true);
+            ammoGauge.SetMaximumValue(weaponData.ammoCount);
+            ammoGauge.SetIcon(weaponData.ammo.icon);
+            ammoGauge.FillGauge(weapon.currentLoadedAmmo);
+            ammoGauge.gameObject.SetActive(true);
             remainingAmmoPanel.gameObject.SetActive(weaponData.needAmmoToReload);
             
             if (currentUnit.actionsHolder.HasAction<A_Reload>() && weaponData.canReload && !weapon.isFullOfAmmo)
@@ -93,7 +94,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         }
         else
         {
-            ammo.gameObject.SetActive(false);
+            ammoGauge.gameObject.SetActive(false);
             remainingAmmoPanel.SetActive(false);
             reloadButton.gameObject.SetActive(false);
         }

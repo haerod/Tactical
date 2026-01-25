@@ -23,6 +23,7 @@ public class UI_SegmentedAmmoGauge : UI_SegmentedGaugeClamped
     /// If Count is under Maximum Value, adds empty items to the parent.
     /// /// </summary>
     /// <param name="count"></param>
+    /// <param name="icon"></param>
     public void FillGauge(int count, Sprite icon)
     {
         DestroyChildren();
