@@ -12,17 +12,17 @@ public class A_Attack : A__Action
     [SerializeField] private int precision = 100;
     
     private Action onAttackDone;
-
+    
     public event EventHandler OnAttackStart;
     public event EventHandler OnAttackEnd;
     public event EventHandler<Unit> OnAttackMiss;
     public event EventHandler<Unit> OnAttackableEnemyHovered;
     public event EventHandler<Unit> OnUnitExit;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

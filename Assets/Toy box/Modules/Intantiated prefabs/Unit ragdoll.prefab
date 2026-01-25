@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4298297386268162985}
+  - component: {fileID: 3409023495478166584}
   - component: {fileID: 7815852954641372199}
   m_Layer: 0
   m_Name: Unit ragdoll
@@ -33,6 +34,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3409023495478166584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2442718264957213786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 843609ae682f41029079fb7a015cf54c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  note: "FBX (Graphics) can be replaced, but remind to add a reference to : \n- Right
+    Hand\n- Root bone (check in the Skinned Mesh Renderer)\n- Skinned Mesh Renderers
+    (can be only one in the list, remove the null ones)"
 --- !u!114 &7815852954641372199
 MonoBehaviour:
   m_ObjectHideFlags: 0
