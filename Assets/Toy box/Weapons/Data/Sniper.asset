@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c4a88a4dd8634ca609a480766e808, type: 3}
   m_Name: Sniper
   m_EditorClassIdentifier: 
+  _useProjectile: 0
   _damagesRange: {x: 4, y: 5}
   _damageType:
   - {fileID: 11400000, guid: 61d85b9788250e041bb254a1d737f89b, type: 2}
@@ -20,7 +21,7 @@ MonoBehaviour:
   _range: 0
   _precisionMalusByDistance: 5
   _precisionModifier: 20
-  _ammoType: {fileID: 11400000, guid: 3453df5c35091d24ca15e327f68ccdb3, type: 2}
+  _ammo: {fileID: -7614215861890518551, guid: 946c423ba53e9db4c9dd79fd589ec14e, type: 3}
   _canReload: 1
   _needAmmoToReload: 1
   _ammoCount: 1

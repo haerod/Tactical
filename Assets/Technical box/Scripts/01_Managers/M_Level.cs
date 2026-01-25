@@ -14,7 +14,7 @@ public class M_Level : MonoBehaviour
     
     public VictoryCondition victoryCondition = VictoryCondition.Deathmatch;
     public enum VictoryCondition { Deathmatch, ReachZone}
-
+    
     [SerializeField] private List<Tile> _tilesToReach;
     public List<Tile> tilesToReach => _tilesToReach;
     

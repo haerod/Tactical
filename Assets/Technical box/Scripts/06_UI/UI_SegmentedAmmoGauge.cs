@@ -6,14 +6,10 @@ using System.Linq;
 using UnityEngine.UI;
 
 /// <summary>
-/// A generic gauge can be filled, with a maximum.
+/// Class description
 /// </summary>
-public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
+public class UI_SegmentedAmmoGauge : UI_SegmentedGaugeClamped
 {
-    [SerializeField] protected Color emptyItemColor = Color.gray;
-    
-    protected int maximumValue;
-    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -21,38 +17,35 @@ public class UI_SegmentedGaugeClamped : UI_SegmentedGaugeBasic
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Sets the maximum value to the given one.
-    /// </summary>
-    /// <param name="value"></param>
-    public void SetMaximumValue(int value) => maximumValue = value;
-    
+
     /// <summary>
     /// Adds Count items to the item parent, clamped to maximum value.
     /// If Count is under Maximum Value, adds empty items to the parent.
     /// /// </summary>
     /// <param name="count"></param>
-    public override void FillGauge(int count)
+    public void FillGauge(int count, Sprite icon)
     {
         DestroyChildren();
-        
+
         for (int i = 0; i < maximumValue; i++)
         {
             GameObject instantiatedItem = Instantiate(itemPrefab, itemParent);
+
+            if (i < count) 
+                continue; // Not an empty icon
             
-            if(i < count)
-                continue; // Not the last
-            
-            instantiatedItem.GetComponent<Image>().color = emptyItemColor;
+            Image image = instantiatedItem.GetComponent<Image>();
+            image.color = emptyItemColor;
+            image.sprite = icon;
         }
     }
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-    
+
     // ======================================================================
     // EVENTS
     // ======================================================================
+
 }

@@ -6,6 +6,10 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "New weapon data", menuName = "Basic Unity Tactical Tool/Weapon data", order = 3)]
 public class WeaponData : ScriptableObject
 {
+    [Header("PROJECTILE")]
+    [SerializeField] private bool _useProjectile;
+    public bool useProjectile => _useProjectile;
+    
     [Header("DAMAGES")]
     
     [SerializeField] private Vector2Int _damagesRange = new (3, 5);
@@ -31,8 +35,8 @@ public class WeaponData : ScriptableObject
     
     [Header("AMMO")]
     
-    [SerializeField] private AmmoType _ammoType;
-    public AmmoType ammoType => _ammoType;
+    [SerializeField] private Ammo _ammo;
+    public Ammo ammo => _ammo;
     
     [SerializeField] private bool _canReload;
     public bool canReload => _canReload;
@@ -41,6 +45,7 @@ public class WeaponData : ScriptableObject
     [SerializeField] private int _ammoCount;
     public int ammoCount => _ammoCount;
     public bool usesAmmo => ammoType != null;
+    public AmmoType ammoType => ammo == null ? null : ammo.ammoType;
     
     [Header("ACTION POINTS")]
     

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static M__Managers;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
@@ -27,7 +28,6 @@ public class Unit_WeaponHolder : MonoBehaviour
     [Header("REFERENCES")]
     
     [SerializeField] private Unit unit;
-    [SerializeField] private Transform hand;
     [SerializeField] private Weapon _weaponGraphics;
     public Weapon weaponGraphics => _weaponGraphics;
     
@@ -115,6 +115,7 @@ public class Unit_WeaponHolder : MonoBehaviour
     /// </summary>
     private void DisplayWeapon()
     {
+        Transform hand = unit.graphics.rightHand;
         Weapon previousWeapon = hand.GetComponentInChildren<Weapon>();
         if (previousWeapon)
             DestroyPreviousWeapon(previousWeapon);

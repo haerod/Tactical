@@ -15,7 +15,7 @@ public class Module_WeaponAmmo : MonoBehaviour
 {
     [Header("REFERENCES")]
     
-    [SerializeField] private UI_SegmentedGaugeClamped ammo;
+    [SerializeField] private UI_SegmentedAmmoGauge ammo;
     [SerializeField] private Image weaponImage;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject remainingAmmoPanel;
@@ -27,12 +27,12 @@ public class Module_WeaponAmmo : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
         Hide();
     }
-
+    
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
@@ -40,7 +40,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
     }
-
+    
     private void OnDisable()
     {
         if(!currentUnit)
@@ -52,16 +52,16 @@ public class Module_WeaponAmmo : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Used by Reload Weapon Button
     /// </summary>
     public void ClickOnReloadWeaponButton() => currentUnit.actionsHolder.GetActionOfType<A_Reload>().StartReload();
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Displays weapon's info on UI.
     /// </summary>
@@ -74,10 +74,10 @@ public class Module_WeaponAmmo : MonoBehaviour
         if (weaponData.usesAmmo)
         {
             ammo.SetMaximumValue(weaponData.ammoCount);
-            ammo.FillGauge(weapon.currentLoadedAmmo);
+            ammo.FillGauge(weapon.currentLoadedAmmo, weaponData.ammo.icon);
             ammo.gameObject.SetActive(true);
             remainingAmmoPanel.gameObject.SetActive(weaponData.needAmmoToReload);
-
+            
             if (currentUnit.actionsHolder.HasAction<A_Reload>() && weaponData.canReload && !weapon.isFullOfAmmo)
             {
                 reloadButton.gameObject.SetActive(true);
@@ -100,7 +100,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         
         panel.SetActive(true);
     }
-
+    
     /// <summary>
     /// Hides weapon's info.
     /// </summary>
@@ -127,7 +127,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         
         Show(currentUnit.weaponHolder.weapon);
     }
-
+    
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if (currentUnit)

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c2c4a88a4dd8634ca609a480766e808, type: 3}
-  m_Name: Pistol
+  m_Name: Bow
   m_EditorClassIdentifier: 
-  _useProjectile: 0
+  _useProjectile: 1
   _damagesRange: {x: 2, y: 3}
   _damageType:
   - {fileID: 11400000, guid: 61d85b9788250e041bb254a1d737f89b, type: 2}
@@ -21,8 +21,8 @@ MonoBehaviour:
   _range: 0
   _precisionMalusByDistance: 5
   _precisionModifier: 0
-  _ammo: {fileID: -7614215861890518551, guid: 77dbff721e9f4aa4d9668a2fbd704b22, type: 3}
+  _ammo: {fileID: -7614215861890518551, guid: a245ca58a0371384bac84120b9517225, type: 3}
   _canReload: 1
   _needAmmoToReload: 1
-  _ammoCount: 6
+  _ammoCount: 1
   _actionPointCost: 1

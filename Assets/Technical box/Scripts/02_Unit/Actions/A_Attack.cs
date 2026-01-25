@@ -22,7 +22,7 @@ public class A_Attack : A__Action
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -46,6 +46,8 @@ public class A_Attack : A__Action
             return; // Enemy not in sight
 
         Unit target = currentTarget;
+        Weapon weapon = unit.weaponHolder.weapon;
+        Ammo ammo = null;
 
         unit.move.OrientTo(target.transform.position);
         target.move.OrientTo(unit.transform.position);
@@ -55,23 +57,42 @@ public class A_Attack : A__Action
         StartAction();
         OnAttackStart?.Invoke(this, EventArgs.Empty);
         GameEvents.InvokeOnAnyAttackStart(unit);
+        if (weapon.data.useProjectile)
+        {
+            //Attack attack = new Attack(target, damages, weapon.data.damageType);
+            ammo = Instantiate(
+                    weapon.data.ammo,
+                    unit.graphics.rightHand.position, 
+                    Quaternion.identity)
+                .GetComponent<Ammo>();
+            ammo.SetGraphicsActive(true);
+            ammo.OnProjectileHit += Ammo_OnProjectileHit;
+        }
+        else
+            unit.anim.OnAttackTouch += AnimatorScripts_OnAttackTouch;
         
         int percentOfTouch = GetChanceToTouch(currentTarget);
         
         if (UnityEngine.Random.Range(0, 101) < percentOfTouch) // SUCCESS
+        {
+            if (weapon.data.useProjectile)
+            {
+                SetOnAttackDone(true, damages, target, ammo);
+                ammo.transform.LookAt(target.graphics.torso.position);
+                ammo.GoTo(target.graphics.torso);
+            }
             SetOnAttackDone(true, damages, target);
+        }
         else // MISS
+        {
+            if (weapon.data.useProjectile)
+            {
+                SetOnAttackDone(false, 0, target, ammo);
+                ammo.transform.LookAt(target.tile.worldPosition);
+                ammo.GoTo(target.tile.transform);
+            }
             SetOnAttackDone(false, 0, target);
-    }
-    
-    /// <summary>
-    /// Ends the attack.
-    /// Called by C_AnimatorScripts, after the shoot animation.
-    /// </summary>
-    public void EndAttack()
-    {
-        _camera.Shake();
-        onAttackDone();
+        }
     }
     
     /// <summary>
@@ -107,7 +128,7 @@ public class A_Attack : A__Action
     /// <param name="success"></param>
     /// <param name="damages"></param>
     /// <param name="target"></param>
-    private void SetOnAttackDone(bool success, int damages, Unit target)
+    private void SetOnAttackDone(bool success, int damages, Unit target, Ammo ammo = null)
     {
         onAttackDone = () =>
         {
@@ -127,7 +148,21 @@ public class A_Attack : A__Action
 
                 EndAction();
             });
+            
+            if(ammo)
+                ammo.OnProjectileHit -= Ammo_OnProjectileHit;
         };
+    }
+    
+    /// <summary>
+    /// Ends the attack.
+    /// Called by C_AnimatorScripts, after the shoot animation.
+    /// </summary>
+    private void EndAttack()
+    {
+        unit.anim.OnAttackTouch -= AnimatorScripts_OnAttackTouch;
+        _camera.Shake();
+        onAttackDone();
     }
     
     /// <summary>
@@ -244,5 +279,15 @@ public class A_Attack : A__Action
         
         // Attack
         Attack(clickedUnit);
+    }
+    
+    private void AnimatorScripts_OnAttackTouch(object sender, EventArgs e)
+    {
+        EndAttack();
+    }
+    
+    private void Ammo_OnProjectileHit(object sender, EventArgs e)
+    {
+        EndAttack();
     }
 }

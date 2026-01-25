@@ -22,6 +22,8 @@ public class Unit_AnimatorScripts : MonoBehaviour
     private readonly int Speed = Animator.StringToHash("speed");
 
     private A_Reload reload;
+
+    public event EventHandler OnAttackTouch;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -81,7 +83,7 @@ public class Unit_AnimatorScripts : MonoBehaviour
     {
         anim.SetBool(Attack, false);
         anim.SetBool(Aim, false);
-        unit.attack.EndAttack();
+        OnAttackTouch?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>
