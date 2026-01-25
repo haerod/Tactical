@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class Module_UnitRagdoll : MonoBehaviour
 {
+    [SerializeField] private bool dropWeapon;
     [SerializeField] private GameObject unitRagdollPrefab;
     
     // ======================================================================
@@ -24,28 +25,28 @@ public class Module_UnitRagdoll : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
     
     private void CreateRagdoll(Unit deadUnit)
     {
-        Unit unitRagdoll = Instantiate(
+        GameObject unitRagdoll = Instantiate(
             unitRagdollPrefab,
             deadUnit.transform.position,
-            deadUnit.transform.rotation).GetComponent<Unit>();
+            deadUnit.transform.rotation);
         
-        Transform originalRootBone = deadUnit.anim.transform.GetChild(2);
-        Transform ragdollRootBone= unitRagdoll.anim.transform.GetChild(2);
+        Transform originalRootBone = deadUnit.graphics.rootBone;
+        Unit_Graphics ragdollGraphics = unitRagdoll.GetComponent<Unit_Graphics>();
+        Transform ragdollRootBone = ragdollGraphics.rootBone;
         
-        unitRagdoll.weaponHolder.EquipWeapon(deadUnit.weaponHolder.weapon);
-        unitRagdoll.team.team = deadUnit.unitTeam;
-        AssignMaterials(unitRagdoll);
+        AssignMaterials(deadUnit.graphics, ragdollGraphics);
         
         MatchAllChildTransforms(originalRootBone, ragdollRootBone);
         ApplyExplosionToRagdoll(ragdollRootBone, 300f, 10f);
-        DropWeaponOnTheFloor(unitRagdoll);
+        if(dropWeapon)
+            DropWeaponOnTheFloor(deadUnit);
     }
     
     private void MatchAllChildTransforms(Transform original, Transform clone)
@@ -71,42 +72,37 @@ public class Module_UnitRagdoll : MonoBehaviour
         
         foreach (Transform child in root)
         {
-            if(child.TryGetComponent(out Rigidbody rigidbody))
-                rigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRange);
+            if(child.TryGetComponent(out Rigidbody rb))
+                rb.AddExplosionForce(explosionForce, explosionPosition, explosionRange);
             
             ApplyExplosionToRagdoll(child, explosionForce, explosionRange);
         }
     }
     
-    private void DropWeaponOnTheFloor(Unit unitRagdoll)
+    private void DropWeaponOnTheFloor(Unit originalUnit)
     {
-        GameObject dropWeapon = unitRagdoll.weaponHolder.weapon.gameObject;
+        GameObject originalPhysics = originalUnit.weaponHolder.weaponGraphics.GetComponent<Weapon>().physics;
+        
+        if(!originalPhysics)
+            return; // Not physiqued
+        
+        GameObject originalWeapon = originalUnit.weaponHolder.weaponGraphics.gameObject;
+        GameObject instantiatedWeapon = Instantiate(
+            originalWeapon, 
+            originalWeapon.transform.position,
+            originalWeapon.transform.rotation);
+        GameObject instantiatedPhysics = instantiatedWeapon.GetComponent<Weapon>().physics;
+        instantiatedPhysics.SetActive(true);
+        Rigidbody rb = instantiatedWeapon.AddComponent<Rigidbody>();
+        
         Vector3 randomDir = new (Random.Range(-1f,1f),0, Random.Range(-1f,1f));
-        
-        dropWeapon.transform.parent = null;
-        
-        if(dropWeapon.TryGetComponent(out Rigidbody rigidbody))
-            rigidbody.AddExplosionForce(50f, transform.position + randomDir, 10f);
+        rb.AddExplosionForce(50f, instantiatedWeapon.transform.position + randomDir, 10f);
     }
-
-    private void AssignMaterials(Unit unitRagdoll)
+    
+    private void AssignMaterials(Unit_Graphics original, Unit_Graphics ragdoll)
     {
-        Team team = unitRagdoll.unitTeam;
-        
-        if(!team)
-        {
-            Debug.LogError(transform.parent.name + " doesn't have a team. Please assign a team.", transform.parent.gameObject);
-            return; // No team assigned
-        }
-        
-        List<Renderer> renderers = unitRagdoll.anim.GetComponentsInChildren<Renderer>().ToList();
-        Renderer rend2 = renderers.Count > 0 ? renderers[0] : null;
-        Renderer rend1 = renderers.Count > 1 ? renderers[1] : null;
-
-        if (rend1 && team.mainMaterial)
-            rend1.material = team.mainMaterial;
-        if (rend2 && team.secondaryMaterial)
-            rend2.material = team.secondaryMaterial;
+        for (int i = 0; i < original.skinnedMeshRenderers.Count; i++)
+            ragdoll.skinnedMeshRenderers[i].materials = original.skinnedMeshRenderers[i].materials;
     }
     
     // ======================================================================

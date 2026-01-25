@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
+using Random = UnityEngine.Random;
 
 public static class ExtensionMethods
 {

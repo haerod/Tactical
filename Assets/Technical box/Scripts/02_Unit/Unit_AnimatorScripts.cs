@@ -31,9 +31,9 @@ public class Unit_AnimatorScripts : MonoBehaviour
 
     private void Start()
     {
-        if(unit.cover.AreCoversAround())
+        if (unit.cover.AreCoversAround())
             EnterCrouch();
-
+        
         unit.move.OnMovementStart += Move_OnMovementStart;
         unit.move.OnMovementEnd += Move_OnMovementEnd;
         unit.attack.OnAttackStart += Attack_OnAttackStart;

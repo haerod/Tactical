@@ -31,6 +31,12 @@ public class Unit_Graphics : MonoBehaviour
     public Transform leftHand => _leftHand;
     [SerializeField] private Transform _rightHand;
     public Transform rightHand => _rightHand;
+    [Space]
+    [SerializeField] private Transform _rootBone;
+    public Transform rootBone => _rootBone;
+    [Space]
+    [SerializeField] private List<SkinnedMeshRenderer> _skinnedMeshRenderers;
+    public List<SkinnedMeshRenderer> skinnedMeshRenderers => _skinnedMeshRenderers;
     
     // ======================================================================
     // MONOBEHAVIOUR

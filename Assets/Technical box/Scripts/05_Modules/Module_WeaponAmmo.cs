@@ -70,7 +70,7 @@ public class Module_WeaponAmmo : MonoBehaviour
     {
         WeaponData weaponData = weapon.data;
         weaponImage.sprite = weapon.icon;
-
+        
         if (weaponData.usesAmmo)
         {
             ammoGauge.SetMaximumValue(weaponData.ammoCount);
@@ -79,16 +79,9 @@ public class Module_WeaponAmmo : MonoBehaviour
             ammoGauge.gameObject.SetActive(true);
             remainingAmmoPanel.gameObject.SetActive(weaponData.needAmmoToReload);
             
-            if (currentUnit.actionsHolder.HasAction<A_Reload>() && weaponData.canReload && !weapon.isFullOfAmmo)
-            {
-                reloadButton.gameObject.SetActive(true);
-                reloadButton.interactable = currentUnit.actionsHolder.HasAvailableAction<A_Reload>();
-            }
-            else
-            {
-                reloadButton.gameObject.SetActive(false);
-            }
-                
+            bool canReload = currentUnit.actionsHolder.HasAvailableAction<A_Reload>() && weaponData.canReload && !weapon.isFullOfAmmo;
+            reloadButton.gameObject.SetActive(canReload);
+            
             if (weaponData.needAmmoToReload)
                 remainingAmmoText.text = currentUnit.inventory.GetAmmoCountOfType(weaponData.ammoType).ToString();
         }

@@ -146,6 +146,7 @@ Transform:
   - {fileID: 2238155364814005150}
   - {fileID: 351623023275788027}
   - {fileID: 3636219495890702664}
+  - {fileID: 3215278648990340024}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -165,13 +166,59 @@ MonoBehaviour:
   _icon: {fileID: 21300000, guid: fcbc90b29b1f1d242b815c0b7a44e9d4, type: 3}
   _sizeInInventory: 1
   _data: {fileID: 11400000, guid: 3a1c0251e75e2594ab3201d6de78ccd9, type: 2}
-  _ammoCount: 0
+  _currentLoadedAmmo: 0
   _graphics:
   - {fileID: 8844531137560464473}
   - {fileID: 798376163233623848}
   _weaponEnd: {fileID: 3636219495890702664}
   muzzleFlash: {fileID: 0}
   weaponAnimatorController: {fileID: 22100000, guid: ce2a91b2027d8fb4fa7b55b26603b901, type: 2}
+  _physics: {fileID: 4370676686547511600}
+--- !u!1 &4370676686547511600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3215278648990340024}
+  - component: {fileID: 664240788608924933}
+  m_Layer: 2
+  m_Name: Physics
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3215278648990340024
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4370676686547511600}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.099, y: -0.04, z: 0.1654}
+  m_LocalScale: {x: 0.03623598, y: 0.31691408, z: 0.036235977}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1877325925389825474}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!65 &664240788608924933
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4370676686547511600}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000001, y: 2.1256883, z: 1.0000005}
+  m_Center: {x: 0.000000051403195, y: 0.062842116, z: -0.000000102806396}
 --- !u!1 &8844531137560464473
 GameObject:
   m_ObjectHideFlags: 0

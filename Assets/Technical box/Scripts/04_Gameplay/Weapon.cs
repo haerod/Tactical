@@ -25,6 +25,9 @@ public class Weapon : Item
     [SerializeField] private GameObject muzzleFlash;
     [SerializeField] private RuntimeAnimatorController weaponAnimatorController;
     public RuntimeAnimatorController animatorController => weaponAnimatorController;
+    [SerializeField] private GameObject _physics;
+    public GameObject physics => _physics;
+    
     
     private Unit unit;
     
