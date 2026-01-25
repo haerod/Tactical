@@ -8,16 +8,18 @@ public class UI_ActionEffectFeedback : MonoBehaviour
 {
     [SerializeField] private float destructionDelay = 2;
     [SerializeField] private float textOffset = 2;
-
+    [SerializeField] private float textMovementOffset = .25f;
+    
     [Header("REFERENCES")]
 
     [SerializeField] private TextMeshProUGUI textValue;
-
+    [SerializeField] private CanvasGroup canvasGroup;
+    
     private Camera cam;
     private Transform target;
 
     private float currentTime;
-    private bool alphaFade;
+    private float fadeDelay;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -27,20 +29,18 @@ public class UI_ActionEffectFeedback : MonoBehaviour
     {
         cam = Camera.main;
         Destroy(gameObject, destructionDelay);
+        fadeDelay = destructionDelay/2;
     }
-
+    
     private void Update()
     {
         currentTime += Time.deltaTime;
         
         if(target)
-            transform.position = cam.WorldToScreenPoint(target.position + (Vector3.up * textOffset));
-
-        if (currentTime >= destructionDelay / 2 && !alphaFade)
-        {
-            alphaFade = true;
-            textValue.CrossFadeAlpha(0, destructionDelay/2, true);
-        }
+            transform.position = cam.WorldToScreenPoint(target.position + (Vector3.up * (textOffset + textMovementOffset * currentTime/destructionDelay)));
+        
+        if (currentTime >= fadeDelay)
+            canvasGroup.alpha = 1 - (currentTime-fadeDelay) / fadeDelay;
     }
     
     // ======================================================================

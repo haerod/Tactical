@@ -10,6 +10,7 @@ public class Module_ActionEffectHolder : MonoBehaviour
 {
     [SerializeField] private string missText = "MISS";
     [SerializeField] private string reloadText = "RELOAD";
+    [SerializeField] private string outOfAmmoText = "OUT OF AMMO";
     
     [Header("REFERENCES")]
     [SerializeField] private GameObject actionEffectFeedbackPrefab;
@@ -68,6 +69,10 @@ public class Module_ActionEffectHolder : MonoBehaviour
         A_Reload reload = currentUnit.actionsHolder.GetActionOfType<A_Reload>();
         if (reload)
             reload.OnReloadEnd += Reload_OnReloadEnd;
+        
+        Weapon currentWeapon = startingUnit.weaponHolder.weapon;
+        if(currentWeapon.data.usesAmmo && currentWeapon.currentLoadedAmmo == 0)
+            DisplayActionEffectFeedback(outOfAmmoText, startingUnit.transform);
     }
     
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
