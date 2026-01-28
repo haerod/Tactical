@@ -90,12 +90,14 @@ public class Unit_ActionsHolder : MonoBehaviour
     /// </summary>
     /// <param name="action"></param>
     /// <returns></returns>
-    public bool CanUse(A__Action action) => CanSpend(action) && action.isAvailable;
-    
+    public bool CanUse(A__Action action) => CanSpend(action)
+        && action.isAvailable
+        && (action.actionPointCost == 0 && currentActionPoints == 0 ? action.usableWithoutActionPoints : true);
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-    
+
     /// <summary>
     /// Unit's actions subscribes to Input's events.
     /// </summary>

@@ -20,8 +20,11 @@ public abstract class A__Action : MonoBehaviour
     [SerializeField] protected bool _costDependsOnWeapon;
     [SerializeField] protected bool _spendAllActionPoints;
     [SerializeField] protected int _actionPointCost = 1;
+    [SerializeField] protected bool _usableWithoutActionPoints;
+
     public bool costDependsOnTheWeapon => _costDependsOnWeapon;
     public int actionPointCost => costDependsOnTheWeapon ? unit.weaponHolder.weaponData.actionPointCost : _actionPointCost;
+    public bool usableWithoutActionPoints => _usableWithoutActionPoints;
     public bool spendAllActionPoints => _spendAllActionPoints;
     
     [Header("REFERENCES")]

@@ -16,7 +16,6 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     [SerializeField] private TextMeshProUGUI buttonText;
     
     private Unit unit;
-    private Module_WeaponButtonsHolder holder;
 
     public Weapon weapon { get; private set; }
     
@@ -33,9 +32,8 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     /// </summary>
     /// <param name="linkedHolder"></param>
     /// <param name="linkedCharacter"></param>
-    public void SetParameters(Module_WeaponButtonsHolder linkedHolder, Unit linkedCharacter)
+    public void SetParameters(Unit linkedCharacter)
     {
-        holder = linkedHolder;
         unit = linkedCharacter;
     }
     
@@ -52,11 +50,9 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
             buttonText.text = weapon.itemName;
         else
             buttonText.transform.parent.gameObject.SetActive(false);
-        button.onClick.AddListener(delegate
-            {
-                unit.weaponHolder.EquipWeapon(weapon);
-                holder.CreateWeaponButtons(unit);
-            });
+
+        button.onClick.AddListener(delegate 
+            {unit.actionsHolder.GetActionOfType<A_TakeWeapon>().EquipWeapon(weapon);});
     }
     
     // ======================================================================

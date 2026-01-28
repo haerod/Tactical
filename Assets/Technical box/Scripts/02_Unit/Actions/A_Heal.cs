@@ -39,14 +39,14 @@ public class A_Heal : A__Action
     // ======================================================================
     
     /// <summary>
-    /// Heal the character of heal amount HP.
+    /// Heals the unit of heal amount HP.
     /// </summary>
-    /// <param name="characterToHeal"></param>
-    private void HealCharacter(Unit characterToHeal)
+    /// <param name="unitToHeal"></param>
+    private void HealUnit(Unit unitToHeal)
     {
         StartAction();
         
-        characterToHeal.health.Heal(healAmount);
+        unitToHeal.health.Heal(healAmount);
         
         EndAction();
     }
@@ -60,6 +60,6 @@ public class A_Heal : A__Action
         if(!IsHealable(clickedCharacter))
             return; // Not healable
 
-        HealCharacter(clickedCharacter);
+        HealUnit(clickedCharacter);
     }
 }

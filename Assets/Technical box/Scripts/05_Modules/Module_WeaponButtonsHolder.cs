@@ -15,9 +15,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     [SerializeField] private GameObject buttonSelectWeaponPrefab;
     [SerializeField] private GameObject buttonSelectActionPrefab;
     [SerializeField] private Transform buttonsParent;
-    
-    private List<GameObject> instantiatedButtons = new();
-    
+        
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -46,25 +44,25 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     public void CreateWeaponButtons(Unit unit)
     {
         DestroyAllButtons();
-        instantiatedButtons.Clear();
         
         Weapon currentWeapon = unit.weaponHolder.weapon;
         
-        foreach (Weapon weapon in unit.inventory.weapons)
+        if(unit.actionsHolder.HasAvailableAction<A_TakeWeapon>())
         {
-            if(weapon == currentWeapon)
-                continue; // Current weapon
+            foreach (Weapon weapon in unit.inventory.weapons)
+            {
+                if(weapon == currentWeapon)
+                    continue; // Current weapon
             
-            Module_WeaponSelectionButton instantiateButton = 
-                Instantiate(
-                    buttonSelectWeaponPrefab,  
-                    buttonsParent)
-                    .GetComponent<Module_WeaponSelectionButton>();
+                Module_WeaponSelectionButton instantiateButton = 
+                    Instantiate(
+                        buttonSelectWeaponPrefab,  
+                        buttonsParent)
+                        .GetComponent<Module_WeaponSelectionButton>();
             
-            instantiateButton.SetParameters(this, unit);
-            instantiateButton.DisplayButton(weapon, _showText);
-            
-            instantiatedButtons.Add(instantiateButton.gameObject);
+                instantiateButton.SetParameters(unit);
+                instantiateButton.DisplayButton(weapon, _showText);
+            }
         }
 
         if (unit.actionsHolder.HasAvailableAction<A_Reload>())
@@ -92,9 +90,7 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
     private void DestroyAllButtons()
     {
         foreach (Transform child in buttonsParent)
-        {
             Destroy(child.gameObject);
-        }
     }
     
     // ======================================================================
