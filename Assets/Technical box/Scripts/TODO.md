@@ -7,7 +7,6 @@
 ---
 
 # PATHFINDING SYSTEM
-
 **IMPORTANT**
 - 1d -> Change pathfinding AStar by Pathfind in Area
 
@@ -116,7 +115,6 @@ But turn based is a feature can be added separately.
   - 1d -> UI Module turn by turn initiative
 
 ### ACTIONS
-
 - 1w -> Actions systems: possibility between multiple designs
     - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)
     - action points

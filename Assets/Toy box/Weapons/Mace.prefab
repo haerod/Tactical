@@ -196,7 +196,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemName: Mace
   _icon: {fileID: 21300000, guid: fcbc90b29b1f1d242b815c0b7a44e9d4, type: 3}
-  _sizeInInventory: 1
+  _sizeInInventory: 2
+  _visibleInInventory: 1
+  _stackable: 0
+  _maxStackSize: 1
+  _currentStack: 1
   _data: {fileID: 11400000, guid: 3a1c0251e75e2594ab3201d6de78ccd9, type: 2}
   _currentLoadedAmmo: 0
   _graphics: {fileID: 641043918562757153}

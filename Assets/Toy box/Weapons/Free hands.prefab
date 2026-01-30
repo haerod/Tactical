@@ -79,9 +79,14 @@ MonoBehaviour:
   _itemName: Free hands
   _icon: {fileID: 21300000, guid: 23459e2baf23e5b4ca9a75dfb8a4440a, type: 3}
   _sizeInInventory: 0
+  _visibleInInventory: 0
+  _stackable: 0
+  _maxStackSize: 1
+  _currentStack: 1
   _data: {fileID: 11400000, guid: 2051cdd12a339794d99a5965400f6a32, type: 2}
-  _ammoCount: 0
-  _graphics: []
+  _currentLoadedAmmo: 0
+  _graphics: {fileID: 0}
   _weaponEnd: {fileID: 2779056909906909448}
   muzzleFlash: {fileID: 0}
   weaponAnimatorController: {fileID: 22100000, guid: 2e55f20952e3ae44282fb7c057a2bcf3, type: 2}
+  _physics: {fileID: 0}

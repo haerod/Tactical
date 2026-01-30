@@ -408,7 +408,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemName: Great sword
   _icon: {fileID: 21300000, guid: eb652d6e2008a364185999a6aea27e2f, type: 3}
-  _sizeInInventory: 1
+  _sizeInInventory: 3
+  _visibleInInventory: 1
+  _stackable: 0
+  _maxStackSize: 1
+  _currentStack: 1
   _data: {fileID: 11400000, guid: 4fbbb0f34ec0a2746aefe6797f845fc7, type: 2}
   _currentLoadedAmmo: 0
   _graphics: {fileID: 6015218891585555977}

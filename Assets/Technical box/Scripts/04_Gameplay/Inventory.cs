@@ -13,12 +13,14 @@ public class Inventory : MonoBehaviour
 {
     [SerializeField] private bool _hasMaxSize = true;
     [SerializeField] private int _maxSize = 6;
+    public bool hasMaxSize => _hasMaxSize;
     public int maxSize => _maxSize;
+    
+    [SerializeField] protected Transform content;
     
     public List<Item> items => GetItems();
     public List<Weapon> weapons => GetWeapons();
-    
-    [SerializeField] protected Transform content;
+    public int remainingSpace => _maxSize - items.Select(testedItem => testedItem.sizeInInventory).Sum();
     
     // ======================================================================
     // MONOBEHAVIOUR

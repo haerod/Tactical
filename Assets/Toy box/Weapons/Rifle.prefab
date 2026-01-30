@@ -442,7 +442,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemName: Rifle
   _icon: {fileID: 21300000, guid: a4355ccd869cb514a80466dbb8118ef0, type: 3}
-  _sizeInInventory: 1
+  _sizeInInventory: 2
+  _visibleInInventory: 1
+  _stackable: 0
+  _maxStackSize: 1
+  _currentStack: 1
   _data: {fileID: 11400000, guid: 415753486e8914643b27ae946ec004ac, type: 2}
   _currentLoadedAmmo: 4
   _graphics: {fileID: 7517779234175742329}

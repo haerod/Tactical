@@ -408,7 +408,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemName: Sword
   _icon: {fileID: 21300000, guid: 42455d7222afa724ca3ff229f5b7f9d8, type: 3}
-  _sizeInInventory: 1
+  _sizeInInventory: 2
+  _visibleInInventory: 1
+  _stackable: 0
+  _maxStackSize: 1
+  _currentStack: 1
   _data: {fileID: 11400000, guid: 339ea4f7a238dcd47b50b79757c397c9, type: 2}
   _currentLoadedAmmo: 0
   _graphics: {fileID: 7763853282586604250}

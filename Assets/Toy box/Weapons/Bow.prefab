@@ -408,7 +408,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemName: Bow
   _icon: {fileID: 21300000, guid: f8a6a16f3ff510d45ae4856f8b2309f5, type: 3}
-  _sizeInInventory: 1
+  _sizeInInventory: 2
+  _visibleInInventory: 1
+  _stackable: 0
+  _maxStackSize: 1
+  _currentStack: 1
   _data: {fileID: 11400000, guid: 2470b8b10fbf41f4eac4887004e0999d, type: 2}
   _currentLoadedAmmo: 1
   _graphics: {fileID: 6036994170151804316}

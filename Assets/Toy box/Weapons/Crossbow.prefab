@@ -538,7 +538,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemName: Crossbow
   _icon: {fileID: 21300000, guid: d02e8d86f470c7545b7abb2efd1486d7, type: 3}
-  _sizeInInventory: 1
+  _sizeInInventory: 2
+  _visibleInInventory: 1
+  _stackable: 0
+  _maxStackSize: 1
+  _currentStack: 1
   _data: {fileID: 11400000, guid: 028c404ee19f69640be52aaeccd6d662, type: 2}
   _currentLoadedAmmo: 1
   _graphics: {fileID: 2514742958068783580}

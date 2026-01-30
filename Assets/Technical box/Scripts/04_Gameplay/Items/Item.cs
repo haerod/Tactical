@@ -21,6 +21,8 @@ public class Item : MonoBehaviour
     
     [SerializeField] private int _sizeInInventory = 1;
     public int sizeInInventory => _sizeInInventory;
+    [SerializeField] private bool _visibleInInventory = true;
+    public bool visibleInInventory => _visibleInInventory;
     
     [Header("ITEM STACK")]
     
