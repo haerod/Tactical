@@ -6,31 +6,6 @@
 
 ---
 
-# ACTIONS
-
-**IMPORTANT**
-- 0.5d -> Make an action toolbar
-
-- 1d -> Can add and remove Actions without bugs
-- 1w -> Actions systems: possibility between multiple designs
-    - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)
-    - action points
-    - play again on condition
-
-**NOTE**
-- An action is defined by **do something**
-- To know if you can do an action, you have to **fulfill the conditions**
-    - an action class needs conditions (cost, triggers, anything)
-    - an action manager haves to manage the costs
-- I see **different implementations**
-    - 1st
-        - the manager is a compilator of the actions, but do not in particular : it asks the Action if its conditions are fulfilled
-        - the Action manages its data (costs), its conditions and its execution script (do something)
-    - 2nd
-        - the manager is a resources manager, it says to the action if it can play or not
-        - the action is only an interface with its execution script (do something)
-    - in the two cases, execution script can be separated from this logic
-
 # PATHFINDING SYSTEM
 
 **IMPORTANT**
@@ -42,9 +17,6 @@
 
 # UNIT VISUALS
 - 1d -> Make it easy to change model (humanoid) -> /!\ Ragdoll Module is linked
-
-# INVENTORY
-- .5d -> Stack of items (ex : ammo of the same type can be stacked together)
 
 ## FOG OF WAR
 - 1h -> Fog mask on FoW, not on tile
@@ -143,10 +115,26 @@ But turn based is a feature can be added separately.
 - 0.5d -> Initiative system (or priority)
   - 1d -> UI Module turn by turn initiative
 
-### PROJECTILES
-- 1d -> Projectile logic
-  - 1h -> Bow weapon
-  - 1h -> Fireball
+### ACTIONS
+
+- 1w -> Actions systems: possibility between multiple designs
+    - possibility to have a maximum of the same action by turn (ex: 2 movements allowed, but one attack)
+    - action points
+    - play again on condition
+
+**NOTE**
+- An action is defined by **do something**
+- To know if you can do an action, you have to **fulfill the conditions**
+    - an action class needs conditions (cost, triggers, anything)
+    - an action manager haves to manage the costs
+- I see **different implementations**
+    - 1st
+        - the manager is a compilator of the actions, but do not in particular : it asks the Action if its conditions are fulfilled
+        - the Action manages its data (costs), its conditions and its execution script (do something)
+    - 2nd
+        - the manager is a resources manager, it says to the action if it can play or not
+        - the action is only an interface with its execution script (do something)
+    - in the two cases, execution script can be separated from this logic
 
 ### MODULAR CHARACTER LOGIC
 - 1w -> Can make a drone unit (without animations)

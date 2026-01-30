@@ -19,11 +19,11 @@ public class Inventory : MonoBehaviour
     public List<Weapon> weapons => GetWeapons();
     
     [SerializeField] protected Transform content;
-
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -36,6 +36,11 @@ public class Inventory : MonoBehaviour
     /// <returns></returns>
     public bool TryAddItem(Item item)
     {
+        StackInInventory(item);
+
+        if (!item || item.currentStack == 0)
+            return true; // Item fully stacked
+        
         if (!_hasMaxSize)
         {
             AddItem(item);
@@ -79,13 +84,23 @@ public class Inventory : MonoBehaviour
         .OfType<Ammo>()
         .Where(ammo => ammoType == ammo.ammoType)
         .ToList();
-
+    
     /// <summary>
     /// Returns the number of ammo of the given type.
     /// </summary>
     /// <param name="ammoType"></param>
     /// <returns></returns>
-    public int GetAmmoCountOfType(AmmoType ammoType) => GetAmmoOfType(ammoType).Count;
+    public int GetAmmoCountOfType(AmmoType ammoType)
+    {
+        List<Ammo> ammoItems = GetAmmoOfType(ammoType);
+        
+        if(ammoItems.Count == 0)
+            return 0;
+        
+        return ammoItems.First().stackable ? 
+            ammoItems.Select(ammo => ammo.currentStack).Sum() : 
+            GetAmmoOfType(ammoType).Count;
+    }
     
     /// <summary>
     /// Removes the given count of ammo of this type.
@@ -98,14 +113,30 @@ public class Inventory : MonoBehaviour
             .Select(ammo => ammo as Item)
             .ToList();
 
+        int currentAmmoCountToRemove = ammoCountToRemove;
+        
         for (int i = 0; i < ammoCountToRemove; i++)
-            DestroyItem(ammoToRemove[i]);
+        {
+            if (!ammoToRemove[i].stackable)
+            {
+                DestroyItem(ammoToRemove[i]);
+                continue; // Not stackable
+            }
+            
+            currentAmmoCountToRemove -= ammoToRemove[i].TryRemoveCountFromStack(currentAmmoCountToRemove);
+            
+            if(ammoToRemove[i].stackIsEmpty)
+                DestroyItem(ammoToRemove[i]); // Stack is empty
+            
+            if(currentAmmoCountToRemove == 0)
+                return; // Ammo are all removed
+        }
     }
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Adds an item in the inventory.
     /// </summary>
@@ -125,6 +156,30 @@ public class Inventory : MonoBehaviour
     private List<Weapon> GetWeapons() => items
         .OfType<Weapon>()
         .ToList();
+    
+    /// <summary>
+    /// Stacks the item in all the same stackable item of the inventory.
+    /// If item is fully stacked, destroys the item.
+    /// </summary>
+    /// <param name="item"></param>
+    private void StackInInventory(Item item)
+    {
+        if(!item.stackable)
+            return; // Not stackable
+        
+        List<Item> availableStacks = items
+            .Where(testedItem => testedItem.itemName == item.itemName && !testedItem.stackIsFull)
+            .ToList();
+
+        foreach (Item availableStack in availableStacks)
+        {
+            int addedCount = availableStack.TryAddCountToStack(item.currentStack);
+            item.TryRemoveCountFromStack(addedCount);
+            
+            if (item.stackIsEmpty)
+                DestroyItem(item); // Fully stacked
+        }
+    }
     
     // ======================================================================
     // EVENTS

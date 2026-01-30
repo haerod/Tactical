@@ -10,6 +10,9 @@ public class Test : MonoBehaviour
 {
     public static Test instance;
     
+    public Inventory inventory;
+    public Item toAdd;
+    
     private void Awake()
     {
         instance = this;
@@ -17,5 +20,9 @@ public class Test : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            
+        }
     }
 }
