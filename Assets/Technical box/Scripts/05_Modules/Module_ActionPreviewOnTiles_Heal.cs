@@ -18,10 +18,7 @@ public class Module_ActionPreviewOnTiles_Heal : Module_ActionPreviewOnTiles_Base
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
-        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
-        GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
-        _Level.OnVictory += Level_OnVictory;
     }
     
     // ======================================================================
@@ -55,16 +52,6 @@ public class Module_ActionPreviewOnTiles_Heal : Module_ActionPreviewOnTiles_Base
         HideFeedbacks();
     }
     
-    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
-    {
-        HideFeedbacks();
-    }
-    
-    private void Action_OnAnyActionStart(object sender, Unit startingActionUnit)
-    {
-        HideFeedbacks();
-    }
-    
     private void Action_OnAnyActionEnd(object sender, Unit endingActionUnit)
     {
         if (!endingActionUnit.behavior.playable) 
@@ -77,10 +64,5 @@ public class Module_ActionPreviewOnTiles_Heal : Module_ActionPreviewOnTiles_Base
         ShowFeedbacks(endingActionUnit.actionsHolder.GetActionOfType<A_Heal>().healableUnits
             .Select(unit => unit.tile)
             .ToList());    
-    }
-    
-    private void Level_OnVictory(object sender, EventArgs e)
-    {
-        HideFeedbacks();
     }
 }

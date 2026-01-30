@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using static M__Managers;
 
 /// <summary>
 /// Class description
@@ -20,6 +21,13 @@ public class Module_ActionPreviewOnTiles_Base : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Start()
+    {
+        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
+        GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
+        _Level.OnVictory += Level_OnVictory;
+    }
 
     // ======================================================================
     // PUBLIC METHODS
@@ -58,5 +66,19 @@ public class Module_ActionPreviewOnTiles_Base : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
+        HideFeedbacks();
+    }
+    
+    private void Action_OnAnyActionStart(object sender, Unit startingActionUnit)
+    {
+        HideFeedbacks();
+    }
+    
+    private void Level_OnVictory(object sender, EventArgs e)
+    {
+        HideFeedbacks();
+    }
 }

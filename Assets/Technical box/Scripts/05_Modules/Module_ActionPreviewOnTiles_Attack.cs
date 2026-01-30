@@ -19,10 +19,7 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
-        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
-        GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
-        _Level.OnVictory += Level_OnVictory;
     }
     
     private void OnDisable()
@@ -70,16 +67,6 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
         currentUnit = null;
     }
     
-    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
-    {
-        HideFeedbacks();
-    }
-    
-    private void Action_OnAnyActionStart(object sender, Unit startingActionUnit)
-    {
-        HideFeedbacks();
-    }
-    
     private void Action_OnAnyActionEnd(object sender, Unit endingActionUnit)
     {
         if (!endingActionUnit.behavior.playable) 
@@ -96,10 +83,5 @@ public class Module_ActionPreviewOnTiles_Attack : Module_ActionPreviewOnTiles_Ba
     {
         HideFeedbacks();
         ShowFeedbacks(_units.current.attack.AttackableTiles());
-    }
-    
-    private void Level_OnVictory(object sender, EventArgs e)
-    {
-        HideFeedbacks();
     }
 }

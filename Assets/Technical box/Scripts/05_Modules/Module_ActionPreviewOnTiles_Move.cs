@@ -17,11 +17,8 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
-        _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
-        GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
-        _Level.OnVictory += Level_OnVictory;
+        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
     }
     
     // ======================================================================
@@ -56,16 +53,6 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
         HideFeedbacks();
     }
     
-    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
-    {
-        HideFeedbacks();
-    }
-    
-    private void Action_OnAnyActionStart(object sender, Unit startingActionUnit)
-    {
-        HideFeedbacks();
-    }
-    
     private void Action_OnAnyActionEnd(object sender, Unit endingActionUnit)
     {
         if (!endingActionUnit.behavior.playable) 
@@ -76,10 +63,5 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
             return; // No move action
         
         ShowFeedbacks(endingActionUnit.move.movementArea);
-    }
-    
-    private void Level_OnVictory(object sender, EventArgs e)
-    {
-        HideFeedbacks();
     }
 }
