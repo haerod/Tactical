@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static M__Managers;
@@ -8,6 +10,8 @@ public class A_Heal : A__Action
     
     [SerializeField] private int healReach = 1;
     [SerializeField] private bool includeDiagonalsInReach = true;
+    
+    public List<Unit> healableUnits => GetHealableUnits();
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -33,6 +37,15 @@ public class A_Heal : A__Action
         
         return isOnHealReach;
     }
+    
+    /// <summary>
+    /// Returns the healable units for this action.
+    /// </summary>
+    /// <returns></returns>
+    private List<Unit> GetHealableUnits() => _units
+        .GetAlliesOf(unit)
+        .Where(IsHealable)
+        .ToList();
     
     // ======================================================================
     // PRIVATE METHODS

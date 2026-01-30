@@ -3,17 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using static M__Managers;
 
-public class Module_WeaponButtonsHolder : MonoBehaviour
+public class Module_ActionSelection : MonoBehaviour
 {
     [SerializeField] private bool _showText = true;
     
     [Header("REFERENCES")]
     
-    [SerializeField] private GameObject buttonSelectWeaponPrefab;
-    [SerializeField] private GameObject buttonSelectActionPrefab;
+    [SerializeField] private GameObject buttonActionPrefab;
+    [SerializeField] private GameObject buttonWeaponPrefab;
     [SerializeField] private Transform buttonsParent;
         
     // ======================================================================
@@ -56,19 +57,21 @@ public class Module_WeaponButtonsHolder : MonoBehaviour
             
                 Module_WeaponSelectionButton instantiateButton = 
                     Instantiate(
-                        buttonSelectWeaponPrefab,  
+                        buttonWeaponPrefab,  
                         buttonsParent)
                         .GetComponent<Module_WeaponSelectionButton>();
             
-                instantiateButton.SetParameters(unit);
-                instantiateButton.DisplayButton(weapon, _showText);
+                instantiateButton.DisplayButton(
+                    weapon, 
+                    delegate {unit.actionsHolder.GetActionOfType<A_TakeWeapon>().EquipWeapon(weapon);}, 
+                    _showText);
             }
         }
 
         if (unit.actionsHolder.HasAvailableAction<A_Reload>())
         {
             Module_ActionSelectionButton instantiatedButton = Instantiate(
-                buttonSelectActionPrefab,
+                buttonActionPrefab,
                 buttonsParent)
                 .GetComponent<Module_ActionSelectionButton>();
             

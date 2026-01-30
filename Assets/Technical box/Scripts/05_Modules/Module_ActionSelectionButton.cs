@@ -17,7 +17,7 @@ public class Module_ActionSelectionButton : MonoBehaviour, IPointerEnterHandler,
     [SerializeField] private TextMeshProUGUI buttonText;
     
     private Unit unit;
-    private Module_WeaponButtonsHolder holder;
+    private Module_ActionSelection holder;
     
     public A__Action action { get; private set; }
     
@@ -34,16 +34,18 @@ public class Module_ActionSelectionButton : MonoBehaviour, IPointerEnterHandler,
     /// </summary>
     /// <param name="linkedHolder"></param>
     /// <param name="linkedCharacter"></param>
-    public void SetParameters(Module_WeaponButtonsHolder linkedHolder, Unit linkedCharacter)
+    public void SetParameters(Module_ActionSelection linkedHolder, Unit linkedCharacter)
     {
         holder = linkedHolder;
         unit = linkedCharacter;
     }
-    
+
     /// <summary>
     /// Displays the button with the weapon's infos.
     /// </summary>
     /// <param name="actionToDisplay"></param>
+    /// <param name="OnClick"></param>
+    /// <param name="showText"></param>
     public void DisplayButton(A__Action actionToDisplay, Action OnClick, bool showText)
     {
         action = actionToDisplay;

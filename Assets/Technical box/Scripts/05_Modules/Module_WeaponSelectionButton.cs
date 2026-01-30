@@ -15,8 +15,6 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     [SerializeField] private Image weaponSprite;
     [SerializeField] private TextMeshProUGUI buttonText;
     
-    private Unit unit;
-
     public Weapon weapon { get; private set; }
     
     // ======================================================================
@@ -28,20 +26,11 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     // ======================================================================
 
     /// <summary>
-    /// Sets the parameters to the button.
-    /// </summary>
-    /// <param name="linkedHolder"></param>
-    /// <param name="linkedCharacter"></param>
-    public void SetParameters(Unit linkedCharacter)
-    {
-        unit = linkedCharacter;
-    }
-    
-    /// <summary>
     /// Displays the button with the weapon's infos.
     /// </summary>
     /// <param name="weaponToDisplay"></param>
-    public void DisplayButton(Weapon weaponToDisplay, bool showText)
+    /// <param name="showText"></param>
+    public void DisplayButton(Weapon weaponToDisplay, Action OnClick, bool showText)
     {
         weapon = weaponToDisplay;
         weaponSprite.sprite = weapon.icon;
@@ -51,8 +40,7 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
         else
             buttonText.transform.parent.gameObject.SetActive(false);
 
-        button.onClick.AddListener(delegate 
-            {unit.actionsHolder.GetActionOfType<A_TakeWeapon>().EquipWeapon(weapon);});
+        button.onClick.AddListener(delegate { OnClick();});
     }
     
     // ======================================================================
