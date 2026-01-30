@@ -18,8 +18,7 @@ public class Weapon : Item
     public bool isFullOfAmmo => data.usesAmmo && currentLoadedAmmo >= data.ammoCount;
 
     [Header("GRAPHICS")] 
-    [SerializeField] private List<GameObject> _graphics;
-    public List<GameObject> graphics => _graphics;
+    [SerializeField] private GameObject _graphics;
     [SerializeField] private Transform _weaponEnd;
     public Transform weaponEnd => _weaponEnd;
     [SerializeField] private GameObject muzzleFlash;
@@ -27,7 +26,6 @@ public class Weapon : Item
     public RuntimeAnimatorController animatorController => weaponAnimatorController;
     [SerializeField] private GameObject _physics;
     public GameObject physics => _physics;
-    
     
     private Unit unit;
     
@@ -101,8 +99,12 @@ public class Weapon : Item
     /// <summary>
     /// Shows the weapon's graphics.
     /// </summary>
-    public void ShowGraphics() => graphics.ForEach(graphic => graphic.SetActive(true));
-    
+    public void ShowGraphics()
+    {
+        if(_graphics)
+            _graphics.SetActive(true);
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================

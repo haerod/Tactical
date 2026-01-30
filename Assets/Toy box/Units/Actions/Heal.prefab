@@ -50,7 +50,9 @@ MonoBehaviour:
   _costDependsOnWeapon: 0
   _spendAllActionPoints: 0
   _actionPointCost: 1
+  _usableWithoutActionPoints: 0
   unit: {fileID: 0}
   healAmount: 3
-  healReach: 6
+  reachEverybodyInView: 1
+  healReach: 1
   includeDiagonalsInReach: 1

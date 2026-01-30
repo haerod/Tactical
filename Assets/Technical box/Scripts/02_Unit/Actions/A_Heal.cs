@@ -7,7 +7,8 @@ using static M__Managers;
 public class A_Heal : A__Action
 {
     [SerializeField] private int healAmount = 1;
-    
+
+    [SerializeField] private bool reachEverybodyInView = true;
     [SerializeField] private int healReach = 1;
     [SerializeField] private bool includeDiagonalsInReach = true;
     
@@ -31,7 +32,7 @@ public class A_Heal : A__Action
         if(unitToHeal.health.IsFullLife())
             return false; // Already full life
         
-        bool isOnHealReach = _board
+        bool isOnHealReach = reachEverybodyInView ? unit.look.visibleTiles.Contains(unitToHeal.tile) : _board
             .GetCoordinatesAround(unit.coordinates, healReach, includeDiagonalsInReach)
             .Contains(unitToHeal.coordinates);
         

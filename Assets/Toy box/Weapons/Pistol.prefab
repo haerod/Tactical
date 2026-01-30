@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &996891208013068703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6040275581026436237}
+  m_Layer: 0
+  m_Name: Graphics
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6040275581026436237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996891208013068703}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6143003751372963492}
+  m_Father: {fileID: 5338941395996686236}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3230358320720938769
 GameObject:
   m_ObjectHideFlags: 0
@@ -17,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6143003751372963492
 Transform:
   m_ObjectHideFlags: 0
@@ -27,10 +59,10 @@ Transform:
   m_GameObject: {fileID: 3230358320720938769}
   m_LocalRotation: {x: 0.49159855, y: 0.508262, z: -0.5082679, w: 0.49159375}
   m_LocalPosition: {x: 0.231, y: -0.04, z: 0.068}
-  m_LocalScale: {x: 0.03623598, y: 0.22920614, z: 0.036235977}
+  m_LocalScale: {x: 0.036235984, y: 0.22920613, z: 0.036235977}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5338941395996686236}
+  m_Father: {fileID: 6040275581026436237}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: -91.911}
 --- !u!33 &3034655317622021684
@@ -272,7 +304,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6143003751372963492}
+  - {fileID: 6040275581026436237}
   - {fileID: 958153007072015673}
   - {fileID: 7567050303105968583}
   - {fileID: 5675681524862104248}
@@ -296,8 +328,7 @@ MonoBehaviour:
   _sizeInInventory: 1
   _data: {fileID: 11400000, guid: d21eb376d1e32794ba800a86a5321e66, type: 2}
   _currentLoadedAmmo: 6
-  _graphics:
-  - {fileID: 3230358320720938769}
+  _graphics: {fileID: 996891208013068703}
   _weaponEnd: {fileID: 958153007072015673}
   muzzleFlash: {fileID: 7334495047389421974}
   weaponAnimatorController: {fileID: 22100000, guid: a63e14276e442a14fb9962d844cf4e89, type: 2}
