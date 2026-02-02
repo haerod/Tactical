@@ -38,6 +38,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
+        _level.OnVictory += Level_OnVictory;
     }
     
     private void OnDisable()
@@ -160,5 +161,10 @@ public class Module_WeaponAmmo : MonoBehaviour
             return; // Can't play
         
         Show(currentUnit.weaponHolder.weapon);
+    }
+    
+    private void Level_OnVictory(object sender, Team winningTeam)
+    {
+        Hide();
     }
 }

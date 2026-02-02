@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using static M__Managers;
 
-public class Module_ActionEffectHolder : MonoBehaviour
+public class Module_TextFeedbackHolder : MonoBehaviour
 {
     [SerializeField] private string missText = "MISS";
     [SerializeField] private string reloadText = "RELOAD";
@@ -20,7 +20,7 @@ public class Module_ActionEffectHolder : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3590819401051024019}
   - component: {fileID: 8678866278511541590}
   m_Layer: 0
-  m_Name: Module - Action effect feedback
+  m_Name: Module - Text feedback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,4 +114,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missText: MISS
+  reloadText: RELOAD
+  outOfAmmoText: OUT OF AMMO
   actionEffectFeedbackPrefab: {fileID: 2426208648441898965, guid: 933a10a0a9155ea42bb16df22e00139a, type: 3}

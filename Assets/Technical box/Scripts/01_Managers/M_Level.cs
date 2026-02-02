@@ -30,13 +30,14 @@ public class M_Level : MonoBehaviour
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
     
     private static M_Level _instance;
-    public static M_Level instance => _instance == null ? FindFirstObjectByType<M_Level>() : _instance;
-    
+    public static M_Level instance => _instance == null ? _instance = FindFirstObjectByType<M_Level>() : _instance;
+        
     public bool isFogOfWar => fogOfWar && fogOfWar.gameObject.activeInHierarchy;
     public bool isVictory => IsVictory();
     public int currentTurn {get; private set;}
     
     public event EventHandler<Team> OnVictory;
+    public event EventHandler OnNewTurnStart;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -109,6 +110,15 @@ public class M_Level : MonoBehaviour
         return true;
     }
     
+    /// <summary>
+    /// Adds a turn to current turn.
+    /// </summary>
+    private void AddTurn()
+    {
+        currentTurn++;
+        OnNewTurnStart?.Invoke(this, EventArgs.Empty);
+    }
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
@@ -123,7 +133,7 @@ public class M_Level : MonoBehaviour
         if(startingTeam != playerTeam)
             return; // Not player team
     
-        currentTurn++;
+        AddTurn();
         IsVictory();
     }
 }

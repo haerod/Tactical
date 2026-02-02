@@ -11,7 +11,7 @@ public class Module_ActionSelection : MonoBehaviour
 {
     [SerializeField] private bool _showText = true;
     
-    [Header("REFERENCES")]
+    [Header("- REFERENCES -")] [Space]
     
     [SerializeField] private GameObject buttonActionPrefab;
     [SerializeField] private GameObject buttonWeaponPrefab;
@@ -38,11 +38,15 @@ public class Module_ActionSelection : MonoBehaviour
     // PUBLIC METHODS
     // ======================================================================
 
+    // ======================================================================
+    // PRIVATE METHODS
+    // ======================================================================
+    
     /// <summary>
     /// Destroys the old buttons, creates new ones and gives them parameters.
     /// </summary>
     /// <param name="unit"></param>
-    public void CreateWeaponButtons(Unit unit)
+    private void CreateWeaponButtons(Unit unit)
     {
         DestroyAllButtons();
         
@@ -57,8 +61,8 @@ public class Module_ActionSelection : MonoBehaviour
             
                 Module_WeaponSelectionButton instantiateButton = 
                     Instantiate(
-                        buttonWeaponPrefab,  
-                        buttonsParent)
+                            buttonWeaponPrefab,  
+                            buttonsParent)
                         .GetComponent<Module_WeaponSelectionButton>();
             
                 instantiateButton.DisplayButton(
@@ -71,8 +75,8 @@ public class Module_ActionSelection : MonoBehaviour
         if (unit.actionsHolder.HasAvailableAction<A_Reload>())
         {
             Module_ActionSelectionButton instantiatedButton = Instantiate(
-                buttonActionPrefab,
-                buttonsParent)
+                    buttonActionPrefab,
+                    buttonsParent)
                 .GetComponent<Module_ActionSelectionButton>();
             
             instantiatedButton.SetParameters(this,unit);
@@ -82,11 +86,7 @@ public class Module_ActionSelection : MonoBehaviour
                 _showText);
         }
     }
-    
-    // ======================================================================
-    // PRIVATE METHODS
-    // ======================================================================
-    
+
     /// <summary>
     /// Destroys all the buttons.
     /// </summary>

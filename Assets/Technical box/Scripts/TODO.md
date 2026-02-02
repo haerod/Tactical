@@ -24,17 +24,6 @@
 - 0.5d -> Fog of war as a Manager (not in Rules)
 - 1w -> Fog of war behavior : mask things undiscovered (difference with discovered and not in line of sight)
 
-## VICTORY CONDITION
-- 1h -> Module showing victory conditions
-- .5d -> Survive X turns
-- .5d -> Multiple objective to win
-- .5d -> Defend a unit
-- .5d -> Eliminate a unit
-- .5d -> Prevent unit to reach a position
-- .5d -> Reach zone
-  - All units have to be on the zone
-  - A specific unit have to be on the zone
-
 ## CUSTOM RIDER
 - 1h -> Custom shortcut for
   - [SerializedField] private
@@ -114,6 +103,15 @@ But turn based is a feature can be added separately.
 - 1d -> Documentation
 - 1w -> Online API like Unity (ask Simon)
 - 0.5d -> Notes in Inspector to make it easier to understand
+
+### VICTORY CONDITION
+- .5d -> Multiple objective to win
+- .5d -> Defend a unit
+- .5d -> Eliminate a unit
+- .5d -> Prevent unit to reach a position
+- .5d -> Reach zone
+    - All units have to be on the zone
+    - A specific unit have to be on the zone
 
 ### RAGDOLL
 - .5d -> Ragdoll is dirty and creates exceptions : fix it

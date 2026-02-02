@@ -61,9 +61,22 @@ public class TurnBasedSystem : MonoBehaviour
     /// <summary>
     /// Returns the next team playing.
     /// </summary>
-    public Team GetNextTeam() => _units.teamPlayOrder
-        .Next(_units.current.unitTeam);
-    
+    public Team GetNextTeam()
+    {
+        Team nextTeam = _units.teamPlayOrder
+            .Next(_units.current.unitTeam);
+        
+        if(_units.GetUnitsOf(nextTeam).Count != 0)
+            return nextTeam;
+
+        while (_units.GetUnitsOf(nextTeam).Count == 0)
+        {
+            nextTeam = _units.teamPlayOrder.Next(nextTeam);
+        }
+        
+        return nextTeam;
+    }
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
