@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using static M__Managers;
+using static GameEvents;
 
 public class Module_MoveLine : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class Module_MoveLine : MonoBehaviour
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _level.OnVictory += Level_OnVictory;
     }
-
+    
     private void OnDisable()
     {
         if(!currentUnit)
@@ -111,7 +112,7 @@ public class Module_MoveLine : MonoBehaviour
         currentUnit.move.OnMovableTileEnter += Move_OnMovableTileEnter;
         currentUnit.move.OnMovementStart += Move_OnMovementStart;
         currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
-        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;   
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter; 
     }
     
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
@@ -149,7 +150,7 @@ public class Module_MoveLine : MonoBehaviour
         DisableLines();
     }
     
-    private void Level_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, Team winnerTeam)
     {
         DisableLines();
     }

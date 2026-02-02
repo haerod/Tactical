@@ -46,9 +46,9 @@ public class Module_VictoryScreen : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Level_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, Team winnerTeam)
     {
-        DisplayEndScreen(_units.current.team.team);
+        DisplayEndScreen(winnerTeam);
     }
     
 }

@@ -14,6 +14,8 @@ public class M_Units : MonoBehaviour
     public List<Team> teamPlayOrder => _teamPlayOrder;
     [SerializeField] private TurnBasedSystem turnBasedSystem;
 
+    [Header("- DEBUG -")] [Space]
+    
     [SerializeField] private List<Unit> _units;
     public List<Unit> units => _units;
     
@@ -22,8 +24,8 @@ public class M_Units : MonoBehaviour
     public event EventHandler<Team> OnTeamTurnStart;
     public event EventHandler<Team> OnTeamTurnEnd;
     
+    private static M_Units _instance;
     public static M_Units instance => _instance == null ? FindFirstObjectByType<M_Units>() : _instance;
-    public static M_Units _instance;
     
     // ======================================================================
     // MONOBEHAVIOUR

@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static M__Managers;
 
 public class M_Board : MonoBehaviour
 {
-    [Header("REFERENCES")] [SerializeField]
-    private Transform charactersParent;
+    [Header("- DEBUG -")] [Space]
+    
+    [SerializeField] private TileGrid _tileGrid;
 
-    [Header("DEBUG")] public TileGrid tileGrid;
+    private static M_Board _instance;
     public static M_Board instance => _instance == null ? FindFirstObjectByType<M_Board>() : _instance;
-    public static M_Board _instance;
 
     public BoardBounds bounds => GetBoardBounds();
 
@@ -28,7 +29,7 @@ public class M_Board : MonoBehaviour
                 "There is more than one M_Board in the scene, kill this one.\n(error by Basic Unity Tactical Tool)",
                 gameObject);
 
-        tileGrid.Setup(transform.Cast<Transform>().Select(t => t.GetComponent<Tile>()).ToList());
+        _tileGrid.Setup(transform.Cast<Transform>().Select(t => t.GetComponent<Tile>()).ToList());
     }
 
     // ======================================================================
@@ -41,14 +42,14 @@ public class M_Board : MonoBehaviour
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns></returns>
-    public Tile GetTileAtCoordinates(int x, int y) => tileGrid[x, y];
+    public Tile GetTileAtCoordinates(int x, int y) => _tileGrid[x, y];
 
     /// <summary>
     /// Returns the tile at given coordinates.
     /// </summary>
     /// <param name="coordinates"></param>
     /// <returns></returns>
-    public Tile GetTileAtCoordinates(Coordinates coordinates) => tileGrid[coordinates.x, coordinates.y];
+    public Tile GetTileAtCoordinates(Coordinates coordinates) => _tileGrid[coordinates.x, coordinates.y];
 
     /// <summary>
     /// Returns a tile with an offset if it exists, otherwise returns null.
@@ -367,5 +368,5 @@ public class M_Board : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     private BoardBounds GetBoardBounds() =>
-        new(tileGrid.highestX, tileGrid.highestY, tileGrid.lowestX, tileGrid.lowestY);
+        new(_tileGrid.highestX, _tileGrid.highestY, _tileGrid.lowestX, _tileGrid.lowestY);
 }

@@ -10,27 +10,33 @@ public class M_Level : MonoBehaviour
     [SerializeField] private Team _playerTeam;
     public Team playerTeam => _playerTeam;
     
-    [Header("VICTORY RULES")]
+    [Header("- VICTORY CONDITIONS -")] [Space]
     
     public VictoryCondition victoryCondition = VictoryCondition.Deathmatch;
-    public enum VictoryCondition { Deathmatch, ReachZone}
+    public enum VictoryCondition { Deathmatch, ReachZone, Survive}
     
     [SerializeField] private List<Tile> _tilesToReach;
     public List<Tile> tilesToReach => _tilesToReach;
     
-    [Header("FOG OF WAR")]
+    [Space] 
+    
+    [SerializeField] private int _turnsToSurvive;
+    public int turnsToSurvive => _turnsToSurvive;
+    
+    [Header("- FOG OF WAR -")] [Space]
     
     [SerializeField] private FogOfWar fogOfWar;
     public enum VisibleInFogOfWar { InView, Allies, Everybody}
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
     
+    private static M_Level _instance;
     public static M_Level instance => _instance == null ? FindFirstObjectByType<M_Level>() : _instance;
-    public static M_Level _instance;
     
     public bool isFogOfWar => fogOfWar && fogOfWar.gameObject.activeInHierarchy;
     public bool isVictory => IsVictory();
+    public int currentTurn {get; private set;}
     
-    public event EventHandler OnVictory;
+    public event EventHandler<Team> OnVictory;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -44,13 +50,16 @@ public class M_Level : MonoBehaviour
         else
             Debug.LogError("There is more than one M_Rules in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
     }
-
+    
     private void Start()
     {
         if (victoryCondition == VictoryCondition.ReachZone)
             GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
+        
+        if (victoryCondition == VictoryCondition.Survive)
+            _units.OnTeamTurnStart += Units_OnTeamTurnStart;
     }
-
+    
     private void OnDisable()
     {
         OnVictory = null;
@@ -69,24 +78,52 @@ public class M_Level : MonoBehaviour
     /// </summary>
     private bool IsVictory()
     {
-        if(victoryCondition ==  VictoryCondition.Deathmatch)
-            if (_units.GetEnemiesOf(_units.current).Count > 0)
-                return false; // No victory
+        if (victoryCondition == VictoryCondition.Deathmatch)
+        {
+            if (_units.GetEnemiesOf(_units.current).Count == 0)
+                OnVictory?.Invoke(null, _units.current.unitTeam);
+            else
+                return false;
+        }
         
-        if (victoryCondition ==  VictoryCondition.ReachZone)
-            if(!_units.GetUnitsOf(playerTeam).Any(unit => _tilesToReach.Contains(unit.tile)))
-                return false; // No victory
+        if (victoryCondition == VictoryCondition.ReachZone)
+        {
+            if(_units.GetUnitsOf(playerTeam).Count == 0)
+                OnVictory?.Invoke(null, _units.units.FirstOrDefault()?.unitTeam);
+            else if (_units.GetUnitsOf(playerTeam).Any(unit => _tilesToReach.Contains(unit.tile)))
+                OnVictory?.Invoke(null, playerTeam);
+            else
+                return false;
+        }
         
-        OnVictory?.Invoke(null, EventArgs.Empty);
+        if (victoryCondition == VictoryCondition.Survive)
+        {
+            if(_units.GetUnitsOf(playerTeam).Count == 0)
+                OnVictory?.Invoke(null, _units.units.FirstOrDefault()?.unitTeam);
+            else if (currentTurn == turnsToSurvive)
+                OnVictory?.Invoke(null, playerTeam);
+            else
+                return false;
+        }
+        
         return true;
     }
     
     // ======================================================================
     // EVENTS
     // ======================================================================
-
+    
     private void GameEvents_OnAnyActionEnd(object sender, Unit endingUnit)
     {
+        IsVictory();
+    }
+    
+    private void Units_OnTeamTurnStart(object sender, Team startingTeam)
+    {
+        if(startingTeam != playerTeam)
+            return; // Not player team
+    
+        currentTurn++;
         IsVictory();
     }
 }

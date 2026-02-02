@@ -312,7 +312,7 @@ public class M_Input : MonoBehaviour
         SetActivePlayerInput();
     }
     
-    private void Level_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, Team winnerTeam)
     {
         SetActivePlayerInput(false);
     }

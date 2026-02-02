@@ -9,10 +9,11 @@ using Cinemachine;
 
 public class M_Camera : MonoBehaviour
 {
-    [Header("BOUNDS")] 
+    [Header("- BOUNDS- ")] [Space]
+    
     [SerializeField] private bool blockCameraAtBoardBoundaries = true;
     
-    [Header("CAMERA")]
+    [Header("- CAMERA -")] [Space]
     
     [SerializeField] private float moveSpeed = 30f;
     [Space]
@@ -25,12 +26,13 @@ public class M_Camera : MonoBehaviour
     [SerializeField] private bool useScreenShake = true;
     [SerializeField] private float screenShakeForce = .1f;
     
-    [Header("REFERENCES")]
+    [Header("- REFERENCES -")] [Space]
+    
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Transform cameraTarget;
     
+    private static M_Camera _instance;
     public static M_Camera instance => _instance == null ? FindFirstObjectByType<M_Camera>() : _instance;
-    public static M_Camera _instance;
     
     public Camera currentCamera => _currentCamera ? _currentCamera : _currentCamera = Camera.main;
     private Camera _currentCamera;

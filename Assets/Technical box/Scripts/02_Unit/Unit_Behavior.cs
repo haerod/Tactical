@@ -11,7 +11,7 @@ public class Unit_Behavior : MonoBehaviour
     public bool playable = true;
     [SerializeField] private UnitBehavior behavior;
     
-    [Header("REFERENCES")]
+    [Header("- REFERENCES -")]
     
     [SerializeField] private Unit unit;
     
@@ -20,11 +20,11 @@ public class Unit_Behavior : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Start the unit's behavior.
     /// </summary>

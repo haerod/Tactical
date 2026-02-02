@@ -121,7 +121,7 @@ public class Module_SelectionSquare : MonoBehaviour
         DisableSquare();
     }
     
-    private void Level_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, Team winnerTeam)
     {
         DisableSquare();
     }

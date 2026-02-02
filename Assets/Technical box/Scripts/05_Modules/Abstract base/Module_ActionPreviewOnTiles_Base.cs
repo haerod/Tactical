@@ -77,7 +77,7 @@ public class Module_ActionPreviewOnTiles_Base : MonoBehaviour
         HideFeedbacks();
     }
     
-    private void Level_OnVictory(object sender, EventArgs e)
+    private void Level_OnVictory(object sender, Team winnerTeam)
     {
         HideFeedbacks();
     }
