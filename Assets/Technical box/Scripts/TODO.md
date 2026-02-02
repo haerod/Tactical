@@ -24,6 +24,14 @@
 - 0.5d -> Fog of war as a Manager (not in Rules)
 - 1w -> Fog of war behavior : mask things undiscovered (difference with discovered and not in line of sight)
 
+## CUSTOM RIDER
+- 1h -> Custom shortcut for
+  - [SerializedField] private
+
+## AUTO SNAP
+- 1h -> Simplify Get...Under or Is...Under
+  - -> single check in IsOnValidPosition and multiple classes in BaseAutoSnap checking what's inside SphereCast result
+
 ## ACTION TILE PREVIEW
 - 1h -> Zone with limits
 - 1h -> Use pulling to not instantiate always area prefabs

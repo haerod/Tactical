@@ -30,7 +30,7 @@ public class UnitAutoSnap : BaseAutoSnap
     // ======================================================================
     // INHERITED
     // ======================================================================
-
+    
     protected override void SetParameters() => transform.parent = _units.transform;
 
     protected override void MoveObject(Coordinates coordinates) => unit.MoveAt(coordinates);
@@ -41,7 +41,7 @@ public class UnitAutoSnap : BaseAutoSnap
 
         if (!validTile)
             return false;
-        if (GetOtherCharacterOnTile(validTile))
+        if (GetOtherUnitOnTile(validTile) || IsSpawnerOnTile())
             return false;
 
         return true;
@@ -85,7 +85,7 @@ public class UnitAutoSnap : BaseAutoSnap
     /// </summary>
     /// <param name="tile"></param>
     /// <returns></returns>
-    private Unit GetOtherCharacterOnTile(Tile tile)
+    private Unit GetOtherUnitOnTile(Tile tile)
     {
         Collider[] colliders = Physics.OverlapSphere(tile.transform.position, .1f);
 
@@ -94,5 +94,13 @@ public class UnitAutoSnap : BaseAutoSnap
             .Where(testedUnit => testedUnit)
             .FirstOrDefault(testedUnit => testedUnit != unit);
     }
+    
+    /// <summary>
+    /// Returns true if is a spawner at position.
+    /// </summary>
+    /// <returns></returns>
+    private bool IsSpawnerOnTile() => Physics.OverlapSphere(transform.position, .1f)
+        .Select(collider => collider.GetComponent<Spawner>())
+        .Any(testedSpawner => testedSpawner != null);
 #endif
 }
