@@ -14,8 +14,9 @@ public class Module_ActionPreviewOnTiles_Heal : Module_ActionPreviewOnTiles_Base
     // MONOBEHAVIOUR
     // ======================================================================
     
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;

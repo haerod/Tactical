@@ -22,7 +22,7 @@ public class Module_ActionPreviewOnTiles_Base : MonoBehaviour
     // MONOBEHAVIOUR
     // ======================================================================
 
-    private void Start()
+    protected virtual void Start()
     {
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;

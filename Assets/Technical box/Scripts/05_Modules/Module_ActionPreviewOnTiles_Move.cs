@@ -14,8 +14,9 @@ public class Module_ActionPreviewOnTiles_Move : Module_ActionPreviewOnTiles_Base
     // MONOBEHAVIOUR
     // ======================================================================
     
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
