@@ -57,7 +57,7 @@ public class FogOfWar : MonoBehaviour
         List<Unit> visibleCharacters = _units.units
             .Where(c =>
             {
-                switch (_Level.visibleInFogOfWar)
+                switch (_level.visibleInFogOfWar)
                 {
                     case M_Level.VisibleInFogOfWar.Everybody:
                         return true;

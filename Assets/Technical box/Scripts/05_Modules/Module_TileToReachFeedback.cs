@@ -22,7 +22,7 @@ public class Module_TileToReachFeedback : MonoBehaviour
     
     private void Start()
     {
-        if(_Level.victoryCondition != M_Level.VictoryCondition.ReachZone)
+        if(_level.victoryCondition != M_Level.VictoryCondition.ReachZone)
             return; // Not the good victory condition
         
         Show();
@@ -30,13 +30,13 @@ public class Module_TileToReachFeedback : MonoBehaviour
     
     private void OnDrawGizmos()
     {
-        if(_Level.victoryCondition != M_Level.VictoryCondition.ReachZone)
+        if(_level.victoryCondition != M_Level.VictoryCondition.ReachZone)
             return; // Not the good victory condition
         
         Gizmos.color = gizmoColor;
         
         if (!level)
-            level = _Level;
+            level = _level;
 
         level.tilesToReach.ForEach(tile => Gizmos.DrawCube(tile.transform.position + Vector3.up * .05f, new Vector3(1f, .1f, 1f)));
     }
@@ -56,12 +56,12 @@ public class Module_TileToReachFeedback : MonoBehaviour
     {
         Hide();
         
-        for (int i = 0; i < _Level.tilesToReach.Count; i++)
+        for (int i = 0; i < _level.tilesToReach.Count; i++)
         {
             if(tileToReachFeedbacks.Count > i)
-                SetupTileToReachFeedback(tileToReachFeedbacks[i], _Level.tilesToReach[i]);
+                SetupTileToReachFeedback(tileToReachFeedbacks[i], _level.tilesToReach[i]);
             else
-                AddNewFeedback(_Level.tilesToReach[i]);
+                AddNewFeedback(_level.tilesToReach[i]);
         }
     }
     

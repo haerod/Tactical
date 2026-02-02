@@ -15,7 +15,7 @@ public class Module_VictoryScreen : MonoBehaviour
     
     private void Start()
     {
-        _Level.OnVictory += Level_OnVictory;
+        _level.OnVictory += Level_OnVictory;
     }
 
     // ======================================================================

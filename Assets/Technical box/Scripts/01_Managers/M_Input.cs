@@ -64,7 +64,7 @@ public class M_Input : MonoBehaviour
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
-        _Level.OnVictory += Level_OnVictory;
+        _level.OnVictory += Level_OnVictory;
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += Action_OnAnyActionEnd;
     }

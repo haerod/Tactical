@@ -57,7 +57,7 @@ public class Unit_Look : MonoBehaviour
         .units
             .Where(chara =>
             {
-                switch (_Level.visibleInFogOfWar)
+                switch (_level.visibleInFogOfWar)
                 {
                     case M_Level.VisibleInFogOfWar.Everybody:
                         return true;

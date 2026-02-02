@@ -25,7 +25,7 @@ public class Module_TurnButtons : MonoBehaviour
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
-        _Level.OnVictory += Level_OnVictory;
+        _level.OnVictory += Level_OnVictory;
         GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
     }

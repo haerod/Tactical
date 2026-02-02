@@ -27,7 +27,7 @@ public class SpawnerAutoSnap : BaseAutoSnap
     // INHERITED
     // ======================================================================
     
-    protected override void SetParameters() => transform.SetParent(_Level.transform);
+    protected override void SetParameters() => transform.SetParent(_level.transform);
 
     protected override void MoveObject(Coordinates coordinates)
     {

@@ -26,7 +26,7 @@ public class Module_ActionPreviewOnTiles_Base : MonoBehaviour
     {
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         GameEvents.OnAnyActionStart += Action_OnAnyActionStart;
-        _Level.OnVictory += Level_OnVictory;
+        _level.OnVictory += Level_OnVictory;
     }
 
     // ======================================================================

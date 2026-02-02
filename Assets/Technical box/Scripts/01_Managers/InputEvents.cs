@@ -61,7 +61,7 @@ public static class InputEvents
         if (!currentUnit.move.CanWalkAt(tile.coordinates) || !currentUnit.CanPlay()) 
             return; // Can't go on this tile or can't play
         
-        bool pointedCharacterIsVisible = !M__Managers._Level.isFogOfWar || currentUnit.look.visibleTiles.Contains(tile);
+        bool pointedCharacterIsVisible = !M__Managers._level.isFogOfWar || currentUnit.look.visibleTiles.Contains(tile);
 
         if (tile.IsOccupiedByUnit() && pointedCharacterIsVisible)
         {

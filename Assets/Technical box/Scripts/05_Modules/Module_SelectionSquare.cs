@@ -23,7 +23,7 @@ public class Module_SelectionSquare : MonoBehaviour
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
-        _Level.OnVictory += Level_OnVictory;
+        _level.OnVictory += Level_OnVictory;
     }
     
     private void OnDisable()
