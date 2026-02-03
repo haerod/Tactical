@@ -2,16 +2,16 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 public class Unit_AnimatorScripts : MonoBehaviour
 {
-    [Header("REFERENCES")]
-
+    [Header("- REFERENCES -")][Space]
+    
     [SerializeField] private Unit unit;
     [SerializeField] private Animator anim;
-    [SerializeField] private List<GameObject> visuals;
-
+    
     private static readonly int Attack = Animator.StringToHash("attack");
     private static readonly int Hit = Animator.StringToHash("hit");
     private static readonly int Dodge = Animator.StringToHash("dodge");
@@ -22,8 +22,6 @@ public class Unit_AnimatorScripts : MonoBehaviour
     private readonly int Speed = Animator.StringToHash("speed");
     
     private A_Reload reload;
-
-    public event EventHandler OnAttackTouch;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -32,7 +30,9 @@ public class Unit_AnimatorScripts : MonoBehaviour
     private void Start()
     {
         if (unit.cover.AreCoversAround())
-            EnterCrouch();
+            StartCrouch();
+        
+        SetWeaponAnimation(unit.weaponHolder.weapon);
         
         unit.move.OnMovementStart += Move_OnMovementStart;
         unit.move.OnMovementEnd += Move_OnMovementEnd;
@@ -62,20 +62,10 @@ public class Unit_AnimatorScripts : MonoBehaviour
         if(reload)
             reload.OnReloadStart -= Reload_OnReloadStart;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Add the good animator controller depending on the given weapon.
-    /// </summary>
-    /// <param name="weapon"></param>
-    public void SetWeaponAnimation(Weapon weapon)
-    {
-        if(anim)
-            anim.runtimeAnimatorController = weapon.animatorController;
-    }
     
     /// <summary>
     /// Ends shoot animation.
@@ -85,7 +75,7 @@ public class Unit_AnimatorScripts : MonoBehaviour
     {
         anim.SetBool(Attack, false);
         anim.SetBool(Aim, false);
-        OnAttackTouch?.Invoke(this, EventArgs.Empty);
+        unit.actionsHolder.GetActionOfType<A_Attack>().ExecuteAttack();
     }
     
     /// <summary>
@@ -93,22 +83,12 @@ public class Unit_AnimatorScripts : MonoBehaviour
     /// Called by animation.
     /// </summary>
     public void EndHitReaction() => anim.SetBool(Hit, false);
-
+    
     /// <summary>
     /// Starts the dodge reaction.
     /// </summary>
     public void StartDodge() => anim.SetTrigger(Dodge);
-
-    /// <summary>
-    /// Starts the crouch animation.
-    /// </summary>
-    public void EnterCrouch() => anim.SetBool(Crouch, true);
-
-    /// <summary>
-    /// Enables or disables visuals of the characters.
-    /// </summary>
-    public void SetVisualActives(bool value) => visuals.ForEach(o => o.SetActive(value));
-
+    
     /// <summary>
     /// Ends reloading.
     /// Called by animation.
@@ -119,9 +99,17 @@ public class Unit_AnimatorScripts : MonoBehaviour
         unit.actionsHolder.GetActionOfType<A_Reload>().EndReload();
     }
     
+    // public void SetReload(bool value) => anim.SetBool(Reload, value);
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Add the good animator controller depending on the given weapon.
+    /// </summary>
+    /// <param name="weapon"></param>
+    private void SetWeaponAnimation(Weapon weapon) => anim.runtimeAnimatorController = weapon.animatorController;
     
     /// <summary>
     /// Sets the Speed animator's parameter.
@@ -161,6 +149,11 @@ public class Unit_AnimatorScripts : MonoBehaviour
 
     private void StartReload() => anim.SetBool(Reload, true);
     
+    /// <summary>
+    /// Starts the crouch animation.
+    /// </summary>
+    private void StartCrouch() => anim.SetBool(Crouch, true);
+
     // ======================================================================
     // EVENTS
     // ======================================================================
@@ -174,6 +167,9 @@ public class Unit_AnimatorScripts : MonoBehaviour
     private void Move_OnMovementEnd(object sender, EventArgs e)
     {
         SetSpeed(0);
+        
+        if(unit.cover.AreCoversAround())
+            StartCrouch();
     }
     
     private void Attack_OnAttackStart(object sender, EventArgs e)

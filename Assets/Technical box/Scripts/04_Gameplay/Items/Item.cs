@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 /// </summary>
 public class Item : MonoBehaviour
 {
-    [Header("ITEM")]
+    [Header("- ITEM -")][Space]
     
     [SerializeField] private string _itemName = "Item name";
     public string itemName => _itemName;
@@ -24,7 +24,7 @@ public class Item : MonoBehaviour
     [SerializeField] private bool _visibleInInventory = true;
     public bool visibleInInventory => _visibleInInventory;
     
-    [Header("ITEM STACK")]
+    [Header("- ITEM STACK -")][Space]
     
     [SerializeField] private bool _stackable;
     public bool stackable => _stackable;

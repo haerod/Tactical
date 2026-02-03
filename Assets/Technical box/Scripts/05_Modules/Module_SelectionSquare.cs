@@ -11,8 +11,6 @@ public class Module_SelectionSquare : MonoBehaviour
     [Range(.01f, .5f)] [SerializeField] private float squareOffset = .01f;
     [SerializeField] private Color inRangeColor = Color.white;
     [SerializeField] private Color outRangeColor = Color.grey;
-
-    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -20,20 +18,12 @@ public class Module_SelectionSquare : MonoBehaviour
     
     private void Start()
     {
-        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
+        InputEvents.OnTileEnter += InputEvents_OnTileEnter;
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _level.OnVictory += Level_OnVictory;
-    }
-    
-    private void OnDisable()
-    {
-        if(!currentUnit)
-            return;
-        
-        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;       
-        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
     }
     
     // ======================================================================
@@ -61,69 +51,23 @@ public class Module_SelectionSquare : MonoBehaviour
     /// <summary>
     /// Disables the selection square.
     /// </summary>
-    private void DisableSquare()
+    private void Hide()
     {
         squareTransform.gameObject.SetActive(false);
     }
-
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
-
-    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
+    
+    private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
-        if(!startingUnit.behavior.playable)
+        if(!_units.current)
+            return; // No current unit
+        if(!_units.current.behavior.playable)
             return; // NPC
         
-        currentUnit = startingUnit;
-        
-        currentUnit.move.OnMovableTileEnter += Move_OnMovableTileEnter;
-        currentUnit.move.OnMovementStart += Move_OnMovementStart;
-        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
-        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
-    }
-    
-    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
-    {
-        DisableSquare();
-        
-        if(!endingUnit.behavior.playable)
-            return; // NPC
-        
-        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;       
-        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
-        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
-        currentUnit = null;
-    }
-
-    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
-    {
-        DisableSquare();
-    }
-    
-    private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
-    {
-        Tile lastTile = pathfinding.Last();
-
-        bool tileInMoveRange = _units.current.move.CanMoveTo(lastTile);
-
-        SetSquareAt(lastTile.worldPosition, tileInMoveRange);
-    }
-
-    private void Move_OnMovementStart(object sender, EventArgs e)
-    {
-        DisableSquare();
-    }
-    
-    private void Attack_OnAttackStart(object sender, EventArgs e)
-    {
-        DisableSquare();
-    }
-    
-    private void Level_OnVictory(object sender, Team winnerTeam)
-    {
-        DisableSquare();
+        SetSquareAt(enteredTile.worldPosition, _units.current.move.CanMoveTo(enteredTile));
     }
     
     private void InputEvents_OnUnitEnter(object sender, Unit hoveredCharacter)
@@ -131,6 +75,26 @@ public class Module_SelectionSquare : MonoBehaviour
         if(!_units.current.look.UnitsVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character
         
-        DisableSquare();
+        Hide();
+    }
+    
+    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
+    {
+        Hide();
+    }
+    
+    private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
+    {
+        Hide();
+    }
+    
+    private void GameEvents_OnAnyActionStart(object sender, Unit e)
+    {
+        Hide();
+    }
+
+    private void Level_OnVictory(object sender, Team winnerTeam)
+    {
+        Hide();
     }
 }

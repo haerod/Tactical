@@ -8,8 +8,6 @@ using static M__Managers;
 public class Module_TurnButtons : MonoBehaviour
 {
     [SerializeField] private GameObject layoutGroup;
-
-    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -19,32 +17,21 @@ public class Module_TurnButtons : MonoBehaviour
     {
         SetUIActive(false);
     }
-
+    
     private void Start()
     {
+        GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
+        GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _level.OnVictory += Level_OnVictory;
-        GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
-        GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
     }
     
-    private void OnDisable()
-    {
-        if(!currentUnit)
-            return;
-        
-        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
-        currentUnit.move.OnMovementEnd -= Move_OnMovementEnd;
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
-        currentUnit.attack.OnAttackEnd -= Attack_OnAttackEnd;
-    }
-
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Events call on End Turn button's click
     /// </summary>
@@ -83,58 +70,18 @@ public class Module_TurnButtons : MonoBehaviour
     // ======================================================================
     // EVENTS
     // ======================================================================
-
+    
     private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
-        if(!startingUnit.behavior.playable)
-            return; // NPC
-
-        currentUnit = startingUnit;
-        
-        currentUnit.move.OnMovementStart += Move_OnMovementStart;
-        currentUnit.move.OnMovementEnd += Move_OnMovementEnd;
-        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
-        currentUnit.attack.OnAttackEnd += Attack_OnAttackEnd;
-        
-        SetUIActive(true);
+        SetUIActive(startingUnit.behavior.playable);
     }
     
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         SetUIActive(false);
-        
-        if(!endingUnit.behavior.playable)
-            return; // NPC
-        
-        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
-        currentUnit.move.OnMovementEnd -= Move_OnMovementEnd;
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
-        currentUnit.attack.OnAttackEnd -= Attack_OnAttackEnd;
-        
-        currentUnit = null;
-    }
-    
-    private void Attack_OnAttackStart(object sender, EventArgs e)
-    {
-        SetUIActive(false);
-    }
-    
-    private void Attack_OnAttackEnd(object sender, EventArgs e)
-    {
-        SetUIActive(_units.current.behavior.playable);
     }
     
     private void Level_OnVictory(object sender, Team winnerTeam)
-    {
-        SetUIActive(false);
-    }
-    
-    private void Move_OnMovementEnd(object sender, EventArgs e)
-    {
-        SetUIActive(_units.current.behavior.playable);
-    }
-
-    private void Move_OnMovementStart(object sender, EventArgs e)
     {
         SetUIActive(false);
     }
@@ -151,11 +98,6 @@ public class Module_TurnButtons : MonoBehaviour
     
     private void GameEvents_OnAnyActionEnd(object sender, Unit endingActionUnit)
     {
-        if(!endingActionUnit.CanPlay())
-            return; // Can't play
-        if(!endingActionUnit.behavior.playable)
-            return; // Not playable character
-        
-        SetUIActive(true);
+        SetUIActive(_units.current.behavior.playable);
     }
 }

@@ -8,19 +8,16 @@ using static M__Managers;
 
 public class Module_PercentShootText : MonoBehaviour
 {
-    [Range(0,100)]
-    [SerializeField] private float textOffset = 20f;
+    [Range(0,100)] [SerializeField] private float textOffset = 20f;
     [Space]
     [SerializeField] private GameColor zeroColor;
     [SerializeField] private GameColor basicColor;
     [SerializeField] private GameColor criticalColor;
 
-    [Header("REFERENCES")]
-
+    [Header("- REFERENCES -")][Space]
+    
     [SerializeField] private GameObject panel;
     [SerializeField] private TextMeshProUGUI percentShootText;
-
-    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -30,14 +27,9 @@ public class Module_PercentShootText : MonoBehaviour
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
+        GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
     }
-
-    private void OnDisable()
-    {
-        if(currentUnit)
-            currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
-    }
-
+    
     private void Update()
     {
         SetPercentShootTextPosition();
@@ -50,7 +42,7 @@ public class Module_PercentShootText : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Enables the percent shoot text and displays the value in percent.
     /// </summary>
@@ -83,7 +75,7 @@ public class Module_PercentShootText : MonoBehaviour
     /// <summary>
     /// Disables the percent shoot text.
     /// </summary>
-    private void DisablePercentShootText() => panel.SetActive(false);
+    private void Hide() => panel.SetActive(false);
     
     /// <summary>
     /// Sets the text position at mouse position + offset.
@@ -101,10 +93,7 @@ public class Module_PercentShootText : MonoBehaviour
     {
         if(!startingUnit.behavior.playable)
             return; // NPC
-
-        currentUnit = startingUnit;
         
-        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
         InputEvents.OnNoTile += InputEvents_OnNoTile;
         InputEvents.OnFreeTileEnter += InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
@@ -118,7 +107,6 @@ public class Module_PercentShootText : MonoBehaviour
         if(!endingUnit.behavior.playable)
             return; // NPC
         
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
         InputEvents.OnNoTile -= InputEvents_OnNoTile;
         InputEvents.OnFreeTileEnter -= InputEvents_OnFreeTileEnter;
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
@@ -126,19 +114,17 @@ public class Module_PercentShootText : MonoBehaviour
         InputEvents.OnAllyEnter -= InputEvents_OnAllyEnter;
         InputEvents.OnCurrentUnitEnter -= InputEvents_OnCurrentUnitEnter;
         
-        DisablePercentShootText();
-        
-        currentUnit = null;
+        Hide();
     }
     
     private void InputEvents_OnFreeTileEnter(object sender, Tile tile)
     {
-        DisablePercentShootText();
+        Hide();
     }
     
     private void InputEvents_OnNoTile(object sender, EventArgs e)
     {
-        DisablePercentShootText();
+        Hide();
     }
 
     private void InputEvents_OnEnemyEnter(object sender, Unit enemy)
@@ -157,21 +143,21 @@ public class Module_PercentShootText : MonoBehaviour
     
     private void InputEvents_OnCurrentUnitEnter(object sender, EventArgs e)
     {
-        DisablePercentShootText();
+        Hide();
     }
 
     private void InputEvents_OnAllyEnter(object sender, Unit ally)
     {
-        DisablePercentShootText();
+        Hide();
     }
     
-    private void Attack_OnAttackStart(object sender, EventArgs e)
+    private void GameEvents_OnAnyActionStart(object sender, Unit startingActionUnit)
     {
-        DisablePercentShootText();
+        Hide();
     }
     
     private void InputEvents_OnUnitExit(object sender, Unit exitedUnit)
     {
-        DisablePercentShootText();
+        Hide();
     }
 }

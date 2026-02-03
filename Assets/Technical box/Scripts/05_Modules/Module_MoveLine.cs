@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using static M__Managers;
-using static GameEvents;
 
 public class Module_MoveLine : MonoBehaviour
 {
@@ -15,8 +14,6 @@ public class Module_MoveLine : MonoBehaviour
 
     [SerializeField] private LineRenderer line;
     [SerializeField] private LineRenderer lineOut;
-
-    private Unit currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -24,20 +21,12 @@ public class Module_MoveLine : MonoBehaviour
 
     private void Start()
     {
-        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
+        GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
+        InputEvents.OnTileEnter += InputEvents_OnTileEnter;
+        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _level.OnVictory += Level_OnVictory;
-    }
-    
-    private void OnDisable()
-    {
-        if(!currentUnit)
-            return;
-        
-        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
-        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
     }
 
     // ======================================================================
@@ -100,19 +89,18 @@ public class Module_MoveLine : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
+    private void InputEvents_OnTileEnter(object sender, Tile enteredTile)
     {
-        if(!startingUnit.behavior.playable)
+        Unit currentUnit = _units.current;
+        
+        if(!currentUnit)
+            return; // No current unit
+        if(!currentUnit.behavior.playable)
             return; // NPC
-        if(!startingUnit.CanPlay())
+        if(!currentUnit.CanPlay())
             return; // Can't play
         
-        currentUnit = startingUnit;
-        
-        currentUnit.move.OnMovableTileEnter += Move_OnMovableTileEnter;
-        currentUnit.move.OnMovementStart += Move_OnMovementStart;
-        currentUnit.attack.OnAttackStart += Attack_OnAttackStart;
-        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter; 
+        SetLines(currentUnit.move.GetPathTo(enteredTile), _units.current.move.GetMovementRange());
     }
     
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
@@ -121,13 +109,6 @@ public class Module_MoveLine : MonoBehaviour
             return; // NPC
         
         DisableLines();
-        
-        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
-        currentUnit.move.OnMovementStart -= Move_OnMovementStart;
-        currentUnit.attack.OnAttackStart -= Attack_OnAttackStart;
-        InputEvents.OnUnitEnter -= InputEvents_OnUnitEnter;
-        
-        currentUnit = null;
     }
     
     private void Units_OnTeamTurnEnd(object sender, Team endingTeam)
@@ -135,17 +116,7 @@ public class Module_MoveLine : MonoBehaviour
         DisableLines();
     }
     
-    private void Move_OnMovementStart(object sender, EventArgs e)
-    {
-        DisableLines();
-    }
-    
-    private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
-    {
-        SetLines(pathfinding, _units.current.move.GetMovementRange());
-    }
-
-    private void Attack_OnAttackStart(object sender, EventArgs e)
+    private void GameEvents_OnAnyActionStart(object sender, Unit startingUnit)
     {
         DisableLines();
     }
@@ -157,6 +128,8 @@ public class Module_MoveLine : MonoBehaviour
     
     private void InputEvents_OnUnitEnter(object sender, Unit hoveredCharacter)
     {
+        if(!_units.current)
+            return; // No current unit
         if(!_units.current.look.UnitsVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character
         

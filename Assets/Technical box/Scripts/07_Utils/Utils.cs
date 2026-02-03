@@ -56,4 +56,11 @@ public static class Utils
         }
         return bounds;
     }
+    
+    /// <summary>
+    /// Rolls a die with X faces and returns the result.
+    /// </summary>
+    /// <param name="diceFaces"></param>
+    /// <returns></returns>
+    public static int DiceRoll(int diceFaces) => Random.Range(1, diceFaces+1);
 }

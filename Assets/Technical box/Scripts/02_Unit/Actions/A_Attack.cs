@@ -4,24 +4,39 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using static M__Managers;
+using static Utils;
 
 public class A_Attack : A__Action
 {
-    [Header("PARAMETERS")]
+    [Header("- PARAMETERS -")]
     
     [SerializeField] private int precision = 100;
     
     private Action onAttackDone;
     
     public event EventHandler OnAttackStart;
+    public event EventHandler OnAttackExecute;
     public event EventHandler OnAttackEnd;
     public event EventHandler<Unit> OnAttackMiss;
     public event EventHandler<Unit> OnAttackableEnemyHovered;
     public event EventHandler<Unit> OnUnitExit;
     
+    private Unit attackTarget;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+    
+    private void Start()
+    {
+        OnAttackExecute += Attack_OnAttackExecute;
+    }
+    
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        OnAttackExecute -= Attack_OnAttackExecute;
+    }
     
     // ======================================================================
     // PUBLIC METHODS
@@ -44,55 +59,20 @@ public class A_Attack : A__Action
     {
         if (!unit.look.CanSee(currentTarget)) 
             return; // Enemy not in sight
-
-        Unit target = currentTarget;
-        Weapon weapon = unit.weaponHolder.weapon;
-        Ammo ammo = null;
-
-        unit.move.OrientTo(target.transform.position);
-        target.move.OrientTo(unit.transform.position);
-
-        int damages = unit.weaponHolder.weaponData.RandomDamages();
-
+        
+        attackTarget = currentTarget;
+        
+        unit.move.OrientTo(currentTarget.transform.position);
+        currentTarget.move.OrientTo(unit.transform.position);
+        
         StartAction();
         GameEvents.InvokeOnAnyAttackStart(unit);
         OnAttackStart?.Invoke(this, EventArgs.Empty);
-        if (weapon.data.useProjectile)
-        {
-            //Attack attack = new Attack(target, damages, weapon.data.damageType);
-            ammo = Instantiate(
-                    weapon.data.ammo,
-                    unit.graphics.rightHand.position, 
-                    Quaternion.identity)
-                .GetComponent<Ammo>();
-            ammo.SetGraphicsActive(true);
-            ammo.OnProjectileHit += Ammo_OnProjectileHit;
-        }
-        else
-            unit.anim.OnAttackTouch += AnimatorScripts_OnAttackTouch;
-        
-        int percentOfTouch = GetChanceToTouch(currentTarget);
-        
-        if (UnityEngine.Random.Range(0, 101) < percentOfTouch) // SUCCESS
-        {
-            if (weapon.data.useProjectile)
-            {
-                SetOnAttackDone(true, damages, target, ammo);
-                ammo.transform.LookAt(target.graphics.torso.position);
-                ammo.GoTo(target.graphics.torso);
-            }
-            SetOnAttackDone(true, damages, target);
-        }
-        else // MISS
-        {
-            if (weapon.data.useProjectile)
-            {
-                SetOnAttackDone(false, 0, target, ammo);
-                ammo.transform.LookAt(target.tile.worldPosition);
-                ammo.GoTo(target.tile.transform);
-            }
-            SetOnAttackDone(false, 0, target);
-        }
+    }
+    
+    public void ExecuteAttack()
+    {
+        OnAttackExecute?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>
@@ -161,7 +141,6 @@ public class A_Attack : A__Action
     /// </summary>
     private void EndAttack()
     {
-        unit.anim.OnAttackTouch -= AnimatorScripts_OnAttackTouch;
         _camera.Shake();
         onAttackDone();
     }
@@ -282,7 +261,7 @@ public class A_Attack : A__Action
         Attack(clickedUnit);
     }
     
-    private void AnimatorScripts_OnAttackTouch(object sender, EventArgs e)
+    private void AnimatorScripts_OnAttackHit(object sender, EventArgs e)
     {
         EndAttack();
     }
@@ -290,5 +269,49 @@ public class A_Attack : A__Action
     private void Ammo_OnProjectileHit(object sender, EventArgs e)
     {
         EndAttack();
+    }
+    
+    private void Attack_OnAttackExecute(object sender, EventArgs e)
+    {
+        Unit target = attackTarget;
+        Weapon weapon = unit.weaponHolder.weapon;
+        int damages = unit.weaponHolder.weaponData.RandomDamages();
+        bool isTouching = DiceRoll(100) < GetChanceToTouch(target);
+        
+        if (weapon.data.useProjectile)
+        {
+            //Attack attack = new Attack(target, damages, weapon.data.damageType);
+            Ammo ammo = Instantiate(
+                    weapon.data.ammo,
+                    unit.graphics.rightHand.position, 
+                    Quaternion.identity)
+                .GetComponent<Ammo>();
+            ammo.SetGraphicsActive(true);
+            ammo.OnProjectileHit += Ammo_OnProjectileHit;
+
+            if (isTouching)
+            {
+                SetOnAttackDone(true, damages, target, ammo);
+                ammo.transform.LookAt(target.graphics.torso.position);
+                ammo.GoTo(target.graphics.torso);
+                SetOnAttackDone(true, damages, target);
+            }
+            else
+            {
+                SetOnAttackDone(false, 0, target, ammo);
+                ammo.transform.LookAt(target.tile.worldPosition);
+                ammo.GoTo(target.tile.transform);
+                SetOnAttackDone(false, 0, target);
+            }
+        }
+        else
+        {
+            if(isTouching)
+                SetOnAttackDone(true, damages, target);
+            else
+                SetOnAttackDone(false, 0, target);
+            
+            EndAttack();
+        }
     }
 }

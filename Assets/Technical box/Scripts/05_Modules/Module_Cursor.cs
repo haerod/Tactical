@@ -16,30 +16,18 @@ public class Module_Cursor : MonoBehaviour
     
     private enum CursorType { Regular, AimAndInSight, OutAimOrSight, OutMovement, Heal, OutOfAmmo } // /!\ If add/remove a cursor, update the SetCursor method
     
-    private Unit currentUnit;
-    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
     
     private void Start()
     {
-        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
-        
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
         InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
         InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
-        
-        _input.OnChangeClickActivation += Input_ChangeClickActivation;
-    }
-    
-    private void OnDisable()
-    {
-        if(currentUnit)
-            currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
+        _input.OnClickActivationChanged += Input_OnClickActivationChanged;
     }
     
     // ======================================================================
@@ -85,22 +73,6 @@ public class Module_Cursor : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void Move_OnMovableTileEnter(object sender, List<Tile> pathfinding)
-    {
-        Tile endTile = pathfinding.LastOrDefault();
-        
-        if (!endTile)
-        {
-            SetCursor(CursorType.OutMovement);
-            return; // No path
-        }
-        
-        bool tileInMoveRange = _units.current.move.CanMoveTo(endTile);
-
-        // Set cursor
-        SetCursor(tileInMoveRange ? CursorType.Regular : CursorType.OutMovement);
-    }
-    
     private void InputEvents_OnAllyEnter(object sender, Unit hoveredAlly)
     {
         Unit currentCharacter = _units.current;
@@ -138,7 +110,7 @@ public class Module_Cursor : MonoBehaviour
             SetCursor(CursorType.OutOfAmmo);
             return; // Out of ammo
         }
-            
+        
         SetCursor(CursorType.AimAndInSight);
     }
     
@@ -147,44 +119,24 @@ public class Module_Cursor : MonoBehaviour
         SetCursor(CursorType.Regular);
     }
     
+    private void InputEvents_OnTileEnter(object sender, Tile tile)
+    {
+        Unit current = _units.current;
+        
+        if(!current)
+            return; // No current unit
+        
+        SetCursor(current.move.CanMoveTo(tile) && current.CanPlay() ? CursorType.Regular : CursorType.OutMovement);
+    }
+    
     private void InputEvents_OnTileExit(object sender, Tile tile)
     {
         SetCursor(CursorType.OutMovement);
     }
-
-    private void Input_ChangeClickActivation(object sender, bool canClickValue)
+    
+    private void Input_OnClickActivationChanged(object sender, bool canClickValue)
     {
         if(!canClickValue)
             SetCursor(CursorType.Regular);
-    }
-    
-    private void InputEvents_OnTileEnter(object sender, Tile tile)
-    {
-        Unit current = _units.current;
-        if(!current)
-            return; // No current unit
-        
-        if (!current.move.CanWalkAt(tile.coordinates) || !current.CanPlay()) 
-            SetCursor(CursorType.OutMovement);
-    }
-    
-    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
-    {
-        if(!startingUnit.behavior.playable)
-            return; // NPC
-        
-        currentUnit = startingUnit;
-        
-        currentUnit.move.OnMovableTileEnter += Move_OnMovableTileEnter;
-    }
-    
-    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
-    {
-        if(!endingUnit.behavior.playable)
-            return; // NPC
-        
-        currentUnit.move.OnMovableTileEnter -= Move_OnMovableTileEnter;
-        
-        currentUnit = null;
     }
 }

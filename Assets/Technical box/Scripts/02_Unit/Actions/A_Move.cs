@@ -3,13 +3,15 @@ using System.Collections;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 using static M__Managers;
 
 public class A_Move : A__Action
 {
-    [Header("PARAMETERS")]
+    [Header("- PARAMETERS -")][Space]
 
-    [SerializeField] private int movementRange = 6;
+    [SerializeField] private int _movementRange = 4;
+    public int movementRange => _movementRange;
     [SerializeField] private bool useDiagonalMovement = true;
     private enum PassThrough {Everybody, Nobody, AlliesOnly}
     [SerializeField] private PassThrough canPassThrough = PassThrough.Nobody;
@@ -17,7 +19,8 @@ public class A_Move : A__Action
     [Range(0,10f)]
     [SerializeField] private float speed = 6;
     
-    [Header("REFERENCES")]
+    [Header("- REFERENCES -")][Space]
+    
     [SerializeField] private MoveOnBoard moveOnBoard;
     [SerializeField] private Transform rotationTarget;
     
@@ -28,8 +31,8 @@ public class A_Move : A__Action
     
     public event EventHandler OnMovementStart;
     public event EventHandler OnMovementEnd;
+    public event EventHandler OnMovableTileHovered;
     public event EventHandler<Tile> OnUnitEnterTile;
-    public event EventHandler<List<Tile>> OnMovableTileEnter;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -60,7 +63,7 @@ public class A_Move : A__Action
     /// Returns the movement range of the unit.
     /// </summary>
     /// <returns></returns>
-    public int GetMovementRange() => movementRange;
+    public int GetMovementRange() => _movementRange;
     
     /// <summary>
     /// Orients this object to another position, except on Y axis. Possibility to add an offset (euler angles).
@@ -77,14 +80,14 @@ public class A_Move : A__Action
 
         unit.ui.OrientToCamera();
     }
-
+    
     /// <summary>
     /// Returns true if the unit can walk on this type of tile.
     /// </summary>
     /// <param name="tileType"></param>
     /// <returns></returns>
     public bool CanWalkOn(TileType tileType) => walkableTiles.Contains(tileType);
-
+    
     /// <summary>
     /// Returns true if the character can walk at the given coordinates.
     /// </summary>
@@ -109,21 +112,10 @@ public class A_Move : A__Action
 
         if (_level.isFogOfWar && !unit.look.visibleTiles.Contains(tile)) 
             return false; // Tile in fog
-
-        List<Tile> path = Pathfinding.GetPath(
-            unit.tile,
-            tile,
-            Pathfinding.TileInclusion.WithEnd,
-            new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement));
         
-        if (path.Count == 0) 
-            return false; // No path
-        if (path.Count > movementRange) 
-            return false; // Out range
-
-        return true; // In range
+        return movementArea.Contains(tile);
     }
-
+    
     /// <summary>
     /// Returns true if the unit can go to the given position (theoretical, without range or play infos).
     /// </summary>
@@ -135,7 +127,7 @@ public class A_Move : A__Action
                 Pathfinding.TileInclusion.WithEnd,
                 new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement))
             .Count > 0;
-
+    
     /// <summary>
     /// Get the furthest tile on the path to a given tile, depending on movement range.
     /// </summary>
@@ -153,13 +145,13 @@ public class A_Move : A__Action
         if (path.Count == 0)
             return null;
         
-        if(path.Count > movementRange)
-            return path[movementRange];
+        if(path.Count > _movementRange)
+            return path[_movementRange];
 
         else
             return path.Last();
     }
-
+    
     /// <summary>
     /// Starts the movement until a tile, with and action on end of this path.
     /// </summary>
@@ -170,7 +162,21 @@ public class A_Move : A__Action
                 Pathfinding.TileInclusion.WithEnd,
                 new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement))
             .ToList());
-
+    
+    /// <summary>
+    /// Returns the path to the destination tile.
+    /// </summary>
+    /// <param name="destination"></param>
+    /// <returns></returns>
+    public List<Tile> GetPathTo(Tile destination) => Pathfinding.GetPath(
+        unit.tile,
+        destination,
+        Pathfinding.TileInclusion.WithStartAndEnd,
+        new MovementRules(
+            walkableTiles, 
+            GetTraversableUnitTiles(), 
+            useDiagonalMovement));
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -202,7 +208,7 @@ public class A_Move : A__Action
         
         tilesToTest.Add(unit.tile);
         
-        for (int i = 0; i < movementRange; i++)
+        for (int i = 0; i < _movementRange; i++)
         {
             foreach (Tile testedTile in tilesToTest)
             {
@@ -238,7 +244,7 @@ public class A_Move : A__Action
         List<Tile> toReturn = new();
 
         // Add not walkableTiles
-        toReturn.AddRange(_board.GetTilesAround(unit.tile, movementRange, useDiagonalMovement)
+        toReturn.AddRange(_board.GetTilesAround(unit.tile, _movementRange, useDiagonalMovement)
             .Where(t => !CanWalkOn(t.type))
             .ToList());
 
@@ -247,16 +253,13 @@ public class A_Move : A__Action
 
         return toReturn;
     }
-
+    
     /// <summary>
     /// Happens in the end of the movement.
     /// </summary>
     private void EndMove()
     {
         OnMovementEnd?.Invoke(this, EventArgs.Empty);
-        
-        if(unit.cover.AreCoversAround())
-            unit.anim.EnterCrouch();
         
         Wait(0.2f, () =>
         {
@@ -314,7 +317,7 @@ public class A_Move : A__Action
     // ======================================================================
     // ACTION OVERRIDE METHODS
     // ======================================================================
-
+    
     protected override void OnHoverTile(Tile hoveredTile)
     {
         if(!unit.CanPlay())
@@ -324,21 +327,12 @@ public class A_Move : A__Action
         
         OrientTo(hoveredTile.transform.position);
         
-        List<Tile> currentPathfinding = Pathfinding.GetPath(
-            unit.tile,
-            hoveredTile,
-            Pathfinding.TileInclusion.WithStartAndEnd,
-            new MovementRules(
-                walkableTiles, 
-                GetTraversableUnitTiles(), 
-                useDiagonalMovement));
-        
-        if (currentPathfinding.Count == 0)
+        if (!CanMoveTo(hoveredTile))
             return; // No path
         
-        OnMovableTileEnter?.Invoke(this, currentPathfinding);
+        OnMovableTileHovered?.Invoke(this, EventArgs.Empty);
     }
-
+    
     protected override void OnClickTile(Tile clickedTile)
     {
         if(!unit.actionsHolder.CanUse(this))
@@ -351,7 +345,7 @@ public class A_Move : A__Action
             clickedTile,
             Pathfinding.TileInclusion.WithEnd,
             new MovementRules(walkableTiles, GetTraversableUnitTiles(), useDiagonalMovement))
-            .Take(movementRange)
+            .Take(_movementRange)
             .ToList();
         
         MoveOn(path);

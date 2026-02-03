@@ -6,24 +6,26 @@ using UnityEngine.Serialization;
 
 public class Weapon : Item
 {
-    [Header("WEAPON")] 
-    [SerializeField] private WeaponData _data;
-    public WeaponData data => _data;
+    [Header("- WEAPON -")][Space]
     
-    [Header("CURRENT AMMO")]
+    [SerializeField] private WeaponData _data;
+    [SerializeField] private RuntimeAnimatorController _animatorController;
+    public WeaponData data => _data;
+    public RuntimeAnimatorController animatorController => _animatorController;
+    
+    [Header("- CURRENT AMMO -")][Space]
     
     [SerializeField] private int _currentLoadedAmmo;
     public int currentLoadedAmmo => _currentLoadedAmmo;
     public bool hasAvailableAmmoToSpend => !data.usesAmmo || (data.usesAmmo && _currentLoadedAmmo > 0);
     public bool isFullOfAmmo => data.usesAmmo && currentLoadedAmmo >= data.ammoCount;
-
-    [Header("GRAPHICS")] 
+    
+    [Header("- GRAPHICS -")][Space]
+    
     [SerializeField] private GameObject _graphics;
     [SerializeField] private Transform _weaponEnd;
     public Transform weaponEnd => _weaponEnd;
     [SerializeField] private GameObject muzzleFlash;
-    [SerializeField] private RuntimeAnimatorController weaponAnimatorController;
-    public RuntimeAnimatorController animatorController => weaponAnimatorController;
     [SerializeField] private GameObject _physics;
     public GameObject physics => _physics;
     
@@ -34,7 +36,7 @@ public class Weapon : Item
     // ======================================================================
     // MONOBEHAVIOR
     // ======================================================================
-
+    
     private void OnDisable()
     {
         if(!unit)
@@ -44,7 +46,7 @@ public class Weapon : Item
         
         unit.attack.OnAttackStart -= Attack_OnAttackStart;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================

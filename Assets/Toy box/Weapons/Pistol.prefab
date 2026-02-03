@@ -326,12 +326,16 @@ MonoBehaviour:
   _itemName: Pistol
   _icon: {fileID: 21300000, guid: f6f5c18b36a5ef043a582e5423d9addb, type: 3}
   _sizeInInventory: 1
+  _visibleInInventory: 1
+  _stackable: 0
+  _maxStackSize: 1
+  _currentStack: 1
   _data: {fileID: 11400000, guid: d21eb376d1e32794ba800a86a5321e66, type: 2}
+  _animatorController: {fileID: 22100000, guid: a63e14276e442a14fb9962d844cf4e89, type: 2}
   _currentLoadedAmmo: 6
   _graphics: {fileID: 996891208013068703}
   _weaponEnd: {fileID: 958153007072015673}
   muzzleFlash: {fileID: 7334495047389421974}
-  weaponAnimatorController: {fileID: 22100000, guid: a63e14276e442a14fb9962d844cf4e89, type: 2}
   _physics: {fileID: 5358745735556149868}
 --- !u!1 &7334495047389421974
 GameObject:

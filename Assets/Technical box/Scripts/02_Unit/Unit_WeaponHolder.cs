@@ -19,7 +19,7 @@ public class Unit_WeaponHolder : MonoBehaviour
     // DEFINITIONS
     // weapon = object in the inventory : is the used weapon
     // weaponData = data of this weapon
-    // weaponGraphics = instantiated object in the hand : only visuals, don't use its datas or pararmeters out of that
+    // weaponGraphics = instantiated object in the hand : only visuals, don't use its data or parameters out of that
     
     [Header("BEHAVIOR")]
     
@@ -37,7 +37,7 @@ public class Unit_WeaponHolder : MonoBehaviour
         public Weapon previousWeapon;
         public Weapon newWeapon;
     }
-
+    
     public event EventHandler<Weapon> OnReloadWeaponEnd;
     
     // ======================================================================
@@ -46,24 +46,20 @@ public class Unit_WeaponHolder : MonoBehaviour
     
     private void Start()
     {
-        if(unit.attack) // Fix for the ragdoll
-            unit.attack.OnAttackStart += Attack_OnAttackStart;
+        unit.attack.OnAttackStart += Attack_OnAttackStart;
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         
-        unit.anim.SetWeaponAnimation(weapon);
-        
         if(weaponGraphics)
             weaponGraphics.Setup(unit);
-
+        
         if (_loadWeaponsOnStart)
             unit.inventory.weapons.ForEach(ReloadWeapon);
     }
     
     private void OnDisable()
     {
-        if(unit.attack) // Fix for the ragdoll
-            unit.attack.OnAttackStart -= Attack_OnAttackStart;
+        unit.attack.OnAttackStart -= Attack_OnAttackStart;
     }
     
     // ======================================================================

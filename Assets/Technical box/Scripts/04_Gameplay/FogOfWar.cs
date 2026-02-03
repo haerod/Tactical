@@ -73,13 +73,13 @@ public class FogOfWar : MonoBehaviour
 
         // Shows visible characters
         visibleCharacters
-            .ForEach(c => c.anim.SetVisualActives(true));
+            .ForEach(c => c.graphics.SetVisualActives(true));
 
         // Hides invisible characters
         _units.units
             .Except(visibleCharacters)
             .ToList()
-            .ForEach(c => c.anim.SetVisualActives(false));
+            .ForEach(c => c.graphics.SetVisualActives(false));
     }
     
     /// <summary>

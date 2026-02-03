@@ -9,15 +9,15 @@ using static M__Managers;
 
 public class M_Input : MonoBehaviour
 {
-    [Header("GAMEPLAY")]
+    [Header("- GAMEPLAY -")][Space]
 
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
     [SerializeField] private KeyCode changeUnitKey = KeyCode.Tab;
     [SerializeField] private KeyCode endTurnKey = KeyCode.Backspace;
     [SerializeField] private KeyCode reloadWeaponKey = KeyCode.R;
 
-    [Header("CAMERA")]
-
+    [Header("- CAMERA -")][Space]
+    
     [SerializeField] private KeyCode upKey = KeyCode.Z;
     [SerializeField] private KeyCode downKey = KeyCode.S;
     [SerializeField] private KeyCode leftKey = KeyCode.Q;
@@ -29,7 +29,7 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode zoomInKey = KeyCode.T;
     [SerializeField] private KeyCode zoomOutKey = KeyCode.G;
     
-    public event EventHandler<bool> OnChangeClickActivation;
+    public event EventHandler<bool> OnClickActivationChanged;
 
     public event EventHandler<Coordinates> OnMovingCameraInput;
     public event EventHandler<int> OnZoomingCameraInput;
@@ -71,7 +71,7 @@ public class M_Input : MonoBehaviour
 
     private void OnDisable()
     {
-        OnChangeClickActivation = null;
+        OnClickActivationChanged = null;
         OnEndTeamTurnInput = null;
         OnNextTeammateInput = null;
         OnReloadWeaponInput = null;
@@ -284,7 +284,7 @@ public class M_Input : MonoBehaviour
     private void SetActivePlayerInput(bool value = true)
     {
         canUsePlayerInput = value;
-        OnChangeClickActivation?.Invoke(this, value);
+        OnClickActivationChanged?.Invoke(this, value);
     }
     
     // ======================================================================

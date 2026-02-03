@@ -34,17 +34,27 @@ public class Unit_Graphics : MonoBehaviour
     [Space]
     [SerializeField] private Transform _rootBone;
     public Transform rootBone => _rootBone;
+    
     [Space]
+    
     [SerializeField] private List<SkinnedMeshRenderer> _skinnedMeshRenderers;
     public List<SkinnedMeshRenderer> skinnedMeshRenderers => _skinnedMeshRenderers;
-    
+
+    [SerializeField] private List<GameObject> _visuals;
+    public List<GameObject> visuals => _visuals;
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+
+    /// <summary>
+    /// Enables or disables visuals of the unit.
+    /// </summary>
+    public void SetVisualActives(bool value) => visuals.ForEach(o => o.SetActive(value));
     
     // ======================================================================
     // PRIVATE METHODS
