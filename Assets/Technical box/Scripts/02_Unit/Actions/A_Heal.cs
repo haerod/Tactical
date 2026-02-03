@@ -29,7 +29,7 @@ public class A_Heal : A__Action
     /// <returns></returns>
     public bool IsHealable(Unit unitToHeal)
     {
-        if(unitToHeal.health.IsFullLife())
+        if(unitToHeal.health.isFullHealth)
             return false; // Already full life
         
         bool isOnHealReach = reachEverybodyInView ? unit.look.visibleTiles.Contains(unitToHeal.tile) : _board

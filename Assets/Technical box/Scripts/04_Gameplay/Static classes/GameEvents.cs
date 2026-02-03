@@ -16,6 +16,8 @@ public static class GameEvents
     public static event EventHandler<Unit> OnAnyAttackEnd;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthLoss;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthGain;
+    public static event EventHandler<DamageTypeTriggerEventArgs> OnAnyResistancesTriggered;
+    public static event EventHandler<DamageTypeTriggerEventArgs> OnAnyWeaknessesTriggered;
     public static event EventHandler<Unit> OnAnyDeath;
     public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonEnter;
     public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonExit;
@@ -27,6 +29,12 @@ public static class GameEvents
         public Unit_Health health;
         public int healthChangedAmount;
     }
+
+    public class DamageTypeTriggerEventArgs : EventArgs
+    {
+        public Unit_Health health;
+        public List<DamageType> damageTypes;
+    }
     
     public static void ClearAllEvents()
     {
@@ -37,6 +45,8 @@ public static class GameEvents
         OnAnyMovementStart = null;
         OnAnyHealthLoss = null;
         OnAnyHealthGain = null;
+        OnAnyResistancesTriggered = null;
+        OnAnyWeaknessesTriggered = null;
         OnAnyDeath = null;
         OnAnyWeaponSelectionButtonEnter = null;
         OnAnyWeaponSelectionButtonExit = null;
@@ -59,6 +69,12 @@ public static class GameEvents
     public static void InvokeOnAnyHealthGain(Unit_Health healthHealed, int healthGain) => OnAnyHealthGain?.Invoke(null, new HealthChangedEventArgs {
         health = healthHealed,
         healthChangedAmount = healthGain });
+    public static void InvokeOnAnyResistancesTriggered(Unit_Health healthTriggered, List<DamageType> resistanceTypes) => OnAnyResistancesTriggered?.Invoke(null, new DamageTypeTriggerEventArgs{
+       health = healthTriggered,
+       damageTypes = resistanceTypes });
+    public static void InvokeOnAnyWeaknessesTriggered(Unit_Health healthTriggered, List<DamageType> weaknessesTypes) => OnAnyWeaknessesTriggered?.Invoke(null, new DamageTypeTriggerEventArgs{
+        health = healthTriggered,
+        damageTypes = weaknessesTypes});
     public static void InvokeOnAnyDeath(Unit deadUnit) => OnAnyDeath?.Invoke(null, deadUnit);
     public static void InvokeOnAnyWeaponSelectionButtonEnter(Module_WeaponSelectionButton selectedButton) => OnAnyWeaponSelectionButtonEnter?.Invoke(null, selectedButton);
     public static void InvokeOnAnyWeaponSelectionButtonExit(Module_WeaponSelectionButton unselectedButton) => OnAnyWeaponSelectionButtonExit?.Invoke(null, unselectedButton);

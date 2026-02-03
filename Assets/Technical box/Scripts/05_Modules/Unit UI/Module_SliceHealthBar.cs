@@ -30,32 +30,32 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         
         health.OnDeath += Health_OnDeath;
-        health.HealthChanged += Health_HealthChanged;
+        health.OnHealthChanged += Health_HealthChanged;
     }
 
     private void OnDisable()
     {
         health.OnDeath -= Health_OnDeath;
-        health.HealthChanged -= Health_HealthChanged;
+        health.OnHealthChanged -= Health_HealthChanged;
     }
     
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Displays the current life and max life on life bar.
     /// </summary>
     private void InitialiseBar()
     {
-        maximumValue = health.health;
+        maximumValue = health.healthMax;
         FillGauge(health.currentHealth);
     }
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Enables the life bar.
     /// </summary>
@@ -72,7 +72,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     /// <param name="time"></param>
     /// <param name="onEnd"></param>
     private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-
+    
     /// <summary>
     /// Waits for "time" seconds and executes an action.
     /// Called by Wait() method.

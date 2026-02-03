@@ -12,7 +12,7 @@ public class Module_ActionPreviewOnTiles_Base : MonoBehaviour
 {
     [SerializeField] private Material feedbackTileMaterial;
 
-    [Header("REFERENCES")]
+    [Header("- REFERENCES -")]
     
     [SerializeField] private GameObject tileAreaPrefab;
     

@@ -30,13 +30,23 @@ public class Unit : Entity
     public Unit_WeaponHolder weaponHolder;
     
     public Team unitTeam => team.team;
-    public Tile tile => Tile();
+    public Tile tile => _board.GetTileAtCoordinates(coordinates.x, coordinates.y);
     
     private bool hasPlayed;
     
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
+
+    private void Start()
+    {
+        health.OnDeath += Health_OnDeath;
+    }
+
+    private void OnDisable()
+    {
+        health.OnDeath -= Health_OnDeath;
+    }
     
     // ======================================================================
     // PUBLIC METHODS
@@ -66,20 +76,19 @@ public class Unit : Entity
     /// </summary>
     /// <param name="value"></param>
     public void SetCanPlayValue(bool value) => hasPlayed = !value;
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
-    /// <summary>
-    /// Returns the tile of this unit.
-    /// </summary>
-    /// <returns></returns>
-    private Tile Tile() => _board
-            ? _board.GetTileAtCoordinates(coordinates.x, coordinates.y)
-            : FindAnyObjectByType<M_Board>().GetTileAtCoordinates(coordinates.x, coordinates.y);
     
     // ======================================================================
     // EVENTS
     // ======================================================================
+    
+    private void Health_OnDeath(object sender, EventArgs e)
+    {
+        _units.RemoveUnit(this);
+        GetComponentInChildren<Collider>().gameObject.SetActive(false);    
+    }
+
 }

@@ -15,12 +15,12 @@ public class Unit_AnimatorScripts : MonoBehaviour
     private static readonly int Attack = Animator.StringToHash("attack");
     private static readonly int Hit = Animator.StringToHash("hit");
     private static readonly int Dodge = Animator.StringToHash("dodge");
-    private static readonly int Death1 = Animator.StringToHash("death");
+    private static readonly int Death = Animator.StringToHash("death");
     private static readonly int Crouch = Animator.StringToHash("crouch");
     private static readonly int Aim = Animator.StringToHash("aim");
-    private static readonly int Reload1 = Animator.StringToHash("reload");
+    private static readonly int Reload = Animator.StringToHash("reload");
     private readonly int Speed = Animator.StringToHash("speed");
-
+    
     private A_Reload reload;
 
     public event EventHandler OnAttackTouch;
@@ -28,7 +28,7 @@ public class Unit_AnimatorScripts : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Start()
     {
         if (unit.cover.AreCoversAround())
@@ -40,6 +40,7 @@ public class Unit_AnimatorScripts : MonoBehaviour
         unit.attack.OnAttackableEnemyHovered += Attack_OnAttackableEnemyHovered;
         unit.attack.OnUnitExit += Attack_OnUnitExit;
         unit.health.OnDeath += Health_OnDeath;
+        unit.health.OnNonLethalDamageApplied += Health_OnNonLethalDamageApplied;
         unit.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
         
         reload = unit.actionsHolder.GetActionOfType<A_Reload>();
@@ -55,6 +56,7 @@ public class Unit_AnimatorScripts : MonoBehaviour
         unit.attack.OnAttackableEnemyHovered -= Attack_OnAttackableEnemyHovered;
         unit.attack.OnUnitExit -= Attack_OnUnitExit;
         unit.health.OnDeath -= Health_OnDeath;
+        unit.health.OnNonLethalDamageApplied -= Health_OnNonLethalDamageApplied;
         unit.weaponHolder.OnWeaponChange -= WeaponHolder_OnWeaponChange;
         
         if(reload)
@@ -87,11 +89,6 @@ public class Unit_AnimatorScripts : MonoBehaviour
     }
     
     /// <summary>
-    /// Starts the hit reaction animation.
-    /// </summary>
-    public void StartHitReaction() => anim.SetBool(Hit, true);
-
-    /// <summary>
     /// Ends the hit reaction animation.
     /// Called by animation.
     /// </summary>
@@ -118,7 +115,7 @@ public class Unit_AnimatorScripts : MonoBehaviour
     /// </summary>
     public void EndReload()
     {
-        anim.SetBool(Reload1, false);
+        anim.SetBool(Reload, false);
         unit.actionsHolder.GetActionOfType<A_Reload>().EndReload();
     }
     
@@ -148,6 +145,11 @@ public class Unit_AnimatorScripts : MonoBehaviour
     private void StopAim() => anim.SetBool(Aim, false);
     
     /// <summary>
+    /// Starts the hit reaction animation.
+    /// </summary>
+    private void StartHitReaction() => anim.SetBool(Hit, true);
+    
+    /// <summary>
     /// Ends the crouch animation.
     /// </summary>
     private void ExitCrouch() => anim.SetBool(Crouch, false);
@@ -155,9 +157,9 @@ public class Unit_AnimatorScripts : MonoBehaviour
     /// <summary>
     /// Starts the death animation.
     /// </summary>
-    private void Death() => anim.SetBool(Death1, true);
+    private void StartDeath() => anim.SetBool(Death, true);
 
-    private void Reload() => anim.SetBool(Reload1, true);
+    private void StartReload() => anim.SetBool(Reload, true);
     
     // ======================================================================
     // EVENTS
@@ -183,16 +185,20 @@ public class Unit_AnimatorScripts : MonoBehaviour
     {
         StartAim();
     }
-
+    
     private void Attack_OnUnitExit(object sender, Unit exitedUnit)
     {
         StopAim();
     }
-
     
     private void Health_OnDeath(object sender, EventArgs e)
     {
-        Death();
+        StartDeath();
+    }
+    
+    private void Health_OnNonLethalDamageApplied(object sender, EventArgs e)
+    {
+        StartHitReaction();
     }
     
     private void WeaponHolder_OnWeaponChange(object sender, Unit_WeaponHolder.WeaponChangeEventArgs args)
@@ -202,6 +208,6 @@ public class Unit_AnimatorScripts : MonoBehaviour
     
     private void Reload_OnReloadStart(object sender, EventArgs e)
     {
-        Reload();
+        StartReload();
     }
 }

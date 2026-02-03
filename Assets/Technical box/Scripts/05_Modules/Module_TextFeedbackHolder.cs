@@ -12,7 +12,8 @@ public class Module_TextFeedbackHolder : MonoBehaviour
     [SerializeField] private string reloadText = "RELOAD";
     [SerializeField] private string outOfAmmoText = "OUT OF AMMO";
     
-    [Header("REFERENCES")]
+    [Header("- REFERENCES -")] [Space]
+    
     [SerializeField] private GameObject actionEffectFeedbackPrefab;
     
     private Unit currentUnit;
@@ -37,7 +38,7 @@ public class Module_TextFeedbackHolder : MonoBehaviour
         
         currentUnit.attack.OnAttackMiss -= Attack_OnAttackMiss;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -45,7 +46,7 @@ public class Module_TextFeedbackHolder : MonoBehaviour
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Create an action effect feedback.
     /// </summary>
