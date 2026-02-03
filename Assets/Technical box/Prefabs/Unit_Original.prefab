@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1008769804889574505}
+  - component: {fileID: 4282710606393300730}
   - component: {fileID: 8764815552201164821}
   - component: {fileID: 3591711939887396428}
   - component: {fileID: 479594348693108684}
@@ -35,6 +36,34 @@ Transform:
   m_Father: {fileID: 1422904897860799220}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4282710606393300730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308574237834567528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 843609ae682f41029079fb7a015cf54c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  note: 'RETARGETING PROCESS
+
+
+    - Ensure the new model is rigged as Humanoid with
+    its own Avatar
+
+    - Add the new FBX as child of this object (like ybot)
+
+    -
+    Disable ybot
+
+
+    In the Animator (component under)
+
+    - replace the Avatar
+    by the new .fbx''s one'
 --- !u!114 &8764815552201164821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,33 +107,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 3541061014796538876}
   anim: {fileID: 479594348693108684}
-  OnEndReload:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3591711939887396428}
-        m_TargetAssemblyTypeName: Unit_AnimatorScripts, Assembly-CSharp
-        m_MethodName: SetReload
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7470037523075072729}
-        m_TargetAssemblyTypeName: A_Reload, Assembly-CSharp
-        m_MethodName: EndReload
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!95 &479594348693108684
 Animator:
   serializedVersion: 5
@@ -746,17 +748,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2340284125076971605, guid: 4aac34f94e4c7394db5b26df46a8977c, type: 3}
   m_PrefabInstance: {fileID: 343042538202705735}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7470037523075072729 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7163077266053868958, guid: 4aac34f94e4c7394db5b26df46a8977c, type: 3}
-  m_PrefabInstance: {fileID: 343042538202705735}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fcdd09f475e4dfcad5070cf1f89d5cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1790941775955150880
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -814,7 +805,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 585990fbd9f48fb4191fbc295bf6edef, type: 2}
     - target: {fileID: 919132149155446097, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_Name
-      value: Graphics
+      value: ybot
       objectReference: {fileID: 0}
     - target: {fileID: 1082271958561512970, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_IsActive
@@ -824,7 +815,8 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 87d91377c647d2c4386ca86b67dc77e3, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
 --- !u!4 &103328547491100648 stripped
 Transform:
@@ -1480,7 +1472,7 @@ PrefabInstance:
     - target: {fileID: 726119423952449077, guid: b6788a4caaa6676469f75e89cb85a987, type: 3}
       propertyPath: rotationTarget
       value: 
-      objectReference: {fileID: 2256318201145831371}
+      objectReference: {fileID: 1008769804889574505}
     - target: {fileID: 2014700816404257035, guid: b6788a4caaa6676469f75e89cb85a987, type: 3}
       propertyPath: m_Name
       value: Move
@@ -1492,7 +1484,7 @@ PrefabInstance:
     - target: {fileID: 6449196871552089771, guid: b6788a4caaa6676469f75e89cb85a987, type: 3}
       propertyPath: rotationTarget
       value: 
-      objectReference: {fileID: 2256318201145831371}
+      objectReference: {fileID: 1008769804889574505}
     - target: {fileID: 8530392462581389575, guid: b6788a4caaa6676469f75e89cb85a987, type: 3}
       propertyPath: m_RootOrder
       value: 0
