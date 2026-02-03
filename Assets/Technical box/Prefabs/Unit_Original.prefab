@@ -62,41 +62,44 @@ MonoBehaviour:
     - Add the new
     FBX as child of this object (like ybot)
 
+    - Remove the Animator on the FBX
+    (if it exists)
+
     - Disable ybot
 
 
-    3. Animator
-    Avatar
+    3. Animator Avatar
 
-    In the Animator (component under)
+    In the Animator
+    (component under)
 
-    - replace the Avatar by the
-    new .fbx''s one
+    - replace the Avatar by the new .fbx''s one
 
 
-    4. Update Graphics references
+    4. Update
+    Graphics references
 
-    In Unit_Graphics (component
-    under), replace by the new one :
+    In Unit_Graphics (component under), replace by the new
+    one :
 
-    - Body parts (at least Torso and Right
-    Hand)
+    - Body parts (at least Torso and Right Hand)
 
     - Skinned Mesh Renderers
 
-    - Visuals
-
-
-    5. Define right hand''s
-    offsets
-
-    Try to place a weapon in the right hand of the new character
-
     -
-    ajust rotation, and copy rotation values in Hand Rotation Offset
+    Visuals
 
-    - ajust
-    position, and copy position values in Hand Position Offset'
+
+    5. Define right hand''s offsets
+
+    Try to place a weapon in the
+    right hand of the new character
+
+    - ajust rotation, and copy rotation values
+    in Hand Rotation Offset
+
+    - ajust position, and copy position values in Hand
+    Position Offset'
 --- !u!114 &8764815552201164821
 MonoBehaviour:
   m_ObjectHideFlags: 0
