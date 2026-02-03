@@ -121,9 +121,11 @@ public class Unit_WeaponHolder : MonoBehaviour
             return; // Weapon not available in inventory
         
         GameObject instantiatedWeapon = Instantiate(weaponToDisplay.gameObject, hand);
+        instantiatedWeapon.transform.rotation *= Quaternion.Euler(unit.graphics.handRotationOffset);
+        instantiatedWeapon.transform.localPosition += unit.graphics.handPositionOffset;
         instantiatedWeapon.gameObject.SetActive(true);
         _weaponGraphics = instantiatedWeapon.GetComponent<Weapon>();
-
+        
         weaponGraphics.ShowGraphics();
         weaponGraphics.Setup(unit);
     }

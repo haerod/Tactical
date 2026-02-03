@@ -51,19 +51,52 @@ MonoBehaviour:
   note: 'RETARGETING PROCESS
 
 
-    - Ensure the new model is rigged as Humanoid with
-    its own Avatar
+    1. Humanoid RIG
 
-    - Add the new FBX as child of this object (like ybot)
+    - Ensure the new model is
+    rigged as Humanoid with its own Avatar
 
-    -
-    Disable ybot
 
+    2. Replace FBX
+
+    - Add the new
+    FBX as child of this object (like ybot)
+
+    - Disable ybot
+
+
+    3. Animator
+    Avatar
 
     In the Animator (component under)
 
-    - replace the Avatar
-    by the new .fbx''s one'
+    - replace the Avatar by the
+    new .fbx''s one
+
+
+    4. Update Graphics references
+
+    In Unit_Graphics (component
+    under), replace by the new one :
+
+    - Body parts (at least Torso and Right
+    Hand)
+
+    - Skinned Mesh Renderers
+
+    - Visuals
+
+
+    5. Define right hand''s
+    offsets
+
+    Try to place a weapon in the right hand of the new character
+
+    -
+    ajust rotation, and copy rotation values in Hand Rotation Offset
+
+    - ajust
+    position, and copy position values in Hand Position Offset'
 --- !u!114 &8764815552201164821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +121,8 @@ MonoBehaviour:
   _leftHand: {fileID: 4820770084879621603}
   _rightHand: {fileID: 103328547491100648}
   _rootBone: {fileID: 5980885582115884895}
+  _handPositionOffset: {x: 0, y: 0, z: 0}
+  _handRotationOffset: {x: 0, y: 0, z: 0}
   _skinnedMeshRenderers:
   - {fileID: 813525511553365662}
   - {fileID: 5193888126871477251}
