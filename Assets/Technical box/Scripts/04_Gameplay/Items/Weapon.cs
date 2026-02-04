@@ -129,7 +129,7 @@ public class Weapon : Item
     /// <param name="time"></param>
     /// <param name="onEnd"></param>
     private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-
+    
     /// <summary>
     /// Waits coroutine.
     /// Called by Wait() method.
@@ -140,7 +140,7 @@ public class Weapon : Item
     private IEnumerator Wait_Co(float time, Action onEnd)
     {
         yield return new WaitForSeconds(time);
-
+    
         onEnd();
     }
     

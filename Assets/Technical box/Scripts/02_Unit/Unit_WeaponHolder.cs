@@ -13,30 +13,26 @@ using UnityEditor.SceneManagement;
 public class Unit_WeaponHolder : MonoBehaviour
 {
     [SerializeField] private Weapon _weapon;
-    public WeaponData weaponData => weapon.data;
     public Weapon weapon => _weapon;
+    public WeaponData weaponData => weapon.data;
     
     // DEFINITIONS
     // weapon = object in the inventory : is the used weapon
     // weaponData = data of this weapon
     // weaponGraphics = instantiated object in the hand : only visuals, don't use its data or parameters out of that
     
-    [Header("BEHAVIOR")]
+    [Header("- SETTINGS -")]
     
     [SerializeField] private bool _loadWeaponsOnStart = true;
-
-    [Header("REFERENCES")]
+    
+    [Header("- REFERENCES -")]
     
     [SerializeField] private Unit unit;
     [SerializeField] private Weapon _weaponGraphics;
     public Weapon weaponGraphics => _weaponGraphics;
     
     public event EventHandler<WeaponChangeEventArgs> OnWeaponChange;
-    public class WeaponChangeEventArgs : EventArgs
-    {
-        public Weapon previousWeapon;
-        public Weapon newWeapon;
-    }
+    public class WeaponChangeEventArgs : EventArgs { public Weapon previousWeapon, newWeapon;}
     
     public event EventHandler<Weapon> OnReloadWeaponEnd;
     
@@ -65,7 +61,7 @@ public class Unit_WeaponHolder : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Changes the weapon to the given one.
     /// </summary>
@@ -78,7 +74,7 @@ public class Unit_WeaponHolder : MonoBehaviour
         
         OnWeaponChange?.Invoke(this, new WeaponChangeEventArgs{previousWeapon = previousWeapon, newWeapon = weapon});
     }
-
+    
     /// <summary>
     /// Reloads the weapon with ammo if it can.
     /// </summary>
