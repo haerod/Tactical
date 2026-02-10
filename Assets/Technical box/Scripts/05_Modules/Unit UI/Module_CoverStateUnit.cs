@@ -27,22 +27,16 @@ public class Module_CoverStateUnit : MonoBehaviour
         InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
-        unit.health.OnDeath += Health_OnDeath;
     }
-
-    private void OnDisable()
-    {
-        unit.health.OnDeath -= Health_OnDeath;
-    }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
     /// <summary>
     /// Displays the cover state of the unit.
     /// </summary>
@@ -79,27 +73,6 @@ public class Module_CoverStateUnit : MonoBehaviour
     /// Hides the cover state of the unit.
     /// </summary>
     private void Hide() => coverStateImage.gameObject.SetActive(false);
-    
-    /// <summary>
-    /// Starts a waits for "time" seconds and executes an action.
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="onEnd"></param>
-    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-    
-    /// <summary>
-    /// Waits for "time" seconds and executes an action.
-    /// Called by Wait() method.
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="onEnd"></param>
-    /// <returns></returns>
-    private IEnumerator Wait_Co(float time, Action onEnd)
-    {
-        yield return new WaitForSeconds(time);
-
-        onEnd();
-    }
     
     // ======================================================================
     // EVENTS
@@ -141,11 +114,6 @@ public class Module_CoverStateUnit : MonoBehaviour
             return; // Invisible character
         
         Show();
-    }
-    
-    private void Health_OnDeath(object sender, EventArgs e)
-    {
-        Wait(1, Hide);
     }
     
     private void InputEvents_OnTileEnter(object sender, Tile enteredTile)

@@ -6,6 +6,14 @@
 
 ---
 
+# PROJECT TEST UPDATES
+- 1h -> Add a Gizmo to place easily weapons offsets
+- .5d -> Use presets of Text mesh pro to change easily typos
+- 1h -> Clickable buttons as prefab variant
+- 1h -> Component for attachments on death
+- .5d -> Event for modules : OnPlayableUnitTurnStart/End
+- 1h -> use a prefab variant for the buttons with an icon inside (like Weapon selection button, Action selection button, Change turn buttons, Inventory buttons, Victory screen buttons)
+
 # PATHFINDING SYSTEM
 **IMPORTANT**
 - 1d -> Change pathfinding AStar by Pathfind in Area

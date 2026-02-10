@@ -15,6 +15,8 @@ public static class InputEvents
     public static event EventHandler<Unit> OnAllyEnter;
     public static event EventHandler OnCurrentUnitEnter;
     
+    public static event EventHandler OnPointerOverUI;
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -26,7 +28,8 @@ public static class InputEvents
     public static void UnitHovered(Unit unit) => CharacterHoveredEvents(unit);
     public static void UnitClick(Unit unit)  => OnUnitClick?.Invoke(null, unit);
     public static void NothingHovered() => OnNoTile?.Invoke(null, EventArgs.Empty);
-
+    public static void PointerOverUI() => OnPointerOverUI?.Invoke(null, EventArgs.Empty);
+    
     public static void ClearEvents()
     {
         OnTileEnter = null;
@@ -40,6 +43,7 @@ public static class InputEvents
         OnEnemyEnter = null;
         OnAllyEnter = null;
         OnCurrentUnitEnter = null;
+        OnPointerOverUI = null;
     }
     
     // ======================================================================

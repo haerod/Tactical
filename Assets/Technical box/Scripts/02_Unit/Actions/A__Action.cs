@@ -97,7 +97,11 @@ public abstract class A__Action : MonoBehaviour
         OnActionEnd?.Invoke(this, this);
         
         if (unit.actionsHolder.areAvailableActions)
+        {
+            if (!unit.behavior.playable)
+                unit.behavior.PlayBehavior();
             return; // Other actions to do
+        }
         
         unit.SetCanPlayValue(false);
         _units.EndCurrentUnitTurn();

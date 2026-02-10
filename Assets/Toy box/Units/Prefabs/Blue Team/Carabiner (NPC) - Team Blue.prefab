@@ -7,17 +7,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1573336793219672514, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
+      propertyPath: _playable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1839518269879080444, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ecd6880017b578f47aaede6f398aeb9b, type: 2}
+      objectReference: {fileID: 2100000, guid: ebe444789af26b748acaae50125e0487, type: 2}
     - target: {fileID: 2072520912820085134, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: team
       value: 
-      objectReference: {fileID: 11400000, guid: d7bda02fd9280c14d9ef96cd0ab76b92, type: 2}
+      objectReference: {fileID: 11400000, guid: 2fd7ef9644aa89145ade402b70a17452, type: 2}
     - target: {fileID: 2220433861757821208, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_Name
-      value: Carabiner (PC) - Team Red
+      value: Carabiner (NPC) - Team Blue
       objectReference: {fileID: 0}
     - target: {fileID: 4768188108386124555, guid: cc9f42cbe325ca44fa5ec0df33c823f3, type: 3}
       propertyPath: m_RootOrder

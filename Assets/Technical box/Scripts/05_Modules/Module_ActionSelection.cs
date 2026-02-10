@@ -16,16 +16,16 @@ public class Module_ActionSelection : MonoBehaviour
     [SerializeField] private GameObject buttonActionPrefab;
     [SerializeField] private GameObject buttonWeaponPrefab;
     [SerializeField] private Transform buttonsParent;
-        
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
         DestroyAllButtons();
     }
-
+    
     private void Start()
     {
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
@@ -37,7 +37,7 @@ public class Module_ActionSelection : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
@@ -56,9 +56,6 @@ public class Module_ActionSelection : MonoBehaviour
         {
             foreach (Weapon weapon in unit.inventory.weapons)
             {
-                if(weapon == currentWeapon)
-                    continue; // Current weapon
-            
                 Module_WeaponSelectionButton instantiateButton = 
                     Instantiate(
                             buttonWeaponPrefab,  
@@ -68,10 +65,11 @@ public class Module_ActionSelection : MonoBehaviour
                 instantiateButton.DisplayButton(
                     weapon, 
                     delegate {unit.actionsHolder.GetActionOfType<A_TakeWeapon>().EquipWeapon(weapon);}, 
-                    _showText);
+                    _showText,
+                    weapon == currentWeapon);
             }
         }
-
+        
         if (unit.actionsHolder.HasAvailableAction<A_Reload>())
         {
             Module_ActionSelectionButton instantiatedButton = Instantiate(
@@ -79,14 +77,13 @@ public class Module_ActionSelection : MonoBehaviour
                     buttonsParent)
                 .GetComponent<Module_ActionSelectionButton>();
             
-            instantiatedButton.SetParameters(this,unit);
             instantiatedButton.DisplayButton(
                 unit.actionsHolder.GetActionOfType<A_Reload>(),
                 delegate { unit.actionsHolder.GetActionOfType<A_Reload>().StartReload(); },
                 _showText);
         }
     }
-
+    
     /// <summary>
     /// Destroys all the buttons.
     /// </summary>

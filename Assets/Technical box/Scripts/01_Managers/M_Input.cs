@@ -48,6 +48,8 @@ public class M_Input : MonoBehaviour
     public static M_Input instance => _instance == null ? FindFirstObjectByType<M_Input>() : _instance;
     public static M_Input _instance;
     
+    public bool isPointerOverUI => EventSystem.current.IsPointerOverGameObject();
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -120,6 +122,12 @@ public class M_Input : MonoBehaviour
     /// </summary>
     private void CheckRaycast()
     {
+        if (isPointerOverUI)
+        {
+            InputEvents.PointerOverUI();
+            return; // Pointer over UI
+        }
+        
         Ray ray = _camera
             .currentCamera
             .ScreenPointToRay(Input.mousePosition);

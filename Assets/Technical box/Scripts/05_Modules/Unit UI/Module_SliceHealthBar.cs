@@ -29,14 +29,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         
-        health.OnDeath += Health_OnDeath;
         health.OnHealthChanged += Health_HealthChanged;
-    }
-
-    private void OnDisable()
-    {
-        health.OnDeath -= Health_OnDeath;
-        health.OnHealthChanged -= Health_HealthChanged;
     }
     
     // ======================================================================
@@ -65,27 +58,6 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     /// Disables the life bar.
     /// </summary>
     private void Hide() => itemParent.gameObject.SetActive(false);
-    
-    /// <summary>
-    /// Starts a waits for "time" seconds and executes an action.
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="onEnd"></param>
-    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-    
-    /// <summary>
-    /// Waits for "time" seconds and executes an action.
-    /// Called by Wait() method.
-    /// </summary>
-    /// <param name="time"></param>
-    /// <param name="onEnd"></param>
-    /// <returns></returns>
-    private IEnumerator Wait_Co(float time, Action onEnd)
-    {
-        yield return new WaitForSeconds(time);
-
-        onEnd();
-    }
     
     // ======================================================================
     // EVENTS
@@ -129,11 +101,6 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         Show();
     }
     
-    private void Health_OnDeath(object sender, EventArgs e)
-    {
-        Wait(1, Hide);
-    }
-    
     private void Health_HealthChanged(object sender, EventArgs e)
     {
         FillGauge(health.currentHealth);
@@ -168,5 +135,4 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         else
             Show();
     }
-
 }

@@ -55,7 +55,7 @@ public class A_Attack : A__Action
     /// Attacks the target and starts an action in the end.
     /// </summary>
     /// <param name="currentTarget"></param>
-    public void Attack(Unit currentTarget)
+    public void StartAttack(Unit currentTarget)
     {
         if (!unit.look.CanSee(currentTarget)) 
             return; // Enemy not in sight
@@ -258,7 +258,7 @@ public class A_Attack : A__Action
             return; // Out of ammo
         
         // Attack
-        Attack(clickedUnit);
+        StartAttack(clickedUnit);
     }
     
     private void AnimatorScripts_OnAttackHit(object sender, EventArgs e)

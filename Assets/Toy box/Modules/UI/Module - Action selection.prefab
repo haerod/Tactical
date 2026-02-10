@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f32c8cbb41b04774cb9a7eb5197fe6df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showText: 1
+  _showText: 0
   buttonActionPrefab: {fileID: 7006683436699592752, guid: 8ea813fc39cee4349b81c0b1ba939d02, type: 3}
   buttonWeaponPrefab: {fileID: 7006683436699592752, guid: f4bf9355e00023d40bcdffa85f633dd1, type: 3}
   buttonsParent: {fileID: 6326451696783516813}
@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 5116626913070827098}
   - component: {fileID: 6338310482899933708}
   - component: {fileID: 1786020711842420819}
+  - component: {fileID: 3193016166908418071}
   m_Layer: 0
   m_Name: Layout group
   m_TagString: Untagged
@@ -208,11 +209,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 7
+    m_Left: 5
+    m_Right: 5
+    m_Top: 5
+    m_Bottom: 5
+  m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -221,3 +222,17 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3193016166908418071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7852655071007145914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 2

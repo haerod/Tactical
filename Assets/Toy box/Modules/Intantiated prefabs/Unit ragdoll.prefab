@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _head: {fileID: 0}
-  _torso: {fileID: 0}
+  _torso: {fileID: 5707425451306421076}
   _belly: {fileID: 0}
   _leftArm: {fileID: 0}
   _rightArm: {fileID: 0}
@@ -73,9 +73,12 @@ MonoBehaviour:
   _leftHand: {fileID: 0}
   _rightHand: {fileID: 5057221230863291544}
   _rootBone: {fileID: 1459619904120646703}
+  _handPositionOffset: {x: 0, y: 0, z: 0}
+  _handRotationOffset: {x: 0, y: 0, z: 0}
   _skinnedMeshRenderers:
   - {fileID: 5479748292678882798}
   - {fileID: 1104972446047256435}
+  _visuals: []
 --- !u!1001 &6889231034336963408
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -289,7 +292,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_Name
-      value: Graphics
+      value: ybot
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
       propertyPath: m_Layer
@@ -928,6 +931,11 @@ Transform:
 --- !u!137 &5479748292678882798 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7813590141776298306, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
+  m_PrefabInstance: {fileID: 6889231034336963408}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5707425451306421076 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8021001004253913084, guid: 093c3741b01fbb547bb7bce3c8d9444a, type: 3}
   m_PrefabInstance: {fileID: 6889231034336963408}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &5809212221798790490 stripped

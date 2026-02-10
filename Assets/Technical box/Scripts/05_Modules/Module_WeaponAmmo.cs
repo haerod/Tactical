@@ -13,15 +13,13 @@ using static M__Managers;
 /// </summary>
 public class Module_WeaponAmmo : MonoBehaviour
 {
-    [Header("REFERENCES")]
+    [Header("- REFERENCES -")]
     
-    [SerializeField] private UI_SegmentedGaugeClamped ammoGauge;
-    [SerializeField] private Image weaponImage;
-    [SerializeField] private GameObject panel;
-    [SerializeField] private GameObject remainingAmmoPanel;
-    [SerializeField] private TextMeshProUGUI remainingAmmoText;
+    [SerializeField] private GameObject _panel;
+    [SerializeField] private Image _ammoImage;
+    [SerializeField] private TextMeshProUGUI _text;
     
-    private Unit currentUnit;
+    private Unit _currentUnit;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -43,20 +41,15 @@ public class Module_WeaponAmmo : MonoBehaviour
     
     private void OnDisable()
     {
-        if(!currentUnit)
+        if(!_currentUnit)
             return;
 
-        currentUnit.weaponHolder.OnWeaponChange -= WeaponHolder_OnWeaponChange;
+        _currentUnit.weaponHolder.OnWeaponChange -= WeaponHolder_OnWeaponChange;
     }
     
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Used by Reload Weapon Button
-    /// </summary>
-    public void ClickOnReloadWeaponButton() => currentUnit.actionsHolder.GetActionOfType<A_Reload>().StartReload();
     
     // ======================================================================
     // PRIVATE METHODS
@@ -69,26 +62,18 @@ public class Module_WeaponAmmo : MonoBehaviour
     private void Show(Weapon weapon)
     {
         WeaponData weaponData = weapon.data;
-        weaponImage.sprite = weapon.icon;
         
-        if (weaponData.usesAmmo)
+        if (!weaponData.usesAmmo)
         {
-            ammoGauge.SetMaximumValue(weaponData.ammoCount);
-            ammoGauge.SetIcon(weaponData.ammo.icon);
-            ammoGauge.FillGauge(weapon.currentLoadedAmmo);
-            ammoGauge.gameObject.SetActive(true);
-            remainingAmmoPanel.gameObject.SetActive(weaponData.needAmmoToReload);
-            
-            if (weaponData.needAmmoToReload)
-                remainingAmmoText.text = currentUnit.inventory.GetAmmoCountOfType(weaponData.ammoType).ToString();
-        }
-        else
-        {
-            ammoGauge.gameObject.SetActive(false);
-            remainingAmmoPanel.SetActive(false);
+            _panel.SetActive(false);
+            return; // Don't use ammo
         }
         
-        panel.SetActive(true);
+        _ammoImage.sprite = weaponData.ammo.icon;
+        _text.text = weaponData.needAmmoToReload ?
+            $"{weapon.currentLoadedAmmo} / {_currentUnit.inventory.GetAmmoCountOfType(weaponData.ammoType).ToString()}" :
+            $"{weapon.currentLoadedAmmo}";
+        _panel.SetActive(true);
     }
     
     /// <summary>
@@ -96,7 +81,7 @@ public class Module_WeaponAmmo : MonoBehaviour
     /// </summary>
     private void Hide()
     {
-        panel.SetActive(false);
+        _panel.SetActive(false);
     }
     
     // ======================================================================
@@ -110,22 +95,22 @@ public class Module_WeaponAmmo : MonoBehaviour
         if(!startingUnit.behavior.playable)
             return; // Not playable character
 
-        currentUnit = startingUnit;
-        currentUnit.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
-        currentUnit.weaponHolder.OnReloadWeaponEnd += WeaponHolder_OnReloadWeaponEnd;
-        currentUnit.weaponHolder.weapon.OnAmmoCountChanged += Weapon_OnAmmoCountChanged;
+        _currentUnit = startingUnit;
+        _currentUnit.weaponHolder.OnWeaponChange += WeaponHolder_OnWeaponChange;
+        _currentUnit.weaponHolder.OnReloadWeaponEnd += WeaponHolder_OnReloadWeaponEnd;
+        _currentUnit.weaponHolder.weapon.OnAmmoCountChanged += Weapon_OnAmmoCountChanged;
         
-        Show(currentUnit.weaponHolder.weapon);
+        Show(_currentUnit.weaponHolder.weapon);
     }
     
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
-        if (currentUnit)
+        if (_currentUnit)
         {
-            currentUnit.weaponHolder.OnWeaponChange -= WeaponHolder_OnWeaponChange;
-            currentUnit.weaponHolder.OnReloadWeaponEnd -= WeaponHolder_OnReloadWeaponEnd; 
-            currentUnit.weaponHolder.weapon.OnAmmoCountChanged -= Weapon_OnAmmoCountChanged;
-            currentUnit = null;
+            _currentUnit.weaponHolder.OnWeaponChange -= WeaponHolder_OnWeaponChange;
+            _currentUnit.weaponHolder.OnReloadWeaponEnd -= WeaponHolder_OnReloadWeaponEnd; 
+            _currentUnit.weaponHolder.weapon.OnAmmoCountChanged -= Weapon_OnAmmoCountChanged;
+            _currentUnit = null;
         }
         
         Hide();
@@ -160,7 +145,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         if(!endingActionUnit.CanPlay())
             return; // Can't play
         
-        Show(currentUnit.weaponHolder.weapon);
+        Show(_currentUnit.weaponHolder.weapon);
     }
     
     private void Level_OnVictory(object sender, Team winningTeam)

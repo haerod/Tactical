@@ -11,9 +11,11 @@ using Image = UnityEngine.UI.Image;
 
 public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private Button button;
-    [SerializeField] private Image weaponSprite;
-    [SerializeField] private TextMeshProUGUI buttonText;
+    [Header("- REFERENCES -")][Space]
+    
+    [SerializeField] private Button _button;
+    [SerializeField] private Image _icon;
+    [SerializeField] private TextMeshProUGUI _buttonText;
     
     public Weapon weapon { get; private set; }
     
@@ -30,17 +32,20 @@ public class Module_WeaponSelectionButton : MonoBehaviour, IPointerEnterHandler,
     /// </summary>
     /// <param name="weaponToDisplay"></param>
     /// <param name="showText"></param>
-    public void DisplayButton(Weapon weaponToDisplay, Action OnClick, bool showText)
+    public void DisplayButton(Weapon weaponToDisplay, Action OnClick, bool showText, bool isCurrent)
     {
         weapon = weaponToDisplay;
-        weaponSprite.sprite = weapon.icon;
+        _icon.sprite = weapon.icon;
         
         if(showText)
-            buttonText.text = weapon.itemName;
+            _buttonText.text = weapon.itemName;
         else
-            buttonText.transform.parent.gameObject.SetActive(false);
-
-        button.onClick.AddListener(delegate { OnClick();});
+            _buttonText.transform.parent.gameObject.SetActive(false);
+        
+        if(isCurrent)
+            _button.interactable = false;
+        
+        _button.onClick.AddListener(delegate { OnClick();});
     }
     
     // ======================================================================

@@ -8,8 +8,11 @@ using static M__Managers;
 
 public class Unit_Behavior : MonoBehaviour
 {
-    public bool playable = true;
-    [SerializeField] private UnitBehavior behavior;
+    [SerializeField] private bool _playable = true;
+    public bool playable => _playable;
+    
+    [SerializeField] private UnitBehavior _behavior;
+    [SerializeField] private float _delayBeforeAct = 1f;
     
     [Header("- REFERENCES -")]
     
@@ -30,14 +33,13 @@ public class Unit_Behavior : MonoBehaviour
     /// </summary>
     public void PlayBehavior()
     {
-        if (!behavior)
+        if (_behavior)
         {
-            unit.SetCanPlayValue(false);
-            Wait(1, () => _units.EndCurrentUnitTurn());
+            Wait(_delayBeforeAct, TargetEnemy);
             return;
         }
 
-        Wait(1, TargetEnemy);
+        Wait(1, PassTurn);
     }
     
     // ======================================================================
@@ -49,39 +51,50 @@ public class Unit_Behavior : MonoBehaviour
     /// </summary>
     private void TargetEnemy()
     {
-        // if(_rules.IsVictory())
-        // {
-        //     PassTurn();
-        //     return; // Victory
-        // }
-        
-        targetUnit = behavior.GetPreferredTarget(unit,unit.attack.AttackableTiles()
+        targetUnit = _behavior.GetPreferredTarget(unit,unit.attack.AttackableTiles()
             .Select(tile => tile.character)
             .ToList());
         
         if(targetUnit)
         {
-            Attack();
-            return; // Attack unit
-        }
-        
-        targetUnit = behavior.GetPreferredTarget(unit,unit.look.EnemiesVisibleInFog());
-        
-        if (targetUnit)
-        {
-            Tile closestMeleePosition = ClosestMeleePositionOf(targetUnit);
-            if (!closestMeleePosition)
+            if (unit.actionsHolder.HasAvailableAction<A_Attack>())
             {
-                PassTurn();
-                return; // Can't reach a melee position
+                Attack();
+                return; // Attack unit
             }
-            
-            Tile closestTileOfMeleePosition = unit.move.GetFurthestTileTowards(closestMeleePosition);
-            
-            GoTowards(closestTileOfMeleePosition);
+            if (unit.actionsHolder.HasAvailableAction<A_Reload>())
+            {
+                Reload(); // Reload weapon
+                return;
+            }
         }
         
-        PassTurn();
+        targetUnit = _behavior.GetPreferredTarget(unit,unit.look.EnemiesVisibleInFog());
+
+        if (!targetUnit)
+        {
+            PassTurn();
+            return; // No target unit
+        }
+        
+        Tile closestMeleePosition = ClosestMeleePositionOf(targetUnit);
+        if (!closestMeleePosition)
+        {
+            PassTurn();
+            return; // Can't reach a melee position
+        }
+        
+        Tile closestTileOfMeleePosition = unit.move.GetFurthestTileTowards(closestMeleePosition);
+        
+        GoTowards(closestTileOfMeleePosition);
+    }
+    
+    /// <summary>
+    /// Reloads the equipped weapon.
+    /// </summary>
+    private void Reload()
+    {
+        unit.actionsHolder.GetActionOfType<A_Reload>().StartReload();
     }
     
     /// <summary>
@@ -98,7 +111,7 @@ public class Unit_Behavior : MonoBehaviour
     /// </summary>
     private void Attack()
     {
-        unit.attack.Attack(targetUnit);
+        unit.attack.StartAttack(targetUnit);
     }
     
     /// <summary>
@@ -143,4 +156,8 @@ public class Unit_Behavior : MonoBehaviour
 
         onEnd();
     }
+    
+    // ======================================================================
+    // EVENTS
+    // ======================================================================
 }

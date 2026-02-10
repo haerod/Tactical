@@ -1,19 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using static M__Managers;
 
 public class UI_OrientToCamera : MonoBehaviour
 {
-    private Camera cam;
-
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
-    private void Start()
-    {
-        cam = Camera.main;
-    }
 
     private void Update()
     {
@@ -27,7 +21,11 @@ public class UI_OrientToCamera : MonoBehaviour
     /// <summary>
     /// Orient the object to the camera.
     /// </summary>
-    public void OrientToCamera() => transform.forward = cam.transform.forward;
+    public void OrientToCamera()
+    {
+        if(_camera.currentCamera)
+            transform.forward = _camera.currentCamera.transform.forward;
+    }
 
     // ======================================================================
     // PRIVATE METHODS

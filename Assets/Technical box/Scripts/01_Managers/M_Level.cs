@@ -25,14 +25,14 @@ public class M_Level : MonoBehaviour
     
     [Header("- FOG OF WAR -")] [Space]
     
-    [SerializeField] private FogOfWar fogOfWar;
+    [SerializeField] private FogOfWar _fogOfWar;
     public enum VisibleInFogOfWar { InView, Allies, Everybody}
     public VisibleInFogOfWar visibleInFogOfWar = VisibleInFogOfWar.Allies;
     
     private static M_Level _instance;
     public static M_Level instance => _instance == null ? _instance = FindFirstObjectByType<M_Level>() : _instance;
         
-    public bool isFogOfWar => fogOfWar && fogOfWar.gameObject.activeInHierarchy;
+    public bool isFogOfWar => _fogOfWar && _fogOfWar.gameObject.activeInHierarchy;
     public bool isVictory => IsVictory();
     public int currentTurn {get; private set;}
     
@@ -50,6 +50,8 @@ public class M_Level : MonoBehaviour
             _instance = this;
         else
             Debug.LogError("There is more than one M_Rules in the scene, kill this one.\n(error by Basic Unity Tactical Tool)", gameObject);
+        
+        _fogOfWar.gameObject.SetActive(true);
     }
     
     private void Start()

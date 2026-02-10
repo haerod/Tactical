@@ -153,9 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   content: []
   showActionPoints: 0
-  showDamage: 1
-  showDamageTypes: 1
-  showPrecisionModifier: 1
+  showDescription: 1
 --- !u!1 &455943098495066263
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +592,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 247d160a5c54481b82f0be03739ca94f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 5929105858888037067}
-  icon: {fileID: 4266340875377258489}
-  buttonText: {fileID: 272751116059124258}
+  _button: {fileID: 5929105858888037067}
+  _icon: {fileID: 4266340875377258489}
+  _buttonText: {fileID: 272751116059124258}

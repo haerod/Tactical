@@ -19,19 +19,23 @@ public class TooltipTrigger_Weapon : TooltipTrigger_Basic
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
-
+    
+    /// <summary>
+    /// Returns the weapon's description
+    /// </summary>
+    /// <returns></returns>
     private string GetWeaponDescription()
     {
         string toReturn = "";
-
+        
         Weapon weapon = GetComponentInParent<Module_WeaponSelectionButton>().weapon;
         WeaponData weaponData = weapon.data;
         
@@ -46,9 +50,9 @@ public class TooltipTrigger_Weapon : TooltipTrigger_Basic
         {
             Vector2Int weaponDamageRange = weaponData.damagesRange;
             if (weaponDamageRange.x != weaponDamageRange.y)
-                toReturn += $"\n{weaponDamageRange.x} - {weaponDamageRange.y}";
+                toReturn += $"\n{weaponDamageRange.x} - {weaponDamageRange.y} damage";
             else
-                toReturn += "\n" + weaponDamageRange.x;
+                toReturn += $"\n {weaponDamageRange.x} damage";
         }
         
         // Damage types
@@ -85,7 +89,7 @@ public class TooltipTrigger_Weapon : TooltipTrigger_Basic
     // ======================================================================
     // EVENTS
     // ======================================================================
-
+    
     public override void OnPointerEnter(PointerEventData eventData)
     {
         GameEvents.InvokeOnAnyTooltipHovered(new List<string>() {GetWeaponDescription()});

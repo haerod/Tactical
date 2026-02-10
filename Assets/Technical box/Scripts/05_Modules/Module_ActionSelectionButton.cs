@@ -12,12 +12,11 @@ using Image = UnityEngine.UI.Image;
 
 public class Module_ActionSelectionButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private Button button;
-    [SerializeField] private Image icon;
-    [SerializeField] private TextMeshProUGUI buttonText;
+    [Header("- REFERENCES -")][Space]
     
-    private Unit unit;
-    private Module_ActionSelection holder;
+    [SerializeField] private Button _button;
+    [SerializeField] private Image _icon;
+    [SerializeField] private TextMeshProUGUI _buttonText;
     
     public A__Action action { get; private set; }
     
@@ -30,17 +29,6 @@ public class Module_ActionSelectionButton : MonoBehaviour, IPointerEnterHandler,
     // ======================================================================
     
     /// <summary>
-    /// Sets the parameters to the button.
-    /// </summary>
-    /// <param name="linkedHolder"></param>
-    /// <param name="linkedCharacter"></param>
-    public void SetParameters(Module_ActionSelection linkedHolder, Unit linkedCharacter)
-    {
-        holder = linkedHolder;
-        unit = linkedCharacter;
-    }
-
-    /// <summary>
     /// Displays the button with the weapon's infos.
     /// </summary>
     /// <param name="actionToDisplay"></param>
@@ -49,13 +37,13 @@ public class Module_ActionSelectionButton : MonoBehaviour, IPointerEnterHandler,
     public void DisplayButton(A__Action actionToDisplay, Action OnClick, bool showText)
     {
         action = actionToDisplay;
-        icon.sprite = actionToDisplay.icon;
+        _icon.sprite = actionToDisplay.icon;
         
         if(showText)
-            buttonText.text = actionToDisplay.actionName;
+            _buttonText.text = actionToDisplay.actionName;
         else
-            buttonText.transform.parent.gameObject.SetActive(false);
-        button.onClick.AddListener(delegate {OnClick();});
+            _buttonText.transform.parent.gameObject.SetActive(false);
+        _button.onClick.AddListener(delegate {OnClick();});
     }
     
     // ======================================================================
@@ -70,7 +58,7 @@ public class Module_ActionSelectionButton : MonoBehaviour, IPointerEnterHandler,
     {
         //GameEvents.InvokeOnAnyWeaponSelectionButtonEnter(this);
     }
-
+    
     public void OnPointerExit(PointerEventData eventData)
     {
         //GameEvents.InvokeOnAnyWeaponSelectionButtonExit(this);
