@@ -12,8 +12,15 @@ public class M_Units : MonoBehaviour
     [HideInInspector] public Unit current;
     [SerializeField] private List<Team> _teamPlayOrder;
     public List<Team> teamPlayOrder => _teamPlayOrder;
+    
+    [Space]
+    
     [SerializeField] private TurnBasedSystem turnBasedSystem;
 
+    [Space]
+    
+    [SerializeField] private float _timeBeforeStart = .5f;
+    
     [Header("- DEBUG -")] [Space]
     
     [SerializeField] private List<Unit> _units;
@@ -46,8 +53,9 @@ public class M_Units : MonoBehaviour
     {
         _input.OnNextTeammateInput += Input_OnNextTeammateInput;
         _input.OnEndTeamTurnInput += Input_OnEndTeamTurnInput;
-        
-        Wait(0.5f, StartGame);
+
+        _timeBeforeStart = Mathf.Clamp(_timeBeforeStart, .1f, Mathf.Infinity);
+        Wait(_timeBeforeStart, StartGame);
     }
 
     private void OnDisable()
