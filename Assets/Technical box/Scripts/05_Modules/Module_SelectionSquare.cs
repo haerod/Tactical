@@ -93,7 +93,7 @@ public class Module_SelectionSquare : MonoBehaviour
         Hide();
     }
 
-    private void Level_OnVictory(object sender, Team winnerTeam)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
         Hide();
     }

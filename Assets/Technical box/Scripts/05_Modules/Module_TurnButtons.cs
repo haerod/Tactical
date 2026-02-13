@@ -81,7 +81,7 @@ public class Module_TurnButtons : MonoBehaviour
         SetUIActive(false);
     }
     
-    private void Level_OnVictory(object sender, Team winnerTeam)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
         SetUIActive(false);
     }

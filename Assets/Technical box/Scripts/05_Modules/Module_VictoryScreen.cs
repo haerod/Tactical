@@ -16,8 +16,9 @@ public class Module_VictoryScreen : MonoBehaviour
     private void Start()
     {
         _level.OnVictory += Level_OnVictory;
+        _level.OnDefeat += Level_OnDefeat;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -35,20 +36,24 @@ public class Module_VictoryScreen : MonoBehaviour
     /// <summary>
     /// Shows the victory screen with the winning team.
     /// </summary>
-    /// <param name="winnerTeam"></param>
-    private void DisplayEndScreen(Team winnerTeam)
+    /// <param name="text"></param>
+    private void DisplayEndScreen(string text)
     {
         endScreen.SetActive(true);
-        endScreenText.text = $"{winnerTeam.name} team wins!";
+        endScreenText.text = text;
     }
     
     // ======================================================================
     // EVENTS
     // ======================================================================
     
-    private void Level_OnVictory(object sender, Team winnerTeam)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
-        DisplayEndScreen(winnerTeam);
+        DisplayEndScreen($"Victory");
     }
     
+    private void Level_OnDefeat(object sender, EventArgs e)
+    {
+        DisplayEndScreen($"Defeat");
+    }
 }

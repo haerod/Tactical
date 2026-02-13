@@ -113,9 +113,7 @@ public class A_Attack : A__Action
         onAttackDone = () =>
         {
             if (success)
-            {
                 target.health.AddDamages(damages, unit.weaponHolder.weaponData.damageType);
-            }
             else
             {
                 OnAttackMiss?.Invoke(this, target);
@@ -261,11 +259,6 @@ public class A_Attack : A__Action
         StartAttack(clickedUnit);
     }
     
-    private void AnimatorScripts_OnAttackHit(object sender, EventArgs e)
-    {
-        EndAttack();
-    }
-    
     private void Ammo_OnProjectileHit(object sender, EventArgs e)
     {
         EndAttack();
@@ -276,7 +269,7 @@ public class A_Attack : A__Action
         Unit target = attackTarget;
         Weapon weapon = unit.weaponHolder.weapon;
         int damages = unit.weaponHolder.weaponData.RandomDamages();
-        bool isTouching = DiceRoll(100) < GetChanceToTouch(target);
+        bool isTouching = DiceRoll(100) <= GetChanceToTouch(target);
         
         if (weapon.data.useProjectile)
         {

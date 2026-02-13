@@ -3,44 +3,39 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using static M__Managers;
+using static Utils;
 
 /// <summary>
 /// Class description
 /// </summary>
-public class Module_Objective : MonoBehaviour
+public class Objective_Fake : Objective
 {
-    [SerializeField] private TextMeshProUGUI _text;
-    [SerializeField] private GameObject _checkMark;
-    
+
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-    
-    /// <summary>
-    /// Setups the text.
-    /// </summary>
-    public void Display(string content, bool isCompleted, bool isSuccessful)
-    {
-        _text.text = content;
-        
-        if (!isCompleted)
-            return; // Uncompleted objective
-        
-        if (isSuccessful)
-            _checkMark.SetActive(true);
-        else
-            _text.text = $"<s>{content}";
-    }
-    
+
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+
+    protected override void CheckObjectiveCompletion()
+    {
+    }
+
+    protected override string GetDescription() => _description;
+
+    protected override void SubscribeToEvents()
+    {
+    }
+
+    protected override void UnsubscribeFromEvents()
+    {
+    }
     
     // ======================================================================
     // EVENTS

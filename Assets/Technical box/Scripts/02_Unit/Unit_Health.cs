@@ -33,6 +33,7 @@ public class Unit_Health : MonoBehaviour
     [SerializeField] private Unit unit;
     
      public bool isFullHealth => currentHealth >= _healthMax;
+     public bool isDead => currentHealth <= 0;
      
      public event EventHandler OnHealthChanged;
      public event EventHandler OnDeath;

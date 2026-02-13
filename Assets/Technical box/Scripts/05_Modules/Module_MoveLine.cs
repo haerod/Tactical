@@ -121,7 +121,7 @@ public class Module_MoveLine : MonoBehaviour
         DisableLines();
     }
     
-    private void Level_OnVictory(object sender, Team winnerTeam)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
         DisableLines();
     }

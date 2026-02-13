@@ -103,7 +103,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3209260729510333018}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -115,7 +115,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &53915568426350201
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -185,7 +185,6 @@ GameObject:
   - component: {fileID: 1235086266041479543}
   - component: {fileID: 8398954294319199030}
   - component: {fileID: 1068221867200257666}
-  - component: {fileID: 4510971112847144599}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -310,27 +309,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!95 &4510971112847144599
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5568082290450348047}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: de26ced7f5fb07843b38ca7b3bc6f97b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6327075965172957670
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,9 +423,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 147.073, y: 0}
+  m_AnchoredPosition: {x: 33.787994, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6869625115840536254
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -507,8 +485,8 @@ GameObject:
   - component: {fileID: 270293951950110162}
   - component: {fileID: 5872757080586936354}
   - component: {fileID: 6979793887644063375}
-  - component: {fileID: 2802430862645520518}
   - component: {fileID: 4627861169494891305}
+  - component: {fileID: 1509188881343854522}
   m_Layer: 0
   m_Name: UI_Objective
   m_TagString: Untagged
@@ -536,7 +514,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 212.45776, y: -70.75366}
-  m_SizeDelta: {x: 364.9156, y: 0}
+  m_SizeDelta: {x: 364.9156, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5872757080586936354
 CanvasRenderer:
@@ -566,26 +544,12 @@ MonoBehaviour:
   m_ChildAlignment: 3
   m_Spacing: 10
   m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
-  m_ChildScaleWidth: 1
-  m_ChildScaleHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &2802430862645520518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7509802547007899935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
 --- !u!114 &4627861169494891305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -600,3 +564,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 1068221867200257666}
   _checkMark: {fileID: 6327075965172957670}
+--- !u!114 &1509188881343854522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509802547007899935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 260
+  m_PreferredHeight: 40
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public static class Utils
 {
@@ -63,4 +64,14 @@ public static class Utils
     /// <param name="diceFaces"></param>
     /// <returns></returns>
     public static int DiceRoll(int diceFaces) => Random.Range(1, diceFaces+1);
+
+    /// <summary>
+    /// Returns the string with the pattern by the replacement value.
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="pattern"></param>
+    /// <param name="replace"></param>
+    /// <returns></returns>
+    public static string ReplacePatternInString(string content, string pattern, string replace) =>
+        Regex.Replace(content,$@"\b{pattern}\b", replace);
 }

@@ -148,7 +148,7 @@ public class Module_WeaponAmmo : MonoBehaviour
         Show(_currentUnit.weaponHolder.weapon);
     }
     
-    private void Level_OnVictory(object sender, Team winningTeam)
+    private void Level_OnVictory(object sender, EventArgs e)
     {
         Hide();
     }

@@ -250,8 +250,8 @@ public class M_Units : MonoBehaviour
     /// </summary>
     /// <param name="time"></param>
     /// <param name="onEnd"></param>
-    protected void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
-
+    private void Wait(float time, Action onEnd) => StartCoroutine(Wait_Co(time, onEnd));
+    
     /// <summary>
     /// Waits coroutine.
     /// Called by Wait() method.

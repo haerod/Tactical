@@ -12,6 +12,8 @@ public class Module_ObjectivesDisplayer : MonoBehaviour
 {
     [SerializeField] private Transform _objectiveParent;
     [SerializeField] private GameObject _objectivePrefab;
+    [SerializeField] private GameObject _objectiveTextPrefab;
+    [SerializeField] private GameObject _optionalObjectiveTextPrefab;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -21,8 +23,10 @@ public class Module_ObjectivesDisplayer : MonoBehaviour
     {
         GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
         GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
-        _units.OnTeamTurnStart += Units_OnTeamTurnStart;
+        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
+        _level.OnObjectiveUpdate += Level_OnObjectiveUpdate;
+        _level.OnDefeat += Level_OnDefeat;
         
         Show();
     }
@@ -41,11 +45,45 @@ public class Module_ObjectivesDisplayer : MonoBehaviour
     private void Show()
     {
         Hide();
+
+        // Main objectives
+        if (_level.objectives.Any(objective => !objective.isOptional))
+        {
+            Instantiate(_objectiveTextPrefab, _objectiveParent);
         
-        Module_Objective instantiatedObjective = Instantiate(_objectivePrefab, _objectiveParent)
-            .GetComponent<Module_Objective>();
+            foreach (Objective objective in _level.objectives)
+            {
+                if(objective.isOptional)
+                    continue; // Optional objective
+            
+                DisplayObjective(objective);
+            }
+        }
         
-        instantiatedObjective.Setup();
+        // Optional objectives
+        if(!_level.objectives.Any(objective => objective.isOptional))
+            return; // No optional objective
+        
+        Instantiate(_optionalObjectiveTextPrefab, _objectiveParent);
+        
+        foreach (Objective objective in _level.objectives)
+        {
+            if(!objective.isOptional)
+                continue; // Main objective
+
+            DisplayObjective(objective);
+        }
+
+        void DisplayObjective(Objective objective)
+        {
+            Module_Objective instantiatedObjective = Instantiate(_objectivePrefab, _objectiveParent)
+                .GetComponent<Module_Objective>();
+
+            instantiatedObjective.Display(
+                objective.description, 
+                (objective.successOnVictory && _level.isVictory) || objective.isCompleted,
+                objective.isSuccessful);
+        }
     }
     
     /// <summary>
@@ -61,20 +99,15 @@ public class Module_ObjectivesDisplayer : MonoBehaviour
     // EVENTS
     // ======================================================================
     
-    private void GameEvents_OnAnyActionStart(object sender, Unit startingUnit)
+    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
-        Hide();
-    }
-    
-    private void GameEvents_OnAnyActionEnd(object sender, Unit endingUnit)
-    {
-        if(!_units.current.behavior.playable)
+        if(!startingUnit.behavior.playable)
             return; // NPC
         
         Show();
     }
     
-    private void Units_OnTeamTurnStart(object sender, Team startingTeam)
+    private void Level_OnObjectiveUpdate(object sender, EventArgs e)
     {
         if(!_units.current)
             return; // No current unit
@@ -82,6 +115,24 @@ public class Module_ObjectivesDisplayer : MonoBehaviour
             return; // NPC
         
         Show();
+    }
+    
+    private void Level_OnDefeat(object sender, EventArgs e)
+    {
+        Show();
+    }
+    
+    private void GameEvents_OnAnyActionEnd(object sender, Unit endingActionUnit)
+    {
+        if(!_units.current.behavior.playable)
+            return; // NPC
+        
+        Show();
+    }
+    
+    private void GameEvents_OnAnyActionStart(object sender, Unit startingActionUnit)
+    {
+        Hide();
     }
     
     private void Units_OnTeamTurnEnd(object sender, Team endingTeam)

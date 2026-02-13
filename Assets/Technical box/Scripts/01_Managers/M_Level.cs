@@ -4,24 +4,20 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using static M__Managers;
+using Object = System.Object;
 
 public class M_Level : MonoBehaviour
 {
     [SerializeField] private Team _playerTeam;
     public Team playerTeam => _playerTeam;
     
-    [Header("- VICTORY CONDITIONS -")] [Space]
+    [Header("- VICTORY CONDITIONS : DEPRECATED, DON'T USE IT -")] [Space]
     
-    public VictoryCondition victoryCondition = VictoryCondition.Deathmatch;
-    public enum VictoryCondition { Deathmatch, ReachZone, Survive}
+    public VictoryCondition victoryCondition;
+    public enum VictoryCondition { ReachZone}
     
     [SerializeField] private List<Tile> _tilesToReach;
     public List<Tile> tilesToReach => _tilesToReach;
-    
-    [Space] 
-    
-    [SerializeField] private int _turnsToSurvive;
-    public int turnsToSurvive => _turnsToSurvive;
     
     [Header("- FOG OF WAR -")] [Space]
     
@@ -33,10 +29,14 @@ public class M_Level : MonoBehaviour
     public static M_Level instance => _instance == null ? _instance = FindFirstObjectByType<M_Level>() : _instance;
         
     public bool isFogOfWar => _fogOfWar && _fogOfWar.gameObject.activeInHierarchy;
-    public bool isVictory => IsVictory();
+    public bool isVictory {get; private set;}
     public int currentTurn {get; private set;}
+    public List<Objective> objectives => _objectives.Count > 0 ? _objectives : _objectives = GetObjectives();
+    private List<Objective> _objectives = new();
     
-    public event EventHandler<Team> OnVictory;
+    public event EventHandler OnVictory;
+    public event EventHandler OnDefeat;
+    public event EventHandler OnObjectiveUpdate;
     public event EventHandler OnNewTurnStart;
     
     // ======================================================================
@@ -56,11 +56,12 @@ public class M_Level : MonoBehaviour
     
     private void Start()
     {
-        if (victoryCondition == VictoryCondition.ReachZone)
-            GameEvents.OnAnyActionEnd += GameEvents_OnAnyActionEnd;
+        _units.OnTeamTurnStart += Units_OnTeamTurnStart;
         
-        if (victoryCondition == VictoryCondition.Survive)
-            _units.OnTeamTurnStart += Units_OnTeamTurnStart;
+        foreach (Objective objective in _objectives)
+        {
+            objective.OnObjectiveUpdate += Objective_OnObjectiveUpdate;
+        }
     }
     
     private void OnDisable()
@@ -79,37 +80,26 @@ public class M_Level : MonoBehaviour
     /// <summary>
     /// Checks if it's currently victory.
     /// </summary>
-    private bool IsVictory()
+    private void IsVictoryOrDefeat()
     {
-        if (victoryCondition == VictoryCondition.Deathmatch)
+        if(objectives.Count == 0)
+            return; // No objectives
+        
+        IEnumerable<Objective> mainObjectives = objectives
+            .Where(objective => !objective.isOptional);
+        
+        if (mainObjectives.Any(objective => objective.isCompleted && !objective.isSuccessful))
         {
-            if (_units.GetEnemiesOf(_units.current).Count == 0)
-                OnVictory?.Invoke(null, _units.current.unitTeam);
-            else
-                return false;
+            OnDefeat?.Invoke(this, EventArgs.Empty);
+            return; // Failed objective
         }
         
-        if (victoryCondition == VictoryCondition.ReachZone)
-        {
-            if(_units.GetUnitsOf(playerTeam).Count == 0)
-                OnVictory?.Invoke(null, _units.units.FirstOrDefault()?.unitTeam);
-            else if (_units.GetUnitsOf(playerTeam).Any(unit => _tilesToReach.Contains(unit.tile)))
-                OnVictory?.Invoke(null, playerTeam);
-            else
-                return false;
-        }
+        if (mainObjectives.Any(objective => !objective.isCompleted && !objective.successOnVictory))
+            return; // Uncompleted objective
         
-        if (victoryCondition == VictoryCondition.Survive)
-        {
-            if(_units.GetUnitsOf(playerTeam).Count == 0)
-                OnVictory?.Invoke(null, _units.units.FirstOrDefault()?.unitTeam);
-            else if (currentTurn == turnsToSurvive)
-                OnVictory?.Invoke(null, playerTeam);
-            else
-                return false;
-        }
-        
-        return true;
+        // Victory
+        isVictory = true;
+        OnVictory?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>
@@ -121,21 +111,36 @@ public class M_Level : MonoBehaviour
         OnNewTurnStart?.Invoke(this, EventArgs.Empty);
     }
     
+    /// <summary>
+    /// Returns objectives in children.
+    /// </summary>
+    /// <returns></returns>
+    private List<Objective> GetObjectives()
+    {
+        List<Objective> toReturn = new();
+
+        foreach (Transform child in transform)
+        {
+            Objective objective = child.GetComponent<Objective>();
+            toReturn.AddIf(objective, objective);
+        }
+        
+        return toReturn;
+    }
+    
     // ======================================================================
     // EVENTS
     // ======================================================================
     
-    private void GameEvents_OnAnyActionEnd(object sender, Unit endingUnit)
+    private void Objective_OnObjectiveUpdate(object sender, Objective updatedObjective)
     {
-        IsVictory();
+        IsVictoryOrDefeat();
+        OnObjectiveUpdate?.Invoke(this, EventArgs.Empty);
     }
     
     private void Units_OnTeamTurnStart(object sender, Team startingTeam)
     {
-        if(startingTeam != playerTeam)
-            return; // Not player team
-    
-        AddTurn();
-        IsVictory();
+        if(startingTeam == _units.teamPlayOrder.First())
+            AddTurn();
     }
 }
