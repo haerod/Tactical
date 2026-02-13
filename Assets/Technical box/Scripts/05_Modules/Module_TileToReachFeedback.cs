@@ -14,7 +14,7 @@ public class Module_TileToReachFeedback : MonoBehaviour
     [SerializeField] private Color gizmoColor = Color.yellow;
     
     private List<GameObject> tileToReachFeedbacks = new();
-    private M_Level level;
+    private Objective_ReachZone _reachZone;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -22,23 +22,24 @@ public class Module_TileToReachFeedback : MonoBehaviour
     
     private void Start()
     {
-        if(_level.victoryCondition != M_Level.VictoryCondition.ReachZone)
-            return; // Not the good victory condition
+        if (!_reachZone)
+            _reachZone = _level.GetObjectiveOfType<Objective_ReachZone>();
+        if(!_reachZone)
+            return; // No available objective
         
         Show();
     }
     
     private void OnDrawGizmos()
     {
-        if(_level.victoryCondition != M_Level.VictoryCondition.ReachZone)
-            return; // Not the good victory condition
+        if (!_reachZone)
+            _reachZone = _level.GetObjectiveOfType<Objective_ReachZone>();
+        if(!_reachZone)
+            return; // No available objective
         
         Gizmos.color = gizmoColor;
         
-        if (!level)
-            level = _level;
-
-        level.tilesToReach.ForEach(tile => Gizmos.DrawCube(tile.transform.position + Vector3.up * .05f, new Vector3(1f, .1f, 1f)));
+        _reachZone.tilesToReach.ForEach(tile => Gizmos.DrawCube(tile.transform.position + Vector3.up * .05f, new Vector3(1f, .1f, 1f)));
     }
     
     // ======================================================================
@@ -56,12 +57,12 @@ public class Module_TileToReachFeedback : MonoBehaviour
     {
         Hide();
         
-        for (int i = 0; i < _level.tilesToReach.Count; i++)
+        for (int i = 0; i < _reachZone.tilesToReach.Count; i++)
         {
             if(tileToReachFeedbacks.Count > i)
-                SetupTileToReachFeedback(tileToReachFeedbacks[i], _level.tilesToReach[i]);
+                SetupTileToReachFeedback(tileToReachFeedbacks[i], _reachZone.tilesToReach[i]);
             else
-                AddNewFeedback(_level.tilesToReach[i]);
+                AddNewFeedback(_reachZone.tilesToReach[i]);
         }
     }
     

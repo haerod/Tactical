@@ -15,6 +15,8 @@ public class Objective_ReachZone : Objective
     [SerializeField] private List<Tile> _tilesToReach;
     [SerializeField] private Unit _unitReaching;
     
+    public List<Tile> tilesToReach => _tilesToReach;
+    
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================

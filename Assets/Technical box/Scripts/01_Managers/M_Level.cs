@@ -8,17 +8,6 @@ using Object = System.Object;
 
 public class M_Level : MonoBehaviour
 {
-    [SerializeField] private Team _playerTeam;
-    public Team playerTeam => _playerTeam;
-    
-    [Header("- VICTORY CONDITIONS : DEPRECATED, DON'T USE IT -")] [Space]
-    
-    public VictoryCondition victoryCondition;
-    public enum VictoryCondition { ReachZone}
-    
-    [SerializeField] private List<Tile> _tilesToReach;
-    public List<Tile> tilesToReach => _tilesToReach;
-    
     [Header("- FOG OF WAR -")] [Space]
     
     [SerializeField] private FogOfWar _fogOfWar;
@@ -27,7 +16,7 @@ public class M_Level : MonoBehaviour
     
     private static M_Level _instance;
     public static M_Level instance => _instance == null ? _instance = FindFirstObjectByType<M_Level>() : _instance;
-        
+    
     public bool isFogOfWar => _fogOfWar && _fogOfWar.gameObject.activeInHierarchy;
     public bool isVictory {get; private set;}
     public int currentTurn {get; private set;}
@@ -72,6 +61,14 @@ public class M_Level : MonoBehaviour
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Returns the Objective of the given type.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T GetObjectiveOfType<T>() where T : Objective => objectives
+        .OfType<T>().FirstOrDefault();
     
     // ======================================================================
     // PRIVATE METHODS
