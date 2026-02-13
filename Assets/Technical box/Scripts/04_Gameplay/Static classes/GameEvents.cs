@@ -16,8 +16,6 @@ public static class GameEvents
     public static event EventHandler<Unit> OnAnyAttackEnd;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthLoss;
     public static event EventHandler<HealthChangedEventArgs> OnAnyHealthGain;
-    public static event EventHandler<DamageTypeTriggerEventArgs> OnAnyResistancesTriggered;
-    public static event EventHandler<DamageTypeTriggerEventArgs> OnAnyWeaknessesTriggered;
     public static event EventHandler<Unit> OnAnyDeath;
     public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonEnter;
     public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonExit;
@@ -28,12 +26,7 @@ public static class GameEvents
     {
         public Unit_Health health;
         public int healthChangedAmount;
-    }
-
-    public class DamageTypeTriggerEventArgs : EventArgs
-    {
-        public Unit_Health health;
-        public List<DamageType> damageTypes;
+        public List<DamageType> resistanceDamageTypes, weaknessDamageTypes;
     }
     
     public static void ClearAllEvents()
@@ -45,8 +38,6 @@ public static class GameEvents
         OnAnyMovementStart = null;
         OnAnyHealthLoss = null;
         OnAnyHealthGain = null;
-        OnAnyResistancesTriggered = null;
-        OnAnyWeaknessesTriggered = null;
         OnAnyDeath = null;
         OnAnyWeaponSelectionButtonEnter = null;
         OnAnyWeaponSelectionButtonExit = null;
@@ -57,24 +48,21 @@ public static class GameEvents
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
-
+    
     public static void InvokeOnAnyActionStart(Unit startingActionUnit) => OnAnyActionStart?.Invoke(null, startingActionUnit);
     public static void InvokeOnAnyActionEnd(Unit endingActionUnit) => OnAnyActionEnd?.Invoke(null, endingActionUnit);
     public static void InvokeOnAnyMovementStart(Unit movingUnit) => OnAnyMovementStart?.Invoke(null, movingUnit);
     public static void InvokeOnAnyAttackStart(Unit attackingUnit) => OnAnyAttackStart?.Invoke(null, attackingUnit);
     public static void InvokeOnAnyAttackEnd(Unit attackingUnit) => OnAnyAttackEnd?.Invoke(null, attackingUnit);
-    public static void InvokeOnAnyHealthLoss(Unit_Health healthDamaged, int healthLoss) => OnAnyHealthLoss?.Invoke(null, new HealthChangedEventArgs {
-        health = healthDamaged, 
-        healthChangedAmount = healthLoss});
+    public static void InvokeOnAnyHealthLoss(Unit_Health healthDamaged, int healthLoss, List<DamageType> resistanceDamageTypes, List<DamageType> weaknessDamageTypes) => 
+        OnAnyHealthLoss?.Invoke(null, new HealthChangedEventArgs {
+            health = healthDamaged, 
+            healthChangedAmount = healthLoss,
+            resistanceDamageTypes = resistanceDamageTypes,
+            weaknessDamageTypes = weaknessDamageTypes });
     public static void InvokeOnAnyHealthGain(Unit_Health healthHealed, int healthGain) => OnAnyHealthGain?.Invoke(null, new HealthChangedEventArgs {
         health = healthHealed,
         healthChangedAmount = healthGain });
-    public static void InvokeOnAnyResistancesTriggered(Unit_Health healthTriggered, List<DamageType> resistanceTypes) => OnAnyResistancesTriggered?.Invoke(null, new DamageTypeTriggerEventArgs{
-       health = healthTriggered,
-       damageTypes = resistanceTypes });
-    public static void InvokeOnAnyWeaknessesTriggered(Unit_Health healthTriggered, List<DamageType> weaknessesTypes) => OnAnyWeaknessesTriggered?.Invoke(null, new DamageTypeTriggerEventArgs{
-        health = healthTriggered,
-        damageTypes = weaknessesTypes});
     public static void InvokeOnAnyDeath(Unit deadUnit) => OnAnyDeath?.Invoke(null, deadUnit);
     public static void InvokeOnAnyWeaponSelectionButtonEnter(Module_WeaponSelectionButton selectedButton) => OnAnyWeaponSelectionButtonEnter?.Invoke(null, selectedButton);
     public static void InvokeOnAnyWeaponSelectionButtonExit(Module_WeaponSelectionButton unselectedButton) => OnAnyWeaponSelectionButtonExit?.Invoke(null, unselectedButton);

@@ -20,12 +20,13 @@ public class Module_SelectionSquare : MonoBehaviour
     {
         GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
-        InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
+        InputEvents.OnPointerOverUI += InputEvents_OnPointerOverUI;
+        InputEvents.OnNoTile += InputEvents_OnNoTile;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _level.OnVictory += Level_OnVictory;
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -64,17 +65,19 @@ public class Module_SelectionSquare : MonoBehaviour
     {
         if(!_units.current)
             return; // No current unit
-        if(!_units.current.behavior.playable)
-            return; // NPC
+        if (_units.current.attack.AttackableTiles().Contains(enteredTile))
+            return; // Attackable tile
         
         SetSquareAt(enteredTile.worldPosition, _units.current.move.CanMoveTo(enteredTile));
     }
     
-    private void InputEvents_OnUnitEnter(object sender, Unit hoveredCharacter)
+    private void InputEvents_OnPointerOverUI(object sender, EventArgs e)
     {
-        if(!_units.current.look.UnitsVisibleInFog().Contains(hoveredCharacter))
-            return; // Invisible character
-        
+        Hide();
+    }
+    
+    private void InputEvents_OnNoTile(object sender, EventArgs e)
+    {
         Hide();
     }
     

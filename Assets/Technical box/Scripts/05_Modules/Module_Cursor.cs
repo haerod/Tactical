@@ -27,9 +27,11 @@ public class Module_Cursor : MonoBehaviour
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
         InputEvents.OnAllyEnter += InputEvents_OnAllyEnter;
         InputEvents.OnCurrentUnitEnter += InputEvents_OnCurrentUnitEnter;
+        InputEvents.OnNoTile += InputEvents_OnNoTile;
+        InputEvents.OnPointerOverUI += InputEvents_OnPointerOverUI;
         _input.OnClickActivationChanged += Input_OnClickActivationChanged;
     }
-    
+
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -138,5 +140,15 @@ public class Module_Cursor : MonoBehaviour
     {
         if(!canClickValue)
             SetCursor(CursorType.Regular);
+    }
+    
+    private void InputEvents_OnPointerOverUI(object sender, EventArgs e)
+    {
+        SetCursor(CursorType.Regular);
+    }
+    
+    private void InputEvents_OnNoTile(object sender, EventArgs e)
+    {
+        SetCursor(CursorType.OutMovement);
     }
 }

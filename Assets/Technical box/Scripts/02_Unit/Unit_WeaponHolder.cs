@@ -43,8 +43,6 @@ public class Unit_WeaponHolder : MonoBehaviour
     private void Start()
     {
         unit.attack.OnAttackStart += Attack_OnAttackStart;
-        _units.OnUnitTurnStart += Units_OnUnitTurnStart;
-        _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         
         if(weaponGraphics)
             weaponGraphics.Setup(unit);
@@ -150,29 +148,5 @@ public class Unit_WeaponHolder : MonoBehaviour
     {
         if(weaponData.usesAmmo)
             weapon.SpendAmmo();
-    }
-    
-    private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
-    {
-        if(startingUnit != unit)
-            return; // Not current unit
-        
-        _input.OnReloadWeaponInput += Input_OnReloadWeaponInput;
-    }
-    
-    private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
-    {
-        if(endingUnit != unit)
-            return; // Not current unit
-        
-        _input.OnReloadWeaponInput -= Input_OnReloadWeaponInput;
-    }
-    
-    private void Input_OnReloadWeaponInput(object sender, EventArgs e)
-    {
-        if(!unit.behavior.playable)
-            return; // NPC
-        
-        ReloadWeapon(weapon);
     }
 }

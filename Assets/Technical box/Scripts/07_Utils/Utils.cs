@@ -74,4 +74,21 @@ public static class Utils
     /// <returns></returns>
     public static string ReplacePatternInString(string content, string pattern, string replace) =>
         Regex.Replace(content,$@"\b{pattern}\b", replace);
+    
+    /// <summary>
+    /// Returns the string with the given color.
+    /// </summary>
+    /// <param name="_content"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static string ColoredText(string _content, Color color) =>
+        $"<color=#{color.ToString()}>{_content}</color>";
+    
+    /// <summary>
+    /// Returns the string with the given color.
+    /// </summary>
+    /// <param name="_content"></param>
+    /// <param name="size"></param>
+    /// <returns></returns>
+    public static string SizedText(string _content, int size) => $"<size={size.ToString()}>{_content}</size>";
 }

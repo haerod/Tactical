@@ -24,6 +24,8 @@ public class Module_MoveLine : MonoBehaviour
         GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         InputEvents.OnUnitEnter += InputEvents_OnUnitEnter;
+        InputEvents.OnPointerOverUI += InputEvents_OnPointerOverUI;
+        InputEvents.OnNoTile += InputEvents_OnNoTile;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         _units.OnTeamTurnEnd += Units_OnTeamTurnEnd;
         _level.OnVictory += Level_OnVictory;
@@ -133,6 +135,16 @@ public class Module_MoveLine : MonoBehaviour
         if(!_units.current.look.UnitsVisibleInFog().Contains(hoveredCharacter))
             return; // Invisible character
         
+        DisableLines();
+    }
+    
+    private void InputEvents_OnPointerOverUI(object sender, EventArgs e)
+    {
+        DisableLines();
+    }
+    
+    private void InputEvents_OnNoTile(object sender, EventArgs e)
+    {
         DisableLines();
     }
 }

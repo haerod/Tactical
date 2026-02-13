@@ -6,8 +6,13 @@ using static M__Managers;
 
 public class Module_VictoryScreen : MonoBehaviour
 {
-    [SerializeField] private GameObject endScreen;
-    [SerializeField] private TextMeshProUGUI endScreenText;
+    [SerializeField] private int sceneIndexToLoad = -1;
+    
+    [Header("- REFERENCES -")][Space]
+    
+    [SerializeField] private GameObject _panel;
+    [SerializeField] private TextMeshProUGUI _endScreenText;
+    [SerializeField] private GameObject _nextLevelButton;
 
     // ======================================================================
     // MONOBEHAVIOUR
@@ -25,9 +30,15 @@ public class Module_VictoryScreen : MonoBehaviour
     
     /// <summary>
     /// Restarts the scene.
-    /// Relied to the event on the button Replay.
+    /// Called by Restart button.
     /// </summary>
     public void ClickOnReplay() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    
+    /// <summary>
+    /// Loads the next level.
+    /// Called by Next Level button.
+    /// </summary>
+    public void ClickOnNextLevel() => SceneManager.LoadScene(sceneIndexToLoad);
     
     // ======================================================================
     // PRIVATE METHODS
@@ -37,10 +48,13 @@ public class Module_VictoryScreen : MonoBehaviour
     /// Shows the victory screen with the winning team.
     /// </summary>
     /// <param name="text"></param>
-    private void DisplayEndScreen(string text)
+    private void DisplayEndScreen(string text, bool isVictory)
     {
-        endScreen.SetActive(true);
-        endScreenText.text = text;
+        _panel.SetActive(true);
+        _endScreenText.text = text;
+
+        if (isVictory && sceneIndexToLoad > 0)
+            _nextLevelButton.gameObject.SetActive(true);
     }
     
     // ======================================================================
@@ -49,11 +63,11 @@ public class Module_VictoryScreen : MonoBehaviour
     
     private void Level_OnVictory(object sender, EventArgs e)
     {
-        DisplayEndScreen($"Victory");
+        DisplayEndScreen($"Victory", true);
     }
     
     private void Level_OnDefeat(object sender, EventArgs e)
     {
-        DisplayEndScreen($"Defeat");
+        DisplayEndScreen($"Defeat", false);
     }
 }

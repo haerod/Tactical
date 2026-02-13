@@ -43,12 +43,12 @@ public class Unit_Health : MonoBehaviour
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
-
+    
     private void Awake()
     {
         currentHealth = _healthMax;
     }
-
+    
     // ======================================================================
     // PUBLIC METHODS
     // ======================================================================
@@ -58,6 +58,7 @@ public class Unit_Health : MonoBehaviour
     /// </summary>
     /// <param name="damage"></param>
     /// <param name="damageTypes"></param>
+
     public void AddDamages(int damage, List<DamageType> damageTypes)
     {
         OnTryDamageApplied?.Invoke(this, EventArgs.Empty);
@@ -73,22 +74,10 @@ public class Unit_Health : MonoBehaviour
         }
         
         if(resistanceTriggered)
-        {
             damage = ApplyResistanceOrWeaknessToDamage(damage, true);
-            
-            GameEvents.InvokeOnAnyResistancesTriggered(this, damageTypes
-                .Where(type => resistances.Contains(type))
-                .ToList());
-        }
-
+        
         if(weaknessTriggered)
-        {
             damage = ApplyResistanceOrWeaknessToDamage(damage, false);
-            
-            GameEvents.InvokeOnAnyWeaknessesTriggered(this, damageTypes
-                .Where(type => weaknesses.Contains(type))
-                .ToList());
-        }
         
         currentHealth = Mathf.Clamp(currentHealth - damage, 0, currentHealth);
         
@@ -100,7 +89,11 @@ public class Unit_Health : MonoBehaviour
         else
             OnNonLethalDamageApplied?.Invoke(this, EventArgs.Empty);
         
-        GameEvents.InvokeOnAnyHealthLoss(this, damage);
+        GameEvents.InvokeOnAnyHealthLoss(
+            this, 
+            damage,
+            resistanceTriggered ? damageTypes.Where(type => resistances.Contains(type)).ToList() : new List<DamageType>(),
+            weaknessTriggered ? damageTypes.Where(type => weaknesses.Contains(type)).ToList() : new List<DamageType>());
         OnHealthChanged?.Invoke(this, EventArgs.Empty);
     }
     
@@ -156,26 +149,25 @@ public class Unit_Health : MonoBehaviour
                     return damage;
             }
         }
-        else // Weakness
+        
+        // Weakness
+        switch (increaseOrDecreaseBy)
         {
-            switch (increaseOrDecreaseBy)
-            {
-                case ResistanceWeaknessBehavior.Amount:
-                    return damage + amountValue;
+            case ResistanceWeaknessBehavior.Amount:
+                return damage + amountValue;
 
-                case ResistanceWeaknessBehavior.Percent:
-                    float damagePercented = damage * (percentValue / 100f);
-                    if (Mathf.Approximately(damagePercented % 1, .5f)) // Fix RoundToInt 0.5 native issue (check Unity API)
-                        damagePercented += .1f;
-                    return damage + Mathf.RoundToInt(damagePercented);
+            case ResistanceWeaknessBehavior.Percent:
+                float damagePercented = damage * (percentValue / 100f);
+                if (Mathf.Approximately(damagePercented % 1, .5f)) // Fix RoundToInt 0.5 native issue (check Unity API)
+                    damagePercented += .1f;
+                return damage + Mathf.RoundToInt(damagePercented);
 
-                case ResistanceWeaknessBehavior.MultiplyOrDivide:
-                    return damage * multiplyOrDivideValue;
+            case ResistanceWeaknessBehavior.MultiplyOrDivide:
+                return damage * multiplyOrDivideValue;
 
-                default:
-                    Debug.LogError("This kind of operation don't exist. Please add it.");
-                    return damage;
-            }
+            default:
+                Debug.LogError("This kind of operation don't exist. Please add it.");
+                return damage;
         }
     }
 }

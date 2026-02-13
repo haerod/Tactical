@@ -146,7 +146,7 @@ public class A_Move : A__Action
             return null;
         
         if(path.Count > _movementRange)
-            return path[_movementRange];
+            return path[_movementRange-1];
 
         else
             return path.Last();

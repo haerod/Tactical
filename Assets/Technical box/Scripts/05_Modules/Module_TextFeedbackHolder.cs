@@ -12,6 +12,11 @@ public class Module_TextFeedbackHolder : MonoBehaviour
     [SerializeField] private string reloadText = "RELOAD";
     [SerializeField] private string outOfAmmoText = "OUT OF AMMO";
     
+    [Space]
+    
+    [SerializeField] private Color _resistanceColor = Color.red;
+    [SerializeField] private Color _weaknessColor = Color.yellow;
+    
     [Header("- REFERENCES -")] [Space]
     
     [SerializeField] private GameObject actionEffectFeedbackPrefab;
@@ -29,6 +34,7 @@ public class Module_TextFeedbackHolder : MonoBehaviour
         GameEvents.OnAnyAttackEnd += GameEvents_OnAnyAttackEnd;
         GameEvents.OnAnyHealthLoss += Health_OnAnyHealthLoss;
         GameEvents.OnAnyHealthGain += Health_OnAnyHealthGain;
+        InputEvents.OnUnitClick += InputEvents_OnUnitClick;
     }
     
     private void OnDisable()
@@ -105,8 +111,15 @@ public class Module_TextFeedbackHolder : MonoBehaviour
     
     private void Health_OnAnyHealthLoss(object sender, GameEvents.HealthChangedEventArgs args)
     {
+        string _toDisplay = $"{args.healthChangedAmount.ToString()} damage";
+        
+        if(args.weaknessDamageTypes.Count > 0)
+            _toDisplay = $"{Utils.ColoredText($"{_toDisplay}\n(Weakness)", _weaknessColor)}";
+        else if(args.resistanceDamageTypes.Count > 0)
+            _toDisplay = $"{Utils.ColoredText($"{_toDisplay}\n(Resistance)", _resistanceColor)}";
+        
         DisplayActionEffectFeedback(
-            args.healthChangedAmount.ToString(), 
+            _toDisplay, 
             args.health.transform);
     }
     
@@ -115,5 +128,20 @@ public class Module_TextFeedbackHolder : MonoBehaviour
         DisplayActionEffectFeedback(
             args.healthChangedAmount.ToString(), 
             args.health.transform);
+    }
+    
+    private void InputEvents_OnUnitClick(object sender, Unit clickedUnit)
+    {
+        if(clickedUnit.team.IsAllyOf(currentUnit))
+            return; // CLick on ally
+        
+        Weapon _weapon = currentUnit.weaponHolder.weapon;
+        
+        if(!_weapon.data.usesAmmo)
+            return; // Weapon don't use ammo
+        if(_weapon.hasAvailableAmmoToSpend)
+            return; // Already has ammo
+        
+        DisplayActionEffectFeedback(outOfAmmoText, currentUnit.transform);
     }
 }

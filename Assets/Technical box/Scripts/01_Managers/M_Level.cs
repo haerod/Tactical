@@ -137,7 +137,7 @@ public class M_Level : MonoBehaviour
     
     private void Units_OnTeamTurnStart(object sender, Team startingTeam)
     {
-        if(startingTeam == _units.teamPlayOrder.First())
+        if(startingTeam == _units.units.First().unitTeam)
             AddTurn();
     }
 }

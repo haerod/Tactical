@@ -5,16 +5,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using static Utils;
+using static M__Managers;
 
 /// <summary>
 /// Trigger to a tooltip's displayer for weapon's images.
 /// /// </summary>
 public class TooltipTrigger_Weapon : TooltipTrigger_Basic
 {
-    [SerializeField] private bool showActionPoints = false;
-    [SerializeField] private bool showDamage = true;
-    [SerializeField] private bool showDamageTypes = true;
-    [SerializeField] private bool showPrecisionModifier = true;
+    [SerializeField] private bool _showEquipCost = true;
+    [SerializeField] private bool _showDamage = true;
+    [SerializeField] private bool _showDamageTypes = true;
+    [SerializeField] private bool _showPrecisionModifier = true;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -40,37 +42,48 @@ public class TooltipTrigger_Weapon : TooltipTrigger_Basic
         WeaponData weaponData = weapon.data;
         
         // Name
-        toReturn = $"<b>{weapon.itemName}</b>";
-        // Action points
-        if (showActionPoints)
-            toReturn += $" ({weaponData.actionPointCost} AP)";
+        toReturn += $"{weapon.itemName}";
+        
+        // Equip cost
+        if (_showEquipCost && _units.current.weaponHolder.weapon != weapon)
+        {
+            A_TakeWeapon actionTakeWeapon = _units.current.actionsHolder.GetActionOfType<A_TakeWeapon>();
+            if(actionTakeWeapon.actionPointCost == 0)
+                toReturn += SizedText($"\nEquip for free", 20);
+            else
+                toReturn += SizedText($"\nEquip for {actionTakeWeapon.actionPointCost} action", 20);
+        }
+        
+        // Equipped
+        if (_units.current.weaponHolder.weapon == weapon)
+            toReturn += SizedText($"\nEquipped", 20);
         
         // Damage range
-        if(showDamage)
+        if(_showDamage)
         {
             Vector2Int weaponDamageRange = weaponData.damagesRange;
             if (weaponDamageRange.x != weaponDamageRange.y)
-                toReturn += $"\n{weaponDamageRange.x} - {weaponDamageRange.y} damage";
+                toReturn += "\n\n" + SizedText($"{weaponDamageRange.x} - {weaponDamageRange.y} damage", 28);
             else
-                toReturn += $"\n {weaponDamageRange.x} damage";
+                toReturn += "\n\n" + SizedText($"{weaponDamageRange.x} damage", 28);
         }
         
         // Damage types
-        if(showDamageTypes)
+        if(_showDamageTypes)
         {
             List<DamageType> damageTypes = weaponData.damageType;
             if (damageTypes.Count > 1)
             {
-                toReturn += "\n" + string.Join(", ", damageTypes);
+                toReturn += SizedText($" ({string.Join(", ", damageTypes)})", 28);
             }
             else if (damageTypes.Count == 1)
             {
-                toReturn += "\n" + damageTypes[0].name;
+                toReturn +=  SizedText($" ({damageTypes[0].name})", 28);
             }
         }
 
         // Precision modifier
-        if (showPrecisionModifier)
+        if (_showPrecisionModifier)
         {
             int precisionModifier = weaponData.precisionModifier;
             if (precisionModifier != 0)

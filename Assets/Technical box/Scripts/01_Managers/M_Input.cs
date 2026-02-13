@@ -14,8 +14,7 @@ public class M_Input : MonoBehaviour
     [SerializeField] private KeyCode recenterCameraKey = KeyCode.Space;    
     [SerializeField] private KeyCode changeUnitKey = KeyCode.Tab;
     [SerializeField] private KeyCode endTurnKey = KeyCode.Backspace;
-    [SerializeField] private KeyCode reloadWeaponKey = KeyCode.R;
-
+    
     [Header("- CAMERA -")][Space]
     
     [SerializeField] private KeyCode upKey = KeyCode.Z;
@@ -36,19 +35,17 @@ public class M_Input : MonoBehaviour
     public event EventHandler OnRecenterCameraInput;
     public event EventHandler OnEndTeamTurnInput;
     public event EventHandler OnNextTeammateInput;
-    public event EventHandler OnReloadWeaponInput;
     public event EventHandler OnRotateLeftInput;
     public event EventHandler OnRotateRightInput;
     
     private bool canUsePlayerInput = true;
     private Tile previousTile;
     private Unit previousUnit;
-    private Plane floorPlane = new (Vector3.up, Vector3.zero);
     
     public static M_Input instance => _instance == null ? FindFirstObjectByType<M_Input>() : _instance;
     public static M_Input _instance;
     
-    public bool isPointerOverUI => EventSystem.current.IsPointerOverGameObject();
+    private static bool isPointerOverUI => EventSystem.current.IsPointerOverGameObject();
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -76,7 +73,6 @@ public class M_Input : MonoBehaviour
         OnClickActivationChanged = null;
         OnEndTeamTurnInput = null;
         OnNextTeammateInput = null;
-        OnReloadWeaponInput = null;
         OnRotateLeftInput = null;
         OnRotateRightInput = null;
         OnZoomingCameraInput = null;
@@ -89,18 +85,19 @@ public class M_Input : MonoBehaviour
     {
         if (!canUsePlayerInput) 
             return; // Player can't click
-        if (IsPointerOverUI()) 
-            return; // Pointer over UI
-
+        
         CheckRaycast();
-        CheckClick();
         CheckChangeUnitInput();
         CheckEndTurnInput();
-        CheckReloadWeaponInput();
         CheckRecenterCameraInput();
         CheckCameraMovementInput();
         CheckCameraZoomInput();
         CheckCameraRotationInput();
+        
+        if(isPointerOverUI)
+            return; // Pointer over UI
+        
+        CheckClick();
     }
     
     // ======================================================================
@@ -112,18 +109,24 @@ public class M_Input : MonoBehaviour
     // ======================================================================
     
     /// <summary>
-    /// Returns true if pointer is over UI. Else, returns false.
-    /// </summary>
-    /// <returns></returns>
-    private bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
-    
-    /// <summary>
     /// Check over which object the pointer is (with raycast).
     /// </summary>
     private void CheckRaycast()
     {
         if (isPointerOverUI)
         {
+            if (previousTile)
+            {
+                InputEvents.TileUnhovered(previousTile);
+                previousTile = null;
+            }
+
+            if (previousUnit)
+            {
+                InputEvents.UnitUnhovered(previousUnit);
+                previousUnit = null;
+            }
+            
             InputEvents.PointerOverUI();
             return; // Pointer over UI
         }
@@ -215,15 +218,6 @@ public class M_Input : MonoBehaviour
     {
         if (Input.GetKeyDown(endTurnKey))
             OnEndTeamTurnInput?.Invoke(this, EventArgs.Empty);
-    }
-
-    /// <summary>
-    /// Checks input to reload current unit's weapon.
-    /// </summary>
-    private void CheckReloadWeaponInput()
-    {
-        if (Input.GetKeyDown(reloadWeaponKey))
-            OnReloadWeaponInput?.Invoke(this, EventArgs.Empty);
     }
     
     /// <summary>

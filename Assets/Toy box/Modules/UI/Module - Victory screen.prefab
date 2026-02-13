@@ -114,8 +114,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba94346852b7af4abe4da7c278004a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endScreen: {fileID: 6622051291291591198}
-  endScreenText: {fileID: 3794677650893060459}
+  sceneIndexToLoad: -1
+  _panel: {fileID: 6622051291291591198}
+  _endScreenText: {fileID: 3794677650893060459}
+  _nextLevelButton: {fileID: 0}
 --- !u!1 &3816981884100048452
 GameObject:
   m_ObjectHideFlags: 0
