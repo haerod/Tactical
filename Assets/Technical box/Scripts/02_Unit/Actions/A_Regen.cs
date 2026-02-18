@@ -3,22 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using static M__Managers;
+using static Utils;
 
 /// <summary>
 /// Class description
 /// </summary>
-public class Module_Objective : MonoBehaviour
+public class A_Regen : A__Action
 {
-    [SerializeField] private Color _baseColor = Color.white;
-    [SerializeField] private Color _successColor = Color.white;
-    [SerializeField] private Color _failedColor = Color.grey;
-    
-    [Header("- REFERENCES -")][Space]
-    
-    [SerializeField] private TextMeshProUGUI _text;
-    [SerializeField] private GameObject _checkMark;
+    [SerializeField] private int _regenAmount = 1;
+    [SerializeField] private GameObject _regenFeedbackPrefab;
+    [SerializeField] private float _regenDuration = 1;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -29,24 +23,27 @@ public class Module_Objective : MonoBehaviour
     // ======================================================================
     
     /// <summary>
-    /// Setups the text.
+    /// Starts the Regen Action
     /// </summary>
-    public void Display(string content, bool isCompleted, bool isSuccessful)
+    public void StartRegen()
     {
-        _text.text = content;
-        
-        if (!isCompleted)
-            return; // Uncompleted objective
-        
-        if (isSuccessful)
-            _checkMark.SetActive(true);
-        else
-            _text.text = $"<s>{content}";
+        StartAction();
+        Instantiate(_regenFeedbackPrefab, unit.transform.position, Quaternion.identity);
+        unit.health.Heal(_regenAmount);
+        Wait(_regenDuration, EndRegen);
     }
     
     // ======================================================================
     // PRIVATE METHODS
     // ======================================================================
+    
+    /// <summary>
+    /// Ends the Regen action.
+    /// </summary>
+    private void EndRegen()
+    {
+        EndAction();
+    }
     
     // ======================================================================
     // EVENTS

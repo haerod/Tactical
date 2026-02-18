@@ -21,7 +21,12 @@ public class TileGrid
             Debug.LogError("No tiles on the board.");
             return; // No tiles to build the board
         }
-
+        
+        lowestX = tilesToAdd[0].coordinates.x;
+        lowestY = tilesToAdd[0].coordinates.y;
+        highestX = tilesToAdd[0].coordinates.x;
+        highestY = tilesToAdd[0].coordinates.y;
+        
         // Note : don't do this during editor time
         foreach (Tile tile in tilesToAdd)
         {

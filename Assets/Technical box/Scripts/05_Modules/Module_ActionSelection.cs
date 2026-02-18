@@ -82,6 +82,19 @@ public class Module_ActionSelection : MonoBehaviour
                 delegate { unit.actionsHolder.GetActionOfType<A_Reload>().StartReload(); },
                 _showText);
         }
+        
+        if (unit.actionsHolder.HasAvailableAction<A_Regen>())
+        {
+            Module_ActionSelectionButton instantiatedButton = Instantiate(
+                    buttonActionPrefab,
+                    buttonsParent)
+                .GetComponent<Module_ActionSelectionButton>();
+            
+            instantiatedButton.DisplayButton(
+                unit.actionsHolder.GetActionOfType<A_Regen>(),
+                delegate { unit.actionsHolder.GetActionOfType<A_Regen>().StartRegen(); },
+                _showText);
+        }
     }
     
     /// <summary>

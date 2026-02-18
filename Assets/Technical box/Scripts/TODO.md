@@ -13,6 +13,9 @@
 - 1h -> Component for attachments on death
 - .5d -> Event for modules : OnPlayableUnitTurnStart/End
 - 1h -> use a prefab variant for the buttons with an icon inside (like Weapon selection button, Action selection button, Change turn buttons, Inventory buttons, Victory screen buttons)
+- 15min -> Body part attachments on the root
+- .5d -> Cover system depends on the reach of the weapons
+- .5d -> Add icons in text
 
 # PATHFINDING SYSTEM
 **IMPORTANT**

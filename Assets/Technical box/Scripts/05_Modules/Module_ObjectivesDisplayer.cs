@@ -10,6 +10,8 @@ using static M__Managers;
 /// </summary>
 public class Module_ObjectivesDisplayer : MonoBehaviour
 {
+    [Header("- REFERENCES -")][Space]
+    
     [SerializeField] private Transform _objectiveParent;
     [SerializeField] private GameObject _objectivePrefab;
     [SerializeField] private GameObject _objectiveTextPrefab;

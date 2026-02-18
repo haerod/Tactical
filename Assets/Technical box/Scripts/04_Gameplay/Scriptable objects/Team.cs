@@ -7,4 +7,7 @@ public class Team : ScriptableObject
 {
     public Material mainMaterial;
     public Material secondaryMaterial;
+    
+    [SerializeField] private Color _teamColor = Color.white;
+    public Color teamColor => _teamColor;
 }

@@ -235,10 +235,10 @@ public class M_Input : MonoBehaviour
     private void CheckCameraMovementInput()
     {
         Vector3 mousePosition = Input.mousePosition;
-        bool upInput = mousePosition.y >= Screen.height || Input.GetKey(upKey);
+        bool upInput = mousePosition.y >= Screen.height-1 || Input.GetKey(upKey);
         bool downInput = mousePosition.y <= 0 || Input.GetKey(downKey);
         bool leftInput = mousePosition.x <= 0 || Input.GetKey(leftKey);
-        bool rightInput = mousePosition.x >= Screen.width || Input.GetKey(rightKey);
+        bool rightInput = mousePosition.x >= Screen.width-1 || Input.GetKey(rightKey);
         Coordinates direction = new(0,0);
 
         if (upInput)
