@@ -34,6 +34,7 @@ public class Unit_Health : MonoBehaviour
     
      public bool isFullHealth => currentHealth >= _healthMax;
      public bool isDead => currentHealth <= 0;
+     public int missingHealth =>  healthMax - currentHealth;
      
      public event EventHandler OnHealthChanged;
      public event EventHandler OnDeath;

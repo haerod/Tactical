@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using static M__Managers;
+using static Utils;
 
 public class Module_TextFeedbackHolder : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class Module_TextFeedbackHolder : MonoBehaviour
     
     [SerializeField] private Color _resistanceColor = Color.red;
     [SerializeField] private Color _weaknessColor = Color.yellow;
+    [SerializeField] private Color _healColor = Color.green;
     
     [Header("- REFERENCES -")] [Space]
     
@@ -114,9 +116,9 @@ public class Module_TextFeedbackHolder : MonoBehaviour
         string _toDisplay = $"{args.healthChangedAmount.ToString()} damage";
         
         if(args.weaknessDamageTypes.Count > 0)
-            _toDisplay = $"{Utils.ColoredText($"{_toDisplay}\n(Weakness)", _weaknessColor)}";
+            _toDisplay = $"{ColoredText($"{_toDisplay}\n(Weakness)", _weaknessColor)}";
         else if(args.resistanceDamageTypes.Count > 0)
-            _toDisplay = $"{Utils.ColoredText($"{_toDisplay}\n(Resistance)", _resistanceColor)}";
+            _toDisplay = $"{ColoredText($"{_toDisplay}\n(Resistance)", _resistanceColor)}";
         
         DisplayActionEffectFeedback(
             _toDisplay, 
@@ -125,9 +127,11 @@ public class Module_TextFeedbackHolder : MonoBehaviour
     
     private void Health_OnAnyHealthGain(object sender, GameEvents.HealthChangedEventArgs args)
     {
-        DisplayActionEffectFeedback(
-            args.healthChangedAmount.ToString(), 
-            args.health.transform);
+        string _toDisplay = args.healthChangedAmount > 0 ? 
+            $"+{args.healthChangedAmount}HP healed" : 
+            $"Full HP";
+        
+        DisplayActionEffectFeedback(ColoredText(_toDisplay, _healColor), args.health.transform);
     }
     
     private void InputEvents_OnUnitClick(object sender, Unit clickedUnit)

@@ -55,8 +55,12 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 89d9d36958083fd48bc3f43b93624792, type: 3}
   baseItemColor: {r: 0.52156866, g: 0.68235296, b: 0.68235296, a: 1}
   emptyItemColor: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
-  health: {fileID: 0}
-  unit: {fileID: 0}
+  _minHealthValue: 2
+  _minSizePercent: 0.5
+  _maxHealthValue: 5
+  _maxSizePercent: 1
+  _unit: {fileID: 0}
+  _parentRectTransform: {fileID: 1550318473600820616}
 --- !u!1 &1550318474207114298
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,12 +158,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 8
+    m_Right: 8
+    m_Top: 8
+    m_Bottom: 8
   m_ChildAlignment: 3
-  m_Spacing: 10
+  m_Spacing: 8
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1

@@ -91,4 +91,37 @@ public static class Utils
     /// <param name="size"></param>
     /// <returns></returns>
     public static string SizedText(string _content, int size) => $"<size={size.ToString()}>{_content}</size>";
+    
+    /// <summary>
+    /// Returns the given sprite asset.
+    /// </summary>
+    /// <param name="_spriteName"></param>
+    /// <returns></returns>
+    public static string SpriteAsset(string _spriteName) => $"<sprite name=\"{_spriteName}\">";
+    
+    /// <summary>
+    /// Returns the percent corresponding to the value in the given range.
+    /// Ex: in a range from 2 to 6 => if value is 2 returns 0 ; 4 returns 0.5, 6 returns 1.
+    /// </summary>
+    /// <param name="_value"></param>
+    /// <param name="_min"></param>
+    /// <param name="_max"></param>
+    /// <returns></returns>
+    public static float PercentInRange(float _value, float _min, float _max) => (_value -_min)/(_max - _min);
+    
+    /// <summary>
+    /// Changes the corners value of a STRETCHED rect transform with a percentage, between 0 (min) and 1 (max).
+    /// Ex: percentX = 0.5 ; percentY = 1 => shrinks UI of 50% on X axis.
+    /// </summary>
+    /// <param name="_rectTransform"></param>
+    /// <param name="_percentX"></param>
+    /// <param name="_percentY"></param>
+    public static void ScaleStretchedUIInPercent(RectTransform _rectTransform, float _percentX, float _percentY)
+    {
+        float _width = _rectTransform.rect.width;
+        float _height = _rectTransform.rect.height;
+        Vector2 _stretchSize = new (_width/2 * (1-_percentX), _height/2 * (1-_percentY));;
+        _rectTransform.offsetMin = _stretchSize;
+        _rectTransform.offsetMax = -_stretchSize;
+    }
 }

@@ -3,15 +3,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Serialization;
 using static M__Managers;
+using static Utils;
 
 /// <summary>
 /// Class description
 /// </summary>
 public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
 {
-    [SerializeField] private Unit_Health health;
-    [SerializeField] private Unit unit;
+    [SerializeField] private int _minHealthValue = 2;
+    [Range(0,1)][SerializeField] private float _minSizePercent = .5f;
+    [SerializeField] private int _maxHealthValue = 5;
+    [Range(0,1)][SerializeField] private float _maxSizePercent = 1f;
+    
+    [Header("- REFERENCES -")][Space]
+    
+    [SerializeField] private Unit _unit;
+    [SerializeField] private RectTransform _parentRectTransform;
+    private Unit_Health _health;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -29,7 +39,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         InputEvents.OnTileExit += InputEvents_OnTileExit;
         InputEvents.OnTileEnter += InputEvents_OnTileEnter;
         
-        health.OnHealthChanged += Health_HealthChanged;
+        _health.OnHealthChanged += Health_HealthChanged;
     }
     
     // ======================================================================
@@ -41,8 +51,16 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     /// </summary>
     private void InitialiseBar()
     {
-        maximumValue = health.healthMax;
-        FillGauge(health.currentHealth);
+        _health = _unit.health;
+        
+        maximumValue = _health.healthMax;
+        FillGauge(_health.currentHealth);
+        
+        float _sizePercent = Mathf.Lerp(
+            _minSizePercent,
+            _maxSizePercent,
+            Mathf.Clamp01(PercentInRange(_health.healthMax, _minHealthValue, _maxHealthValue)));
+        ScaleStretchedUIInPercent(_parentRectTransform, _sizePercent, 1);
     }
     
     // ======================================================================
@@ -65,7 +83,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     
     private void Units_OnUnitTurnStart(object sender, Unit startingUnit)
     {
-        if(startingUnit != unit)
+        if(startingUnit != _unit)
             return; // Another character
 
         Show();
@@ -73,7 +91,7 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
-        if(endingUnit != unit)
+        if(endingUnit != _unit)
             return; // Another character
         
         Hide();
@@ -86,16 +104,16 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     
     private void InputEvents_OnUnitEnter(object sender, Unit hoveredUnit)
     {
-        if(hoveredUnit != unit)
+        if(hoveredUnit != _unit)
             return; // Another character
         
         Unit currentUnit = _units.current;
         
         if(!currentUnit)
             return; // No current unit
-        if(currentUnit == unit)
+        if(currentUnit == _unit)
             return; // Current unit
-        if(!currentUnit.look.UnitsVisibleInFog().Contains(unit))
+        if(!currentUnit.look.UnitsVisibleInFog().Contains(_unit))
             return; // Invisible unit
         
         Show();
@@ -103,14 +121,14 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
     
     private void Health_HealthChanged(object sender, EventArgs e)
     {
-        FillGauge(health.currentHealth);
+        FillGauge(_health.currentHealth);
     }
     
     private void InputEvents_OnTileExit(object sender, Tile exitedTile)
     {
-        if(exitedTile.character != unit)
+        if(exitedTile.character != _unit)
             return; // Not this character
-        if(_units.current == unit)
+        if(_units.current == _unit)
             return; // Is the current character
         
         Hide();
@@ -122,15 +140,15 @@ public class Module_SliceHealthBar : UI_SegmentedGaugeClamped
         
         if(!currentUnit)
             return; // No current unit
-        if(currentUnit.team.IsTeammateOf(unit))
+        if(currentUnit.team.IsTeammateOf(_unit))
             return; // Teammate
-        if(!currentUnit.look.CanSee(unit))
+        if(!currentUnit.look.CanSee(_unit))
             return; // Not visible
         if(!currentUnit.behavior.playable)
             return; // NPC
         if(!currentUnit.move.movementArea.Contains(enteredTile))
             return; // Tile not in movement area
-        if(unit.look.visibleTiles.Contains(enteredTile))
+        if(_unit.look.visibleTiles.Contains(enteredTile))
             Hide();
         else
             Show();

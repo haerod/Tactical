@@ -15,7 +15,7 @@
 - 1h -> use a prefab variant for the buttons with an icon inside (like Weapon selection button, Action selection button, Change turn buttons, Inventory buttons, Victory screen buttons)
 - 15min -> Body part attachments on the root
 - .5d -> Cover system depends on the reach of the weapons
-- .5d -> Add icons in text
+- .5d -> Add icons in text (https://kenney.nl/assets/game-icons)
 
 # PATHFINDING SYSTEM
 **IMPORTANT**
