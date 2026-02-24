@@ -288,6 +288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8977320948512688638}
   - component: {fileID: 1181271343903788171}
+  - component: {fileID: 6850293486004218793}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Clickable
@@ -324,6 +325,24 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &6850293486004218793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089087891139880543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb16512a683443be9e5fad63cd90a7a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _standHeight: 1.8
+  _standYCenter: 0.9
+  _crouchHeight: 1
+  _crouchYCenter: 0.5
+  _unit: {fileID: 3541061014796538876}
+  _capsuleCollider: {fileID: 1181271343903788171}
 --- !u!1 &3139687582020661344
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,6 +465,7 @@ MonoBehaviour:
   inventory: {fileID: 3084281157466325437}
   ui: {fileID: 6375618182437013659}
   weaponHolder: {fileID: 7427763846562212774}
+  unitCollider: {fileID: 6850293486004218793}
 --- !u!114 &2371686734661026428
 MonoBehaviour:
   m_ObjectHideFlags: 0

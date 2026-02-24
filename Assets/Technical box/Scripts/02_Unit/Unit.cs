@@ -9,11 +9,11 @@ using static M__Managers;
 
 public class Unit : Entity
 {
-    [Header("NAME")]
+    [Header("- NAME -")][Space]
     
     public string unitName = "Name";
-
-    [Header("REFERENCES")]
+    
+    [Header("- REFERENCES -")][Space]
     
     public Unit_ActionsHolder actionsHolder;
     public Unit_Graphics graphics;
@@ -28,6 +28,7 @@ public class Unit : Entity
     public Unit_Inventory inventory;
     public Unit_WorldUI ui;
     public Unit_WeaponHolder weaponHolder;
+    public Unit_Collider unitCollider;
     
     public Team unitTeam => team.team;
     public Tile tile => _board.GetTileAtCoordinates(coordinates.x, coordinates.y);
