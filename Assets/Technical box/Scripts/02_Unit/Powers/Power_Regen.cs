@@ -9,11 +9,12 @@ using static M__Managers;
 /// <summary>
 /// Class description
 /// </summary>
-public class Power_Regen : MonoBehaviour
+public class Power_Regen : Power
 {
-    [SerializeField] private Unit _unit;
-    [SerializeField] private GameObject _feedbackPrefab;
+    [Header("- FEEDBACKS -")]
     
+    [SerializeField] private GameObject _feedbackPrefab;
+        
     // ======================================================================
     // MONOBEHAVIOUR
     // ======================================================================
@@ -32,12 +33,23 @@ public class Power_Regen : MonoBehaviour
     // PRIVATE METHODS
     // ======================================================================
     
+    /// <summary>
+    /// Regenerates to full health.
+    /// </summary>
     private void Regen()
     {
         Unit_Health _health = _unit.health;
+        
+        ExecutePower();
         _health.Heal(_health.missingHealth);
         Instantiate(_feedbackPrefab, _unit.transform.position, Quaternion.identity);
     }
+    
+    protected override string GetDescription() => _description;
+    
+    protected override string GetTextFeedback() => _unit.health.missingHealth > 0 ? 
+        ColoredText($"+{_unit.health.missingHealth}HP healed", _textFeedbackColor) : 
+        ColoredText($"Full HP", _textFeedbackColor);
     
     // ======================================================================
     // EVENTS
@@ -47,7 +59,6 @@ public class Power_Regen : MonoBehaviour
     {
         if (startingUnit != _unit)
             return; // Not this unit
-        
         if (_unit.health.isDead)
         {
             _units.OnUnitTurnStart -= Units_OnUnitTurnStart;
@@ -68,5 +79,5 @@ public class Power_Regen : MonoBehaviour
         }
         
         Regen();
-    }    
+    }
 }

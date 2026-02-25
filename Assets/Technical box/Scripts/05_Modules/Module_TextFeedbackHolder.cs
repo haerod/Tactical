@@ -18,6 +18,7 @@ public class Module_TextFeedbackHolder : MonoBehaviour
     [SerializeField] private Color _resistanceColor = Color.red;
     [SerializeField] private Color _weaknessColor = Color.yellow;
     [SerializeField] private Color _healColor = Color.green;
+    [SerializeField] private Color _powerTitleColor = Color.blue;
     
     [Header("- REFERENCES -")] [Space]
     
@@ -36,6 +37,7 @@ public class Module_TextFeedbackHolder : MonoBehaviour
         GameEvents.OnAnyAttackEnd += GameEvents_OnAnyAttackEnd;
         GameEvents.OnAnyHealthLoss += Health_OnAnyHealthLoss;
         GameEvents.OnAnyHealthGain += Health_OnAnyHealthGain;
+        GameEvents.OnAnyPowerExecute += GameEvents_OnAnyPowerExecute;
         InputEvents.OnUnitClick += InputEvents_OnUnitClick;
     }
     
@@ -99,6 +101,12 @@ public class Module_TextFeedbackHolder : MonoBehaviour
         Weapon currentWeapon = endingUnit.weaponHolder.weapon;
         if(currentWeapon.data.usesAmmo && currentWeapon.currentLoadedAmmo == 0)
             DisplayActionEffectFeedback(outOfAmmoText, endingUnit.transform);    
+    }
+    
+    private void GameEvents_OnAnyPowerExecute(object sender, Power power)
+    {
+        string _toDisplay = ColoredText($"<b>{power.powerName}</b>", _powerTitleColor) + $"\n{power.textFeedback}";
+        DisplayActionEffectFeedback(_toDisplay, power.unit.transform);
     }
     
     private void Attack_OnAttackMiss(object sender, Unit missedUnit)

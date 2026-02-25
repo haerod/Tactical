@@ -16,6 +16,7 @@ public class Unit : Entity
     [Header("- REFERENCES -")][Space]
     
     public Unit_ActionsHolder actionsHolder;
+    public Unit_PowersHolder powersHolder;
     public Unit_Graphics graphics;
     public Unit_AnimatorScripts anim; // With animator / skinned mesh renderer
     public Unit_Behavior behavior;

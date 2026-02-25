@@ -12,7 +12,7 @@ public static class Utils
     /// <param name="list"></param>
     /// <returns></returns>
     public static bool IsVoidList<T>(List<T> list) => list == null || list.Count == 0;
-
+    
     /// <summary>
     /// Round to the closest value + 0.5 (ex : 0.5, 1.5, 2.5, ...).
     /// </summary>
@@ -64,7 +64,7 @@ public static class Utils
     /// <param name="diceFaces"></param>
     /// <returns></returns>
     public static int DiceRoll(int diceFaces) => Random.Range(1, diceFaces+1);
-
+    
     /// <summary>
     /// Returns the string with the pattern by the replacement value.
     /// </summary>
@@ -82,7 +82,7 @@ public static class Utils
     /// <param name="color"></param>
     /// <returns></returns>
     public static string ColoredText(string _content, Color color) =>
-        $"<color=#{color.ToString()}>{_content}</color>";
+        $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{_content}</color>";
     
     /// <summary>
     /// Returns the string with the given color.

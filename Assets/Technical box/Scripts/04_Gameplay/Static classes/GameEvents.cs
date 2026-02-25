@@ -21,6 +21,7 @@ public static class GameEvents
     public static event EventHandler<Module_WeaponSelectionButton> OnAnyWeaponSelectionButtonExit;
     public static event EventHandler<List<string>> OnAnyTooltipHovered;
     public static event EventHandler OnAnyTooltipExit;
+    public static event EventHandler<Power> OnAnyPowerExecute;
     
     public class HealthChangedEventArgs : EventArgs
     {
@@ -43,6 +44,7 @@ public static class GameEvents
         OnAnyWeaponSelectionButtonExit = null;
         OnAnyTooltipHovered = null;
         OnAnyTooltipExit = null;
+        OnAnyPowerExecute = null;
     }
 
     // ======================================================================
@@ -68,6 +70,7 @@ public static class GameEvents
     public static void InvokeOnAnyWeaponSelectionButtonExit(Module_WeaponSelectionButton unselectedButton) => OnAnyWeaponSelectionButtonExit?.Invoke(null, unselectedButton);
     public static void InvokeOnAnyTooltipHovered(List<string> tooltips) => OnAnyTooltipHovered?.Invoke(null, tooltips);
     public static void InvokeOnAnyTooltipExit() => OnAnyTooltipExit?.Invoke(null, EventArgs.Empty);
+    public static void InvokeOnAnyPowerExecute(Power power) => OnAnyPowerExecute?.Invoke(null, power);
     
     // ======================================================================
     // PRIVATE METHODS

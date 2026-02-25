@@ -75,6 +75,12 @@ public class Unit_ActionsHolder : MonoBehaviour
     public void RefillActionPoints() => currentActionPoints = actionPoints;
     
     /// <summary>
+    /// Adds the given amount to action points.
+    /// </summary>
+    /// <param name="_amount"></param>
+    public void AddActionPoints(int _amount) => currentActionPoints += _amount;
+    
+    /// <summary>
     /// Removes the action points of the action.
     /// </summary>
     public void SpendActionPoints(A__Action action)
