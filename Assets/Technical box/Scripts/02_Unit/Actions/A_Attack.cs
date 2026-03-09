@@ -73,6 +73,7 @@ public class A_Attack : A__Action
     public void ExecuteAttack()
     {
         OnAttackExecute?.Invoke(this, EventArgs.Empty);
+        GameEvents.InvokeOnAnyAttackExecute(unit);
     }
     
     /// <summary>

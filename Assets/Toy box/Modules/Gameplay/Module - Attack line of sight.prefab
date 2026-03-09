@@ -45,7 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e83e9261aaad4fdab740004e6f47bfd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 5924009866356527564}
+  _showOnMeleeWeapons: 0
+  _showIfUntouchableTarget: 0
+  _lineRenderer: {fileID: 5924009866356527564}
 --- !u!1 &5844223115373633028
 GameObject:
   m_ObjectHideFlags: 0

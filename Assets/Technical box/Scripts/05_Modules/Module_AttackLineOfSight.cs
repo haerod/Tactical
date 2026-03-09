@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.TextCore.Text;
+using UnityEngine.Serialization;
 using static M__Managers;
 
 /// <summary>
@@ -11,12 +11,15 @@ using static M__Managers;
 /// </summary>
 public class Module_AttackLineOfSight : MonoBehaviour
 {
-    [Header("REFERENCES")]
+    [SerializeField] private bool _showOnMeleeWeapons = false;
+    [SerializeField] private bool _showIfUntouchableTarget = false;
     
-    [SerializeField] private LineRenderer lineRenderer;
+    [Header("- REFERENCES -")][Space]
     
-    private bool isShowing;
-    private Unit attacker, target;
+    [SerializeField] private LineRenderer _lineRenderer;
+    
+    private bool _isShowing;
+    private Unit _attacker, _target;
     
     // ======================================================================
     // MONOBEHAVIOUR
@@ -27,18 +30,20 @@ public class Module_AttackLineOfSight : MonoBehaviour
         _units.OnUnitTurnStart += Units_OnUnitTurnStart;
         _units.OnUnitTurnEnd += Units_OnUnitTurnEnd;
         GameEvents.OnAnyActionStart += GameEvents_OnAnyActionStart;
+        
+        _lineRenderer.useWorldSpace = true;
     }
     
     private void Update()
     {
-        if(!isShowing)
+        if(!_isShowing)
             return; // Not showing
         
-        Vector3 weaponEndTransform = attacker.weaponHolder.weaponGraphics.weaponEnd.position;
+        Vector3 weaponEndTransform = _attacker.weaponHolder.weaponGraphics.weaponEnd.position;
         
-        lineRenderer.gameObject.SetActive(true);
-        lineRenderer.SetPosition(0, weaponEndTransform);
-        lineRenderer.SetPosition(1, target.transform.position + Vector3.up * weaponEndTransform.y);
+        _lineRenderer.gameObject.SetActive(true);
+        _lineRenderer.SetPosition(0, weaponEndTransform);
+        _lineRenderer.SetPosition(1, _target.transform.position + Vector3.up * weaponEndTransform.y);
     }
 
     // ======================================================================
@@ -56,9 +61,21 @@ public class Module_AttackLineOfSight : MonoBehaviour
     /// <param name="newTarget"></param>
     private void Show(Unit newAttacker, Unit newTarget)
     {
-        isShowing = true;
-        attacker = newAttacker;
-        target = newTarget;
+        if(!_showOnMeleeWeapons && newAttacker.weaponHolder.weaponData.isMeleeWeapon)
+        {
+            Hide();
+            return;
+        }
+        
+        if(!_showIfUntouchableTarget && newAttacker.attack.GetChanceToTouch(newTarget) <= 0)
+        {
+            Hide();
+            return;
+        }
+        
+        _isShowing = true;
+        _attacker = newAttacker;
+        _target = newTarget;
     }
 
     /// <summary>
@@ -66,8 +83,8 @@ public class Module_AttackLineOfSight : MonoBehaviour
     /// </summary>
     private void Hide()
     {
-        isShowing = false;
-        lineRenderer.gameObject.SetActive(false);
+        _isShowing = false;
+        _lineRenderer.gameObject.SetActive(false);
     }
     
     // ======================================================================
@@ -82,7 +99,7 @@ public class Module_AttackLineOfSight : MonoBehaviour
         InputEvents.OnEnemyEnter += InputEvents_OnEnemyEnter;
         InputEvents.OnTileExit += InputEvents_OnTileExit;
     }
-
+    
     private void Units_OnUnitTurnEnd(object sender, Unit endingUnit)
     {
         if(!endingUnit.behavior.playable)
@@ -91,7 +108,7 @@ public class Module_AttackLineOfSight : MonoBehaviour
         InputEvents.OnEnemyEnter -= InputEvents_OnEnemyEnter;
         InputEvents.OnTileExit -= InputEvents_OnTileExit;
     }
-
+    
     private void InputEvents_OnEnemyEnter(object sender, Unit enteredUnit)
     {
         Unit current = _units.current;
