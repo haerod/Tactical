@@ -33,7 +33,7 @@ public class Unit_Behavior : MonoBehaviour
     /// </summary>
     public void PlayBehavior()
     {
-        if (_behavior)
+        if (_behavior&& !_level.isEnd)
         {
             Wait(_delayBeforeAct, TargetEnemy);
             return;

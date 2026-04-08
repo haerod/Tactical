@@ -19,6 +19,8 @@ public class M_Level : MonoBehaviour
     
     public bool isFogOfWar => _fogOfWar && _fogOfWar.gameObject.activeInHierarchy;
     public bool isVictory {get; private set;}
+    public bool isDefeat {get; private set;}
+    public bool isEnd => isVictory || isDefeat;
     public int currentTurn {get; private set;}
     public List<Objective> objectives => _objectives.Count > 0 ? _objectives : _objectives = GetObjectives();
     private List<Objective> _objectives = new();
@@ -75,9 +77,9 @@ public class M_Level : MonoBehaviour
     // ======================================================================
     
     /// <summary>
-    /// Checks if it's currently victory.
+    /// Checks if it's currently victory or defeat.
     /// </summary>
-    private void IsVictoryOrDefeat()
+    private void CheckVictoryOrDefeat()
     {
         if(objectives.Count == 0)
             return; // No objectives
@@ -87,8 +89,9 @@ public class M_Level : MonoBehaviour
         
         if (mainObjectives.Any(objective => objective.isCompleted && !objective.isSuccessful))
         {
+            isDefeat = true;
             OnDefeat?.Invoke(this, EventArgs.Empty);
-            return; // Failed objective
+            return; // Defeat
         }
         
         if (mainObjectives.Any(objective => !objective.isCompleted && !objective.successOnVictory))
@@ -131,7 +134,7 @@ public class M_Level : MonoBehaviour
     
     private void Objective_OnObjectiveUpdate(object sender, Objective updatedObjective)
     {
-        IsVictoryOrDefeat();
+        CheckVictoryOrDefeat();
         OnObjectiveUpdate?.Invoke(this, EventArgs.Empty);
     }
     
